@@ -11,9 +11,15 @@ fail() {
 	exit 1
 }
 
-for command in git tar sha256sum node; do
+for command in git tar sha256sum; do
 	command -v "$command" >/dev/null 2>&1 || fail "Required command is unavailable: $command"
 done
+
+node_command='node'
+if ! command -v "$node_command" >/dev/null 2>&1; then
+	node_command='node.exe'
+	command -v "$node_command" >/dev/null 2>&1 || fail 'Required command is unavailable: node'
+fi
 
 git -C "$ROOT_DIR" rev-parse --verify HEAD >/dev/null 2>&1 || fail 'A committed Git revision is required.'
 if [[ -n "$(git -C "$ROOT_DIR" status --porcelain --untracked-files=all)" ]]; then
@@ -35,7 +41,7 @@ for package in blocksy woocommerce; do
 	) || fail "Offline package checksum failed: ${package}"
 done
 
-node --test "$ROOT_DIR/tests/standalone-contract.test.mjs"
+"$node_command" --test "$ROOT_DIR/tests/standalone-contract.test.mjs"
 
 revision="$(git -C "$ROOT_DIR" rev-parse HEAD)"
 revision_short="${revision:0:12}"
