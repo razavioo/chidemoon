@@ -11,15 +11,9 @@ fail() {
 	exit 1
 }
 
-for command in git tar sha256sum; do
+for command in git tar sha256sum bash; do
 	command -v "$command" >/dev/null 2>&1 || fail "Required command is unavailable: $command"
 done
-
-node_command='node'
-if ! command -v "$node_command" >/dev/null 2>&1; then
-	node_command='node.exe'
-	command -v "$node_command" >/dev/null 2>&1 || fail 'Required command is unavailable: node'
-fi
 
 git -C "$ROOT_DIR" rev-parse --verify HEAD >/dev/null 2>&1 || fail 'A committed Git revision is required.'
 if [[ -n "$(git -C "$ROOT_DIR" status --porcelain --untracked-files=all)" ]]; then
@@ -41,7 +35,10 @@ for package in blocksy woocommerce; do
 	) || fail "Offline package checksum failed: ${package}"
 done
 
-"$node_command" --test "$ROOT_DIR/tests/standalone-contract.test.mjs"
+# The complete Node/PHP contract suite is run before sealing a release. Keep
+# this final artifact command POSIX-only so it remains usable on an operator
+# host that has Docker but not a host-level Node runtime.
+bash -n "$ROOT_DIR/ops/create-release-bundle.sh" "$ROOT_DIR/ops/verify-release-bundle.sh" "$ROOT_DIR/ops/deploy-release-bundle.sh"
 
 revision="$(git -C "$ROOT_DIR" rev-parse HEAD)"
 revision_short="${revision:0:12}"
