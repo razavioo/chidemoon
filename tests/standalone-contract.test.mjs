@@ -91,6 +91,12 @@ describe('standalone Chidemoon runtime', () => {
     const builder = read('ops/create-release-bundle.sh');
     const verifier = read('ops/verify-release-bundle.sh');
     const deployer = read('ops/deploy-release-bundle.sh');
+    const imageBuilder = read('ops/create-offline-image-archive.sh');
+    const imageVerifier = read('ops/verify-offline-image-archive.sh');
+    const imageLoader = read('ops/load-offline-image-archive.sh');
+    const restorer = read('ops/restore-backup.sh');
+    const restoreSmokeTest = read('ops/restore-smoke-test.sh');
+    const backup = read('ops/run-backup.sh');
 
     assert.match(builder, /archive --format=tar/);
     assert.match(builder, /status --porcelain/);
@@ -100,9 +106,32 @@ describe('standalone Chidemoon runtime', () => {
     assert.match(verifier, /sha256sum -c/);
     assert.match(verifier, /--no-same-owner/);
     assert.match(verifier, /forbidden path/);
-    assert.match(deployer, /run --rm --no-deps backup/);
+    assert.match(deployer, /run --rm --no-deps --pull never backup/);
     assert.match(deployer, /mv -Tf/);
+    assert.match(deployer, /CHIDEMOON_IMAGE_ARCHIVE/);
+    assert.match(deployer, /--pull never/);
     assert.doesNotMatch(deployer, /docker compose .*down -v/);
     assert.doesNotMatch(deployer, /docker system prune/);
+
+    assert.match(imageBuilder, /docker image save/);
+    assert.match(imageBuilder, /offline-images\.lock/);
+    assert.match(read('ops/offline-images-lib.sh'), /release_bundle_sha256/);
+    assert.match(imageVerifier, /docker-images\.tar/);
+    assert.match(imageLoader, /Refusing to replace an existing image tag/);
+    assert.match(imageLoader, /docker image load/);
+
+    assert.match(restorer, /--confirm-restore/);
+    assert.match(restorer, /database-\$\{timestamp\}/);
+    assert.match(restorer, /uploads-\$\{timestamp\}/);
+    assert.match(restorer, /gzip -t/);
+    assert.match(restorer, /run --rm --no-deps --pull never backup/);
+    assert.match(restorer, /restore/);
+    assert.match(restorer, /link or special filesystem entry/);
+    assert.match(read('compose.yml'), /\n  restore:/);
+    assert.doesNotMatch(restorer, /latest/);
+    assert.match(backup, /Refusing to overwrite an existing backup timestamp/);
+    assert.match(restoreSmokeTest, /--confirm-smoke-test/);
+    assert.match(restoreSmokeTest, /COMPOSE_PROJECT_NAME/);
+    assert.doesNotMatch(restoreSmokeTest, /down -v/);
   });
 });

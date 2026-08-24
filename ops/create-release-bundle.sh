@@ -38,7 +38,9 @@ done
 # The complete Node/PHP contract suite is run before sealing a release. Keep
 # this final artifact command POSIX-only so it remains usable on an operator
 # host that has Docker but not a host-level Node runtime.
-bash -n "$ROOT_DIR/ops/create-release-bundle.sh" "$ROOT_DIR/ops/verify-release-bundle.sh" "$ROOT_DIR/ops/deploy-release-bundle.sh"
+for script in "$ROOT_DIR"/ops/*.sh; do
+	bash -n "$script"
+done
 
 revision="$(git -C "$ROOT_DIR" rev-parse HEAD)"
 revision_short="${revision:0:12}"

@@ -5,6 +5,7 @@ set -euo pipefail
 # container. Named database and upload volumes are never removed or recreated.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bundle_path="${1:-}"
+image_bundle_path="${2:-${CHIDEMOON_IMAGE_ARCHIVE:-}}"
 deploy_root="${CHIDEMOON_DEPLOY_ROOT:-/opt/chidemoon}"
 environment_file="${CHIDEMOON_ENV_FILE:-$deploy_root/.env}"
 
@@ -14,11 +15,13 @@ fail() {
 }
 
 [[ -n "$bundle_path" && -f "$bundle_path" ]] || fail 'Pass an existing release bundle.'
+[[ -n "$image_bundle_path" && -f "$image_bundle_path" ]] || fail 'Pass the matching sealed offline image archive as the second argument, or set CHIDEMOON_IMAGE_ARCHIVE.'
 [[ "$deploy_root" = /* ]] || fail 'CHIDEMOON_DEPLOY_ROOT must be an absolute path.'
 [[ -f "$environment_file" ]] || fail 'Host-managed .env is required and must not be bundled.'
 command -v docker >/dev/null 2>&1 || fail 'Docker is required.'
 
 bash "$SCRIPT_DIR/verify-release-bundle.sh" "$bundle_path"
+bash "$SCRIPT_DIR/load-offline-image-archive.sh" "$image_bundle_path" "${CHIDEMOON_IMAGE_ARCHIVE_CHECKSUM:-${image_bundle_path}.sha256}" "$bundle_path" "${bundle_path}.sha256"
 
 mkdir -p "$deploy_root/releases"
 deploy_root="$(cd "$deploy_root" && pwd)"
@@ -40,7 +43,7 @@ if [[ -L "$current_link" ]]; then
 	previous_release="$(readlink -f "$current_link")"
 	[[ -f "$previous_release/compose.yml" ]] || fail 'The current release does not contain compose.yml.'
 	# Preserve database and editorial uploads before changing the code mount.
-	docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" run --rm --no-deps backup
+	docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" run --rm --no-deps --pull never backup
 fi
 
 staging_dir="$(mktemp -d "$releases_dir/.staging.XXXXXX")"
@@ -68,15 +71,15 @@ rollback() {
 	rollback_link="$deploy_root/.current-rollback-$$"
 	ln -s "$previous_release" "$rollback_link"
 	mv -Tf "$rollback_link" "$current_link"
-	docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" up -d --wait --force-recreate wordpress || true
+	docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" up -d --wait --pull never --force-recreate wordpress || true
 }
 
 if ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" config -q \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" up -d --wait database \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" up -d --wait --force-recreate wordpress \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps wpcli core is-installed --allow-root \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps wpcli plugin is-active woocommerce --allow-root \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps wpcli plugin is-active chidemoon-core --allow-root \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" up -d --wait --pull never database \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" up -d --wait --pull never --force-recreate wordpress \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli core is-installed --allow-root \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli plugin is-active woocommerce --allow-root \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli plugin is-active chidemoon-core --allow-root \
 	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" exec -T wordpress php -r 'exit(@file_get_contents("http://localhost/wp-login.php") === false ? 1 : 0);'; then
 	rollback
 	fail 'The new release did not pass runtime checks; code was switched back when a previous release existed.'

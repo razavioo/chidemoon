@@ -128,6 +128,21 @@ services:
       - ./backups:/backups
       - ./ops/run-backup.sh:/runner/run-backup.sh:ro
 
+  restore:
+    image: mariadb:11.4
+    profiles: ["tools"]
+    user: "0:0"
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      MARIADB_DATABASE: ${CHIDEMOON_DB_NAME:?Set CHIDEMOON_DB_NAME in .env}
+      MARIADB_USER: ${CHIDEMOON_DB_USER:?Set CHIDEMOON_DB_USER in .env}
+      MARIADB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
+    volumes:
+      - chidemoon_uploads:/uploads
+      - ./backups:/backups
+
 volumes:
   chidemoon_database:
   chidemoon_wordpress:
