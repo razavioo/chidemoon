@@ -1,0 +1,134 @@
+name: chidemoon
+
+x-wordpress-environment: &wordpress-environment
+  WORDPRESS_DB_HOST: database:3306
+  WORDPRESS_DB_NAME: ${CHIDEMOON_DB_NAME:?Set CHIDEMOON_DB_NAME in .env}
+  WORDPRESS_DB_USER: ${CHIDEMOON_DB_USER:?Set CHIDEMOON_DB_USER in .env}
+  WORDPRESS_DB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
+  CHIDEMOON_ENVIRONMENT: ${CHIDEMOON_ENVIRONMENT:-production}
+  CHIDEMOON_WP_DEBUG: ${CHIDEMOON_WP_DEBUG:-0}
+  CHIDEMOON_AI_PROVIDER_BASE_URL: ${CHIDEMOON_AI_PROVIDER_BASE_URL:-}
+  CHIDEMOON_AI_API_KEY: ${CHIDEMOON_AI_API_KEY:-}
+  CHIDEMOON_AI_TEXT_MODEL: ${CHIDEMOON_AI_TEXT_MODEL:-gpt-4.1-mini}
+  CHIDEMOON_AI_IMAGE_MODEL: ${CHIDEMOON_AI_IMAGE_MODEL:-gpt-image-2}
+  CHIDEMOON_AI_PROVIDER_TIMEOUT: ${CHIDEMOON_AI_PROVIDER_TIMEOUT:-60}
+  CHIDEMOON_AI_MODERATION_MODEL: ${CHIDEMOON_AI_MODERATION_MODEL:-omni-moderation-latest}
+  CHIDEMOON_AI_MODERATION_TIMEOUT: ${CHIDEMOON_AI_MODERATION_TIMEOUT:-30}
+  CHIDEMOON_AI_DAILY_REQUEST_LIMIT: ${CHIDEMOON_AI_DAILY_REQUEST_LIMIT:-25}
+  CHIDEMOON_AI_MONTHLY_REQUEST_LIMIT: ${CHIDEMOON_AI_MONTHLY_REQUEST_LIMIT:-500}
+  CHIDEMOON_AI_MONTHLY_BUDGET: ${CHIDEMOON_AI_MONTHLY_BUDGET:-25}
+  CHIDEMOON_AI_TEXT_ESTIMATED_COST: ${CHIDEMOON_AI_TEXT_ESTIMATED_COST:-0.02}
+  CHIDEMOON_AI_COMPARISON_ESTIMATED_COST: ${CHIDEMOON_AI_COMPARISON_ESTIMATED_COST:-0.04}
+  CHIDEMOON_AI_IMAGE_ESTIMATED_COST: ${CHIDEMOON_AI_IMAGE_ESTIMATED_COST:-0.06}
+  CHIDEMOON_AI_EVIDENCE_MAX_AGE_DAYS: ${CHIDEMOON_AI_EVIDENCE_MAX_AGE_DAYS:-90}
+  WORDPRESS_CONFIG_EXTRA: |
+    define( 'WP_ENVIRONMENT_TYPE', getenv( 'CHIDEMOON_ENVIRONMENT' ) ?: 'production' );
+    define( 'DISABLE_WP_CRON', true );
+    define( 'FS_METHOD', 'direct' );
+    if ( ! defined( 'WP_DEBUG' ) ) {
+      define( 'WP_DEBUG', filter_var( getenv( 'CHIDEMOON_WP_DEBUG' ) ?: '0', FILTER_VALIDATE_BOOLEAN ) );
+    }
+    if ( ! defined( 'WP_DEBUG_LOG' ) ) {
+      define( 'WP_DEBUG_LOG', WP_DEBUG );
+    }
+    if ( ! defined( 'WP_DEBUG_DISPLAY' ) ) {
+      define( 'WP_DEBUG_DISPLAY', false );
+    }
+
+services:
+  database:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${CHIDEMOON_DB_NAME:?Set CHIDEMOON_DB_NAME in .env}
+      MARIADB_USER: ${CHIDEMOON_DB_USER:?Set CHIDEMOON_DB_USER in .env}
+      MARIADB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
+      MARIADB_ROOT_PASSWORD: ${CHIDEMOON_DB_ROOT_PASSWORD:?Set CHIDEMOON_DB_ROOT_PASSWORD in .env}
+    volumes:
+      - chidemoon_database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  wordpress:
+    image: wordpress:7.1-php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "${CHIDEMOON_HTTP_PORT:-18098}:80"
+    environment: *wordpress-environment
+    volumes:
+      - chidemoon_wordpress:/var/www/html
+      - chidemoon_uploads:/var/www/html/wp-content/uploads
+      - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
+      - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
+      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@file_get_contents(\"http://localhost/wp-login.php\") === false ? 1 : 0);'"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 45s
+
+  wpcli:
+    image: wordpress:cli-2.10.0-php8.2
+    profiles: ["tools"]
+    user: "0:0"
+    depends_on:
+      database:
+        condition: service_healthy
+    working_dir: /var/www/html
+    entrypoint: ["wp"]
+    environment: *wordpress-environment
+    volumes:
+      - chidemoon_wordpress:/var/www/html
+      - chidemoon_uploads:/var/www/html/wp-content/uploads
+      - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
+      - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
+      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+      - ./vendor:/packages:ro
+
+  scheduler:
+    image: wordpress:cli-2.10.0-php8.2
+    profiles: ["tools"]
+    user: "0:0"
+    depends_on:
+      database:
+        condition: service_healthy
+    working_dir: /var/www/html
+    entrypoint: ["sh", "/runner/run-scheduler.sh"]
+    environment: *wordpress-environment
+    volumes:
+      - chidemoon_wordpress:/var/www/html
+      - chidemoon_uploads:/var/www/html/wp-content/uploads
+      - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
+      - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
+      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+      - ./ops/run-scheduler.sh:/runner/run-scheduler.sh:ro
+
+  backup:
+    image: mariadb:11.4
+    profiles: ["tools"]
+    depends_on:
+      database:
+        condition: service_healthy
+    entrypoint: ["sh", "/runner/run-backup.sh"]
+    environment:
+      MARIADB_DATABASE: ${CHIDEMOON_DB_NAME:?Set CHIDEMOON_DB_NAME in .env}
+      MARIADB_USER: ${CHIDEMOON_DB_USER:?Set CHIDEMOON_DB_USER in .env}
+      MARIADB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
+      CHIDEMOON_BACKUP_RETENTION_DAYS: ${CHIDEMOON_BACKUP_RETENTION_DAYS:-14}
+    volumes:
+      - chidemoon_uploads:/uploads:ro
+      - ./backups:/backups
+      - ./ops/run-backup.sh:/runner/run-backup.sh:ro
+
+volumes:
+  chidemoon_database:
+  chidemoon_wordpress:
+  chidemoon_uploads:

@@ -1,0 +1,11 @@
+.env
+.deploy-artifacts/
+backups/*
+!backups/.gitkeep
+vendor/*
+!vendor/.gitkeep
+!vendor/blocksy.zip
+!vendor/blocksy.sha256
+!vendor/woocommerce.zip
+!vendor/woocommerce.sha256
+.DS_Store

@@ -1,0 +1,1042 @@
+/*
+Theme Name: Chidemoon for Blocksy
+Theme URI: https://chidemoon.com
+Description: Persian-first editorial affiliate presentation for Chidemoon.
+Author: Chidemoon
+Template: blocksy
+Version: 1.1.0
+Requires at least: 6.5
+Requires PHP: 8.1
+Text Domain: chidemoon-blocksy-child
+*/
+
+:root {
+	--chidemoon-paper: #f6f2e9;
+	--chidemoon-surface: #fffcf7;
+	--chidemoon-surface-muted: #ece5d8;
+	--chidemoon-ink: #1f2a26;
+	--chidemoon-muted: #65716b;
+	--chidemoon-forest: #173f35;
+	--chidemoon-forest-deep: #102d26;
+	--chidemoon-clay: #b65d3d;
+	--chidemoon-clay-soft: #e2b19d;
+	--chidemoon-sage: #9eab92;
+	--chidemoon-line: rgba(23, 63, 53, 0.17);
+	--chidemoon-line-strong: rgba(23, 63, 53, 0.35);
+	--chidemoon-shadow: 0 24px 65px rgba(26, 44, 37, 0.11);
+	--chidemoon-serif: Georgia, "Times New Roman", serif;
+	--chidemoon-sans: Vazirmatn, IRANSansX, "Segoe UI", Tahoma, Arial, sans-serif;
+	--theme-palette-color-1: var(--chidemoon-forest);
+	--theme-palette-color-2: var(--chidemoon-clay);
+	--theme-link-hover-color: var(--chidemoon-clay);
+	--theme-button-background-initial-color: var(--chidemoon-forest);
+	--theme-button-background-hover-color: var(--chidemoon-forest-deep);
+	--theme-button-text-initial-color: #fffcf7;
+	--theme-button-text-hover-color: #fffcf7;
+}
+
+body {
+	background: var(--chidemoon-paper);
+	color: var(--chidemoon-ink);
+	font-family: var(--chidemoon-sans);
+}
+
+body.rtl {
+	letter-spacing: 0;
+}
+
+body.chidemoon-editorial-site {
+	font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.ct-container,
+.entry-content {
+	--theme-content-vertical-spacing: clamp(2.75rem, 6vw, 5.5rem);
+}
+
+.site-main {
+	min-width: 0;
+}
+
+.chidemoon-section-shell {
+	margin-inline: auto;
+	max-width: 1240px;
+	padding-inline: clamp(1rem, 3vw, 2.25rem);
+}
+
+.chidemoon-eyebrow,
+.chidemoon-card__meta,
+.chidemoon-category-link__index,
+.chidemoon-category-link__count,
+.chidemoon-empty-state__index {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-sans);
+	font-size: 0.7rem;
+	font-weight: 750;
+	letter-spacing: 0.12em;
+	line-height: 1.4;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.entry-content > :where(h1, h2, h3),
+.chidemoon-home h1,
+.chidemoon-home h2,
+.chidemoon-archive h1,
+.chidemoon-collection-page h1,
+.chidemoon-collection-page h2,
+.chidemoon-shop-archive h1,
+.woocommerce div.product .product_title {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-serif);
+	font-weight: 600;
+	letter-spacing: -0.035em;
+	line-height: 1.08;
+}
+
+.entry-content > h2 {
+	border-top: 1px solid var(--chidemoon-line);
+	margin-top: clamp(3rem, 7vw, 6rem);
+	padding-top: 1.2rem;
+}
+
+.entry-content :where(p, li) {
+	line-height: 2;
+}
+
+.entry-content a:not(.wp-element-button) {
+	color: var(--chidemoon-forest);
+	text-decoration-color: color-mix(in srgb, var(--chidemoon-clay) 70%, transparent);
+	text-underline-offset: 0.2em;
+}
+
+.wp-element-button,
+.button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.chidemoon-button,
+.chidemoon-affiliate-cta {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: 0;
+	box-shadow: 4px 4px 0 var(--chidemoon-sage);
+	color: #fffcf7;
+	display: inline-flex;
+	font-family: var(--chidemoon-sans);
+	font-size: 0.82rem;
+	font-weight: 800;
+	gap: 0.65rem;
+	justify-content: center;
+	letter-spacing: 0.035em;
+	line-height: 1.2;
+	min-height: 2.8rem;
+	padding: 0.8rem 1.05rem;
+	text-decoration: none;
+	transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.wp-element-button:hover,
+.button:hover,
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.chidemoon-button:hover,
+.chidemoon-affiliate-cta:hover {
+	background: var(--chidemoon-forest-deep);
+	box-shadow: 1px 1px 0 var(--chidemoon-sage);
+	color: #fffcf7;
+	transform: translate(3px, 3px);
+}
+
+.chidemoon-button--quiet {
+	background: transparent;
+	box-shadow: none;
+	color: var(--chidemoon-forest);
+}
+
+.chidemoon-button--quiet:hover {
+	background: transparent;
+	box-shadow: inset 0 -2px 0 var(--chidemoon-clay);
+	color: var(--chidemoon-forest);
+	transform: none;
+}
+
+.chidemoon-text-link {
+	align-items: center;
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	font-size: 0.82rem;
+	font-weight: 800;
+	gap: 0.55rem;
+	letter-spacing: 0.025em;
+	text-decoration: none;
+}
+
+.chidemoon-text-link span {
+	color: var(--chidemoon-clay);
+	font-size: 1.12em;
+	transition: transform 140ms ease;
+}
+
+.chidemoon-text-link:hover span {
+	transform: translateX(-0.22rem);
+}
+
+body:not(.rtl) .chidemoon-text-link:hover span {
+	transform: translateX(0.22rem);
+}
+
+.chidemoon-home {
+	padding-block: clamp(1.15rem, 3vw, 2.75rem) clamp(3.5rem, 8vw, 8rem);
+}
+
+.chidemoon-home__hero {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	display: grid;
+	grid-template-columns: minmax(0, 1.12fr) minmax(16rem, 0.88fr);
+	min-height: min(39rem, 72vh);
+	overflow: hidden;
+	padding-block: clamp(2rem, 7vw, 6.5rem);
+	position: relative;
+}
+
+.chidemoon-home__hero::before {
+	background-image: linear-gradient(var(--chidemoon-line) 1px, transparent 1px), linear-gradient(90deg, var(--chidemoon-line) 1px, transparent 1px);
+	background-size: 3.2rem 3.2rem;
+	content: "";
+	inset: 0;
+	opacity: 0.45;
+	pointer-events: none;
+	position: absolute;
+}
+
+.chidemoon-home__hero-copy {
+	align-self: center;
+	max-width: 43rem;
+	padding: clamp(1rem, 3vw, 3.5rem);
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero h1 {
+	font-size: clamp(3.1rem, 7vw, 6.55rem);
+	hyphens: none;
+	margin: 0.75rem 0 1.4rem;
+	max-width: 13ch;
+	overflow-wrap: normal;
+	word-break: normal;
+}
+
+.chidemoon-home__lede {
+	color: var(--chidemoon-muted);
+	font-size: clamp(1rem, 1.8vw, 1.25rem);
+	line-height: 1.9;
+	margin: 0;
+	max-width: 35rem;
+}
+
+.chidemoon-home__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-top: 2.2rem;
+}
+
+.chidemoon-home__hero-mark {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: 20rem;
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero-mark::before,
+.chidemoon-home__hero-mark::after {
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: 50%;
+	content: "";
+	position: absolute;
+}
+
+.chidemoon-home__hero-mark::before {
+	background: var(--chidemoon-sage);
+	height: min(23vw, 17rem);
+	width: min(23vw, 17rem);
+}
+
+.chidemoon-home__hero-mark::after {
+	border-radius: 0;
+	height: min(29vw, 21rem);
+	transform: rotate(16deg);
+	width: min(16vw, 12rem);
+}
+
+.chidemoon-home__hero-mark span {
+	color: var(--chidemoon-forest-deep);
+	font-family: var(--chidemoon-serif);
+	font-size: clamp(4.5rem, 11vw, 8.5rem);
+	font-weight: 600;
+	letter-spacing: -0.12em;
+	margin-inline-start: -0.15em;
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero-mark i,
+.chidemoon-home__hero-mark b {
+	background: var(--chidemoon-clay);
+	display: block;
+	position: absolute;
+}
+
+.chidemoon-home__hero-mark i {
+	height: 0.75rem;
+	left: 17%;
+	top: 17%;
+	width: 0.75rem;
+}
+
+.chidemoon-home__hero-mark b {
+	bottom: 18%;
+	height: 2.6rem;
+	right: 12%;
+	width: 0.5rem;
+}
+
+.chidemoon-home__intro {
+	max-width: 830px;
+	padding-block: clamp(3rem, 8vw, 7rem) clamp(1rem, 3vw, 2rem);
+}
+
+.chidemoon-home__section {
+	padding-block: clamp(3rem, 7vw, 6.5rem);
+}
+
+.chidemoon-section-heading {
+	align-items: end;
+	border-bottom: 1px solid var(--chidemoon-line);
+	display: flex;
+	gap: 1.25rem;
+	justify-content: space-between;
+	margin-bottom: clamp(1.35rem, 3vw, 2.45rem);
+	padding-bottom: 1rem;
+}
+
+.chidemoon-section-heading h2 {
+	font-size: clamp(2.1rem, 4vw, 4.25rem);
+	margin: 0.35rem 0 0;
+}
+
+.chidemoon-card-grid {
+	display: grid;
+	gap: clamp(0.9rem, 2vw, 1.6rem);
+}
+
+.chidemoon-card-grid--products {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.chidemoon-card-grid--stories,
+.chidemoon-card-grid--archive {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.chidemoon-card {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	transition: border-color 140ms ease, transform 140ms ease;
+}
+
+.chidemoon-card:hover {
+	border-color: var(--chidemoon-line-strong);
+	transform: translateY(-3px);
+}
+
+.chidemoon-card__media {
+	background: var(--chidemoon-surface-muted);
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+.chidemoon-story-card .chidemoon-card__media {
+	aspect-ratio: 1.28 / 1;
+}
+
+.chidemoon-product-card .chidemoon-card__media {
+	aspect-ratio: 0.9 / 1;
+}
+
+.chidemoon-card__media img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 280ms ease;
+	width: 100%;
+}
+
+.chidemoon-product-card .chidemoon-card__media img {
+	object-fit: contain;
+	padding: 1rem;
+}
+
+.chidemoon-card:hover .chidemoon-card__media img {
+	transform: scale(1.035);
+}
+
+.chidemoon-card__media-empty {
+	background: linear-gradient(135deg, transparent 0 46%, rgba(23, 63, 53, 0.18) 46% 47%, transparent 47% 100%), linear-gradient(45deg, transparent 0 46%, rgba(23, 63, 53, 0.14) 46% 47%, transparent 47% 100%), var(--chidemoon-surface-muted);
+	display: block;
+	height: 100%;
+	min-height: 100%;
+	width: 100%;
+}
+
+.chidemoon-card__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 1.15rem 1.1rem 1.2rem;
+}
+
+.chidemoon-card__meta {
+	display: flex;
+	gap: 0.65rem;
+	justify-content: space-between;
+	margin: 0 0 0.7rem;
+}
+
+.chidemoon-card__title {
+	font-family: var(--chidemoon-serif);
+	font-size: clamp(1.25rem, 2vw, 1.62rem);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	line-height: 1.25;
+	margin: 0;
+}
+
+.chidemoon-card__title a {
+	color: var(--chidemoon-ink);
+	text-decoration: none;
+}
+
+.chidemoon-card__title a:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-card__excerpt {
+	color: var(--chidemoon-muted);
+	font-size: 0.91rem;
+	line-height: 1.85;
+	margin: 0.8rem 0 1rem;
+}
+
+.chidemoon-card__body .chidemoon-text-link {
+	margin-top: auto;
+}
+
+.chidemoon-product-card__price,
+.chidemoon-product-card__pending {
+	color: var(--chidemoon-clay);
+	font-size: 0.93rem;
+	font-weight: 800;
+	margin: 0.85rem 0 1rem;
+}
+
+.chidemoon-product-card__pending {
+	color: var(--chidemoon-muted);
+	font-size: 0.79rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.chidemoon-category-grid {
+	border-bottom: 1px solid var(--chidemoon-line);
+	border-top: 1px solid var(--chidemoon-line);
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.chidemoon-category-link {
+	align-items: center;
+	border-inline-end: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	display: grid;
+	gap: 0.55rem;
+	grid-template-columns: auto 1fr auto;
+	min-height: 8rem;
+	padding: 1.25rem;
+	text-decoration: none;
+	transition: background-color 140ms ease, color 140ms ease;
+}
+
+.chidemoon-category-link:nth-child(3n) {
+	border-inline-end: 0;
+}
+
+.chidemoon-category-link:hover {
+	background: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+.chidemoon-category-link:hover :where(.chidemoon-category-link__index, .chidemoon-category-link__count) {
+	color: var(--chidemoon-clay-soft);
+}
+
+.chidemoon-category-link__title {
+	font-family: var(--chidemoon-serif);
+	font-size: clamp(1.25rem, 2vw, 1.7rem);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+
+.chidemoon-home__journal {
+	background: var(--chidemoon-forest);
+	color: #fffcf7;
+	margin-block: clamp(1rem, 4vw, 3rem);
+	max-width: none;
+	padding-block: clamp(3rem, 7vw, 6.5rem);
+}
+
+.chidemoon-home__journal > * {
+	margin-inline: auto;
+	max-width: 1240px;
+}
+
+.chidemoon-section-heading--inverse {
+	border-color: rgba(255, 252, 247, 0.25);
+}
+
+.chidemoon-section-heading--inverse :where(h2, .chidemoon-text-link) {
+	color: #fffcf7;
+}
+
+.chidemoon-section-heading--inverse .chidemoon-eyebrow {
+	color: var(--chidemoon-clay-soft);
+}
+
+.chidemoon-home__journal .chidemoon-card {
+	border-color: transparent;
+}
+
+.chidemoon-home__journal .chidemoon-empty-state {
+	border-color: rgba(255, 252, 247, 0.25);
+}
+
+.chidemoon-home__journal .chidemoon-empty-state :where(h3, p) {
+	color: #fffcf7;
+}
+
+.chidemoon-home__routes {
+	display: grid;
+	gap: clamp(1rem, 2vw, 1.6rem);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	padding-block: clamp(2rem, 5vw, 5rem) 0;
+}
+
+.chidemoon-route-card {
+	background: var(--chidemoon-sage);
+	border: 1px solid var(--chidemoon-forest);
+	color: var(--chidemoon-forest-deep);
+	display: flex;
+	flex-direction: column;
+	min-height: 18rem;
+	padding: clamp(1.5rem, 4vw, 3.25rem);
+	position: relative;
+	text-decoration: none;
+	transition: transform 140ms ease;
+}
+
+.chidemoon-route-card:hover {
+	color: var(--chidemoon-forest-deep);
+	transform: translateY(-3px);
+}
+
+.chidemoon-route-card--clay {
+	background: var(--chidemoon-clay-soft);
+}
+
+.chidemoon-route-card strong {
+	font-family: var(--chidemoon-serif);
+	font-size: clamp(2.1rem, 4vw, 4rem);
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1;
+	margin-block: 1rem;
+}
+
+.chidemoon-route-card > span:last-of-type {
+	line-height: 1.8;
+	max-width: 31rem;
+}
+
+.chidemoon-route-card i {
+	align-items: center;
+	border: 1px solid currentColor;
+	border-radius: 50%;
+	display: flex;
+	font-style: normal;
+	height: 2.65rem;
+	justify-content: center;
+	margin-top: auto;
+	width: 2.65rem;
+}
+
+.chidemoon-empty-state {
+	align-items: start;
+	background: transparent;
+	border-block: 1px solid var(--chidemoon-line);
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: auto minmax(0, 1fr);
+	padding: clamp(1.25rem, 4vw, 2.35rem) 0;
+}
+
+.chidemoon-empty-state__index {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-empty-state h3 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-serif);
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	margin: 0;
+}
+
+.chidemoon-empty-state p {
+	color: var(--chidemoon-muted);
+	line-height: 1.8;
+	margin: 0.55rem 0 0;
+	max-width: 46rem;
+}
+
+.chidemoon-archive,
+.chidemoon-shop-archive,
+.chidemoon-collection-page {
+	padding-block: clamp(1.4rem, 4vw, 3.5rem) clamp(3.5rem, 8vw, 8rem);
+}
+
+.chidemoon-archive__hero,
+.chidemoon-collection-page__hero,
+.chidemoon-shop-archive__intro {
+	border-bottom: 1px solid var(--chidemoon-line);
+	max-width: 1240px;
+	padding-block: clamp(2.2rem, 7vw, 6.5rem) clamp(1.75rem, 4vw, 3rem);
+}
+
+.chidemoon-archive__hero h1,
+.chidemoon-collection-page__hero h1,
+.chidemoon-shop-archive__intro h1 {
+	font-size: clamp(3rem, 7vw, 6rem);
+	margin: 0.65rem 0 1rem;
+	max-width: 12ch;
+}
+
+.chidemoon-archive__hero > p,
+.chidemoon-archive__description,
+.chidemoon-collection-page__hero > p,
+.chidemoon-shop-archive__intro .term-description {
+	color: var(--chidemoon-muted);
+	font-size: clamp(1rem, 1.6vw, 1.18rem);
+	line-height: 1.9;
+	margin: 0;
+	max-width: 47rem;
+}
+
+.chidemoon-archive > .chidemoon-section-shell,
+.chidemoon-collection-page__feed {
+	padding-top: clamp(2rem, 5vw, 4.5rem);
+}
+
+.chidemoon-pagination {
+	border-top: 1px solid var(--chidemoon-line);
+	display: flex;
+	gap: 0.45rem;
+	margin-top: 3.25rem;
+	padding-top: 1.25rem;
+}
+
+.chidemoon-pagination :where(a, .current) {
+	align-items: center;
+	border: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	height: 2.4rem;
+	justify-content: center;
+	min-width: 2.4rem;
+	padding-inline: 0.55rem;
+	text-decoration: none;
+}
+
+.chidemoon-pagination .current,
+.chidemoon-pagination a:hover {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+.chidemoon-collection-page__content {
+	display: grid;
+	gap: clamp(2rem, 6vw, 6rem);
+	grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.5fr);
+	padding-block: clamp(2.25rem, 5vw, 5rem);
+}
+
+.chidemoon-collection-page__note {
+	align-self: start;
+	border-top: 3px solid var(--chidemoon-clay);
+	padding-top: 1rem;
+}
+
+.chidemoon-collection-page__note p {
+	color: var(--chidemoon-muted);
+	line-height: 1.85;
+	margin: 0.7rem 0 0;
+}
+
+.chidemoon-shop-archive__catalogue .woocommerce-ordering,
+.chidemoon-shop-archive__catalogue .woocommerce-result-count {
+	color: var(--chidemoon-muted);
+	font-size: 0.84rem;
+}
+
+.woocommerce ul.products {
+	display: grid;
+	gap: clamp(1rem, 2vw, 1.65rem);
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	margin: 0;
+}
+
+.woocommerce ul.products::before,
+.woocommerce ul.products::after {
+	display: none;
+}
+
+.woocommerce ul.products li.product {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-direction: column;
+	float: none;
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	padding: 0;
+	width: auto;
+}
+
+.woocommerce ul.products li.product > :not(a.woocommerce-LoopProduct-link, .button, .added_to_cart) {
+	margin-inline: 1.1rem;
+}
+
+.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.woocommerce ul.products li.product a img {
+	aspect-ratio: 0.9 / 1;
+	background: var(--chidemoon-surface-muted);
+	margin: 0;
+	object-fit: contain;
+	padding: 0.9rem;
+	width: 100%;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title {
+	color: var(--chidemoon-ink);
+	font-family: var(--chidemoon-serif);
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.38;
+	margin-bottom: 0.65rem;
+	min-height: 3.35em;
+	padding: 0;
+}
+
+.woocommerce ul.products li.product .price,
+.woocommerce div.product p.price,
+.woocommerce div.product span.price {
+	color: var(--chidemoon-clay);
+	font-size: 1rem;
+	font-weight: 800;
+}
+
+.woocommerce ul.products li.product .button {
+	align-self: flex-start;
+	margin: 1rem 1.1rem 1.25rem;
+}
+
+.woocommerce div.product {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	box-shadow: var(--chidemoon-shadow);
+	padding: clamp(1.15rem, 3vw, 2.5rem);
+}
+
+.woocommerce div.product div.images {
+	margin-bottom: 1.25rem;
+}
+
+.woocommerce div.product div.images img {
+	background: var(--chidemoon-surface-muted);
+	object-fit: contain;
+}
+
+.woocommerce div.product .summary {
+	padding-inline-start: clamp(0rem, 2vw, 1.5rem);
+}
+
+.woocommerce div.product .product_title {
+	font-size: clamp(2.35rem, 5vw, 4.75rem);
+	line-height: 1.13;
+	margin-bottom: 0.85rem;
+}
+
+.woocommerce div.product .woocommerce-product-details__short-description {
+	color: var(--chidemoon-muted);
+	line-height: 1.9;
+	margin-block: 1.25rem;
+}
+
+.woocommerce div.product .product_meta {
+	border-top: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-muted);
+	margin-top: 1.75rem;
+	padding-top: 1rem;
+}
+
+.woocommerce div.product .product_meta a {
+	color: var(--chidemoon-forest);
+}
+
+.woocommerce div.product .single_add_to_cart_button {
+	margin-top: 0.8rem;
+}
+
+.woocommerce .woocommerce-breadcrumb,
+.woocommerce .woocommerce-result-count,
+.woocommerce .woocommerce-ordering {
+	color: var(--chidemoon-muted);
+	font-size: 0.86rem;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs {
+	border-bottom: 1px solid var(--chidemoon-line);
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs::before {
+	border: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	margin: 0 1rem 0 0;
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li::before,
+.woocommerce div.product .woocommerce-tabs ul.tabs li::after {
+	display: none;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	color: var(--chidemoon-muted);
+	padding: 0.75rem 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+	box-shadow: inset 0 -2px 0 var(--chidemoon-clay);
+	color: var(--chidemoon-forest);
+}
+
+.chidemoon-product-disclosure {
+	margin-top: 1.35rem;
+}
+
+.chidemoon-affiliate-disclosure,
+.chidemoon-source-note {
+	background: color-mix(in srgb, var(--chidemoon-sage) 19%, var(--chidemoon-surface));
+	border-inline-start: 4px solid var(--chidemoon-sage);
+	color: var(--chidemoon-ink);
+	font-size: 0.91rem;
+	line-height: 1.9;
+	margin-block: 1.5rem;
+	padding: 1rem 1.1rem;
+}
+
+.chidemoon-product-facts {
+	border-block: 1px solid var(--chidemoon-line);
+	display: grid;
+	gap: 0.75rem;
+	margin-block: 2rem;
+	padding-block: 1.25rem;
+}
+
+.chidemoon-product-facts__row {
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: minmax(8rem, 0.3fr) 1fr;
+}
+
+.chidemoon-product-facts__label {
+	color: var(--chidemoon-muted);
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.chidemoon-ai-assistant {
+	background: var(--chidemoon-forest);
+	color: #fffdf8;
+	margin-block: clamp(2rem, 5vw, 4rem);
+	padding: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.chidemoon-ai-assistant input,
+.chidemoon-ai-assistant textarea {
+	background: #fffdf8;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 0;
+	color: var(--chidemoon-ink);
+	min-height: 2.8rem;
+	padding: 0.75rem;
+	width: 100%;
+}
+
+.chidemoon-ai-assistant__sources {
+	font-size: 0.86rem;
+	margin-top: 1rem;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+	outline: 3px solid var(--chidemoon-clay);
+	outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-home__hero {
+		grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.7fr);
+	}
+
+	.chidemoon-card-grid--products,
+	.woocommerce ul.products {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 780px) {
+	.chidemoon-home__hero {
+		grid-template-columns: 1fr;
+		min-height: 0;
+	}
+
+	.chidemoon-home__hero-mark {
+		min-height: 14rem;
+	}
+
+	.chidemoon-home__hero-mark::before {
+		height: 11rem;
+		width: 11rem;
+	}
+
+	.chidemoon-home__hero-mark::after {
+		height: 14rem;
+		width: 8rem;
+	}
+
+	.chidemoon-card-grid--stories,
+	.chidemoon-card-grid--archive,
+	.chidemoon-card-grid--products,
+	.woocommerce ul.products,
+	.chidemoon-category-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.chidemoon-category-link:nth-child(3n) {
+		border-inline-end: 1px solid var(--chidemoon-line);
+	}
+
+	.chidemoon-category-link:nth-child(2n) {
+		border-inline-end: 0;
+	}
+
+	.chidemoon-collection-page__content {
+		grid-template-columns: 1fr;
+	}
+
+	.woocommerce div.product .summary {
+		padding-inline-start: 0;
+	}
+}
+
+@media (max-width: 520px) {
+	.chidemoon-section-shell {
+		padding-inline: 1rem;
+	}
+
+	.chidemoon-home__hero {
+		margin-inline: 0;
+	}
+
+	.chidemoon-home__hero-copy {
+		padding: 1.2rem;
+	}
+
+	.chidemoon-home__actions,
+	.chidemoon-section-heading {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.chidemoon-card-grid--stories,
+	.chidemoon-card-grid--archive,
+	.chidemoon-card-grid--products,
+	.woocommerce ul.products,
+	.chidemoon-category-grid,
+	.chidemoon-home__routes {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-category-link,
+	.chidemoon-category-link:nth-child(2n) {
+		border-bottom: 1px solid var(--chidemoon-line);
+		border-inline-end: 0;
+	}
+
+	.chidemoon-category-link:last-child {
+		border-bottom: 0;
+	}
+
+	.woocommerce div.product {
+		border-inline: 0;
+		box-shadow: none;
+		margin-inline: calc(var(--theme-frame-size, 0px) * -1);
+	}
+
+	.chidemoon-product-facts__row {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}
