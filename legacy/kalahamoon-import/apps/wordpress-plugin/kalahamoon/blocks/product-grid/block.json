@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/product-grid",
+	"version": "1.1.0",
+	"title": "Kalahamoon Product Grid",
+	"category": "kalahamoon",
+	"icon": "grid-view",
+	"description": "Display a responsive grid of product cards. Supports ranked mode (🥇🥈🥉) for 'best of' lists, and masonry/list/carousel variations.",
+	"keywords": ["products", "grid", "ranking", "best", "masonry", "list", "carousel", "بهترین"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"__experimentalDefaultControls": { "background": false }
+		},
+		"typography": {
+			"fontSize": true,
+			"fontFamily": true,
+			"lineHeight": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true,
+			"blockGap": true,
+			"__experimentalDefaultControls": { "blockGap": true }
+		}
+	},
+	"attributes": {
+		"productIds": { "type": "string", "default": "" },
+		"category": { "type": "string", "default": "" },
+		"columns": { "type": "number", "default": 3 },
+		"limit": { "type": "number", "default": 6 },
+		"ranked": { "type": "boolean", "default": false },
+		"layout": { "type": "string", "default": "grid", "enum": ["grid", "masonry", "list", "carousel"] },
+		"orderBy": { "type": "string", "default": "newest", "enum": ["newest", "oldest", "price_asc", "price_desc", "title", "random"] }
+	},
+	"example": {
+		"attributes": {
+			"columns": 3,
+			"limit": 6,
+			"layout": "grid"
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

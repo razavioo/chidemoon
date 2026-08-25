@@ -1,0 +1,74 @@
+services:
+  chidemoon-staging-db:
+    image: mariadb:11
+    container_name: chidemoon-staging-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${STAGING_WORDPRESS_DB_NAME}
+      MARIADB_USER: ${STAGING_WORDPRESS_DB_USER}
+      MARIADB_PASSWORD: ${STAGING_WORDPRESS_DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${STAGING_WORDPRESS_DB_ROOT_PASSWORD}
+    volumes:
+      - chidemoon-staging-db-data:/var/lib/mysql
+    networks: [internal]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  chidemoon-staging-wordpress:
+    image: wordpress:6.8-php8.3-apache
+    container_name: chidemoon-staging-wordpress
+    restart: unless-stopped
+    depends_on:
+      chidemoon-staging-db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: chidemoon-staging-db:3306
+      WORDPRESS_DB_NAME: ${STAGING_WORDPRESS_DB_NAME}
+      WORDPRESS_DB_USER: ${STAGING_WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${STAGING_WORDPRESS_DB_PASSWORD}
+      KALAHAMOON_INTERNAL_API_URL: http://app:3000
+      KALAHAMOON_CATALOG_CONNECTOR_CLIENT_ID: ${STAGING_CATALOG_CONNECTOR_CLIENT_ID:-}
+      KALAHAMOON_CATALOG_CONNECTOR_CLIENT_SECRET: ${STAGING_CATALOG_CONNECTOR_CLIENT_SECRET:-}
+      KALAHAMOON_CATALOG_CONNECTOR_ORIGIN_CHALLENGE: ${STAGING_CATALOG_CONNECTOR_ORIGIN_CHALLENGE:-}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'https://staging.chidemoon.com');
+        define('WP_SITEURL', 'https://staging.chidemoon.com');
+        define('FORCE_SSL_ADMIN', true);
+        define('KALAHAMOON_TRUSTED_PROXY_HEADERS', true);
+        if (isset($$_SERVER['HTTP_X_FORWARDED_PROTO']) && $$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') $$_SERVER['HTTPS'] = 'on';
+    volumes:
+      - chidemoon-staging-wp-data:/var/www/html
+      - /opt/projects/kalahamoon/current/deploy/chidemoon/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      - /opt/projects/kalahamoon/current/chidemoon/packages:/packages:ro
+    networks: [proxy, internal]
+
+  chidemoon-staging-wpcli:
+    image: wordpress:cli-php8.3
+    profiles: [tools]
+    working_dir: /var/www/html
+    environment:
+      WORDPRESS_DB_HOST: chidemoon-staging-db:3306
+      WORDPRESS_DB_NAME: ${STAGING_WORDPRESS_DB_NAME}
+      WORDPRESS_DB_USER: ${STAGING_WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${STAGING_WORDPRESS_DB_PASSWORD}
+      WORDPRESS_URL: https://staging.chidemoon.com
+      KALAHAMOON_INTERNAL_API_URL: http://app:3000
+    volumes:
+      - chidemoon-staging-wp-data:/var/www/html
+      - /opt/projects/kalahamoon/current/deploy/chidemoon/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      - /opt/projects/kalahamoon/current/chidemoon/packages:/packages:ro
+    networks: [proxy, internal]
+
+networks:
+  proxy:
+    external: true
+  internal:
+    name: kalahamoon-internal
+    external: true
+
+volumes:
+  chidemoon-staging-db-data:
+  chidemoon-staging-wp-data:

@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/lead-form",
+	"version": "1.0.0",
+	"title": "Kalahamoon Lead Form",
+	"category": "kalahamoon",
+	"icon": "email",
+	"description": "Contact / lead-capture form that submits straight to your Kalahamoon CRM. Honeypot-protected.",
+	"keywords": ["lead", "form", "contact", "crm", "فرم", "تماس"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide"],
+		"spacing": { "padding": true, "margin": ["top", "bottom"] },
+		"border": { "radius": true, "color": true, "width": true, "style": true }
+	},
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"description": { "type": "string", "default": "" },
+		"intent": { "type": "string", "default": "contact", "enum": ["contact", "consultation", "issue"] },
+		"showSubject": { "type": "boolean", "default": true },
+		"showName": { "type": "boolean", "default": true },
+		"showEmail": { "type": "boolean", "default": true },
+		"showPhone": { "type": "boolean", "default": true },
+		"showMessage": { "type": "boolean", "default": true },
+		"buttonText": { "type": "string", "default": "" },
+		"successText": { "type": "string", "default": "" },
+		"consentText": { "type": "string", "default": "" },
+		"consentVersion": { "type": "string", "default": "1" }
+	},
+	"example": {},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

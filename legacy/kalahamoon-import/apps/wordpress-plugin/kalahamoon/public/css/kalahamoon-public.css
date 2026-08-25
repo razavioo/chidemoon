@@ -1,0 +1,812 @@
+/* Kalahamoon WordPress Plugin — Public Styles
+ * RTL-first: uses CSS Logical Properties throughout.
+ * Tokens resolve from the active theme's theme.json first, literal fallbacks
+ * only kick in when the theme doesn't provide the preset. The plugin also
+ * emits an inline :root block via Kalahamoon_Plugin::emit_token_bridge() that is
+ * filterable through `kalahamoon_css_tokens` — this stylesheet's :root acts as a
+ * safety net when the PHP bridge is disabled.
+ */
+
+/* ─── Token fallbacks (PHP inline bridge overrides these at runtime) ─── */
+:root {
+	--kalahamoon-primary:        var(--wp--preset--color--primary, var(--wp--custom--kalahamoon--accent, #2563eb));
+	--kalahamoon-primary-hover:  color-mix(in srgb, var(--kalahamoon-primary) 85%, var(--kalahamoon-text));
+	--kalahamoon-on-primary:     var(--wp--preset--color--base, #ffffff);
+	--kalahamoon-success:        var(--wp--preset--color--success, var(--wp--preset--color--vivid-green-cyan, #16a34a));
+	--kalahamoon-danger:         var(--wp--preset--color--vivid-red, #dc2626);
+	--kalahamoon-warning:        var(--wp--preset--color--luminous-vivid-amber, #f59e0b);
+	--kalahamoon-text:           var(--wp--preset--color--contrast, var(--wp--custom--kalahamoon--text, #1f2937));
+	--kalahamoon-muted:          color-mix(in srgb, var(--kalahamoon-text) 65%, transparent);
+	--kalahamoon-text-muted:     var(--kalahamoon-muted);
+	--kalahamoon-surface:        var(--wp--preset--color--base, var(--wp--custom--kalahamoon--surface, #ffffff));
+	--kalahamoon-surface-alt:    color-mix(in srgb, var(--kalahamoon-surface) 96%, var(--kalahamoon-text));
+	--kalahamoon-bg:             var(--kalahamoon-surface);
+	--kalahamoon-bg-muted:       var(--kalahamoon-surface-alt);
+	--kalahamoon-border:         var(--wp--custom--kalahamoon--border, color-mix(in srgb, var(--kalahamoon-text) 12%, transparent));
+	--kalahamoon-radius:         var(--wp--custom--radius--medium, var(--wp--custom--kalahamoon--radius-card, 12px));
+	--kalahamoon-radius-sm:      var(--wp--custom--radius--small, 8px);
+	--kalahamoon-radius-lg:      var(--wp--custom--radius--large, 20px);
+	--kalahamoon-shadow:         var(--wp--custom--shadow--natural, 0 1px 3px rgba(0,0,0,.08));
+	--kalahamoon-shadow-lg:      var(--wp--custom--shadow--deep, var(--wp--custom--kalahamoon--shadow-card-hover, 0 4px 12px rgba(0,0,0,.1)));
+	--kalahamoon-focus:          var(--wp--custom--shadow--focus, 0 0 0 3px color-mix(in srgb, var(--kalahamoon-primary) 25%, transparent));
+	--kalahamoon-gap-sm:         var(--wp--preset--spacing--30, 0.75rem);
+	--kalahamoon-gap:            var(--wp--preset--spacing--40, 1rem);
+	--kalahamoon-gap-lg:         var(--wp--preset--spacing--60, 1.5rem);
+	--kalahamoon-transition:     0.2s ease;
+
+	/* Marketplace brand colors — intentionally literal (brand identity). */
+	--kalahamoon-bakalahamoon:  #ff6b35;
+	--kalahamoon-digikala: #ef394e;
+	--kalahamoon-torob:    #00b4d8;
+}
+
+/* ─── Accessibility + focus helpers ─── */
+.kalahamoon-screen-reader-text,
+.kalahamoon-sr-only,
+.screen-reader-text {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.kalahamoon-product-card :where(a, button):focus-visible,
+.kalahamoon-comparison-table-wrapper :where(a, button):focus-visible,
+.kalahamoon-lead-form-wrapper :where(a, button, input, textarea, select):focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: 2px;
+	box-shadow: var(--kalahamoon-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(.kalahamoon-product-card, .kalahamoon-cta-button, .kalahamoon-favorite-btn, .kalahamoon-lead-submit, .kalahamoon-grid-item) {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}
+
+/* ─── Product Card ─── */
+.kalahamoon-product-card {
+	background: var(--kalahamoon-surface);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	overflow: hidden;
+	transition: box-shadow var(--kalahamoon-transition);
+	position: relative;
+}
+
+.kalahamoon-product-card:hover {
+	box-shadow: var(--kalahamoon-shadow-lg);
+}
+
+.kalahamoon-layout-vertical {
+	display: flex;
+	flex-direction: column;
+}
+
+.kalahamoon-layout-horizontal {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.kalahamoon-layout-horizontal .kalahamoon-product-image {
+	flex: 0 0 160px;
+	max-inline-size: 160px;
+}
+
+/* Image */
+.kalahamoon-product-image {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 1;
+	background: var(--kalahamoon-surface-alt);
+}
+
+.kalahamoon-product-image img {
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* Favorite button */
+.kalahamoon-favorite-btn {
+	position: absolute;
+	inset-block-start: 8px;
+	inset-inline-end: 8px;
+	background: color-mix(in srgb, var(--kalahamoon-surface) 90%, transparent);
+	border: none;
+	border-radius: 50%;
+	inline-size: 36px;
+	block-size: 36px;
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	transition: transform var(--kalahamoon-transition);
+	z-index: 2;
+}
+
+.kalahamoon-favorite-btn:hover {
+	transform: scale(1.1);
+}
+
+.kalahamoon-favorite-btn.is-favorited {
+	color: var(--kalahamoon-danger);
+}
+
+.kalahamoon-favorite-btn:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: 2px;
+}
+
+/* Product Info */
+.kalahamoon-product-info {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1;
+}
+
+.kalahamoon-product-title {
+	font-size: clamp(0.875rem, 0.8rem + 0.4vw, 1rem);
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+	margin: 0;
+	line-height: 1.5;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* Price */
+.kalahamoon-product-price {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.kalahamoon-current-price {
+	font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+	font-weight: 700;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-old-price {
+	font-size: 13px;
+	color: var(--kalahamoon-text-muted);
+}
+
+.kalahamoon-old-price del {
+	text-decoration: line-through;
+}
+
+.kalahamoon-discount-badge {
+	background: var(--kalahamoon-danger);
+	color: var(--kalahamoon-on-primary);
+	font-size: 12px;
+	font-weight: 700;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+/* Marketplace Badge */
+.kalahamoon-marketplace-badge {
+	display: inline-block;
+	font-size: 12px;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-weight: 500;
+}
+
+.kalahamoon-badge-bakalahamoon {
+	background: color-mix(in srgb, var(--kalahamoon-bakalahamoon) 12%, transparent);
+	color: var(--kalahamoon-bakalahamoon);
+}
+
+.kalahamoon-badge-digikala {
+	background: color-mix(in srgb, var(--kalahamoon-digikala) 12%, transparent);
+	color: var(--kalahamoon-digikala);
+}
+
+/* ─── Stock badge ─── */
+.kalahamoon-stock-badge {
+	display: inline-block;
+	font-size: 12px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-weight: 600;
+}
+
+.kalahamoon-stock-in {
+	background: color-mix(in srgb, var(--kalahamoon-success) 12%, transparent);
+	color: var(--kalahamoon-success);
+}
+
+.kalahamoon-stock-out {
+	background: color-mix(in srgb, var(--kalahamoon-danger) 12%, transparent);
+	color: var(--kalahamoon-danger);
+}
+
+/* ─── CTA Button ─── */
+.kalahamoon-cta-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 20px;
+	background: var(--kalahamoon-primary);
+	color: var(--kalahamoon-on-primary);
+	text-decoration: none;
+	border-radius: var(--kalahamoon-radius-sm);
+	font-weight: 600;
+	font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+	transition: background var(--kalahamoon-transition);
+	border: none;
+	cursor: pointer;
+	text-align: center;
+}
+
+.kalahamoon-cta-button:hover {
+	background: var(--kalahamoon-primary-hover);
+	color: var(--kalahamoon-on-primary);
+}
+
+.kalahamoon-cta-button:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: 2px;
+}
+
+/* ─── Product Grid ─── */
+.kalahamoon-product-grid {
+	display: grid;
+	gap: var(--kalahamoon-gap);
+	container-type: inline-size;
+	container-name: kalahamoon-grid;
+}
+
+.kalahamoon-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.kalahamoon-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.kalahamoon-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Container queries — respond to the block's own width, not viewport.
+ * This means a grid dropped into a narrow sidebar stacks correctly even on
+ * a wide screen. */
+@container kalahamoon-grid (max-width: 768px) {
+	.kalahamoon-grid-cols-3,
+	.kalahamoon-grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@container kalahamoon-grid (max-width: 480px) {
+	.kalahamoon-product-grid { grid-template-columns: 1fr; }
+	.kalahamoon-layout-horizontal { flex-direction: column; }
+	.kalahamoon-layout-horizontal .kalahamoon-product-image {
+		max-inline-size: 100%;
+		flex: auto;
+	}
+}
+
+/* Fallback for browsers without container query support (~2% as of 2025). */
+@supports not (container-type: inline-size) {
+	@media (max-width: 768px) {
+		.kalahamoon-grid-cols-3,
+		.kalahamoon-grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+	}
+	@media (max-width: 480px) {
+		.kalahamoon-product-grid { grid-template-columns: 1fr; }
+		.kalahamoon-layout-horizontal { flex-direction: column; }
+		.kalahamoon-layout-horizontal .kalahamoon-product-image {
+			max-inline-size: 100%;
+			flex: auto;
+		}
+	}
+}
+
+/* ─── Masonry layout ─────────────────────────────────────────────────────── */
+/* Uses CSS multi-column so items flow with natural variable heights.          */
+.kalahamoon-product-grid[data-layout="masonry"] {
+	display: block;
+	column-gap: var(--kalahamoon-gap);
+}
+.kalahamoon-product-grid[data-layout="masonry"].kalahamoon-grid-cols-2 { column-count: 2; }
+.kalahamoon-product-grid[data-layout="masonry"].kalahamoon-grid-cols-3 { column-count: 3; }
+.kalahamoon-product-grid[data-layout="masonry"].kalahamoon-grid-cols-4 { column-count: 4; }
+
+.kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-grid-item {
+	break-inside: avoid;
+	margin-block-end: var(--kalahamoon-gap);
+	display: inline-block; /* required for column-count masonry */
+	width: 100%;
+}
+
+@container kalahamoon-grid (max-width: 640px) {
+	.kalahamoon-product-grid[data-layout="masonry"].kalahamoon-grid-cols-3,
+	.kalahamoon-product-grid[data-layout="masonry"].kalahamoon-grid-cols-4 { column-count: 2; }
+}
+@container kalahamoon-grid (max-width: 400px) {
+	.kalahamoon-product-grid[data-layout="masonry"] { column-count: 1 !important; }
+}
+
+/* ─── List layout ────────────────────────────────────────────────────────── */
+/* Compact horizontal card: thumbnail left, info right.                       */
+.kalahamoon-product-grid[data-layout="list"] {
+	display: flex;
+	flex-direction: column;
+	gap: var(--kalahamoon-gap);
+	grid-template-columns: none; /* override grid */
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-grid-item {
+	width: 100%;
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-card {
+	display: grid;
+	grid-template-columns: 100px 1fr;
+	grid-template-rows: auto;
+	gap: 0 var(--kalahamoon-gap-sm, 12px);
+	align-items: start;
+	border-radius: var(--kalahamoon-radius-sm);
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-image {
+	aspect-ratio: 1;
+	inline-size: 100px;
+	block-size: 100px;
+	grid-row: 1 / 3;
+	border-radius: var(--kalahamoon-radius-sm) 0 0 var(--kalahamoon-radius-sm);
+	overflow: hidden;
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-info {
+	padding-block: 10px;
+	padding-inline-end: 12px;
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-title {
+	font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);
+}
+.kalahamoon-product-grid[data-layout="list"] .kalahamoon-cta-button {
+	inline-size: auto;
+	padding-block: 6px;
+	padding-inline: 14px;
+	font-size: 0.8rem;
+}
+
+@container kalahamoon-grid (max-width: 400px) {
+	.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-card {
+		grid-template-columns: 72px 1fr;
+	}
+	.kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-image {
+		inline-size: 72px;
+		block-size: 72px;
+	}
+}
+
+/* Rank badge */
+.kalahamoon-grid-item {
+	position: relative;
+}
+
+.kalahamoon-rank-badge {
+	position: absolute;
+	inset-block-start: -4px;
+	inset-inline-start: -4px;
+	font-size: 28px;
+	z-index: 3;
+	filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* ─── Comparison Table ─── */
+.kalahamoon-comparison-table-wrapper {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.kalahamoon-comparison-table {
+	inline-size: 100%;
+	border-collapse: collapse;
+	background: var(--kalahamoon-surface);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	overflow: hidden;
+}
+
+.kalahamoon-comparison-table th,
+.kalahamoon-comparison-table td {
+	padding: 12px 16px;
+	text-align: center;
+	border-block-end: 1px solid var(--kalahamoon-border);
+	vertical-align: middle;
+}
+
+.kalahamoon-comparison-table th {
+	background: var(--kalahamoon-surface-alt);
+	font-size: 14px;
+}
+
+.kalahamoon-compare-img {
+	inline-size: 80px;
+	block-size: 80px;
+	object-fit: cover;
+	border-radius: var(--kalahamoon-radius-sm);
+	display: block;
+	margin: 0 auto 8px;
+}
+
+.kalahamoon-compare-title {
+	display: block;
+	font-weight: 600;
+	font-size: 13px;
+}
+
+/* Scoped to table so theme th/td text-align can't force it off-start. */
+.kalahamoon-comparison-table .kalahamoon-compare-label {
+	text-align: start;
+	font-weight: 600;
+	color: var(--kalahamoon-text-muted);
+	font-size: 13px;
+}
+
+.kalahamoon-compare-winner {
+	background: color-mix(in srgb, var(--kalahamoon-success) 10%, var(--kalahamoon-surface));
+	font-weight: 600;
+	color: var(--kalahamoon-success);
+}
+
+.kalahamoon-compare-cta-row td {
+	padding-block: 16px;
+	border-block-end: none;
+}
+
+/* ─── Inline Price ─── */
+.kalahamoon-inline-price {
+	font-weight: 700;
+	color: var(--kalahamoon-primary);
+	white-space: nowrap;
+}
+
+/* ─── Disclosure ─── */
+.kalahamoon-disclosure {
+	background: var(--kalahamoon-surface-alt);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius-sm);
+	padding: 12px 16px;
+	margin-block-end: 20px;
+	font-size: 13px;
+	color: var(--kalahamoon-text-muted);
+}
+
+.kalahamoon-disclosure p {
+	margin: 0;
+}
+
+/* ─── Favorites ─── */
+.kalahamoon-favorites-empty,
+.kalahamoon-recently-viewed-empty {
+	text-align: center;
+	color: var(--kalahamoon-text-muted);
+	padding: 40px 20px;
+	grid-column: 1 / -1;
+}
+
+/* ─── CTA Button Sizes ─── */
+.kalahamoon-cta-small  { padding: 6px 12px; font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem); }
+.kalahamoon-cta-medium { padding: 10px 20px; font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem); }
+.kalahamoon-cta-large  { padding: 14px 28px; font-size: clamp(1rem, 0.95rem + 0.4vw, 1.125rem); }
+
+.kalahamoon-cta-price {
+	opacity: 0.9;
+	font-size: 0.9em;
+	margin-inline-start: 6px;
+}
+
+/* ─── Lead Form ─── */
+.kalahamoon-lead-form-wrapper {
+	max-inline-size: 720px;
+	container-type: inline-size;
+	container-name: kalahamoon-lead-form;
+	background: linear-gradient(180deg, color-mix(in srgb, var(--kalahamoon-surface) 92%, var(--kalahamoon-primary) 8%) 0%, var(--kalahamoon-surface) 100%);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	box-shadow: var(--kalahamoon-shadow);
+	padding: clamp(18px, 2.8vw, 28px);
+}
+
+.kalahamoon-lead-form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.kalahamoon-form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.kalahamoon-form-field--full,
+.kalahamoon-form-status,
+.kalahamoon-lead-submit {
+	grid-column: 1 / -1;
+}
+
+.kalahamoon-form-field label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-form-field input,
+.kalahamoon-form-field textarea {
+	padding: 10px 12px;
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius-sm);
+	font-size: 14px;
+	font-family: inherit;
+	line-height: 1.55;
+	color: var(--kalahamoon-text);
+	background: var(--kalahamoon-surface);
+	transition: border-color var(--kalahamoon-transition), box-shadow var(--kalahamoon-transition), background var(--kalahamoon-transition);
+}
+
+.kalahamoon-form-field input:focus,
+.kalahamoon-form-field textarea:focus {
+	outline: none;
+	border-color: var(--kalahamoon-primary);
+	box-shadow: var(--wp--custom--shadow--focus, 0 0 0 3px rgba(37, 99, 235, 0.1));
+}
+
+.kalahamoon-form-field textarea {
+	min-block-size: 132px;
+	resize: vertical;
+}
+
+.kalahamoon-form-status {
+	font-size: 14px;
+	min-block-size: 20px;
+}
+
+.kalahamoon-lead-submit {
+	justify-self: start;
+	min-inline-size: min(100%, 220px);
+}
+
+.kalahamoon-form-success { color: var(--kalahamoon-success); }
+.kalahamoon-form-error   { color: var(--kalahamoon-danger); }
+
+@container kalahamoon-lead-form (max-width: 560px) {
+	.kalahamoon-lead-form {
+		grid-template-columns: 1fr;
+	}
+
+	.kalahamoon-lead-submit {
+		inline-size: 100%;
+		justify-self: stretch;
+	}
+}
+
+@supports not (container-type: inline-size) {
+	@media (max-width: 640px) {
+		.kalahamoon-lead-form {
+			grid-template-columns: 1fr;
+		}
+
+		.kalahamoon-lead-submit {
+			inline-size: 100%;
+			justify-self: stretch;
+		}
+	}
+}
+
+/* Submit button: swap label ↔ spinner with no layout shift. */
+.kalahamoon-lead-submit {
+	position: relative;
+}
+.kalahamoon-lead-submit .kalahamoon-lead-spinner {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	opacity: 0;
+	pointer-events: none;
+	animation: kalahamoon-spin 0.9s linear infinite;
+}
+.kalahamoon-lead-submit.is-loading .kalahamoon-lead-submit-label { visibility: hidden; }
+.kalahamoon-lead-submit.is-loading .kalahamoon-lead-spinner { opacity: 1; }
+.kalahamoon-lead-submit[disabled] { opacity: 0.85; cursor: progress; }
+
+@keyframes kalahamoon-spin {
+	from { transform: rotate(0deg); }
+	to   { transform: rotate(360deg); }
+}
+
+/* Success animation: soft green flash on the form border. */
+.kalahamoon-lead-form.is-submitted .kalahamoon-form-field input,
+.kalahamoon-lead-form.is-submitted .kalahamoon-form-field textarea {
+	animation: kalahamoon-form-success 0.6s ease;
+}
+
+@keyframes kalahamoon-form-success {
+	0%   { box-shadow: 0 0 0 3px color-mix(in srgb, var(--kalahamoon-success) 35%, transparent); }
+	100% { box-shadow: 0 0 0 3px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kalahamoon-lead-submit .kalahamoon-lead-spinner { animation: none; }
+	.kalahamoon-lead-form.is-submitted .kalahamoon-form-field input,
+	.kalahamoon-lead-form.is-submitted .kalahamoon-form-field textarea { animation: none; }
+}
+
+/* ─── Image Placeholder (Kalahamoon_Placeholder::image_fallback_svg) ─── */
+.kalahamoon-image-placeholder {
+	inline-size: 100%;
+	block-size: 100%;
+	display: block;
+	background: var(--kalahamoon-surface-alt);
+}
+
+/* ─── Price unavailable state ─── */
+.kalahamoon-price-unavailable {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding-block: 2px;
+}
+
+.kalahamoon-price-unavailable-label {
+	font-size: 0.8125rem;
+	font-weight: 500;
+	color: var(--kalahamoon-text-muted);
+	background: var(--kalahamoon-surface-alt);
+	padding: 4px 10px;
+	border-radius: var(--kalahamoon-radius-sm);
+	border: 1px dashed var(--kalahamoon-border);
+}
+
+/* ─── Empty state (grid / comparison / carousel with no items) ─── */
+.kalahamoon-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: clamp(24px, 3vw, 40px) 20px;
+	text-align: center;
+	color: var(--kalahamoon-text-muted);
+	background: var(--kalahamoon-surface-alt);
+	border: 1px dashed var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	min-block-size: 140px;
+}
+
+.kalahamoon-empty-state-icon {
+	opacity: .55;
+}
+
+.kalahamoon-empty-state-title {
+	margin: 0;
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+	font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+}
+
+.kalahamoon-empty-state-hint {
+	margin: 0;
+	font-size: 0.875rem;
+	max-inline-size: 48ch;
+}
+
+/* ─── Editor-only hints (visible only to users with edit_posts cap) ─── */
+.kalahamoon-editor-hint {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px 16px;
+	border-inline-start: 3px solid var(--kalahamoon-primary);
+	background: color-mix(in srgb, var(--kalahamoon-primary) 6%, var(--kalahamoon-surface));
+	border-radius: var(--kalahamoon-radius-sm);
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-editor-hint strong {
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--kalahamoon-primary);
+}
+
+.kalahamoon-editor-hint--warn {
+	border-inline-start-color: var(--kalahamoon-danger);
+	background: color-mix(in srgb, var(--kalahamoon-danger) 6%, var(--kalahamoon-surface));
+}
+
+.kalahamoon-editor-hint--warn strong {
+	color: var(--kalahamoon-danger);
+}
+
+/* ─── Block placeholder (editor, no product selected yet) ─── */
+.kalahamoon-block-placeholder {
+	padding: 40px 20px;
+	text-align: center;
+	background: var(--wp-admin-theme-color-alt, var(--kalahamoon-surface-alt));
+	border: 2px dashed var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	color: var(--kalahamoon-text-muted);
+}
+
+/* ─── Legacy dark mode support ───
+ * Activated only when `kalahamoon_legacy_dark_mode` option is true; the plugin
+ * injects an additional stylesheet in that case. The tokens above already
+ * inherit the theme's contrast/base colors so a theme-aware dark mode is
+ * free. The .kalahamoon-dark class and prefers-color-scheme rules live in
+ * kalahamoon-public-legacy-dark.css (enqueued conditionally). Keep this file
+ * theme-neutral.
+ */
+
+/* ─── Print ─────────────────────────────────────────────────────────────── */
+@media print {
+	/* Hide interactive / decorative elements. */
+	.kalahamoon-favorite-btn,
+	.kalahamoon-carousel__arrow,
+	.kalahamoon-carousel__dots,
+	.kalahamoon-stl-dot,
+	.kalahamoon-lead-form,
+	.kalahamoon-block-placeholder,
+	.kalahamoon-editor-hint,
+	.kalahamoon-cta-button .kalahamoon-cta-icon { display: none !important; }
+
+	/* Flatten carousels into a wrapping grid so all items are visible. */
+	.kalahamoon-carousel__track {
+		display: grid !important;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		overflow: visible !important;
+		transform: none !important;
+		gap: 12px;
+	}
+	.kalahamoon-carousel__slide { width: auto !important; flex: none !important; }
+
+	/* Product grid — always 3 columns in print. */
+	.kalahamoon-product-grid {
+		display: grid !important;
+		grid-template-columns: repeat(3, 1fr) !important;
+		gap: 12px;
+	}
+
+	/* Comparison table — keep borders visible, shrink padding. */
+	.kalahamoon-comparison-table th,
+	.kalahamoon-comparison-table td {
+		padding: 6px 8px;
+		border: 1px solid #ccc !important;
+		font-size: 11pt;
+	}
+
+	/* Expand product boxes to full natural height; no shadow ink. */
+	.kalahamoon-product-box,
+	.wp-block-kalahamoon-product-box {
+		box-shadow: none !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+	}
+
+	/* CTA button — show as plain underlined text. */
+	a.kalahamoon-cta-button {
+		background: none !important;
+		color: #000 !important;
+		border: none !important;
+		text-decoration: underline;
+		padding: 0;
+	}
+	a.kalahamoon-cta-button::after { content: " (" attr(href) ")"; font-size: 9pt; }
+
+	/* Pros / cons — always two columns if both present. */
+	.kalahamoon-pc-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; }
+
+	/* Verdict section — keep intact, add a top rule. */
+	.kalahamoon-ai-cmp-verdict { border-block-start: 1px solid #ccc; padding-block-start: 8px; }
+}

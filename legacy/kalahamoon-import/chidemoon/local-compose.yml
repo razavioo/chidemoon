@@ -1,0 +1,63 @@
+name: chidemoon-local
+
+services:
+  database:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: chidemoon
+      MARIADB_USER: chidemoon
+      MARIADB_PASSWORD: chidemoon-local
+      MARIADB_ROOT_PASSWORD: chidemoon-root-local
+    volumes:
+      - chidemoon_database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:6.8.3-php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "18088:80"
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: chidemoon
+      WORDPRESS_DB_USER: chidemoon
+      WORDPRESS_DB_PASSWORD: chidemoon-local
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_ENVIRONMENT_TYPE', 'local' );
+        define( 'FS_METHOD', 'direct' );
+    volumes:
+      - chidemoon_wordpress:/var/www/html
+      # Bind the actual sources so browser checks always reflect the current worktree.
+      - ../apps/wordpress-plugin/kalahamoon:/var/www/html/wp-content/plugins/kalahamoon
+      - ./theme/chidemoon-theme:/var/www/html/wp-content/themes/chidemoon-theme
+      - ../deploy/chidemoon/mu-plugins:/var/www/html/wp-content/mu-plugins
+
+  wpcli:
+    image: wordpress:cli-2.10.0-php8.2
+    profiles: ["tools"]
+    depends_on:
+      database:
+        condition: service_healthy
+    working_dir: /var/www/html
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: chidemoon
+      WORDPRESS_DB_USER: chidemoon
+      WORDPRESS_DB_PASSWORD: chidemoon-local
+    volumes:
+      - chidemoon_wordpress:/var/www/html
+      - ../apps/wordpress-plugin/kalahamoon:/var/www/html/wp-content/plugins/kalahamoon
+      - ./theme/chidemoon-theme:/var/www/html/wp-content/themes/chidemoon-theme
+      - ../deploy/chidemoon/mu-plugins:/var/www/html/wp-content/mu-plugins
+
+volumes:
+  chidemoon_database:
+  chidemoon_wordpress:

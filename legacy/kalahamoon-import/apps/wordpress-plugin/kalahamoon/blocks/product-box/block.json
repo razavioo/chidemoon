@@ -1,0 +1,72 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/product-box",
+	"version": "1.1.0",
+	"title": "Kalahamoon Product Box",
+	"category": "kalahamoon",
+	"icon": "products",
+	"description": "Display a single product card with image, price, discount, marketplace badge, and affiliate CTA button.",
+	"keywords": ["product", "affiliate", "bakalahamoon", "digikala", "محصول"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true,
+			"__experimentalDefaultControls": { "background": true }
+		},
+		"typography": {
+			"fontSize": true,
+			"fontFamily": true,
+			"lineHeight": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true,
+			"blockGap": true
+		},
+		"border": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true,
+			"__experimentalDefaultControls": { "radius": true }
+		},
+		"shadow": true,
+		"dimensions": { "minHeight": true }
+	},
+	"attributes": {
+		"productId": { "type": "string", "default": "" },
+		"showTitle": { "type": "boolean", "default": true },
+		"showPrice": { "type": "boolean", "default": true },
+		"showOldPrice": { "type": "boolean", "default": true },
+		"showMarketplaceBadge": { "type": "boolean", "default": true },
+		"showCta": { "type": "boolean", "default": true },
+		"showStock": { "type": "boolean", "default": false },
+		"ctaText": { "type": "string", "default": "View product" },
+		"layout": { "type": "string", "default": "vertical", "enum": ["vertical", "horizontal"] },
+		"trackRecent": { "type": "boolean", "default": true },
+		"variant": { "type": "string", "default": "", "enum": ["", "bestseller", "on-sale", "new-arrival"] },
+		"imageAspectRatio": { "type": "string", "default": "1/1", "enum": ["1/1", "4/3", "3/4", "16/9", "auto"] },
+		"hoverEffect": { "type": "string", "default": "lift", "enum": ["none", "lift", "zoom", "glow"] },
+		"headingLevel": { "type": "number", "default": 3 }
+	},
+	"example": {
+		"attributes": {
+			"showTitle": true,
+			"showPrice": true,
+			"showMarketplaceBadge": true,
+			"showCta": true,
+			"ctaText": "View product",
+			"layout": "vertical",
+			"variant": "bestseller",
+			"imageAspectRatio": "1/1"
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

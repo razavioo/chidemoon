@@ -1,0 +1,52 @@
+/* Legacy dark mode support for sites upgrading from pre-2026 Kalahamoon plugin
+ * releases. Activated only when the `kalahamoon_legacy_dark_mode` option is true.
+ *
+ * Modern setup: the plugin's `--kalahamoon-*` tokens inherit the active theme's
+ * contrast/base colors, so a theme-aware dark mode is automatic. Enable this
+ * file only if your site depends on the `.kalahamoon-dark` toggle or the plugin's
+ * own `prefers-color-scheme: dark` override.
+ *
+ * Will be removed in a future major release.
+ */
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--kalahamoon-text:       #f1f5f9;
+		--kalahamoon-text-muted: #94a3b8;
+		--kalahamoon-bg:         #1e293b;
+		--kalahamoon-bg-muted:   #0f172a;
+		--kalahamoon-border:     #334155;
+		--kalahamoon-shadow:     0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+		--kalahamoon-shadow-lg:  0 4px 12px rgba(0,0,0,0.4);
+	}
+
+	.kalahamoon-favorite-btn          { background: rgba(30, 41, 59, 0.9); }
+	.kalahamoon-badge-bakalahamoon         { background: rgba(255, 107, 53, 0.15); }
+	.kalahamoon-badge-digikala        { background: rgba(239, 57, 78, 0.15); }
+	.kalahamoon-compare-winner        { background: rgba(22, 163, 106, 0.12); }
+	.kalahamoon-discount-badge        { background: #b91c1c; }
+	.kalahamoon-form-field input,
+	.kalahamoon-form-field textarea   { background: #0f172a; color: #f1f5f9; }
+	.kalahamoon-form-field input:focus,
+	.kalahamoon-form-field textarea:focus { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); }
+}
+
+.kalahamoon-dark {
+	--kalahamoon-text:       #f1f5f9;
+	--kalahamoon-text-muted: #94a3b8;
+	--kalahamoon-bg:         #1e293b;
+	--kalahamoon-bg-muted:   #0f172a;
+	--kalahamoon-border:     #334155;
+	--kalahamoon-shadow:     0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+	--kalahamoon-shadow-lg:  0 4px 12px rgba(0,0,0,0.4);
+}
+
+.kalahamoon-dark .kalahamoon-favorite-btn          { background: rgba(30, 41, 59, 0.9); }
+.kalahamoon-dark .kalahamoon-badge-bakalahamoon         { background: rgba(255, 107, 53, 0.15); }
+.kalahamoon-dark .kalahamoon-badge-digikala        { background: rgba(239, 57, 78, 0.15); }
+.kalahamoon-dark .kalahamoon-compare-winner        { background: rgba(22, 163, 106, 0.12); }
+.kalahamoon-dark .kalahamoon-discount-badge        { background: #b91c1c; }
+.kalahamoon-dark .kalahamoon-form-field input,
+.kalahamoon-dark .kalahamoon-form-field textarea   { background: #0f172a; color: #f1f5f9; }
+.kalahamoon-dark .kalahamoon-form-field input:focus,
+.kalahamoon-dark .kalahamoon-form-field textarea:focus { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); }

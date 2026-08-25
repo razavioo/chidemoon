@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/affiliate-disclosure",
+	"version": "1.0.0",
+	"title": "Kalahamoon Affiliate Disclosure",
+	"category": "kalahamoon",
+	"icon": "info-outline",
+	"description": "Standalone affiliate-disclosure callout. Uses your saved disclosure text by default.",
+	"keywords": ["disclosure", "affiliate", "افشا", "همکاری در فروش"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide"],
+		"spacing": { "padding": true, "margin": ["top", "bottom"] }
+	},
+	"attributes": {
+		"text": { "type": "string", "default": "" }
+	},
+	"example": {},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js"
+}

@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/product-catalog",
+	"version": "1.0.0",
+	"title": "Kalahamoon Product Catalog",
+	"category": "kalahamoon",
+	"icon": "store",
+	"description": "A server-rendered, filterable public product catalog with freshness, favorites, quick view, comparison, and pagination.",
+	"keywords": ["catalog", "products", "filters", "compare", "shop"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"spacing": { "padding": true, "margin": true, "blockGap": true }
+	},
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"description": { "type": "string", "default": "" },
+		"collection": { "type": "string", "default": "" },
+		"perPage": { "type": "number", "default": 12 },
+		"columns": { "type": "number", "default": 3 },
+		"showFilters": { "type": "boolean", "default": true },
+		"showQuickView": { "type": "boolean", "default": true },
+		"showFavorites": { "type": "boolean", "default": true },
+		"showCompare": { "type": "boolean", "default": true }
+	},
+	"example": {
+		"attributes": { "heading": "Product catalog", "perPage": 6, "columns": 3 }
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./view.js",
+	"style": "file:./style.css"
+}

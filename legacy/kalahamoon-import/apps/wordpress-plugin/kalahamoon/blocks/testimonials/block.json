@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/testimonials",
+	"version": "1.0.0",
+	"title": "Kalahamoon Testimonials",
+	"category": "kalahamoon",
+	"icon": "format-quote",
+	"description": "Customer testimonials in a card grid or rotating slider. Emits Schema.org Review JSON-LD per item.",
+	"keywords": ["testimonials", "reviews", "quotes", "نظرات"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color":   { "background": true, "text": true },
+		"spacing": { "padding": true, "margin": true, "blockGap": true }
+	},
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": []
+		},
+		"layout":   { "type": "string",  "default": "grid", "enum": ["grid", "slider"] },
+		"columns":  { "type": "number",  "default": 2 },
+		"showRating": { "type": "boolean", "default": true }
+	},
+	"example": {
+		"attributes": {
+			"items": [
+				{ "quote": "Lorem ipsum dolor sit amet.", "author": "John Doe", "role": "CEO, Acme",   "rating": 5 },
+				{ "quote": "Sed do eiusmod tempor incididunt.", "author": "Jane Roe", "role": "Founder", "rating": 5 }
+			]
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "chidemoon/article-toc",
+  "version": "1.0.0",
+  "title": "Chidemoon Article Table of Contents",
+  "category": "theme",
+  "icon": "list-view",
+  "description": "Shows level-two sections from the current article.",
+  "supports": { "html": false, "inserter": false },
+  "textdomain": "chidemoon-theme",
+  "render": "file:./render.php"
+}

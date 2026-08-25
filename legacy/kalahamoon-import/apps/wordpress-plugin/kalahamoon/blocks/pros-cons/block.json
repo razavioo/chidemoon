@@ -1,0 +1,65 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/pros-cons",
+	"version": "1.1.0",
+	"title": "Pros & Cons",
+	"category": "kalahamoon",
+	"icon": "list-view",
+	"description": "Two-column pros and cons card — optionally linked to a Kalahamoon product.",
+	"keywords": ["pros", "cons", "review", "advantages", "disadvantages", "مزایا", "معایب"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true,
+			"__experimentalDefaultControls": { "background": true }
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true,
+			"blockGap": true,
+			"__experimentalDefaultControls": { "padding": true }
+		},
+		"border": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true,
+			"__experimentalDefaultControls": { "radius": true }
+		},
+		"layout": {
+			"allowSwitching": false,
+			"allowInheriting": false,
+			"default": { "type": "flex", "flexWrap": "wrap" }
+		}
+	},
+	"attributes": {
+		"productId": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"pros": { "type": "string", "default": "" },
+		"cons": { "type": "string", "default": "" },
+		"ctaText": { "type": "string", "default": "View product" },
+		"showCta": { "type": "boolean", "default": true },
+		"prosLabel": { "type": "string", "default": "نقاط مثبت" },
+		"consLabel": { "type": "string", "default": "نقاط منفی" }
+	},
+	"example": {
+		"attributes": {
+			"heading": "جمع بندی سریع",
+			"pros": "✅::قیمت رقابتی\n✅::کیفیت ساخت خوب\n✅::ارسال سریع",
+			"cons": "❌::تنوع رنگ محدود\n❌::لوازم جانبی پایه",
+			"showCta": false
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

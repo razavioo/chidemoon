@@ -1,0 +1,3687 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Kalahamoon 1.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-05 18:44+0330\n"
+"Last-Translator: Kalahamoon Team <support@kalahamoon.com>\n"
+"Language-Team: Arabic <ar@kalahamoon.com>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+"X-Domain: kalahamoon\n"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "\"401 Unauthorized\" in the AI Compare block"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"\"productId:x,y\" pairs separated by semicolons, e.g. "
+"\"bas-1:30,40;bas-2:60,55\"."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+#, php-format
+msgid "%s درصد تخفیف"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "2, 3, or 4. Default: 3."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "2–4 comma-separated IDs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "3-Product Comparison Matrix"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"301 (permanent) is best for SEO link equity. 302 (temporary) is useful while "
+"testing. 307 preserves the request method."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A compliance-friendly disclosure notice for posts containing affiliate "
+"recommendations."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "A focused deal section with product recommendation and conversion CTA."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A lightweight opener for explaining buyer criteria before a roundup or "
+"comparison."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "A lightweight tracked affiliate button for inline recommendations."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A neutral article or product hero with headline, copy, and optional CTA."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A responsive grid, list, or carousel layout for hand-picked or category-"
+"filtered products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A review scorecard with criteria, verdict text, optional CTA, and review "
+"schema."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "A scan-friendly list of product advantages and disadvantages."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A side-by-side product comparison table for specs, prices, and buying "
+"criteria."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "A single affiliate CTA button."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A single product card with image, live price, marketplace badge, CTA, "
+"schema, and tracked affiliate link."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A structured matrix for comparing three products across important buyer "
+"criteria."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A supporting form for buyer questions, seller contact, or consultation "
+"requests."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"A two-product buyer-intent comparison with disclosure, positioning copy, and "
+"AI Compare."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "AI Compare"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"AI Compare generates a scored criteria table, pros & cons, and a verdict for "
+"two selected products, then stores the result in the post."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+#, fuzzy
+msgid "AI Comparison"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "AI Product Comparison"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"AI-assisted head-to-head product comparison with criteria, pros, cons, and a "
+"final verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "AI-draft last answer"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "API Key (legacy)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Accessible buyer questions with optional FAQPage schema."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Account"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Actions"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Active"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Active order sample"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Add Keyword Mapping"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Add Mapping"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Add a con…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Add a pro…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Add avatar"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Add con"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Add pro"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Add real buyer objections and concise answers."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Add row"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Add testimonial"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Add verified quotes, authors, roles, and ratings where appropriate."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Address"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Adjust the CTA text and visibility toggles in the sidebar."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Advantages, one per line."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Affiliate"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Affiliate Disclosure"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Affiliate Links"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Affiliate Publishing Patterns"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Affiliate URLs are served from /go/{slug} on your domain for cleaner links, "
+"attribution, and easier sharing."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Affiliate article patterns"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Affiliate button label."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Affiliate buy button with optional price."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Affiliate clicks are tracked through a lightweight beacon and shown in your "
+"WordPress analytics dashboard."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, php-format
+msgid ""
+"Affiliate credentials (Bakalahamoon tracking URL, etc.) are managed in the "
+"<a href=\"%s\" target=\"_blank\">panel</a>."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Affiliate product landing structure with disclosure, product card, rating, "
+"CTA, pros/cons, comparison table, FAQ, and related products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "After inserting:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Alignment"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "All Platforms"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "All Providers"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Alt text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Analytics"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Answer"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Appearance"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "Approve the connection — after returning to WordPress, you are ready."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Arrow"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Ask Expert Form"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Assign a product to this hotspot"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Assign product…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "At end (after text)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "At start (before text)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Attribute"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Author"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Auto Links"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Auto-inserted at the top of posts containing affiliate links. Leave empty "
+"for default."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Automatically convert keywords in your post content into affiliate links. "
+"Keywords are matched case-insensitively and only text outside of existing "
+"links is affected."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Available Blocks & Shortcodes"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Avoid generic SaaS landing-page copy; keep it tied to the product or article."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Background image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Background overlay"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Badge / Variant"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Behavior"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Best paired with Affiliate Disclosure, Rating Box, and Pros & Cons in "
+"product reviews."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Best-of Roundup"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Bestseller"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Block Patterns"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Block heading"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Block preview in editor shows a spinner forever"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Block settings"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Block shows \"No product found\" after selecting a product"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Blocks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Bolt"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Booking fields"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Bordered"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Build a product recommendation"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Button Text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Button label. Default: \"مشاهده و خرید\"."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Button text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Button text."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Buying Guide Intro"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "CTA"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "CTA Button"
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "CTA Text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "CTA button label."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "CTA text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Calling Kalahamoon AI — this can take 10–20 seconds…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Campaign"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid "Cancel"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Caption (optional)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Card"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Card heading (optional)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Card title."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Cards"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Carousel"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Cart"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Category (instead of IDs)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Category Buying Guide"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Category slug (alternative to ids)."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Category slug."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Center"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Centered"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Change avatar"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Change products…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Change product…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Check"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Check REST API"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Check if your theme sets \"block_patterns\" to false in add_theme_support(). "
+"If so, ask your theme author to enable it, or switch to a block-editor-"
+"compatible theme."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Check that your WordPress REST API is accessible: open /wp-json/ in a new "
+"tab. If it 403s, a security plugin (Wordfence, iThemes) may be blocking the "
+"editor from calling it."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Choose a product to display."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Choose exactly two products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Choose products manually or set a category slug."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Choose the products in ranked order and explain why each pick earns its "
+"position."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Classic Editor shortcodes"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Clean"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Clear"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Click \"Connect with Kalahamoon\" to go through the OAuth flow. Your account "
+"is linked without ever sharing a password. Tokens are refreshed "
+"automatically."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Click \"Sync Now\" on the Dashboard. Prices update within seconds of the "
+"sync completing."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Click Choose Product and select a synced product."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Click Tracking"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Click image to add hotspots"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid "Click to add products to your selection"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "Click “Connect with Kalahamoon” and log in to your Kalahamoon account."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Click “Generate” to call Kalahamoon AI and build the comparison."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Clicks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Clicks (7d)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Clicks (7d):"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Clicks are not appearing in Analytics"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Cloaked /go/ links return 404"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Cloaked URL"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+msgid "Collection"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+msgid "Collections"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Column Labels"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Columns"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Comma-separated IDs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Comma-separated product IDs selected with the multi-select picker."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Comma-separated product IDs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Comma-separated, 2–5 products"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Common issues and their solutions. If your problem is not listed here, check "
+"the PHP error log at wp-content/debug.log (enable WP_DEBUG_LOG in wp-"
+"config.php) or contact support."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Compact"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Comparison Criteria"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Comparison Settings"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Comparison Table"
+msgstr "جدول مقارنة کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid ""
+"Connect this WordPress site with your Kalahamoon account to activate blocks "
+"and product sync."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Connect to Kalahamoon"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Connect with Kalahamoon"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Connect your Kalahamoon account"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Connected"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Connected to Kalahamoon"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Connection"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Connection failed:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Cons column label"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Content"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Controls automatic product catalog synchronization."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Controls how prices and numbers are formatted across all blocks and "
+"shortcodes."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Controls link cloaking and legal disclosure."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Copy"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Core Publishing Blocks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Core publishing blocks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Create affiliate links"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Criteria"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Criteria (comma-separated, optional)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Criteria (one per line: \"Label:Score\")"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Criteria table"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Currency Unit"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Currency display, number formatting, affiliate disclosure, and sync "
+"frequency."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Custom URL (overrides affiliate link)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Daily Clicks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Dashboard"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Date picker"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Deal of the Day"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Default"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid ""
+"Default: [\"wordpress\"], or [\"booking\"] when date/time fields are on."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Default: https://app.kalahamoon.com. Change only if you are running a self-"
+"hosted Kalahamoon instance."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Defaults are intentionally empty to avoid publishing incorrect structured "
+"data."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Delete"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Delete this mapping?"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Description"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Diagnostic tools"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Digikala Open API"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Disadvantages, one per line."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Disclosure Text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Disclosure copy."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Disclosure text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Disclosure text…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Disclosure, intro, Product Box, Rating Box, Pros & Cons, analysis sections, "
+"comparison table, FAQ, and ask-expert CTA."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Disconnect"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Disconnect from Kalahamoon? You can reconnect later."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Display"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Display & Affiliate"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Dot"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "E.g. \"قیمت, کیفیت ساخت, مصرف انرژی\". Leave empty and the AI picks."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Edit the copy if your jurisdiction or editorial policy requires different "
+"language."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Elevated"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Email"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Emit FAQPage Schema.org JSON-LD"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Emit FAQPage structured data."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Enter only accurate store name, address, phone, and hours."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, php-format
+msgid "Every %d hours"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Everything you need to build a professional affiliate content site."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Exactly two product IDs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Example"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid ""
+"Example:\n"
+"قیمت:8.5\n"
+"کیفیت:9\n"
+"طراحی:7"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Export CSV"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Eyebrow"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "FAQ"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Failed to generate comparison."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Featured"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Fields"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Fill in the criteria that matter to buyers."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Filter"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Final score."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, php-format
+msgid "Find product IDs on the <a href=\"%s\">Products page</a>."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Fix:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Focused starters for product reviews, buying pages, head-to-head "
+"comparisons, best-of roundups, category guides, and deal posts."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Force refresh"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Full Product Box card — image, title, price, CTA."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Full URL to the lifestyle image."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Full width"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Full-bleed"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Generate"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Generate the comparison, review the result, and save the post."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Generated"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Getting Started"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Ghost"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Glow border"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, php-format
+msgid ""
+"Go to <a href=\"%s\">Settings</a> and click <strong>Connect with Kalahamoon</"
+"strong>. The OAuth flow links WordPress to your catalog and analytics "
+"without sharing your password."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Go to Dashboard → click \"Sync Now\". Then refresh the editor."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Go to Settings → Permalinks and click \"Save Changes\" without changing "
+"anything. This regenerates the .htaccess rewrite rules."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Go to Settings → click \"Disconnect\" → click \"Connect with Kalahamoon\" to "
+"re-authorize with the new scope."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Grid"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Grid Settings"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Grid column count."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Grid is the default; carousel scrolls horizontally."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Head-to-Head Comparison"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Headline"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Health"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Heart"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Help & Guide"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Help sections"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Hero"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Hero headline"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Horizontal (image start)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Horizontal scroll-snap carousel — best for 6+ products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Horizontally scrollable product row."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Hotspot coordinates are percentage-based and should scale correctly. This "
+"usually means the image has a fixed pixel width set in the block."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Hotspots"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Hours"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Hover Effect"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"How often WordPress cron re-fetches products from Kalahamoon. Options: 1 "
+"hour, 6 hours, 12 hours, 24 hours. 6 hours is the default and recommended "
+"for most sites."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "How the plugin authenticates with the Kalahamoon platform."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "How to use"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "IDs of the products to compare."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Icon"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Icon position"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Ignored while ranking is on."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Image Aspect Ratio"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"In the block editor, insert Product Box for one recommendation or Product "
+"Grid for a ranked list. Use the visual picker to choose products and let "
+"Kalahamoon handle prices, images, cloaked links, and click tracking."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"In the block toolbar, set the image width to 100% (not a fixed pixel value)."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Inline image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Inline price for a product — renders the cached price inline with the "
+"correct currency."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid "Insert"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert AI Compare."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert Affiliate Disclosure before the first product recommendation."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Insert CTA Button."
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Insert Comparison Table."
+msgstr "جدول مقارنة کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert FAQ."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert Hero and write product-specific copy."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert Product Box from the Kalahamoon block category."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Insert Product Grid."
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Insert Pros & Cons."
+msgstr "المزايا والعيوب"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Insert Rating Box after the product card or intro."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Instagram link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Interactive hotspots on lifestyle images for shoppable editorial content."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Intro, ranked product grid, buying criteria, FAQ, and disclosure for "
+"category-level affiliate pages."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Items"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/class-kalahamoon-plugin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Kalahamoon"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+#, fuzzy
+msgid "Kalahamoon (legacy)"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Kalahamoon API URL"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon Analytics"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon Dashboard"
+msgstr "نموذج عملاء کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Kalahamoon Plugin — Help & Guide"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+#, fuzzy
+msgid "Kalahamoon Product"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon Products"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon Settings"
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Kalahamoon is an affiliate publishing toolkit for WordPress. Sync products "
+"from supported Iranian marketplaces, build product reviews and comparison "
+"articles, show live prices through cached product data, cloak affiliate "
+"links, track clicks, and add disclosure/schema markup without leaving the "
+"block editor."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon product ID"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Kalahamoon product ID (required)."
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Kalahamoon product ID selected with the visual picker."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Kalahamoon requires PHP 8.0 or higher and at least 128 MB of memory."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+#, fuzzy
+msgid "Kalahamoon · Comparisons & Tables"
+msgstr "جدول مقارنة کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+#, fuzzy
+msgid "Kalahamoon · Deals & Offers"
+msgstr "نموذج عملاء کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+#, fuzzy
+msgid "Kalahamoon · Editorial & Guides"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+#, fuzzy
+msgid "Kalahamoon · Product Showcases"
+msgstr "عرض متحرك للمنتجات"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-patterns.php
+msgid "Kalahamoon · Reviews & Verdicts"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-favorites.php
+#, fuzzy
+msgid "Kalahamoon — Favorites"
+msgstr "نموذج عملاء کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Kalahamoon — Overview"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+#, fuzzy
+msgid "Kalahamoon — Recently Viewed"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+#, fuzzy
+msgid "Kalahamoon — Trending Products"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: connected"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: disconnected"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: invalid key"
+msgstr "نموذج عملاء کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: not configured"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: slow"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Kalahamoon: unknown"
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Keep the fields minimal and tag submissions by article or product."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Keyword"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Landscape (4:3)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Language"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Large"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Last Sync:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Last product sync"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Last sync"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Last sync completed:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, php-format
+msgid "Last sync: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Layout"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Layout & Shape"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Layout & media"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Lead Form"
+msgstr "نموذج عملاء کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Lead capture form that syncs to Kalahamoon CRM."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Learn more →"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Leave blank to use automatic label."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Leave empty to show all specs"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Leave empty to use the auto-generated affiliate link."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Legacy Dark Mode Styles"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Lift"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Likely cause:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Limit"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Link Cloaking"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Link a product…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Link this WordPress site to your Kalahamoon account to sync products, track "
+"affiliate clicks, and capture leads — all from one dashboard."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Link this WordPress site to your Kalahamoon account to sync products, track "
+"affiliate clicks, and capture leads."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Link to a product (optional)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "List"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Live preview is approximate — final layout uses the theme’s tokens."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Load the old Kalahamoon dark-mode compatibility stylesheet. Keep disabled "
+"when your theme controls dark mode."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Low-stock variants"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Lower number = matched first."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Makes the button stretch across its container."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Manage"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Manual Sync"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Map URL"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Masonry"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Max items. Default: 10."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Max items. Default: 12."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Max per post"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Max/Post"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Maximum 10 items reached."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Maximum number of products to display."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Medium"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Memory limit:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Merchant contact details with LocalBusiness schema when real data is entered."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Message"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Minimal"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Multi-column masonry grid that flows card heights naturally."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Muted"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Name"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Natural (unconstrained)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Never"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "New Arrival"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Newest first"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No affiliate links found."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No click data in the last 30 days."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No click data yet."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "No icon"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No keyword mappings yet."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "No product yet"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No products available to sync."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "No products found. Sync your products from Settings."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid ""
+"No products found. Try a different search or sync products from the "
+"Kalahamoon dashboard."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "No sync recorded yet. Go to Dashboard → Sync Now."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "None"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/rest/class-kalahamoon-rest-controller.php
+msgid "Not connected to Kalahamoon. Connect in the plugin settings."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Number"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "OAuth (recommended)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Off"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Oldest first"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "On"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "On Sale"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, php-format
+msgid ""
+"Open <a href=\"%s\">Products</a> and click <strong>Sync Now</strong>. "
+"Product titles, prices, images, marketplace badges, and affiliate URLs are "
+"cached locally for fast block previews and frontend rendering."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Open API docs"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "Open Settings"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Open Settings →"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Open first item by default"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, php-format
+msgid ""
+"Open the <a href=\"%s\">Dashboard</a> to see clicks, top products, and "
+"revenue estimates. Every affiliate CTA uses the tracker automatically."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "Open the Kalahamoon plugin settings page."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Open the first question by default."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Open this URL in your browser to verify the Kalahamoon endpoints are "
+"registered:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optional caption."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optional category slug when you want a dynamic product list."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optional comma-separated buying criteria."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optional product CTA footer."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optional product ID for thumbnail + CTA."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Optional. When set, Kalahamoon verifies incoming product-update webhooks "
+"with HMAC-SHA256. Prevents unauthorized cache invalidation."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Optionally show the current price."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Or type IDs directly"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Or type an ID directly"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Order by"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Organization"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Organization Slug"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Orientation"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Out of 10"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Out of 5"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Outline"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Outlined"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Output Schema.org Review JSON-LD"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Overall score"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "PHP version & memory"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Paste a key from your Kalahamoon dashboard → Developer → API Keys. Use this "
+"only if OAuth is not available."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Patterns are focused article starters for product reviews, buying pages, "
+"comparisons, roundups, category guides, and deal posts. Insert one from the "
+"editor Patterns tab, then replace the products and write your own editorial "
+"verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Patterns provide structure only. Real rankings, pros/cons, testimonials, and "
+"offer claims should come from your own review process."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Patterns tab is empty in the block inserter"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Per-criterion scores, one per line."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Persian Numerals"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Persian, Arabic, or English output."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Phone"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Phone is required"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Pick 2 products…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+#, fuzzy
+msgid "Pick a Kalahamoon product"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Pick exactly 2 products first."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Pick exactly 2 products to compare"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid ""
+"Pick exactly 2 products. AI will generate pros, cons, per-criterion winners, "
+"and a verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Pick exactly two products and edit the AI criteria to match the purchase "
+"decision."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Pick the deal product, mention the real offer terms, and avoid fake urgency."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pick the product and write the button label."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pick the products to compare."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pipe-separated advantages, e.g. \"سبک|ارزان|بادوام\"."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pipe-separated disadvantages."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Place it near the top of review, comparison, and roundup articles."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Plain"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Platform"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Please fill in keyword and product ID."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Plus (+)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Portrait (3:4)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Price"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Price: high → low"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Price: low → high"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Prices are stale or wrong"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Primary CTA link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Primary CTA text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Priority"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Product"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Product & CTA"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#, fuzzy
+msgid "Product (optional)"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Product Box"
+msgstr "بطاقة منتج کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Product Box, Product Grid, Comparison Table, AI Compare, Rating Box, Pros & "
+"Cons, CTA Button, FAQ, and Affiliate Disclosure."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#, fuzzy
+msgid "Product Carousel"
+msgstr "عرض متحرك للمنتجات"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+#, fuzzy
+msgid "Product Categories"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-product-cache.php
+msgid "Product Category"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Product Grid"
+msgstr "شبكة منتجات کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, fuzzy
+msgid "Product Grid (Carousel)"
+msgstr "عرض متحرك للمنتجات"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid ""
+"Product Grid block with the carousel layout — swipeable slider with autoplay."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Product Grid — multiple products in a responsive grid."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Product ID"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Product ID."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Product IDs"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Product IDs (comma-separated, exactly 2)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#, fuzzy
+msgid "Product List"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#, fuzzy
+msgid "Product Masonry"
+msgstr "مقارنة المنتجات بالذكاء الاصطناعي"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Product Review Article"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Product cards, product grids, comparison tables, CTA buttons, prices, pros/"
+"cons cards, and Shop the Look are also available as shortcodes."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Product heads row"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Product name (for schema, if no product linked)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/api/class-kalahamoon-api-products.php
+msgid "Product not found"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Products"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+msgid ""
+"Products the visitor has viewed recently (client-side, privacy-friendly)."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-favorites.php
+msgid ""
+"Products the visitor saved to favorites. Client-side, no account needed."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Products:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pros & Cons"
+msgstr "المزايا والعيوب"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Pros & Cons card — same as the block, usable in Classic Editor."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+#, fuzzy
+msgid "Pros / cons columns"
+msgstr "المزايا والعيوب"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Pros column label"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Provider"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Publish reviews, comparisons, and roundups"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Question"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Question heading level"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Questions and answers."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Quote"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Random"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Ranked product list for “best X” articles, with product grid, FAQ, and "
+"disclosure."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Rating"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Rating Box"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Real merchant or customer quotes for trust sections."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Reassign product for this hotspot"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Reassign product…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "Recommended for SEO rich results."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Redirect Type"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Regenerate"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Remove"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Replace image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Replace the category heading, choose products, then write practical criteria "
+"for that market."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Responsive grid of products by category or IDs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Review affiliate performance"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Role / company"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "SEO"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Save changes"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Saving..."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Scale"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Scheduled sync keeps product data fresh while pages continue to render from "
+"the local cache."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Score"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Score label (e.g. \"عالی\")"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid "Search products by name…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Search products…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Secondary CTA link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Secondary CTA text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Sections to show"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Select 2–5 products to compare."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Select a product"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Select a product for this button."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Select products for grid"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Select products or enter a category."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Select products to compare (2–5)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Select products…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Select product…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Select the reviewed product, write your verdict, fill buyer criteria, and "
+"replace placeholder FAQ content."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#, php-format
+msgid "Seller: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "ServerSideRender timed out — usually because the REST API is blocked."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Service Hub"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Set the score, criteria, and verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Set up auto-linking"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Setting"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/class-kalahamoon-plugin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Settings"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Settings Reference"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Share"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Shop the Look"
+msgstr "تسوّق المشهد"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Shop the Look for Classic Editor — provide the image URL and hotspot "
+"coordinates manually."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Shop the Look hotspots are misaligned on mobile"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Short editorial verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Shortcode"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Shortcodes"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#, fuzzy
+msgid "Show CTA Button"
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+#, fuzzy
+msgid "Show CTA button"
+msgstr "زر CTA کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Show Marketplace Badge"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Show Old Price / Discount"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Show Price"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Show Ranking (🥇🥈🥉)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Show Title"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Show numbered badges for ranked recommendations."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Show or hide the cached live price."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Show or hide the rating when available."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Show star rating"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Show stars"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Side-by-side product comparison with specs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Single Product Buying Page"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Single product card with price and buy button."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Single-column list with horizontal product cards."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Size"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/index.js
+msgid "Slider"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Slot interval (minutes)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Small"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Soft (tinted)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Solid"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Some themes or full-site editing setups disable pattern registration for "
+"third-party plugins."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/comparison-table/index.js
+msgid "Spec Keys (comma-separated)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Spec rows for the comparison matrix."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Split (text + media)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Square (1:1)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Stacked"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/hero/index.js
+msgid "Start"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Start simple: one disclosure block, one product box, one verdict, and one "
+"CTA are enough for a practical review."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Static comparison table for 2–4 products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Status"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Store Info"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Store info"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Store name"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-block-styles.php
+msgid "Striped"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/affiliate-disclosure/index.js
+msgid "Style"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Submission"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Submit button text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Success message"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Successfully connected to Kalahamoon!"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Supporting Merchant Blocks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Sync"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Sync Interval"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Sync failed"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Sync products now"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Sync your product catalog"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Sync your products"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Synced"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Syncing products…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"TOMAN: divides the IRR price by 10 and shows \"تومان\". RIAL: shows the raw "
+"IRR amount with \"ریال\"."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Tag"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Tags (comma-separated)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/index.js
+msgid "Target product"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Target product."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "Telegram link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Test connection"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Test product search"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Test without ad-blockers. Add the REST API path to your CSP connect-src "
+"directive. Clicks are stored server-side so even one unblocked test will "
+"confirm the system works."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Testimonials"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Testing…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "Text"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"The \"Sync Now\" button on the Dashboard page triggers an immediate sync "
+"outside of the cron schedule. Use it after adding new products to Kalahamoon."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "The cached price is from the last sync."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"The click tracker uses navigator.sendBeacon to /wp-json/kalahamoon/v1/"
+"clicks. A Content Security Policy or ad-blocker may be blocking it."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"The generated comparison is stored in the post; visitors do not trigger AI "
+"calls."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"The product exists in Kalahamoon but has not been synced to the local cache "
+"yet."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"The text shown at the bottom of posts containing Kalahamoon blocks. Required "
+"by FTC guidelines and similar regulations. Kalahamoon adds it automatically "
+"— you just provide the text."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"These are the main Kalahamoon blocks for merchant, product, review, "
+"comparison, and affiliate publishing."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"These blocks remain available for merchant context and niche editorial use, "
+"but they are secondary to the product/review workflow."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "This URL should return a JSON array of your synced products:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"This is a niche supporting block, not required for standard review workflows."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Time picker"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Tip:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Title"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/index.js
+msgid "Title (A→Z)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Title heading level"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Top Products by Clicks"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "Top-clicked Kalahamoon affiliate products over the last N days."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Total Clicks (last 30 days)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Troubleshooting"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/index.js
+msgid "Turns this form into an appointment/booking form."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Unanswered questions"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Unexpected response from Kalahamoon AI."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Upload a lifestyle image, then click on it to add product hotspots."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Upload a real lifestyle image, then assign products to hotspots."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "Upload image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use AI Compare when you want a narrative verdict in addition to structured "
+"criteria."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use OAuth when possible; API keys are kept only for legacy installs."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Use Persian numerals (۱۲۳ instead of 123)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Use a heading level that fits your page outline for SEO and a11y."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use at the end of reviews, comparisons, and buying guides."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use before Product Grid or Comparison Table when readers need context."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use for buyer-intent comparison posts where two products are close "
+"alternatives."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use for home, fashion, kitchen, and setup articles where an image explains "
+"multiple products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use for one high-intent product page; keep every CTA tied to the same "
+"product or close alternatives."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use for the main recommendation in a review, buying guide, deal post, or "
+"product landing page."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use in best-of roundups, related product sections, and category buying "
+"guides."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use in every review where readers need a quick buying summary."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use it when readers need specs and trade-offs more than a narrative review."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use near the top of product reviews to summarize your verdict quickly."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use on merchant pages, not generic review articles."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use only when human follow-up is part of the purchase journey."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use only with real testimonials; do not publish placeholder quotes."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use ranked mode for best-of articles and buying guides."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use shortcodes in the Classic Editor, in text widgets, or anywhere that "
+"accepts WordPress shortcodes. Gutenberg users should use blocks instead — "
+"the visual experience is better."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use sparingly for product highlights or buying-guide introductions."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Use the block editor"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use the curated patterns for product reviews, single-product buying pages, "
+"head-to-head comparisons, best-of lists, buying guides, and deal posts. Each "
+"pattern is only a starter: replace the products and write your own verdict."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Use when a full Product Box would interrupt the article flow."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Use when readers need structured specs before choosing between products."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/index.js
+msgid "Verdict / summary"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/index.js
+msgid "Verdict paragraph"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Vertical (image top)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "View Dashboard"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Visibility"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Visual feedback when the card is hovered or focused."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Visual style for the notice."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Webhook Secret"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "Webhook events"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+#, fuzzy
+msgid "Welcome to Kalahamoon"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, fuzzy
+msgid "Welcome to Kalahamoon!"
+msgstr "کالاهامون"
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "What is inside the plugin"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "What it does"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/index.js
+msgid "WhatsApp link"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"When both product IDs and category are set, the hand-picked products take "
+"priority."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"When enabled, all numbers are displayed using Eastern Arabic digits (۱۲۳ "
+"instead of 123). Recommended for Persian-language sites."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "When to use"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Wide (16:9)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"WordPress permalink rewrite rules have not been flushed after plugin "
+"activation."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Write concise buyer-facing points."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "You can now sync products and track affiliate clicks."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Your OAuth token is missing the ai:read scope — this happens when you "
+"connected before the AI Compare feature was added."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "Your PHP:"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid ""
+"Your organization's unique slug on Kalahamoon. Found in your Kalahamoon "
+"dashboard URL."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/index.js
+msgid "Zoom image"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "e.g. LG Washing Machine — Our Verdict"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "e.g. جاروبرقی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "errors"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "hours"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/index.js
+msgid "no product"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "primary / secondary / ghost."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "products"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/admin/js/kalahamoon-product-picker.js
+msgid "selected"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-help.php
+msgid "sm / md / lg."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+#, php-format
+msgid "آخرین بررسی: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "آیا برای خانواده مناسب است؟"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "ارسال"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/render.php
+msgid "از سایدبار بلاک «Add row» را بزنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+msgid "از سایدبار بلاک یک محصول را انتخاب کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/render.php
+msgid "از سایدبار بلاک، محصول مقصد را انتخاب کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/render.php
+msgid "از سایدبار بلاک، محصول یا دسته‌بندی را انتخاب کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+msgid "افزودن به علاقه‌مندی‌ها"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-disclosure.php
+msgid "افشای همکاری در فروش"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/testimonials/render.php
+#, php-format
+msgid "امتیاز: %d از ۵"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/editorial-picks.php
+msgid "انتخاب سردبیر"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+#, php-format
+msgid "انتخاب نهایی: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/hero-product-highlight.php
+msgid "انتخاب هفته ما"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "ایمیل"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid ""
+"این راهنمای خرید به شما کمک می‌کند بدون اشتباه‌های رایج، بهترین انتخاب را برای "
+"نیاز خود داشته باشید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/compare-3-matrix.php
+msgid "این سه محصول را از نظر قیمت، کیفیت و ویژگی‌ها در یک نگاه مقایسه کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-disclosure.php
+msgid ""
+"این مطلب شامل لینک‌های همکاری در فروش است. در صورت خرید از طریق این لینک‌ها، "
+"ما بدون هزینه اضافی برای شما کمیسیون دریافت می‌کنیم."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "این مقایسه به‌کمک هوش مصنوعی تولید شده است."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "با نگه‌داشتن Ctrl/⌘ چند محصول را در انتخابگر برگزینید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/render.php
+msgid "باز کردن اینستاگرام فروشگاه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/render.php
+msgid "باز کردن تلگرام فروشگاه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/render.php
+msgid "باز کردن واتساپ فروشگاه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+msgid "بازدید اخیر"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "بازه (روز)"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid ""
+"برای خریدارانی که به دنبال ترکیب مناسب قیمت، کیفیت و کاربری روزمره هستند، "
+"این محصول می‌تواند انتخاب مناسبی باشد. اگر ویژگی‌های تخصصی‌تر می‌خواهید، "
+"گزینه‌های جایگزین را هم مقایسه کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "برنده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "بستن"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/best-of-5.php
+msgid ""
+"بعد از ساعت‌ها تست و مقایسه، این پنج مدل را از بهتر به خوب رتبه‌بندی کرده‌ایم."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "به نظر می‌رسد خروجی AI معتبر نیست. دوباره با دو محصول سالم تولید کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid "بودجه و هزینه نگهداری"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "تاریخ"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid "تحلیل بخش‌به‌بخش"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+msgid "تخفیف"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+#, php-format
+msgid "تصویر در دسترس نیست: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+msgid "تعداد"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "تعداد محصول"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/i18n/class-kalahamoon-rtl.php
+msgid "تومان"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "جدول مقایسه نیاز به حداقل ۲ محصول دارد"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+msgid "جدید"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+msgid "جزئیات قیمت در صفحه فروشنده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "خرید"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/render.php
+msgid "خرید از باکالاهامون"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "خطا در ارسال"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "خطای شبکه — لطفاً دوباره تلاش کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+msgid "خوب"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "داده‌های مقایسه ناقص است"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid ""
+"در این راهنما بهترین گزینه‌های این دسته را بر اساس ارزش خرید، کیفیت، کاربرد و "
+"بازخورد خریداران مرور می‌کنیم."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/rest/class-kalahamoon-rest-controller.php
+msgid "درخواست‌های زیادی دریافت شد. لطفاً کمی صبر کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "دسته‌بندی را بررسی کنید یا مستقیماً شناسه محصولات را وارد کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "دو محصول انتخاب و روی «تولید با AI» کلیک کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/compare-side-by-side.php
+msgid ""
+"دو گزینه‌ی نزدیک را در معیارهای مهم مقایسه کردیم تا تصمیم شما آسان‌تر شود."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid "راهنمای خرید: نام دسته‌بندی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "رتبه اول"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "رتبه دوم"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "رتبه سوم"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/compare-side-by-side.php
+msgid "رو در رو: کدام را بخریم؟"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/i18n/class-kalahamoon-rtl.php
+msgid "ریال"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "زمان درخواستی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "ساعت"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "ستون‌ها"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid "سوال از کارشناس"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "سوال جدید"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-single-product.php
+msgid "سوالات متداول"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/best-of-5.php
+msgid ""
+"سوالات متداول خود را اینجا اضافه کنید. این بخش برای بهبود SEO و پاسخ به "
+"ابهامات کاربر بسیار مفید است."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "سوالات پرتکرار"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-grid/render.php
+msgid "شبکه محصول خالی است"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "شماره تماس"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+#, php-format
+msgid ""
+"شناسه %s در cache محلی موجود نیست. لطفاً همگام‌سازی محصولات را اجرا کنید یا "
+"محصول دیگری انتخاب کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+msgid "عالی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-favorites.php
+msgid "علاقه‌مندی‌ها"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-favorites.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "عنوان"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/deal-of-day.php
+msgid "فرصت محدود — قبل از تمام شدن موجودی سفارش دهید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-onboarding.php
+msgid "قبل"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "قبل از خرید این‌ها را بدانید"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid "قبل از خرید به چه معیارهایی توجه کنیم؟"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "قیمت"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid ""
+"متن نقد را در بخش‌های جداگانه مثل طراحی، کیفیت ساخت، عملکرد، ارزش خرید و "
+"خدمات پس از فروش سازماندهی کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+msgid "متوسط"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "محدوده قیمتی منطقی برای نیاز روزمره را مشخص کنید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+msgid "محصول"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-placeholder.php
+msgid "محصول پیدا نشد"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/render.php
+#, php-format
+msgid "محصول: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-single-product.php
+msgid "محصولات مرتبط"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/editorial-picks.php
+msgid "محصولاتی که تیم ما با بررسی دقیق به شما پیشنهاد می‌کند."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "محصولاتی که گارانتی رسمی دارند را در اولویت بگذارید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+msgid "محصولی انتخاب نشده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/cta-button/render.php
+msgid "محصولی برای این دکمه انتخاب نشده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "محصولی برای نمایش یافت نشد."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/hero-product-highlight.php
+msgid "محصولی که بعد از بررسی و مقایسه، بهترین گزینه این ماه شناخته شد."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "مزایا"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "مزایا و معایب در یک نگاه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/store-info/render.php
+msgid "مشاهده روی نقشه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/shop-the-look/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "مشاهده و خرید"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "مشخصه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "معایب"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "معیار"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-single-product.php
+msgid "مقایسه با گزینه‌های مشابه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/compare-3-matrix.php
+msgid "مقایسه کامل: ۳ گزینه برتر"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid "مقدمه کوتاه — کاربر چه می‌خواهد بداند، و این نقد چه‌چیزی پاسخ می‌دهد."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "نام"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-single-product.php
+msgid "نقاط قوت و ضعف"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "نقاط مثبت"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/render.php
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/pros-cons/index.js
+msgid "نقاط منفی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/rating-box/render.php
+#, php-format
+msgid "نقد %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid "نقد و بررسی کامل: نام محصول"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "هنوز آماری برای این بازه موجود نیست."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/display/class-kalahamoon-shortcodes.php
+msgid "هنوز محصولی به لیست علاقه‌مندی‌ها اضافه نکردید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-recently-viewed.php
+msgid "هنوز محصولی مشاهده نکرده‌اید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/ai-compare/render.php
+msgid "هنوز مقایسه‌ای تولید نشده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/render.php
+msgid "هیچ سوالی اضافه نشده"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "پاسخ خود را اینجا بنویسید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "پاسخ خود را اینجا بنویسید. تجربه و نکات کلیدی را به اشتراک بگذارید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/faq/index.js
+msgid "پاسخ…"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/best-of-5.php
+msgid "پرسش‌های رایج"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/product-box/render.php
+msgid "پرفروش"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/widgets/class-kalahamoon-widget-trending.php
+msgid "پرکلیک‌ترین محصولات"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "پیام"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/blocks/lead-form/render.php
+msgid "پیام شما با موفقیت ارسال شد."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "پیش از خرید، فضا و ظرفیت مورد نیاز خود را دقیق بسنجید."
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/deal-of-day.php
+msgid "پیشنهاد شگفت امروز"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-product-review.php
+msgid "چه کسانی باید این محصول را بخرند؟"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/core/class-kalahamoon-price-alert-mailer.php
+#, php-format
+msgid "کاهش قیمت: %s"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid "کیفیت ساخت و دوام"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/pros-cons-with-faq.php
+msgid "گارانتی و خدمات پس از فروش چطور است؟"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/page-category.php
+msgid "گارانتی، ارسال و خدمات پس از فروش"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "۱. بودجه"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "۲. ظرفیت و ابعاد"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/buying-guide-intro.php
+msgid "۳. گارانتی"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/patterns/best-of-5.php
+msgid "۵ انتخاب برتر امسال"
+msgstr ""
+
+#: /Users/emad/IdeaProjects/kalahamoon/apps/wordpress-plugin/kalahamoon/includes/admin/class-kalahamoon-admin.php
+msgid "✓ Connection works"
+msgstr ""

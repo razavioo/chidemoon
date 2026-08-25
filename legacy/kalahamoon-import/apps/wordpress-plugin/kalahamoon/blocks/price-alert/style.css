@@ -1,0 +1,17 @@
+.kalahamoon-price-alert {
+	max-width: 420px;
+}
+
+.kalahamoon-price-alert .kalahamoon-form__heading {
+	font-size: 1rem;
+}
+
+.kalahamoon-price-alert .kalahamoon-form__consent {
+	display: grid;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	align-items: start;
+	gap: 0.5rem;
+	font-size: 0.78rem;
+	line-height: 1.55;
+	color: var(--kalahamoon-muted);
+}

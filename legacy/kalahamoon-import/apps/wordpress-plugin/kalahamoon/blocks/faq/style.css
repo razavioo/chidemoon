@@ -1,0 +1,82 @@
+/**
+ * Kalahamoon FAQ — front-end + editor styles.
+ */
+.kalahamoon-faq {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.kalahamoon-faq-item {
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	background: var(--kalahamoon-surface);
+	overflow: hidden;
+	transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.kalahamoon-faq-item[open] {
+	border-color: var(--kalahamoon-primary);
+	box-shadow: 0 6px 18px color-mix(in srgb, var(--kalahamoon-primary) 14%, transparent);
+}
+.kalahamoon-faq-question {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 14px 18px;
+	list-style: none;
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+}
+.kalahamoon-faq-question::-webkit-details-marker { display: none; }
+.kalahamoon-faq-question-text {
+	margin: 0;
+	font: inherit;
+	color: inherit;
+}
+.kalahamoon-faq-question-icon {
+	flex: 0 0 22px;
+	width: 22px;
+	height: 22px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--kalahamoon-primary);
+	transition: transform 200ms ease;
+}
+.kalahamoon-faq-item[open] .kalahamoon-faq-question-icon { transform: rotate(180deg); }
+.kalahamoon-faq-question:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: -2px;
+}
+.kalahamoon-faq-answer {
+	padding: 0 18px 16px;
+	color: var(--kalahamoon-text);
+	line-height: 1.65;
+}
+.kalahamoon-faq-answer > :first-child { margin-block-start: 0; }
+.kalahamoon-faq-answer > :last-child  { margin-block-end: 0; }
+
+.wp-block-kalahamoon-faq.is-style-plain .kalahamoon-faq-item {
+	background: transparent;
+	border-inline: 0;
+	border-block-start: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.wp-block-kalahamoon-faq.is-style-plain .kalahamoon-faq-item:last-child {
+	border-block-end: 0;
+}
+
+/* Editor */
+.kalahamoon-faq-editor { padding: 8px 0; }
+.kalahamoon-faq-edit-list { display: flex; flex-direction: column; gap: 18px; }
+.kalahamoon-faq-edit-row {
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius-sm);
+	padding: 14px;
+	background: var(--kalahamoon-surface-alt);
+}
+.kalahamoon-faq-edit-actions { display: flex; gap: 10px; margin-block-start: 14px; }
+.kalahamoon-faq-edit-note { margin-block-start: 12px; font-size: 0.8rem; color: var(--kalahamoon-muted); }

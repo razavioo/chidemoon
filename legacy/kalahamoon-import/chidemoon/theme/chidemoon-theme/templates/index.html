@@ -1,0 +1,29 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","anchor":"chidemoon-main","className":"chidemoon-index-page","layout":{"type":"constrained","wideSize":"1280px"}} -->
+<main id="chidemoon-main" class="wp-block-group chidemoon-index-page">
+	<!-- wp:query {"queryId":0,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"layout":{"type":"constrained"}} -->
+		<!-- wp:post-template {"className":"chidemoon-editorial-masonry"} -->
+			<!-- wp:group {"className":"chidemoon-editorial-card chidemoon-index-card","layout":{"type":"constrained"}} -->
+			<div class="wp-block-group chidemoon-editorial-card chidemoon-index-card">
+				<!-- wp:post-featured-image {"isLink":true} /-->
+				<!-- wp:group {"className":"chidemoon-index-card__body","layout":{"type":"constrained"}} -->
+				<div class="wp-block-group chidemoon-index-card__body">
+					<!-- wp:post-date {"format":"Y/m/d"} /-->
+					<!-- wp:post-title {"level":2,"isLink":true} /-->
+					<!-- wp:post-excerpt {"excerptLength":22} /-->
+				</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
+		<!-- /wp:post-template -->
+		<!-- wp:query-pagination -->
+			<!-- wp:query-pagination-previous /-->
+			<!-- wp:query-pagination-numbers /-->
+			<!-- wp:query-pagination-next /-->
+		<!-- /wp:query-pagination -->
+	<!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

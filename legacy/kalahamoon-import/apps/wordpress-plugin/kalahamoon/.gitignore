@@ -1,0 +1,19 @@
+# Composer — installed dev dependencies, regenerable via `composer install`
+/vendor/
+
+# PHPUnit — cache and generated reports
+.phpunit.result.cache
+.phpunit.cache/
+/coverage/
+/build/logs/
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log

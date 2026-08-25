@@ -1,0 +1,203 @@
+/* Pros & Cons block — uses logical properties + container queries.
+ * All colors route through --kalahamoon-* tokens so the host theme's palette
+ * flows through automatically.
+ */
+
+.wp-block-kalahamoon-pros-cons {
+	container-type: inline-size;
+	container-name: kalahamoon-pc;
+}
+
+.kalahamoon-pros-cons-card {
+	background: var(--kalahamoon-bg);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	overflow: hidden;
+	box-shadow: var(--kalahamoon-shadow);
+}
+
+/* Product header (when linked to a product) */
+.kalahamoon-pc-product-header {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 16px 20px;
+	border-block-end: 1px solid var(--kalahamoon-border);
+	background: var(--kalahamoon-bg-muted);
+}
+
+.kalahamoon-pc-product-thumb {
+	inline-size: 64px;
+	block-size: 64px;
+	object-fit: cover;
+	border-radius: var(--kalahamoon-radius-sm);
+	flex-shrink: 0;
+}
+
+.kalahamoon-pc-product-title {
+	flex: 1;
+	min-inline-size: 0;
+}
+
+.kalahamoon-pc-heading {
+	font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+	font-weight: 700;
+	margin: 0 0 4px;
+	line-height: 1.35;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-pc-price {
+	font-size: .875rem;
+	color: var(--kalahamoon-text-muted);
+}
+
+/* ─── Two-column layout (cards default) ─── */
+.kalahamoon-pc-columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+}
+
+/* Collapse to a single column when only pros or only cons were provided. */
+.kalahamoon-pros-cons-card[data-col-mode="single"] .kalahamoon-pc-columns {
+	grid-template-columns: 1fr;
+}
+.kalahamoon-pros-cons-card[data-col-mode="single"] .kalahamoon-pc-pros {
+	border-inline-end: 0;
+}
+
+/* Missing product image placeholder in the header. */
+.kalahamoon-pc-product-thumb--placeholder {
+	inline-size: 64px;
+	block-size: 64px;
+	border-radius: var(--kalahamoon-radius-sm);
+	overflow: hidden;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.kalahamoon-pc-product-thumb--placeholder .kalahamoon-image-placeholder {
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.kalahamoon-pc-col {
+	padding: 16px 20px;
+}
+
+.kalahamoon-pc-pros {
+	border-inline-end: 1px solid var(--kalahamoon-border);
+}
+
+.kalahamoon-pc-col-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: .8125rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .04em;
+	margin-block-end: 10px;
+}
+
+.kalahamoon-pc-pros .kalahamoon-pc-col-label { color: var(--kalahamoon-success); }
+.kalahamoon-pc-cons .kalahamoon-pc-col-label { color: var(--kalahamoon-danger); }
+
+.kalahamoon-pc-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+}
+
+.kalahamoon-pc-item {
+	font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9375rem);
+	line-height: 1.45;
+	color: var(--kalahamoon-text);
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+}
+
+.kalahamoon-pc-item-icon {
+	flex-shrink: 0;
+	font-style: normal;
+	line-height: 1;
+}
+
+/* CTA footer */
+.kalahamoon-pc-footer {
+	padding: 14px 20px;
+	border-block-start: 1px solid var(--kalahamoon-border);
+	background: var(--kalahamoon-bg-muted);
+	display: flex;
+	justify-content: center;
+}
+
+/* ─── is-style-* variants ─── */
+
+.wp-block-kalahamoon-pros-cons.is-style-columns .kalahamoon-pros-cons-card {
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+}
+
+.wp-block-kalahamoon-pros-cons.is-style-columns .kalahamoon-pc-product-header {
+	background: transparent;
+	border-block-end: 0;
+	padding-inline: 0;
+}
+
+.wp-block-kalahamoon-pros-cons.is-style-stacked .kalahamoon-pc-columns {
+	grid-template-columns: 1fr;
+}
+
+.wp-block-kalahamoon-pros-cons.is-style-stacked .kalahamoon-pc-pros {
+	border-inline-end: 0;
+	border-block-end: 1px solid var(--kalahamoon-border);
+}
+
+/* ─── Container query responsive ─── */
+@container kalahamoon-pc (max-width: 560px) {
+	.wp-block-kalahamoon-pros-cons .kalahamoon-pc-columns {
+		grid-template-columns: 1fr;
+	}
+	.wp-block-kalahamoon-pros-cons .kalahamoon-pc-pros {
+		border-inline-end: 0;
+		border-block-end: 1px solid var(--kalahamoon-border);
+	}
+}
+
+/* Fallback media query for legacy browsers */
+@supports not (container-type: inline-size) {
+	@media (max-width: 600px) {
+		.kalahamoon-pc-columns { grid-template-columns: 1fr; }
+		.kalahamoon-pc-pros { border-inline-end: none; border-block-end: 1px solid var(--kalahamoon-border); }
+	}
+}
+
+/* ─── Editor inline UI (unchanged — Editor-only) ─── */
+.kalahamoon-pros-cons-editor {
+	border: 2px dashed var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	padding: 16px;
+	background: var(--kalahamoon-bg-muted);
+}
+
+.kalahamoon-pros-cons-cols {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+	margin-block-start: 12px;
+}
+
+.kalahamoon-pc-pros-label { color: var(--kalahamoon-success); }
+.kalahamoon-pc-cons-label { color: var(--kalahamoon-danger); }
+
+@media (max-width: 600px) {
+	.kalahamoon-pros-cons-cols { grid-template-columns: 1fr; }
+}

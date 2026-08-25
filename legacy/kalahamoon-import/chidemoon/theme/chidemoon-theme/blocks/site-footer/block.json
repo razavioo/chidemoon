@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "chidemoon/site-footer",
+	"version": "1.0.0",
+	"title": "Chidemoon Site Footer",
+	"category": "theme",
+	"icon": "editor-insertmore",
+	"description": "Footer and mobile navigation.",
+	"supports": { "html": false, "multiple": false },
+	"textdomain": "chidemoon-theme",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,74 @@
+/* CTA Button block — style variants registered via register_block_style().
+ * Base button layout lives in public/css/kalahamoon-public.css (.kalahamoon-cta-button).
+ * These rules add alternate visual treatments users can pick from the
+ * block's Style switcher.
+ */
+
+/* Solid (default) — no override needed */
+
+.wp-block-kalahamoon-cta-button.is-style-outline a.kalahamoon-cta-button {
+	background: transparent;
+	color: var(--kalahamoon-primary);
+	border: 2px solid currentColor;
+}
+
+.wp-block-kalahamoon-cta-button.is-style-outline a.kalahamoon-cta-button:hover {
+	background: color-mix(in srgb, var(--kalahamoon-primary) 10%, transparent);
+	color: var(--kalahamoon-primary);
+}
+
+.wp-block-kalahamoon-cta-button.is-style-ghost a.kalahamoon-cta-button {
+	background: transparent;
+	color: var(--kalahamoon-primary);
+	border: 0;
+	padding-inline: 12px;
+}
+
+.wp-block-kalahamoon-cta-button.is-style-ghost a.kalahamoon-cta-button:hover {
+	background: color-mix(in srgb, var(--kalahamoon-primary) 8%, transparent);
+	color: var(--kalahamoon-primary);
+}
+
+.wp-block-kalahamoon-cta-button.is-style-link a.kalahamoon-cta-button {
+	background: none;
+	color: var(--kalahamoon-primary);
+	padding: 0;
+	border: 0;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.wp-block-kalahamoon-cta-button.is-style-link a.kalahamoon-cta-button:hover {
+	background: none;
+	color: var(--kalahamoon-primary-hover);
+}
+
+/* ─── Icon + layout flexibility ─── */
+
+.kalahamoon-cta-icon {
+	inline-size: 18px;
+	block-size: 18px;
+	flex-shrink: 0;
+}
+
+.kalahamoon-cta-icon-start .kalahamoon-cta-icon { order: -1; }
+.kalahamoon-cta-icon-end   .kalahamoon-cta-icon { order: 1;  }
+
+.kalahamoon-cta-has-icon {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.kalahamoon-cta-wrap--full .kalahamoon-cta-button,
+.kalahamoon-cta-fullwidth {
+	inline-size: 100%;
+	max-inline-size: 100%;
+}
+
+.kalahamoon-cta-label {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+

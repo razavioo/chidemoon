@@ -1,0 +1,69 @@
+.kalahamoon-product-comparison {
+	--comparison-line: var(--kalahamoon-border, rgba(37, 33, 29, .12));
+	--comparison-ink: var(--kalahamoon-text, #25211d);
+	--comparison-paper: var(--kalahamoon-surface, #fdfbf7);
+	color: var(--comparison-ink);
+}
+
+.kalahamoon-product-comparison__empty {
+	max-inline-size: 48rem;
+	border-block: 1px solid var(--comparison-line);
+	padding-block: clamp(2.5rem, 7vw, 6rem);
+}
+
+.kalahamoon-product-comparison__empty h2 {
+	font-family: var(--kalahamoon-font-display, Georgia, serif);
+	font-size: clamp(1.75rem, 5vw, 3.75rem);
+	font-weight: 400;
+	line-height: 1.05;
+	margin: 0 0 1rem;
+}
+
+.kalahamoon-product-comparison__empty p {
+	max-inline-size: 38rem;
+	line-height: 1.7;
+}
+
+.kalahamoon-product-comparison__empty a {
+	display: inline-flex;
+	align-items: center;
+	min-block-size: 2.75rem;
+	margin-block-start: 1rem;
+	background: var(--comparison-ink);
+	border: 1px solid var(--comparison-ink);
+	color: var(--comparison-paper);
+	font-weight: 650;
+	padding: .7rem 1rem;
+	text-decoration: none;
+}
+
+.kalahamoon-product-comparison__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .65rem;
+	margin-block-start: 1rem;
+}
+
+.kalahamoon-product-comparison__actions a {
+	margin-block-start: 0;
+}
+
+.kalahamoon-product-comparison__actions a + a {
+	background: transparent;
+	color: var(--comparison-ink);
+}
+
+.kalahamoon-product-comparison__disclosure {
+	border-block: 1px solid var(--comparison-line);
+	font-family: var(--kalahamoon-font-mono, ui-monospace, monospace);
+	font-size: .7rem;
+	letter-spacing: .025em;
+	line-height: 1.7;
+	margin-block-end: 1rem;
+	padding-block: .75rem;
+}
+
+.kalahamoon-product-comparison .kalahamoon-comparison-table-wrapper {
+	overflow-x: auto;
+	scrollbar-width: thin;
+}

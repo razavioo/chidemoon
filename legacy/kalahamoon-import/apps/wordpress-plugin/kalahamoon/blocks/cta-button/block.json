@@ -1,0 +1,68 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/cta-button",
+	"version": "1.1.0",
+	"title": "Kalahamoon CTA Button",
+	"category": "kalahamoon",
+	"icon": "button",
+	"description": "Styled affiliate button with marketplace logo and price.",
+	"keywords": ["button", "CTA", "buy", "خرید", "affiliate"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true,
+			"link": true,
+			"gradients": true,
+			"__experimentalDefaultControls": { "background": true, "text": true }
+		},
+		"typography": {
+			"fontSize": true,
+			"fontFamily": true,
+			"lineHeight": true,
+			"letterSpacing": true,
+			"__experimentalFontWeight": true,
+			"__experimentalTextTransform": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": ["top", "bottom"],
+			"__experimentalDefaultControls": { "padding": true }
+		},
+		"border": {
+			"radius": true,
+			"width": true,
+			"color": true,
+			"style": true,
+			"__experimentalDefaultControls": { "radius": true }
+		},
+		"shadow": true,
+		"dimensions": { "minHeight": true }
+	},
+	"attributes": {
+		"productId": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "View product" },
+		"customUrl": { "type": "string", "default": "" },
+		"showPrice": { "type": "boolean", "default": true },
+		"size": { "type": "string", "default": "medium", "enum": ["small", "medium", "large"] },
+		"icon": { "type": "string", "default": "none", "enum": ["none", "cart", "bolt", "tag", "arrow", "heart"] },
+		"iconPosition": { "type": "string", "default": "start", "enum": ["start", "end"] },
+		"fullWidth": { "type": "boolean", "default": false }
+	},
+	"example": {
+		"attributes": {
+			"text": "View product",
+			"showPrice": false,
+			"size": "medium",
+			"icon": "cart",
+			"iconPosition": "start"
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

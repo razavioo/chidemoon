@@ -1,0 +1,362 @@
+/* AI Compare block — all colors routed through --kalahamoon-* tokens so the
+ * active theme's palette flows through. Container queries replace viewport
+ * media queries for layout decisions.
+ */
+
+.wp-block-kalahamoon-ai-compare {
+	container-type: inline-size;
+	container-name: kalahamoon-ac;
+}
+
+.kalahamoon-ai-cmp {
+	background: var(--kalahamoon-surface);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	overflow: hidden;
+	box-shadow: var(--kalahamoon-shadow);
+	margin-block: 24px;
+}
+
+/* ── Product heads row ── */
+.kalahamoon-ai-cmp-heads {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	background: var(--kalahamoon-surface-alt);
+	border-block-end: 1px solid var(--kalahamoon-border);
+}
+
+.kalahamoon-ai-cmp-head {
+	position: relative;
+	padding: 20px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.kalahamoon-ai-cmp-head + .kalahamoon-ai-cmp-head {
+	border-inline-start: 1px solid var(--kalahamoon-border);
+}
+
+.kalahamoon-ai-cmp-head.is-winner {
+	background: linear-gradient(180deg,
+		color-mix(in srgb, var(--kalahamoon-warning) 20%, transparent) 0%,
+		transparent 60%);
+}
+
+.kalahamoon-ai-cmp-head-badge {
+	position: absolute;
+	inset-block-start: 8px;
+	inset-inline-start: 8px;
+	background: var(--kalahamoon-warning);
+	color: var(--kalahamoon-on-primary);
+	font-size: 11px;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 999px;
+}
+
+.kalahamoon-ai-cmp-head-img {
+	max-inline-size: 140px;
+	block-size: auto;
+	aspect-ratio: 1/1;
+	object-fit: cover;
+	border-radius: var(--kalahamoon-radius-sm);
+	background: var(--kalahamoon-surface);
+}
+
+.kalahamoon-ai-cmp-head-title {
+	font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.125rem);
+	font-weight: 700;
+	margin: 0;
+	line-height: 1.35;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-ai-cmp-head-price {
+	font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+	font-weight: 700;
+	color: var(--kalahamoon-primary);
+}
+
+.kalahamoon-ai-cmp-head .kalahamoon-cta-button {
+	margin-block-start: 4px;
+}
+
+/* ── Criteria table ── */
+.kalahamoon-ai-cmp-criteria-scroll {
+	max-inline-size: 100%;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+.kalahamoon-ai-cmp-criteria-scroll:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: -2px;
+}
+
+.kalahamoon-ai-cmp-criteria {
+	inline-size: 100%;
+	min-inline-size: 520px;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.kalahamoon-ai-cmp-criteria th,
+.kalahamoon-ai-cmp-criteria td {
+	padding: 12px 16px;
+	text-align: start;
+	border-block-end: 1px solid var(--kalahamoon-border);
+	vertical-align: top;
+}
+
+.kalahamoon-ai-cmp-criteria thead th {
+	background: var(--kalahamoon-surface-alt);
+	font-size: .8125rem;
+	font-weight: 700;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-ai-cmp-crit-name {
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+	inline-size: 30%;
+}
+
+.kalahamoon-ai-cmp-crit-expl {
+	display: block;
+	font-size: .75rem;
+	font-weight: 400;
+	color: var(--kalahamoon-text-muted);
+	margin-block-start: 4px;
+	line-height: 1.45;
+}
+
+.kalahamoon-ai-cmp-crit-score {
+	text-align: center;
+	font-weight: 600;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-ai-cmp-crit-score.is-winner {
+	background: color-mix(in srgb, var(--kalahamoon-success) 10%, transparent);
+	color: var(--kalahamoon-success);
+}
+
+.kalahamoon-ai-cmp-crit-score.is-winner span {
+	margin-inline-start: 6px;
+	color: var(--kalahamoon-success);
+	font-weight: 800;
+}
+
+/* ── Pros & cons columns ── */
+.kalahamoon-ai-cmp-pc-cols {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	border-block-start: 1px solid var(--kalahamoon-border);
+}
+
+.kalahamoon-ai-cmp-pc-col {
+	padding: 20px;
+}
+
+.kalahamoon-ai-cmp-pc-col + .kalahamoon-ai-cmp-pc-col {
+	border-inline-start: 1px solid var(--kalahamoon-border);
+}
+
+.kalahamoon-ai-cmp-pc-col h4 {
+	font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+	font-weight: 700;
+	margin: 0 0 12px;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-ai-cmp-pc-section {
+	margin-block-end: 12px;
+}
+
+.kalahamoon-ai-cmp-pc-section strong {
+	display: block;
+	font-size: .75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .04em;
+	margin-block-end: 6px;
+}
+
+.kalahamoon-ai-cmp-pros strong { color: var(--kalahamoon-success); }
+.kalahamoon-ai-cmp-cons strong { color: var(--kalahamoon-danger); }
+
+.kalahamoon-ai-cmp-pc-section ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.kalahamoon-ai-cmp-pc-section li {
+	font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9375rem);
+	line-height: 1.45;
+	padding-inline-start: 20px;
+	position: relative;
+	color: var(--kalahamoon-text);
+}
+
+.kalahamoon-ai-cmp-pros li::before {
+	content: '+';
+	position: absolute;
+	inset-inline-start: 0;
+	color: var(--kalahamoon-success);
+	font-weight: 700;
+}
+
+.kalahamoon-ai-cmp-cons li::before {
+	content: '–';
+	position: absolute;
+	inset-inline-start: 0;
+	color: var(--kalahamoon-danger);
+	font-weight: 700;
+}
+
+/* ── Verdict ── */
+.kalahamoon-ai-cmp-verdict {
+	padding: 20px;
+	border-block-start: 1px solid var(--kalahamoon-border);
+	background: var(--kalahamoon-surface-alt);
+	text-align: center;
+}
+
+.kalahamoon-ai-cmp-verdict-badge {
+	display: inline-block;
+	background: color-mix(in srgb, var(--kalahamoon-warning) 20%, transparent);
+	color: color-mix(in srgb, var(--kalahamoon-warning) 80%, var(--kalahamoon-text));
+	padding: 6px 14px;
+	border-radius: 999px;
+	font-size: .875rem;
+	font-weight: 700;
+	margin-block-end: 10px;
+}
+
+.kalahamoon-ai-cmp-verdict-text {
+	font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+	line-height: 1.55;
+	color: var(--kalahamoon-text);
+	margin: 0;
+	max-inline-size: 65ch;
+	margin-inline: auto;
+}
+
+.kalahamoon-ai-cmp-footer-note {
+	font-size: .75rem;
+	color: var(--kalahamoon-text-muted);
+	text-align: center;
+	margin: 0;
+	padding: 8px 16px 12px;
+	background: var(--kalahamoon-surface-alt);
+}
+
+/* ── Editor-only styles ── */
+.kalahamoon-ai-cmp-editor {
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	padding: 12px;
+	background: var(--kalahamoon-surface);
+}
+
+.kalahamoon-ai-cmp-editor-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	padding-block-end: 10px;
+	border-block-end: 1px solid var(--kalahamoon-border);
+	margin-block-end: 12px;
+}
+
+.kalahamoon-ai-cmp-badge {
+	background: color-mix(in srgb, var(--kalahamoon-primary) 12%, transparent);
+	color: var(--kalahamoon-primary);
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.kalahamoon-ai-cmp-timestamp {
+	font-size: 11px;
+	color: var(--kalahamoon-text-muted);
+}
+
+.kalahamoon-ai-cmp-loading {
+	padding: 32px;
+	text-align: center;
+	color: var(--kalahamoon-text-muted);
+}
+
+.kalahamoon-ai-cmp-loading p {
+	margin-block-start: 10px;
+	font-size: 13px;
+}
+
+.kalahamoon-ai-cmp-empty-result {
+	padding: 24px;
+	text-align: center;
+	background: var(--kalahamoon-surface-alt);
+	border: 2px dashed var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius-sm);
+	color: var(--kalahamoon-text-muted);
+	font-size: 13px;
+}
+
+.kalahamoon-ai-cmp-preview .kalahamoon-ai-cmp-heads {
+	background: var(--kalahamoon-surface-alt);
+}
+
+.kalahamoon-ai-cmp-winner-badge {
+	display: inline-block;
+	background: color-mix(in srgb, var(--kalahamoon-warning) 20%, transparent);
+	color: color-mix(in srgb, var(--kalahamoon-warning) 80%, var(--kalahamoon-text));
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	margin-block-end: 8px;
+}
+
+/* ── Responsive (container queries) ── */
+@container kalahamoon-ac (max-width: 640px) {
+	.wp-block-kalahamoon-ai-compare .kalahamoon-ai-cmp-heads,
+	.wp-block-kalahamoon-ai-compare .kalahamoon-ai-cmp-pc-cols {
+		grid-template-columns: 1fr;
+	}
+
+	.wp-block-kalahamoon-ai-compare .kalahamoon-ai-cmp-head + .kalahamoon-ai-cmp-head,
+	.wp-block-kalahamoon-ai-compare .kalahamoon-ai-cmp-pc-col + .kalahamoon-ai-cmp-pc-col {
+		border-inline-start: none;
+		border-block-start: 1px solid var(--kalahamoon-border);
+	}
+
+	.wp-block-kalahamoon-ai-compare .kalahamoon-ai-cmp-head-img {
+		max-inline-size: 100px;
+	}
+}
+
+@supports not (container-type: inline-size) {
+	@media (max-width: 640px) {
+		.kalahamoon-ai-cmp-heads,
+		.kalahamoon-ai-cmp-pc-cols { grid-template-columns: 1fr; }
+		.kalahamoon-ai-cmp-head + .kalahamoon-ai-cmp-head,
+		.kalahamoon-ai-cmp-pc-col + .kalahamoon-ai-cmp-pc-col {
+			border-inline-start: none;
+			border-block-start: 1px solid var(--kalahamoon-border);
+		}
+		.kalahamoon-ai-cmp-head-img { max-inline-size: 100px; }
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/price-comparison",
+	"version": "1.0.0",
+	"title": "Kalahamoon Price Comparison",
+	"category": "kalahamoon",
+	"icon": "menu-alt",
+	"description": "Compare the same product's price across every connected marketplace and surface the cheapest seller.",
+	"keywords": ["price", "compare", "marketplace", "قیمت", "مقایسه", "فروشنده"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide"],
+		"spacing": { "padding": true, "margin": ["top", "bottom"] },
+		"border": { "radius": true, "color": true, "width": true, "style": true }
+	},
+	"attributes": {
+		"productId": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"showStock": { "type": "boolean", "default": true },
+		"maxRows": { "type": "number", "default": 8 }
+	},
+	"example": { "attributes": { "heading": "Best price" } },
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

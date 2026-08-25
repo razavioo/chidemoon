@@ -1,0 +1,50 @@
+@font-face {
+	font-family: 'YekanBakh';
+	src: url('../fonts/YekanBakh-Regular.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'YekanBakh';
+	src: url('../fonts/YekanBakh-SemiBold.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'YekanBakh';
+	src: url('../fonts/YekanBakh-Bold.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'YekanBakh';
+	src: url('../fonts/YekanBakh-ExtraBold.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+}
+
+body.editor-styles-wrapper {
+	direction: rtl;
+	background: #f7f3ea;
+	color: #17221e;
+	font-family: 'YekanBakh', Tahoma, Arial, sans-serif;
+	line-height: 1.8;
+	text-align: start;
+}
+
+.editor-styles-wrapper :where(h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, label, li, th, td) {
+	font-family: 'YekanBakh', Tahoma, Arial, sans-serif;
+}
+
+.editor-styles-wrapper :where(h1, h2, h3, h4, h5, h6) {
+	color: #12382e;
+	font-weight: 800;
+	letter-spacing: -0.025em;
+}

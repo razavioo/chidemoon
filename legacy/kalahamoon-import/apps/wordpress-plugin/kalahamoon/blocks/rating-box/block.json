@@ -1,0 +1,62 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/rating-box",
+	"version": "1.0.0",
+	"title": "Kalahamoon Rating Box",
+	"category": "kalahamoon",
+	"icon": "star-filled",
+	"description": "Product review scorecard with criteria bars, verdict, and Schema.org Review markup.",
+	"keywords": ["rating", "review", "score", "stars", "امتیاز", "نقد"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide"],
+		"color": {
+			"background": true,
+			"text": true,
+			"__experimentalDefaultControls": { "background": true, "text": true }
+		},
+		"spacing": {
+			"padding": true,
+			"margin": ["top", "bottom"]
+		},
+		"border": {
+			"radius": true,
+			"width": true,
+			"color": true,
+			"style": true
+		}
+	},
+	"attributes": {
+		"productId":    { "type": "string",  "default": "" },
+		"productName":  { "type": "string",  "default": "" },
+		"heading":      { "type": "string",  "default": "" },
+		"score":        { "type": "number",  "default": 8.0 },
+		"scoreMax":     { "type": "number",  "default": 10,  "enum": [5, 10] },
+		"scoreLabel":   { "type": "string",  "default": "" },
+		"criteria":     { "type": "string",  "default": "" },
+		"verdict":      { "type": "string",  "default": "" },
+		"showStars":    { "type": "boolean", "default": true },
+		"showCta":      { "type": "boolean", "default": false },
+		"ctaText":      { "type": "string",  "default": "View product" },
+		"showSchema":   { "type": "boolean", "default": true }
+	},
+	"example": {
+		"attributes": {
+			"heading": "امتیاز نهایی",
+			"score": 8.5,
+			"scoreMax": 10,
+			"scoreLabel": "پیشنهاد ویژه",
+			"criteria": "کیفیت ساخت:9\nارزش خرید:8.5\nکاربری روزمره:8",
+			"verdict": "برای اکثر خریداران، توازن خیلی خوبی بین کیفیت و قیمت ارائه می کند.",
+			"showStars": true,
+			"showCta": false,
+			"showSchema": false
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

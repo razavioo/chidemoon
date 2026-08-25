@@ -1,0 +1,83 @@
+/* Product Grid block — layout variations (grid/masonry/list/carousel).
+ * Container queries on the wrapper (not the inner .kalahamoon-product-grid) so
+ * the wrapper's width drives responsive column counts regardless of the
+ * surrounding column layout.
+ */
+
+.wp-block-kalahamoon-product-grid {
+	container-type: inline-size;
+	container-name: kalahamoon-grid-block;
+}
+
+/* ─── Layout: masonry ─── */
+.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-product-grid {
+	display: block;
+	column-count: 3;
+	column-gap: var(--kalahamoon-gap);
+}
+
+.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-grid-item {
+	break-inside: avoid;
+	margin-block-end: var(--kalahamoon-gap);
+	display: block;
+}
+
+@container kalahamoon-grid-block (max-width: 768px) {
+	.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-product-grid { column-count: 2; }
+}
+@container kalahamoon-grid-block (max-width: 480px) {
+	.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-product-grid { column-count: 1; }
+}
+
+/* ─── Layout: list ─── */
+.wp-block-kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-grid {
+	grid-template-columns: 1fr;
+}
+
+.wp-block-kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-card {
+	display: grid;
+	grid-template-columns: minmax(120px, 180px) 1fr;
+	align-items: center;
+	gap: var(--kalahamoon-gap);
+}
+
+.wp-block-kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-image {
+	aspect-ratio: 1;
+	max-inline-size: 180px;
+}
+
+@container kalahamoon-grid-block (max-width: 420px) {
+	.wp-block-kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-card {
+		grid-template-columns: 1fr;
+	}
+	.wp-block-kalahamoon-product-grid[data-layout="list"] .kalahamoon-product-image {
+		max-inline-size: 100%;
+	}
+}
+
+/* ─── Layout: carousel (horizontal scroll-snap) ─── */
+.wp-block-kalahamoon-product-grid[data-layout="carousel"] .kalahamoon-product-grid {
+	display: flex;
+	grid-template-columns: none;
+	overflow-x: auto;
+	scroll-snap-type: inline mandatory;
+	scrollbar-width: thin;
+	-webkit-overflow-scrolling: touch;
+	gap: var(--kalahamoon-gap);
+	padding-block-end: 8px;
+}
+
+.wp-block-kalahamoon-product-grid[data-layout="carousel"] .kalahamoon-grid-item {
+	flex: 0 0 min(280px, 80%);
+	scroll-snap-align: start;
+}
+
+/* ─── Fallback for browsers without container queries ─── */
+@supports not (container-type: inline-size) {
+	@media (max-width: 768px) {
+		.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-product-grid { column-count: 2; }
+	}
+	@media (max-width: 480px) {
+		.wp-block-kalahamoon-product-grid[data-layout="masonry"] .kalahamoon-product-grid { column-count: 1; }
+	}
+}

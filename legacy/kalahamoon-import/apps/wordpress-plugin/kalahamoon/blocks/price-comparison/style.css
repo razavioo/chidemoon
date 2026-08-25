@@ -1,0 +1,66 @@
+.kalahamoon-price-comparison {
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius, 12px);
+	padding: var(--kalahamoon-gap, 1rem);
+	background: var(--kalahamoon-surface);
+}
+
+.kalahamoon-price-comparison__heading {
+	margin: 0 0 0.75rem;
+	font-size: 1.05rem;
+}
+
+.kalahamoon-price-comparison__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.kalahamoon-price-comparison__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.6rem 0.75rem;
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius-sm, 8px);
+}
+
+.kalahamoon-price-comparison__row.is-cheapest {
+	border-color: var(--kalahamoon-success, #16a34a);
+	background: color-mix(in srgb, var(--kalahamoon-success, #16a34a) 8%, transparent);
+}
+
+.kalahamoon-price-comparison__seller {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	flex-wrap: wrap;
+}
+
+.kalahamoon-price-comparison__best {
+	font-size: 0.72rem;
+	font-weight: 700;
+	color: var(--kalahamoon-success, #16a34a);
+}
+
+.kalahamoon-price-comparison__price {
+	font-weight: 700;
+	margin-inline-start: auto;
+}
+
+.kalahamoon-price-comparison__buy {
+	flex-shrink: 0;
+}
+
+.kalahamoon-stock-badge {
+	font-size: 0.7rem;
+	padding: 0.1rem 0.45rem;
+	border-radius: 999px;
+}
+
+.kalahamoon-stock-in { color: var(--kalahamoon-success, #16a34a); }
+.kalahamoon-stock-out { color: var(--kalahamoon-danger, #dc2626); }

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "chidemoon/article-context",
+  "version": "1.0.0",
+  "title": "Chidemoon Article Context",
+  "category": "theme",
+  "icon": "media-text",
+	"description": "Shows article details for the current post.",
+  "supports": { "html": false, "inserter": false },
+  "textdomain": "chidemoon-theme",
+  "render": "file:./render.php"
+}

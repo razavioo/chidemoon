@@ -1,0 +1,433 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Chidemoon Theme 1.6.0\n"
+"Language: fa_IR\n"
+"PO-Revision-Date: 2026-08-23 00:00+0000\n"
+"Last-Translator: Chidemoon\n"
+"Language-Team: Persian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Skip to main content"
+msgstr "پرش به محتوای اصلی"
+
+msgid "Chidemoon home"
+msgstr "صفحه اصلی چیدمون"
+
+msgid "Primary navigation"
+msgstr "ناوبری اصلی"
+
+msgid "Search verified products"
+msgstr "جست‌وجوی محصولات بررسی‌شده"
+
+msgid "Search products..."
+msgstr "جست‌وجوی محصولات..."
+
+msgid "Search"
+msgstr "جست‌وجو"
+
+msgid "Open product comparison"
+msgstr "باز کردن مقایسه محصولات"
+
+msgid "Open the grounded Chidemoon guide"
+msgstr "باز کردن راهنمای مستند چیدمون"
+
+msgid "Open menu"
+msgstr "باز کردن منو"
+
+msgid "Mobile navigation"
+msgstr "ناوبری موبایل"
+
+msgid "Close menu"
+msgstr "بستن منو"
+
+msgid "Search verified products and guides"
+msgstr "جست‌وجوی محصولات بررسی‌شده و راهنماها"
+
+msgid "Explore"
+msgstr "کاوش"
+
+msgid "Mobile shortcuts"
+msgstr "میان‌برهای موبایل"
+
+msgid "No verified result matched this search. Try a product, material, room, or buying question."
+msgstr "نتیجه بررسی‌شده‌ای برای این جست‌وجو پیدا نشد. نام محصول، متریال، فضا یا پرسش خرید دیگری را امتحان کنید."
+
+msgid "Search is temporarily unavailable. You can still browse the catalog directly."
+msgstr "جست‌وجو موقتاً در دسترس نیست. همچنان می‌توانید مستقیم راهنماها و فهرست محصولات را ببینید."
+
+msgid "Search is temporarily unavailable. Please try again in a few minutes."
+msgstr "جست‌وجو موقتاً در دسترس نیست. لطفاً چند دقیقه دیگر دوباره تلاش کنید."
+
+msgid "Too many searches were submitted. Please wait a few minutes."
+msgstr "تعداد جست‌وجوها زیاد است. چند دقیقه دیگر دوباره تلاش کنید."
+
+msgid "Grounded Chidemoon guide"
+msgstr "راهنمای مستند چیدمون"
+
+msgid "Verified products and reviewed editorial content only"
+msgstr "فقط محصولات بررسی‌شده و محتوای تحریریه بازبینی‌شده"
+
+msgid "Close guide"
+msgstr "بستن راهنما"
+
+msgid "Describe what you need. I will search only openable, reviewed sources and show where each result comes from."
+msgstr "آنچه نیاز دارید را بنویسید. فقط در منابع بازبینی‌شده و قابل‌دسترسی جست‌وجو می‌کنم و منبع هر نتیجه را نشان می‌دهم."
+
+msgid "Suggested searches"
+msgstr "جست‌وجوهای پیشنهادی"
+
+msgid "lighting for a small living room"
+msgstr "نورپردازی برای نشیمن کوچک"
+
+msgid "Small-room lighting"
+msgstr "نورپردازی فضای کوچک"
+
+msgid "how to compare product dimensions"
+msgstr "چگونه ابعاد محصولات را مقایسه کنیم"
+
+msgid "Compare dimensions"
+msgstr "مقایسه ابعاد"
+
+msgid "materials that are easy to maintain"
+msgstr "متریال‌های آسان برای نگهداری"
+
+msgid "Easy-care materials"
+msgstr "متریال‌های کم‌دردسر"
+
+msgid "Search verified Chidemoon sources"
+msgstr "جست‌وجوی منابع بررسی‌شده چیدمون"
+
+msgid "What are you looking for?"
+msgstr "دنبال چه چیزی هستید؟"
+
+msgid "Search results"
+msgstr "نتایج جست‌وجو"
+
+msgid "Search reviewed articles"
+msgstr "جست‌وجوی مقاله‌های بازبینی‌شده"
+
+msgid "Editorial topics"
+msgstr "موضوع‌های تحریریه"
+
+msgid "All topics"
+msgstr "همه موضوع‌ها"
+
+msgid "Read article"
+msgstr "خواندن مقاله"
+
+msgid "Products"
+msgstr "محصولات"
+
+msgid "View product"
+msgstr "مشاهده محصول"
+
+msgid "Compare products"
+msgstr "مقایسه محصولات"
+
+msgid "Buying guides"
+msgstr "راهنماهای خرید"
+
+msgid "Magazine"
+msgstr "مجله"
+
+msgid "Shop the look"
+msgstr "خرید از روی تصویر"
+
+msgid "Contact"
+msgstr "تماس"
+
+msgid "Report a problem"
+msgstr "گزارش مشکل"
+
+msgid "Request an expert"
+msgstr "درخواست کارشناس"
+
+msgid "About Chidemoon"
+msgstr "درباره چیدمون"
+
+msgid "Frequently asked questions"
+msgstr "پرسش‌های متداول"
+
+msgid "%d min read"
+msgid_plural "%d min read"
+msgstr[0] "%d دقیقه مطالعه"
+
+msgid "Reviewed by %s"
+msgstr "بازبینی‌شده توسط %s"
+
+msgid "No reviewed article matches this view yet."
+msgstr "هنوز مقاله بازبینی‌شده‌ای برای این بخش آماده نیست."
+
+msgid "Try another topic or browse the verified product catalog."
+msgstr "موضوع دیگری را امتحان کنید یا راهنماهای خرید را مرور کنید."
+
+msgid "Browse verified products"
+msgstr "مرور محصولات بررسی‌شده"
+
+msgid "Clickable room stories are being prepared."
+msgstr "داستان‌های قابل‌کلیک فضاها در حال آماده‌سازی هستند."
+
+msgid "We publish a room story only after its product references are complete and current. Until then, use a buying guide or browse the magazine for practical ideas."
+msgstr "یک داستان فضا را فقط پس از کامل و به‌روز بودن ارجاع‌های محصول منتشر می‌کنیم. تا آن زمان، برای ایده‌های کاربردی از راهنمای خرید یا مجله استفاده کنید."
+
+msgid "Explore the magazine"
+msgstr "مرور مجله"
+
+msgid "The requested route is unavailable"
+msgstr "نشانی درخواستی در دسترس نیست"
+
+msgid "This page could not be found."
+msgstr "این صفحه پیدا نشد."
+
+msgid "The address may have changed. Search reviewed articles or return to one of the primary discovery routes."
+msgstr "ممکن است نشانی تغییر کرده باشد. مقاله‌های بازبینی‌شده را جست‌وجو کنید یا به یکی از مسیرهای اصلی بازگردید."
+
+msgid "Search the magazine..."
+msgstr "جست‌وجو در مجله..."
+
+msgid "Return home"
+msgstr "بازگشت به صفحه اصلی"
+
+msgid "Read buying guides"
+msgstr "خواندن راهنماهای خرید"
+
+msgid "Try another topic, read a buying guide, or explore the magazine."
+msgstr "موضوع دیگری را امتحان کنید، یک راهنمای خرید بخوانید یا مجله را ببینید."
+
+msgid "Sources and verification"
+msgstr "منابع و بررسی"
+
+msgid "List the source documents, product pages, measurements, and the date they were checked."
+msgstr "سندهای منبع، صفحه‌های محصول، اندازه‌ها و تاریخ بررسی آن‌ها را بنویسید."
+
+msgid "Advantages"
+msgstr "مزیت‌ها"
+
+msgid "Add a supported advantage."
+msgstr "یک مزیت مستند اضافه کنید."
+
+msgid "Add a second supported advantage."
+msgstr "یک مزیت مستند دیگر اضافه کنید."
+
+msgid "Considerations"
+msgstr "نکات قابل‌توجه"
+
+msgid "Add a practical limitation."
+msgstr "یک محدودیت عملی اضافه کنید."
+
+msgid "Add the reader or space this may not suit."
+msgstr "بگویید این انتخاب برای چه کسی یا چه فضایی مناسب نیست."
+
+msgid "Editorial recommendation"
+msgstr "پیشنهاد تحریریه"
+
+msgid "Explain who this recommendation suits, the evidence behind it, and what must still be checked at the destination store."
+msgstr "توضیح دهید این پیشنهاد برای چه کسی مناسب است، بر چه شواهدی تکیه دارد و در فروشگاه مقصد چه چیزهایی باید بررسی شود."
+
+msgid "Key takeaways"
+msgstr "نکات کلیدی"
+
+msgid "Add the most important measurable recommendation."
+msgstr "مهم‌ترین پیشنهاد قابل‌اندازه‌گیری را اضافه کنید."
+
+msgid "Add the main limitation or tradeoff."
+msgstr "مهم‌ترین محدودیت یا ملاحظه را اضافه کنید."
+
+msgid "Add the final check a reader should make before buying."
+msgstr "آخرین بررسی لازم پیش از خرید را اضافه کنید."
+
+msgid "Write a concise introduction that explains the reader problem and what this article will help them decide."
+msgstr "یک مقدمه کوتاه بنویسید که مسئله خواننده و تصمیمی را که این مقاله کمک می‌کند بگیرد توضیح دهد."
+
+msgid "Editorial transparency"
+msgstr "شفافیت تحریریه"
+
+msgid "Explain that purchasing happens at the destination store and that price, availability, and final terms must be checked there."
+msgstr "توضیح دهید خرید در فروشگاه مقصد انجام می‌شود و قیمت، موجودی و شرایط نهایی باید همان‌جا بررسی شوند."
+
+msgid "Primary Header Menu"
+msgstr "فهرست اصلی سربرگ"
+
+msgid "Footer Menu"
+msgstr "فهرست پاصفحه"
+
+msgid "Editorial Types"
+msgstr "نوع‌های تحریریه"
+
+msgid "Editorial Type"
+msgstr "نوع تحریریه"
+
+msgid "Compare"
+msgstr "مقایسه"
+
+msgid "Magazine and guides"
+msgstr "مجله و راهنماها"
+
+msgid "Community"
+msgstr "جامعه"
+
+msgid "Home"
+msgstr "صفحه اصلی"
+
+msgid "Body copy must contain at least %d words."
+msgstr "متن اصلی باید دست‌کم %d واژه داشته باشد."
+
+msgid "Add a useful excerpt."
+msgstr "یک خلاصه مفید اضافه کنید."
+
+msgid "Before publishing"
+msgstr "پیش از انتشار"
+
+msgid "Choose at least one category."
+msgstr "دست‌کم یک دسته‌بندی انتخاب کنید."
+
+msgid "Use this short checklist before you publish. It does not block WordPress publishing."
+msgstr "پیش از انتشار این فهرست کوتاه را بررسی کنید. این مورد مانع انتشار در وردپرس نمی‌شود."
+
+msgid "Writing reminder"
+msgstr "یادآوری نگارش"
+
+msgid "Replace pattern guidance with your article copy and source details."
+msgstr "راهنمای الگو را با متن مقاله و جزئیات منابع خود جایگزین کنید."
+
+msgid "Add at least one level-two heading."
+msgstr "دست‌کم یک عنوان سطح دو اضافه کنید."
+
+msgid "Add a featured image."
+msgstr "یک تصویر شاخص اضافه کنید."
+
+msgid "Add alternative text to the featured image."
+msgstr "برای تصویر شاخص متن جایگزین اضافه کنید."
+
+msgid "Add at least one external source link."
+msgstr "دست‌کم یک پیوند منبع بیرونی اضافه کنید."
+
+msgid "Add alternative text to every inline image."
+msgstr "برای همه تصویرهای درون‌متنی متن جایگزین اضافه کنید."
+
+msgid "Add the affiliate disclosure block."
+msgstr "بلوک شفاف‌سازی همکاری در فروش را اضافه کنید."
+
+msgid "Chidemoon editorial review"
+msgstr "بازبینی تحریریه چیدمون"
+
+msgid "Sources checked on"
+msgstr "تاریخ بررسی منابع"
+
+msgid "I reviewed the claims, links, media, disclosure, and product references."
+msgstr "ادعاها، پیوندها، رسانه‌ها، شفاف‌سازی و ارجاع‌های محصول را بررسی کرده‌ام."
+
+msgid "Automated editorial checks currently pass."
+msgstr "بررسی‌های خودکار تحریریه اکنون با موفقیت انجام می‌شوند."
+
+msgid "Resolve before approval:"
+msgstr "پیش از تأیید برطرف کنید:"
+
+msgid "Choose a valid source-check date."
+msgstr "یک تاریخ معتبر برای بررسی منابع انتخاب کنید."
+
+msgid "Invalid post ID."
+msgstr "شناسه نوشته نامعتبر است."
+
+msgid "Results for “%s”"
+msgstr "نتایج برای «%s»"
+
+msgid "Editorial pages"
+msgstr "صفحه‌های تحریریه"
+
+msgid "Previous"
+msgstr "قبلی"
+
+msgid "Next"
+msgstr "بعدی"
+
+msgid "Public review"
+msgstr "بازبینی عمومی"
+
+msgid "Needs classification"
+msgstr "نیازمند دسته‌بندی"
+
+msgid "Ready for public"
+msgstr "آماده برای انتشار عمومی"
+
+msgid "Needs review"
+msgstr "نیازمند بازبینی"
+
+msgid "%d content check remaining"
+msgid_plural "%d content checks remaining"
+msgstr[0] "%d بررسی محتوایی باقی مانده است"
+
+msgid "Review evidence required"
+msgstr "مدرک بازبینی لازم است"
+
+msgid "Ready to publish"
+msgstr "آماده برای انتشار"
+
+msgid "Chidemoon editorial readiness"
+msgstr "آمادگی تحریریه چیدمون"
+
+msgid "Editorial readiness"
+msgstr "آمادگی تحریریه"
+
+msgid "You are not allowed to review editorial readiness."
+msgstr "اجازه بررسی آمادگی تحریریه را ندارید."
+
+msgid "Published articles that satisfy the public editorial checks."
+msgstr "مقاله‌های منتشرشده‌ای که بررسی‌های تحریریه عمومی را گذرانده‌اند."
+
+msgid "Articles that pass review but remain unpublished."
+msgstr "مقاله‌هایی که بازبینی را گذرانده‌اند اما هنوز منتشر نشده‌اند."
+
+msgid "Classified articles missing current review evidence or content checks."
+msgstr "مقاله‌های دسته‌بندی‌شده‌ای که مدرک بازبینی به‌روز یا بررسی محتوایی ندارند."
+
+msgid "Articles that need an editorial type before they can enter a public route."
+msgstr "مقاله‌هایی که پیش از ورود به مسیر عمومی به یک نوع تحریریه نیاز دارند."
+
+msgid "Magazine, guide, and room-story pages only show published articles with current sources and completed editorial checks."
+msgstr "صفحه‌های مجله، راهنما و داستان فضا فقط مقاله‌های منتشرشده با منابع به‌روز و بررسی تحریریه کامل را نمایش می‌دهند."
+
+msgid "articles in the editorial queue"
+msgstr "مقاله در صف تحریریه"
+
+msgid "Review posts"
+msgstr "بررسی مقاله‌ها"
+
+msgid "Buying guide"
+msgstr "راهنمای خرید"
+
+msgid "Room story"
+msgstr "داستان فضا"
+
+msgid "Review"
+msgstr "بررسی"
+
+msgid "Inspiration"
+msgstr "الهام"
+
+msgid "Body copy has %1$d of %2$d required words."
+msgstr "متن اصلی %1$d واژه از %2$d واژه لازم را دارد."
+
+msgid "Use a date no older than 180 days. Saving this post records the review evidence."
+msgstr "تاریخی انتخاب کنید که بیش از ۱۸۰ روز از آن نگذشته باشد. ذخیره این نوشته، مدرک بازبینی را ثبت می‌کند."
+
+msgid "Buying guides are being reviewed."
+msgstr "راهنماهای خرید در حال بازبینی هستند."
+
+msgid "We publish buying advice only after its sources and recommendations are current. Explore the magazine while guides are prepared."
+msgstr "راهنمای خرید را فقط پس از به‌روز بودن منابع و پیشنهادهای آن منتشر می‌کنیم. تا آماده‌شدن راهنماها، مجله را ببینید."
+
+msgid "No reviewed articles match this search."
+msgstr "هیچ مقاله بررسی‌شده‌ای با این جست‌وجو همخوانی ندارد."
+
+msgid "Try a broader search or explore the magazine for related ideas."
+msgstr "جست‌وجوی گسترده‌تری انجام دهید یا برای ایده‌های مرتبط مجله را ببینید."
+
+msgid "No reviewed magazine articles are available yet."
+msgstr "هنوز مقاله بررسی‌شده‌ای برای مجله آماده نیست."
+
+msgid "We publish magazine articles after their sources and recommendations have been checked."
+msgstr "مقاله‌های مجله را پس از بررسی منابع و پیشنهادهایشان منتشر می‌کنیم."

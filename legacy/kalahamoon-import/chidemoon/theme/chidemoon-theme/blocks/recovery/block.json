@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "chidemoon/recovery",
+	"version": "1.0.0",
+	"title": "Chidemoon Recovery Page",
+	"category": "theme",
+	"icon": "search",
+	"description": "Localized not-found recovery routes.",
+	"supports": { "html": false, "multiple": false },
+	"textdomain": "chidemoon-theme",
+	"render": "file:./render.php"
+}

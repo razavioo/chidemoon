@@ -1,0 +1,160 @@
+/* Rating Box block */
+.kalahamoon-rating-box {
+	--rating-high: var(--kalahamoon-success, #16a34a);
+	--rating-mid: var(--kalahamoon-warning, var(--kalahamoon-warning));
+	--rating-low: var(--kalahamoon-danger, #dc2626);
+	--rating-bg: var(--kalahamoon-surface-alt);
+	--rating-border: var(--kalahamoon-border);
+	--rating-radius: var(--kalahamoon-radius);
+	background: var(--rating-bg);
+	border: 1px solid var(--rating-border);
+	border-radius: var(--rating-radius);
+	padding: 1.25rem 1.5rem;
+	font-family: inherit;
+	color: var(--kalahamoon-text);
+}
+
+/* ── Heading ── */
+.kalahamoon-rating-heading {
+	font-size: 1.05rem;
+	font-weight: 700;
+	margin: 0 0 1rem;
+	color: inherit;
+}
+
+/* ── Score line ── */
+.kalahamoon-rating-scoreline {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.kalahamoon-rating-badge {
+	display: flex;
+	align-items: baseline;
+	gap: 2px;
+	background: var(--kalahamoon-surface);
+	border: 2px solid var(--rating-border);
+	border-radius: 10px;
+	padding: 0.4rem 0.75rem;
+	flex-shrink: 0;
+}
+
+.kalahamoon-rating-badge.kalahamoon-rating-high { border-color: var(--rating-high); }
+.kalahamoon-rating-badge.kalahamoon-rating-mid  { border-color: var(--rating-mid); }
+.kalahamoon-rating-badge.kalahamoon-rating-low  { border-color: var(--rating-low); }
+
+.kalahamoon-rating-number {
+	font-size: 2rem;
+	font-weight: 800;
+	line-height: 1;
+}
+
+.kalahamoon-rating-badge.kalahamoon-rating-high .kalahamoon-rating-number { color: var(--rating-high); }
+.kalahamoon-rating-badge.kalahamoon-rating-mid  .kalahamoon-rating-number { color: var(--rating-mid); }
+.kalahamoon-rating-badge.kalahamoon-rating-low  .kalahamoon-rating-number { color: var(--rating-low); }
+
+.kalahamoon-rating-denom {
+	font-size: 0.85rem;
+	color: var(--kalahamoon-muted);
+	font-weight: 500;
+}
+
+.kalahamoon-rating-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+/* ── Stars ── */
+.kalahamoon-stars {
+	display: inline-flex;
+	gap: 1px;
+	font-size: 1.25rem;
+	line-height: 1;
+}
+
+.kalahamoon-star-full  { color: var(--kalahamoon-warning); }
+.kalahamoon-star-half  { color: var(--kalahamoon-warning); opacity: 0.6; }
+.kalahamoon-star-empty { color: color-mix(in srgb, var(--kalahamoon-text) 20%, transparent); }
+
+.kalahamoon-rating-label {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--kalahamoon-muted);
+}
+
+/* ── Criteria bars ── */
+.kalahamoon-rating-criteria {
+	list-style: none;
+	margin: 0 0 1rem;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.kalahamoon-rating-criterion {
+	display: grid;
+	grid-template-columns: minmax(80px, 1fr) 3fr auto;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.88rem;
+}
+
+.kalahamoon-criterion-label {
+	font-weight: 500;
+	color: inherit;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.kalahamoon-criterion-track {
+	background: color-mix(in srgb, var(--kalahamoon-text) 10%, transparent);
+	border-radius: 999px;
+	height: 8px;
+	overflow: hidden;
+}
+
+.kalahamoon-criterion-fill {
+	height: 100%;
+	border-radius: 999px;
+	background: var(--rating-mid);
+	transition: width 0.3s ease;
+}
+
+.kalahamoon-criterion-fill.kalahamoon-rating-high { background: var(--rating-high); }
+.kalahamoon-criterion-fill.kalahamoon-rating-mid  { background: var(--rating-mid); }
+.kalahamoon-criterion-fill.kalahamoon-rating-low  { background: var(--rating-low); }
+
+.kalahamoon-criterion-score {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--kalahamoon-muted);
+	min-width: 2.5rem;
+	text-align: end;
+}
+
+/* ── Verdict ── */
+.kalahamoon-rating-verdict {
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: var(--kalahamoon-muted);
+	margin: 0 0 1rem;
+	border-right: 3px solid var(--rating-border);
+	padding-right: 0.75rem;
+}
+
+[dir="ltr"] .kalahamoon-rating-verdict {
+	border-right: none;
+	border-left: 3px solid var(--rating-border);
+	padding-right: 0;
+	padding-left: 0.75rem;
+}
+
+/* ── CTA ── */
+.kalahamoon-rating-cta {
+	margin-top: 0.75rem;
+}

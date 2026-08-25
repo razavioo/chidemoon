@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "chidemoon/site-header",
+	"version": "1.0.0",
+	"title": "Chidemoon Site Header",
+	"category": "theme",
+	"icon": "menu",
+	"description": "Accessible Chidemoon brand, navigation, catalog search, and mobile menu.",
+	"supports": { "html": false, "multiple": false },
+	"textdomain": "chidemoon-theme",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,41 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/faq",
+	"version": "1.0.0",
+	"title": "Kalahamoon FAQ",
+	"category": "kalahamoon",
+	"icon": "editor-help",
+	"description": "Accessible accordion FAQ. Each row uses native <details> for keyboard and screen-reader support; emits Schema.org FAQPage JSON-LD for rich results.",
+	"keywords": ["faq", "questions", "accordion", "پرسش", "سوال"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": ["wide"],
+		"color":      { "background": true, "text": true },
+		"typography": { "fontSize": true, "lineHeight": true },
+		"spacing":    { "padding": true, "margin": true, "blockGap": true },
+		"border":     { "radius": true, "color": true, "width": true }
+	},
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": []
+		},
+		"openFirst":     { "type": "boolean", "default": false },
+		"emitSchema":    { "type": "boolean", "default": true },
+		"headingLevel":  { "type": "number",  "default": 3 }
+	},
+	"example": {
+		"attributes": {
+			"items": [
+				{ "q": "Sample question?", "a": "Sample answer to give a feel of the FAQ block layout." },
+				{ "q": "Another question?", "a": "Another short answer for the preview." }
+			]
+		}
+	},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

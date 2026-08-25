@@ -1,0 +1,109 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 2,
+	"settings": {
+		"appearanceTools": true,
+		"color": {
+			"custom": true,
+			"customGradient": true,
+			"defaultGradients": false,
+			"defaultPalette": true,
+			"palette": [
+				{ "slug": "base", "color": "#ffffff", "name": "Base" },
+				{ "slug": "base-2", "color": "#f8fafc", "name": "Base Soft" },
+				{ "slug": "contrast", "color": "#0f172a", "name": "Contrast" },
+				{ "slug": "primary", "color": "#2563eb", "name": "Primary" },
+				{ "slug": "accent", "color": "#7c3aed", "name": "Accent" },
+				{ "slug": "success", "color": "#16a34a", "name": "Success" },
+				{ "slug": "warning", "color": "#f59e0b", "name": "Warning" },
+				{ "slug": "danger", "color": "#dc2626", "name": "Danger" },
+				{ "slug": "kalahamoon-bakalahamoon", "color": "#ff6b35", "name": "Bakalahamoon" },
+				{ "slug": "kalahamoon-digikala", "color": "#ef394e", "name": "Digikala" },
+				{ "slug": "kalahamoon-torob", "color": "#00b4d8", "name": "Torob" }
+			],
+			"gradients": [
+				{
+					"slug": "kalahamoon-surface",
+					"gradient": "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+					"name": "Surface"
+				},
+				{
+					"slug": "kalahamoon-spotlight",
+					"gradient": "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)",
+					"name": "Spotlight"
+				}
+			]
+		},
+		"layout": {
+			"contentSize": "760px",
+			"wideSize": "1280px"
+		},
+		"spacing": {
+			"blockGap": true,
+			"customSpacingSize": true,
+			"margin": true,
+			"padding": true,
+			"units": ["px", "rem", "em", "%", "vw"],
+			"spacingSizes": [
+				{ "slug": "20", "size": "0.5rem", "name": "2X-Small" },
+				{ "slug": "30", "size": "0.75rem", "name": "X-Small" },
+				{ "slug": "40", "size": "1rem", "name": "Small" },
+				{ "slug": "50", "size": "1.5rem", "name": "Medium" },
+				{ "slug": "60", "size": "2.25rem", "name": "Large" },
+				{ "slug": "70", "size": "3.5rem", "name": "X-Large" },
+				{ "slug": "80", "size": "5rem", "name": "2X-Large" }
+			]
+		},
+		"typography": {
+			"customFontSize": true,
+			"dropCap": false,
+			"fluid": true,
+			"lineHeight": true,
+			"fontFamilies": [
+				{
+					"fontFamily": "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+					"slug": "system-sans",
+					"name": "System Sans"
+				},
+				{
+					"fontFamily": "YekanBakh, Inter, system-ui, sans-serif",
+					"slug": "yekanbakh",
+					"name": "YekanBakh"
+				}
+			],
+			"fontSizes": [
+				{ "slug": "x-small", "size": "0.875rem", "name": "X-Small" },
+				{ "slug": "small", "size": "1rem", "name": "Small" },
+				{ "slug": "medium", "size": "1.125rem", "name": "Medium" },
+				{ "slug": "large", "size": "1.375rem", "name": "Large" },
+				{ "slug": "x-large", "size": "1.75rem", "name": "X-Large" },
+				{ "slug": "xx-large", "size": "2.4rem", "name": "2X-Large" }
+			]
+		},
+		"custom": {
+			"radius": {
+				"small": "8px",
+				"medium": "12px",
+				"large": "20px",
+				"pill": "9999px"
+			},
+			"shadow": {
+				"natural": "0 1px 3px rgba(0,0,0,.08)",
+				"deep": "0 4px 12px rgba(0,0,0,.1)",
+				"focus": "0 0 0 3px rgba(37, 99, 235, .25)"
+			},
+			"kalahamoon": {
+				"accent": "#b94a24",
+				"accent-strong": "#823212",
+				"surface": "#ffffff",
+				"surface-soft": "#f8fafc",
+				"border": "rgba(15, 23, 42, 0.10)",
+				"text": "#1f2937",
+				"muted": "rgba(31, 41, 55, 0.65)",
+				"radius-card": "16px",
+				"shadow-card": "0 8px 24px rgba(0,0,0,0.06)",
+				"shadow-card-hover": "0 16px 40px rgba(0,0,0,0.10)"
+			}
+		}
+	}
+}

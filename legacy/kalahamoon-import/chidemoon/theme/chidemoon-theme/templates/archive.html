@@ -1,0 +1,60 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","anchor":"chidemoon-main","style":{"spacing":{"padding":{"top":"3rem","bottom":"4rem","left":"clamp(1rem,4vw,2.5rem)","right":"clamp(1rem,4vw,2.5rem)"}}},"layout":{"type":"constrained","wideSize":"1280px"}} -->
+<main id="chidemoon-main" class="wp-block-group" style="padding-top:3rem;padding-bottom:4rem;padding-left:clamp(1rem,4vw,2.5rem);padding-right:clamp(1rem,4vw,2.5rem)">
+
+	<!-- wp:query-title {"type":"archive","showPrefix":false,"style":{"typography":{"fontSize":"2rem","fontWeight":"800"},"spacing":{"margin":{"bottom":"2rem"}}}} /-->
+
+	<!-- wp:term-description {"style":{"typography":{"fontSize":"0.95rem","lineHeight":"1.8"},"color":{"text":"rgba(0,33,11,0.7)"},"spacing":{"margin":{"bottom":"2rem"}}}} /-->
+
+	<!-- wp:query {"queryId":0,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"layout":{"type":"default"}} -->
+
+		<!-- wp:post-template {"className":"chidemoon-editorial-masonry"} -->
+
+			<!-- wp:group {"className":"chidemoon-editorial-card chidemoon-archive-card","style":{"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
+			<div class="wp-block-group chidemoon-editorial-card chidemoon-archive-card" style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0">
+
+				<!-- wp:post-featured-image {"isLink":true,"style":{"spacing":{"margin":{"bottom":"0"}}}} /-->
+
+				<!-- wp:group {"style":{"spacing":{"padding":{"top":"20px","right":"24px","bottom":"24px","left":"24px"}}}} -->
+				<div class="wp-block-group" style="padding-top:20px;padding-right:24px;padding-bottom:24px;padding-left:24px">
+
+					<!-- wp:post-terms {"term":"category","className":"chidemoon-tag-mono","style":{"typography":{"fontSize":"0.68rem","fontWeight":"600"}}} /-->
+
+					<!-- wp:post-title {"level":3,"isLink":true,"style":{"typography":{"fontSize":"1rem","fontWeight":"800","lineHeight":"1.4"},"spacing":{"margin":{"top":"8px","bottom":"8px"}},"elements":{"link":{"color":{"text":"var:preset|color|forest-green"},":hover":{"color":{"text":"var:preset|color|terracotta-orange"}}}}}} /-->
+
+					<!-- wp:post-excerpt {"moreText":"","excerptLength":20,"style":{"typography":{"fontSize":"0.8rem","lineHeight":"1.6"},"color":{"text":"rgba(0,33,11,0.65)"}}} /-->
+
+					<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between","verticalAlignment":"center"},"style":{"spacing":{"margin":{"top":"12px"}}}} -->
+					<div class="wp-block-group" style="margin-top:12px">
+						<!-- wp:post-date {"format":"Y/m/d","style":{"typography":{"fontSize":"0.72rem","fontWeight":"600"},"color":{"text":"rgba(0,33,11,0.45)"}}} /-->
+						<!-- wp:read-more {"content":"ادامه مطلب","style":{"typography":{"fontSize":"0.75rem","fontWeight":"700"},"elements":{"link":{"color":{"text":"var:preset|color|terracotta-orange"}}}}} /-->
+					</div>
+					<!-- /wp:group -->
+
+				</div>
+				<!-- /wp:group -->
+
+			</div>
+			<!-- /wp:group -->
+
+		<!-- /wp:post-template -->
+
+		<!-- wp:query-no-results -->
+			<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.1rem"},"color":{"text":"rgba(0,33,11,0.55)"}}} -->
+			<p class="has-text-align-center has-text-color chidemoon-archive-empty" style="color:rgba(0,33,11,0.55);font-size:1.1rem">مطلبی مطابق این موضوع پیدا نشد. از مجله چیدمون، موضوع دیگری را مرور کنید.</p>
+			<!-- /wp:paragraph -->
+		<!-- /wp:query-no-results -->
+
+		<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"3rem"}}}} -->
+			<!-- wp:query-pagination-previous /-->
+			<!-- wp:query-pagination-numbers /-->
+			<!-- wp:query-pagination-next /-->
+		<!-- /wp:query-pagination -->
+
+	<!-- /wp:query -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

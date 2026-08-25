@@ -1,0 +1,400 @@
+/* Shop the Look block — tokens-first, container-query responsive, RTL-safe.
+ * Hotspot positioning uses logical properties; pulse color references theme
+ * primary so it adapts to the host palette.
+ */
+
+.wp-block-kalahamoon-shop-the-look {
+	container-type: inline-size;
+	container-name: kalahamoon-stl;
+}
+
+.kalahamoon-shop-the-look {
+	margin: 0;
+}
+
+.kalahamoon-stl-canvas {
+	position: relative;
+	display: inline-block;
+	inline-size: 100%;
+	line-height: 0;
+}
+
+.kalahamoon-stl-image {
+	inline-size: 100%;
+	block-size: auto;
+	display: block;
+	border-radius: var(--kalahamoon-radius);
+}
+
+.kalahamoon-stl-image--fallback {
+	aspect-ratio: 4 / 3;
+	min-block-size: 240px;
+	background: var(--kalahamoon-surface-alt);
+}
+
+.kalahamoon-stl-image--fallback .kalahamoon-image-placeholder,
+.kalahamoon-stl-tp-thumb--placeholder .kalahamoon-image-placeholder,
+.kalahamoon-stl-card-thumb--placeholder .kalahamoon-image-placeholder {
+	inline-size: 100%;
+	block-size: 100%;
+	display: block;
+}
+
+.wp-block-kalahamoon-shop-the-look.is-style-elevated .kalahamoon-stl-image {
+	box-shadow: var(--kalahamoon-shadow-lg);
+}
+
+/* ── Hotspot dot ── */
+.kalahamoon-stl-dot {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	inline-size: 30px;
+	block-size: 30px;
+	border-radius: 50%;
+	background: var(--kalahamoon-bg);
+	border: 2px solid var(--kalahamoon-primary);
+	color: var(--kalahamoon-primary);
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px color-mix(in srgb, var(--kalahamoon-text) 30%, transparent);
+	transition: transform .2s, box-shadow .2s;
+	z-index: 2;
+	padding: 0;
+	line-height: 1;
+}
+
+.kalahamoon-stl-dot:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: 4px;
+}
+
+.kalahamoon-stl-dot::after {
+	content: '';
+	position: absolute;
+	inset: -6px;
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--kalahamoon-primary) 15%, transparent);
+	animation: kalahamoon-pulse 2s ease-in-out infinite;
+	pointer-events: none;
+}
+
+@keyframes kalahamoon-pulse {
+	0%, 100% { transform: scale(1); opacity: .6; }
+	50%      { transform: scale(1.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kalahamoon-stl-dot::after { animation: none; }
+}
+
+.kalahamoon-stl-dot:hover,
+.kalahamoon-stl-dot[aria-expanded="true"] {
+	transform: translate(-50%, -50%) scale(1.2);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--kalahamoon-primary) 40%, transparent);
+}
+
+.kalahamoon-stl-dot--empty,
+.kalahamoon-stl-dot--no-product {
+	border-color: var(--kalahamoon-text-muted);
+	color: var(--kalahamoon-text-muted);
+}
+
+.kalahamoon-stl-dot--empty::after,
+.kalahamoon-stl-dot--no-product::after {
+	background: color-mix(in srgb, var(--kalahamoon-text-muted) 15%, transparent);
+}
+
+/* ── Tooltip card ── */
+.kalahamoon-stl-tooltip {
+	position: absolute;
+	z-index: 10;
+	inline-size: 260px;
+	background: var(--kalahamoon-surface);
+	border-radius: var(--kalahamoon-radius);
+	box-shadow: var(--kalahamoon-shadow-lg);
+	overflow: hidden;
+	border: 1px solid var(--kalahamoon-border);
+	animation: kalahamoon-stl-in .18s cubic-bezier(.34,1.3,.64,1);
+}
+
+@keyframes kalahamoon-stl-in {
+	from { opacity: 0; transform: scale(.92) translateY(6px); }
+	to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kalahamoon-stl-tooltip { animation: none; }
+}
+
+/* Close button */
+.kalahamoon-stl-tp-close {
+	position: absolute;
+	inset-block-start: 8px;
+	inset-inline-end: 8px;
+	z-index: 2;
+	inline-size: 26px;
+	block-size: 26px;
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--kalahamoon-text) 55%, transparent);
+	color: var(--kalahamoon-on-primary);
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: background .15s;
+	backdrop-filter: blur(4px);
+}
+.kalahamoon-stl-tp-close:hover { background: color-mix(in srgb, var(--kalahamoon-text) 70%, transparent); }
+
+/* Image */
+.kalahamoon-stl-tp-image-wrap {
+	block-size: 160px;
+	overflow: hidden;
+	background: var(--kalahamoon-surface-alt);
+}
+
+.kalahamoon-stl-tp-thumb {
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .3s ease;
+}
+
+.kalahamoon-stl-tp-thumb--placeholder {
+	display: block;
+}
+
+.kalahamoon-stl-tooltip:hover .kalahamoon-stl-tp-thumb {
+	transform: scale(1.04);
+}
+
+/* Body */
+.kalahamoon-stl-tp-body {
+	padding: 14px 14px 14px;
+}
+
+.kalahamoon-stl-tp-title {
+	font-size: .9rem;
+	font-weight: 700;
+	line-height: 1.4;
+	margin: 0 0 8px;
+	color: var(--kalahamoon-text);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.kalahamoon-stl-tp-price {
+	display: inline-flex;
+	align-items: center;
+	background: color-mix(in srgb, var(--kalahamoon-success) 12%, var(--kalahamoon-surface));
+	color: var(--kalahamoon-success);
+	font-size: .8125rem;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 6px;
+	margin-block-end: 12px;
+	border: 1px solid color-mix(in srgb, var(--kalahamoon-success) 30%, transparent);
+}
+
+.kalahamoon-stl-tp-cta {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	background: var(--kalahamoon-primary);
+	color: var(--kalahamoon-on-primary);
+	padding: 9px 14px;
+	border-radius: var(--kalahamoon-radius-sm);
+	font-size: .875rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background .15s, transform .1s;
+	box-shadow: 0 2px 8px color-mix(in srgb, var(--kalahamoon-primary) 35%, transparent);
+	border: 1px solid color-mix(in srgb, var(--kalahamoon-primary) 18%, transparent);
+}
+
+.kalahamoon-stl-tp-cta:hover {
+	background: var(--kalahamoon-primary-hover);
+	color: var(--kalahamoon-on-primary);
+	text-decoration: none;
+	transform: translateY(-1px);
+}
+
+.kalahamoon-stl-tp-cta:focus-visible {
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: 2px;
+}
+
+/* Caption */
+.kalahamoon-stl-caption {
+	text-align: center;
+	font-size: .875rem;
+	color: var(--kalahamoon-text-muted);
+	margin-block-start: 8px;
+	line-height: 1.4;
+}
+
+/* Narrow containers: shrink tooltip. */
+@container kalahamoon-stl (max-width: 420px) {
+	.wp-block-kalahamoon-shop-the-look .kalahamoon-stl-tooltip { inline-size: min(220px, calc(100cqi - 20px)); }
+}
+
+@supports not (container-type: inline-size) {
+	@media (max-width: 480px) {
+		.kalahamoon-stl-tooltip { inline-size: min(220px, calc(100vw - 40px)); }
+	}
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Display style variations: strip / side / list
+ * The base layout is a single column; "side" switches to two columns.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.kalahamoon-stl-layout {
+	display: flex;
+	flex-direction: column;
+	gap: var(--kalahamoon-gap, 1rem);
+}
+
+/* Side-by-side: image and product list share a row on wider containers. */
+.kalahamoon-stl-style-side .kalahamoon-stl-layout {
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+.kalahamoon-stl-style-side .kalahamoon-stl-canvas {
+	flex: 1 1 60%;
+	min-inline-size: 0;
+}
+
+.kalahamoon-stl-style-side .kalahamoon-stl-products {
+	flex: 1 1 40%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--kalahamoon-gap-sm, 0.75rem);
+}
+
+@container kalahamoon-stl (max-width: 640px) {
+	.kalahamoon-stl-style-side .kalahamoon-stl-layout { flex-direction: column; }
+}
+@supports not (container-type: inline-size) {
+	@media (max-width: 640px) {
+		.kalahamoon-stl-style-side .kalahamoon-stl-layout { flex-direction: column; }
+	}
+}
+
+/* Strip: horizontal scrolling carousel of product cards under the image. */
+.kalahamoon-stl-style-strip .kalahamoon-stl-products {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(200px, 1fr);
+	gap: var(--kalahamoon-gap-sm, 0.75rem);
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	padding-block-end: 6px;
+	scrollbar-width: thin;
+}
+.kalahamoon-stl-style-strip .kalahamoon-stl-card { scroll-snap-align: start; }
+
+/* Numbered list: vertical list of cards under the image. */
+.kalahamoon-stl-style-list .kalahamoon-stl-products {
+	display: flex;
+	flex-direction: column;
+	gap: var(--kalahamoon-gap-sm, 0.75rem);
+}
+
+/* Shared product card used by strip/side/list. */
+.kalahamoon-stl-card {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px;
+	background: var(--kalahamoon-surface);
+	border: 1px solid var(--kalahamoon-border);
+	border-radius: var(--kalahamoon-radius);
+	position: relative;
+}
+
+.kalahamoon-stl-style-strip .kalahamoon-stl-card {
+	flex-direction: column;
+	align-items: stretch;
+	text-align: start;
+}
+
+.kalahamoon-stl-card-num {
+	flex: 0 0 24px;
+	inline-size: 24px;
+	block-size: 24px;
+	border-radius: 50%;
+	background: var(--kalahamoon-primary);
+	color: var(--kalahamoon-on-primary);
+	font-size: 12px;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.kalahamoon-stl-style-strip .kalahamoon-stl-card-num {
+	position: absolute;
+	inset-block-start: 14px;
+	inset-inline-start: 14px;
+	z-index: 2;
+}
+
+.kalahamoon-stl-card-thumb {
+	flex: 0 0 72px;
+	inline-size: 72px;
+	block-size: 72px;
+	object-fit: cover;
+	border-radius: var(--kalahamoon-radius-sm);
+	background: var(--kalahamoon-surface-alt);
+}
+.kalahamoon-stl-card-thumb--placeholder {
+	display: block;
+	overflow: hidden;
+}
+.kalahamoon-stl-style-strip .kalahamoon-stl-card-thumb {
+	inline-size: 100%;
+	block-size: auto;
+	aspect-ratio: 1 / 1;
+}
+
+.kalahamoon-stl-card-body {
+	flex: 1;
+	min-inline-size: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.kalahamoon-stl-card-title {
+	margin: 0;
+	font-size: 0.9rem;
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--kalahamoon-text);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.kalahamoon-stl-card-price {
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: var(--kalahamoon-success);
+}
+
+.kalahamoon-stl-card-cta { align-self: flex-start; margin-block-start: 4px; }
+.kalahamoon-stl-style-strip .kalahamoon-stl-card-cta { align-self: stretch; text-align: center; }

@@ -1,0 +1,142 @@
+/* Product Box block — style variants + container-query responsive + new
+ * flexibility attributes (aspect-ratio, hover effect, badge variant).
+ * Base card styles live in public/css/kalahamoon-public.css.
+ */
+
+.wp-block-kalahamoon-product-box {
+	container-type: inline-size;
+	container-name: kalahamoon-pb;
+}
+
+.wp-block-kalahamoon-product-box .kalahamoon-product-image {
+	aspect-ratio: var(--kalahamoon-image-aspect, 1 / 1);
+}
+
+.wp-block-kalahamoon-product-box[data-variant="auto"] .kalahamoon-product-image,
+.wp-block-kalahamoon-product-box .kalahamoon-product-image[data-aspect="auto"] {
+	aspect-ratio: auto;
+}
+
+/* ─── Narrow containers: collapse horizontal layout ─── */
+@container kalahamoon-pb (max-width: 380px) {
+	.wp-block-kalahamoon-product-box .kalahamoon-layout-horizontal {
+		flex-direction: column;
+	}
+	.wp-block-kalahamoon-product-box .kalahamoon-layout-horizontal .kalahamoon-product-image {
+		max-inline-size: 100%;
+		flex: auto;
+	}
+}
+
+/* ─── Hover effects (driven by kalahamoon-hover-* wrapper class) ─── */
+.wp-block-kalahamoon-product-box.kalahamoon-hover-lift .kalahamoon-product-card {
+	transition: transform var(--kalahamoon-transition), box-shadow var(--kalahamoon-transition);
+}
+.wp-block-kalahamoon-product-box.kalahamoon-hover-lift:hover .kalahamoon-product-card,
+.wp-block-kalahamoon-product-box.kalahamoon-hover-lift:focus-within .kalahamoon-product-card {
+	transform: translateY(-3px);
+	box-shadow: var(--kalahamoon-shadow-lg);
+}
+
+.wp-block-kalahamoon-product-box.kalahamoon-hover-zoom .kalahamoon-product-image img {
+	transition: transform 0.35s ease;
+}
+.wp-block-kalahamoon-product-box.kalahamoon-hover-zoom:hover .kalahamoon-product-image img,
+.wp-block-kalahamoon-product-box.kalahamoon-hover-zoom:focus-within .kalahamoon-product-image img {
+	transform: scale(1.06);
+}
+
+.wp-block-kalahamoon-product-box.kalahamoon-hover-glow .kalahamoon-product-card {
+	transition: box-shadow var(--kalahamoon-transition), border-color var(--kalahamoon-transition);
+}
+.wp-block-kalahamoon-product-box.kalahamoon-hover-glow:hover .kalahamoon-product-card,
+.wp-block-kalahamoon-product-box.kalahamoon-hover-glow:focus-within .kalahamoon-product-card {
+	border-color: var(--kalahamoon-primary);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--kalahamoon-primary) 20%, transparent);
+}
+
+.wp-block-kalahamoon-product-box.kalahamoon-hover-none .kalahamoon-product-card:hover {
+	box-shadow: var(--kalahamoon-shadow);
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-kalahamoon-product-box .kalahamoon-product-card,
+	.wp-block-kalahamoon-product-box .kalahamoon-product-image img {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+
+/* ─── is-style-* variants ─── */
+
+.wp-block-kalahamoon-product-box.is-style-outlined .kalahamoon-product-card {
+	background: transparent;
+	border-width: 2px;
+}
+
+.wp-block-kalahamoon-product-box.is-style-minimal .kalahamoon-product-card {
+	border: 0;
+	box-shadow: none;
+	background: transparent;
+}
+
+.wp-block-kalahamoon-product-box.is-style-minimal .kalahamoon-product-card:hover {
+	box-shadow: none;
+}
+
+.wp-block-kalahamoon-product-box.is-style-featured .kalahamoon-product-card {
+	box-shadow: var(--kalahamoon-shadow-lg);
+	outline: 2px solid var(--kalahamoon-primary);
+	outline-offset: -2px;
+}
+
+.wp-block-kalahamoon-product-box.is-style-compact .kalahamoon-product-card .kalahamoon-product-info {
+	padding: var(--wp--preset--spacing--20, 0.5rem);
+	gap: 4px;
+}
+
+.wp-block-kalahamoon-product-box.is-style-compact .kalahamoon-product-title {
+	font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9rem);
+	-webkit-line-clamp: 1;
+}
+
+/* ─── variant attribute (pill badge over card) ─── */
+/* data-variant-label is emitted by render.php on the wrapper via
+ * get_block_wrapper_attributes(). The pseudo-element reads it with attr()
+ * and pins itself to the card's top-start corner. */
+
+.wp-block-kalahamoon-product-box {
+	position: relative;
+}
+
+.wp-block-kalahamoon-product-box[data-variant="bestseller"]::before,
+.wp-block-kalahamoon-product-box[data-variant="on-sale"]::before,
+.wp-block-kalahamoon-product-box[data-variant="new-arrival"]::before {
+	content: attr(data-variant-label);
+	position: absolute;
+	inset-block-start: 10px;
+	inset-inline-start: 10px;
+	background: var(--kalahamoon-primary);
+	color: var(--kalahamoon-on-primary);
+	font-size: 11px;
+	font-weight: 700;
+	padding: 3px 10px;
+	border-radius: var(--kalahamoon-radius-sm);
+	z-index: 3;
+	letter-spacing: .02em;
+	box-shadow: 0 1px 3px color-mix(in srgb, var(--kalahamoon-text) 20%, transparent);
+	pointer-events: none;
+}
+
+.wp-block-kalahamoon-product-box[data-variant="on-sale"]::before {
+	background: var(--kalahamoon-danger);
+}
+
+.wp-block-kalahamoon-product-box[data-variant="new-arrival"]::before {
+	background: var(--kalahamoon-success);
+}
+
+.wp-block-kalahamoon-product-box .kalahamoon-product-card {
+	position: relative;
+}

@@ -1,0 +1,53 @@
+/* Comparison Table block — is-style-* variants + container-aware sizing.
+ * Base table styles live in public/css/kalahamoon-public.css (.kalahamoon-comparison-table).
+ */
+
+.wp-block-kalahamoon-comparison-table {
+	container-type: inline-size;
+	container-name: kalahamoon-ct;
+}
+
+/* ─── is-style-striped (default) ─── */
+.wp-block-kalahamoon-comparison-table.is-style-striped .kalahamoon-comparison-table tbody tr:nth-child(odd) > td,
+.wp-block-kalahamoon-comparison-table.is-style-striped .kalahamoon-comparison-table tbody tr:nth-child(odd) > th {
+	background: color-mix(in srgb, var(--kalahamoon-bg-muted) 60%, transparent);
+}
+
+/* ─── is-style-bordered ─── */
+.wp-block-kalahamoon-comparison-table.is-style-bordered .kalahamoon-comparison-table {
+	border: 2px solid var(--kalahamoon-border);
+}
+
+.wp-block-kalahamoon-comparison-table.is-style-bordered .kalahamoon-comparison-table th,
+.wp-block-kalahamoon-comparison-table.is-style-bordered .kalahamoon-comparison-table td {
+	border: 1px solid var(--kalahamoon-border);
+}
+
+/* ─── is-style-minimal ─── */
+.wp-block-kalahamoon-comparison-table.is-style-minimal .kalahamoon-comparison-table {
+	border: 0;
+	background: transparent;
+	border-radius: 0;
+}
+
+.wp-block-kalahamoon-comparison-table.is-style-minimal .kalahamoon-comparison-table th {
+	background: transparent;
+	border-block-end: 2px solid var(--kalahamoon-border);
+}
+
+.wp-block-kalahamoon-comparison-table.is-style-minimal .kalahamoon-comparison-table td {
+	border-block-end: 1px solid var(--kalahamoon-border);
+}
+
+/* ─── Narrow containers: reduce padding ─── */
+@container kalahamoon-ct (max-width: 560px) {
+	.wp-block-kalahamoon-comparison-table .kalahamoon-comparison-table th,
+	.wp-block-kalahamoon-comparison-table .kalahamoon-comparison-table td {
+		padding: 8px 10px;
+		font-size: 13px;
+	}
+	.wp-block-kalahamoon-comparison-table .kalahamoon-compare-img {
+		inline-size: 56px;
+		block-size: 56px;
+	}
+}

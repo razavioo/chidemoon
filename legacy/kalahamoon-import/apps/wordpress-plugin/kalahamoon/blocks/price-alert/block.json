@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "kalahamoon/price-alert",
+	"version": "1.0.0",
+	"title": "Kalahamoon Price Alert",
+	"category": "kalahamoon",
+	"icon": "bell",
+	"description": "Let visitors subscribe by email to be notified when a product's price drops.",
+	"keywords": ["price", "alert", "drop", "notify", "قیمت", "هشدار"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"spacing": { "padding": true, "margin": ["top", "bottom"] },
+		"border": { "radius": true, "color": true, "width": true, "style": true }
+	},
+	"attributes": {
+		"productId": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"successText": { "type": "string", "default": "" }
+	},
+	"example": {},
+	"textdomain": "kalahamoon",
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

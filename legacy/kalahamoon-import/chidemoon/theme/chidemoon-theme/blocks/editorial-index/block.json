@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "chidemoon/editorial-index",
+	"version": "1.0.0",
+	"title": "Chidemoon Editorial Index",
+	"category": "theme",
+	"icon": "grid-view",
+	"description": "Reviewed magazine, guide, shop-the-look, or search results.",
+	"attributes": {
+		"mode": { "type": "string", "default": "magazine", "enum": ["magazine", "guides", "shop-look", "search"] },
+		"perPage": { "type": "integer", "default": 12, "minimum": 3, "maximum": 24 },
+		"showFilters": { "type": "boolean", "default": true }
+	},
+	"supports": { "html": false, "align": ["wide", "full"] },
+	"textdomain": "chidemoon-theme",
+	"render": "file:./render.php"
+}

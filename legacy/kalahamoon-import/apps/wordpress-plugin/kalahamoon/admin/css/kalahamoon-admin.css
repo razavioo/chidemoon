@@ -1,0 +1,1032 @@
+/* Kalahamoon — Admin Styles
+ * Minimal additions on top of WordPress admin defaults.
+ * Uses CSS Logical Properties for RTL support.
+ */
+
+/* ─── Status Badges ─── */
+.kalahamoon-status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 12px;
+	border-radius: 9999px;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.kalahamoon-status-connected {
+	background: #dcfce7;
+	color: #166534;
+}
+
+.kalahamoon-status-disconnected {
+	background: #fee2e2;
+	color: #991b1b;
+}
+
+.kalahamoon-status-badge::before {
+	content: '';
+	display: inline-block;
+	inline-size: 8px;
+	block-size: 8px;
+	border-radius: 50%;
+}
+
+.kalahamoon-status-connected::before {
+	background: #16a34a;
+}
+
+.kalahamoon-status-disconnected::before {
+	background: #dc2626;
+}
+
+.kalahamoon-stat-cards {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-block: 20px;
+}
+
+.kalahamoon-stat-card {
+	flex: 1 1 200px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-inline-start: 4px solid #64748b; /* Neutral default starting border */
+	border-radius: 6px;
+	padding: 16px 20px;
+	text-align: start;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kalahamoon-stat-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+	border-color: #c3c4c7;
+}
+
+.kalahamoon-stat-value {
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.25;
+	color: #1d2327;
+	font-feature-settings: "tnum" 1;
+}
+
+.kalahamoon-stat-label {
+	font-size: 13px;
+	font-weight: 500;
+	color: #646970;
+	margin-block-start: 4px;
+}
+
+.kalahamoon-stat-card--primary {
+	border-inline-start-color: #b94a24; /* Kalahamoon terracotta */
+}
+
+.kalahamoon-stat-card--primary .kalahamoon-stat-value {
+	color: #b94a24;
+}
+
+.kalahamoon-stat-card--success {
+	border-inline-start-color: #16a34a;
+}
+
+.kalahamoon-stat-card--success .kalahamoon-stat-value {
+	color: #16a34a;
+}
+
+.kalahamoon-stat-card--warning {
+	border-inline-start-color: #dba617;
+}
+
+.kalahamoon-stat-card--warning .kalahamoon-stat-value {
+	color: #dba617;
+}
+
+/* ─── Sync Status Indicator ─── */
+.kalahamoon-sync-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	color: #646970;
+}
+
+.kalahamoon-sync-status--syncing {
+	color: #2271b1;
+}
+
+.kalahamoon-sync-spinner {
+	display: inline-block;
+	inline-size: 14px;
+	block-size: 14px;
+	border: 2px solid #dcdcde;
+	border-block-start-color: #2271b1;
+	border-radius: 50%;
+	animation: kalahamoon-spin 0.6s linear infinite;
+}
+
+@keyframes kalahamoon-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* ─── Product List Thumbnails ─── */
+.kalahamoon-admin-thumbnail {
+	inline-size: 50px;
+	block-size: 50px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #dcdcde;
+	vertical-align: middle;
+}
+
+.kalahamoon-product-id-cell {
+	cursor: pointer;
+	position: relative;
+}
+
+.kalahamoon-product-id-cell code {
+	font-size: 11px;
+	transition: background 0.15s ease;
+}
+
+.kalahamoon-product-id-cell:hover code {
+	background: #dcdcde;
+}
+
+.kalahamoon-copy-tooltip {
+	position: absolute;
+	inset-block-end: calc(100% + 4px);
+	inset-inline-start: 0;
+	background: #1d2327;
+	color: #fff;
+	font-size: 11px;
+	padding: 3px 8px;
+	border-radius: 4px;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+.kalahamoon-copy-tooltip.is-visible {
+	opacity: 1;
+}
+
+/* ─── Action Buttons ─── */
+.kalahamoon-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-block: 16px;
+}
+
+.kalahamoon-actions .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.kalahamoon-action-status {
+	font-size: 13px;
+	margin-inline-start: 8px;
+	min-inline-size: 120px;
+}
+
+/* ─── Affiliate Link Row Actions ─── */
+.kalahamoon-link-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.kalahamoon-link-actions .button-link-delete {
+	color: #b32d2e;
+}
+
+.kalahamoon-link-actions .button-link-delete:hover {
+	color: #a00;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 782px) {
+	.kalahamoon-stat-cards {
+		flex-direction: column;
+	}
+
+	.kalahamoon-stat-card {
+		flex-basis: auto;
+	}
+}
+
+/* Explicit admin-theme integrations may opt in by adding this class. */
+.kalahamoon-dark .kalahamoon-stat-card {
+  background: #1e293b;
+  border-color: #334155;
+  border-inline-start-color: #475569;
+}
+
+.kalahamoon-dark .kalahamoon-stat-value {
+  color: #f1f5f9;
+}
+
+.kalahamoon-dark .kalahamoon-stat-label {
+  color: #94a3b8;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--primary {
+  border-inline-start-color: #c96846;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--primary .kalahamoon-stat-value {
+  color: #c96846;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--success {
+  border-inline-start-color: #4ade80;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--success .kalahamoon-stat-value {
+  color: #4ade80;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--warning {
+  border-inline-start-color: #fbbf24;
+}
+
+.kalahamoon-dark .kalahamoon-stat-card--warning .kalahamoon-stat-value {
+  color: #fbbf24;
+}
+
+.kalahamoon-dark .kalahamoon-status-connected {
+  background: rgba(16, 163, 74, 0.15);
+  color: #4ade80;
+}
+
+.kalahamoon-dark .kalahamoon-status-disconnected {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
+}
+
+.kalahamoon-dark .kalahamoon-status-connected::before {
+  background: #4ade80;
+}
+
+.kalahamoon-dark .kalahamoon-status-disconnected::before {
+  background: #fca5a5;
+}
+
+.kalahamoon-dark .kalahamoon-sync-status {
+  color: #94a3b8;
+}
+
+.kalahamoon-dark .kalahamoon-sync-status--syncing {
+  color: #60a5fa;
+}
+
+.kalahamoon-dark .kalahamoon-sync-spinner {
+  border-color: #334155;
+  border-block-start-color: #60a5fa;
+}
+
+.kalahamoon-dark .kalahamoon-admin-thumbnail {
+  border-color: #334155;
+}
+
+.kalahamoon-dark .kalahamoon-product-id-cell:hover code {
+  background: #334155;
+}
+
+.kalahamoon-dark .kalahamoon-link-actions .button-link-delete {
+  color: #fca5a5;
+}
+
+.kalahamoon-dark .kalahamoon-link-actions .button-link-delete:hover {
+  color: #f87171;
+}
+
+/* ─── Dashboard page (moved out of inline <style>) ─── */
+.kalahamoon-dash { max-width: 1200px; }
+.kalahamoon-dash h1 { font-weight: 600; letter-spacing: -0.01em; margin-bottom: 16px; }
+.kalahamoon-dash-connect-hero {
+	background: #0f172a;
+	border: 1px solid #1e293b;
+	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+	border-radius: 6px;
+	padding: 20px 24px;
+	margin: 20px 0 24px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+}
+.kalahamoon-dash-connect-hero h2 { color: #fff; margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.kalahamoon-dash-connect-hero p { color: #94a3b8; margin: 0; font-size: 13px; max-width: 480px; line-height: 1.5; }
+.kalahamoon-dash-connect-btn {
+	background: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: none;
+	cursor: pointer;
+	font-size: 13px;
+	transition: background 0.15s ease;
+	flex-shrink: 0;
+}
+.kalahamoon-dash-connect-btn:hover { background: var(--wp-admin-theme-color-darker-10, #135e96); color: #fff; }
+.kalahamoon-dash-status {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	margin: 20px 0 24px;
+}
+.kalahamoon-dash-status-dot {
+	width: 8px; height: 8px; border-radius: 50%;
+	background: var(--wp-admin-theme-color, #2271b1);
+	box-shadow: 0 0 0 4px rgba(185,74,36,0.15);
+}
+.kalahamoon-dash-status-text { flex: 1; font-size: 13px; color: #334155; }
+.kalahamoon-dash-status-text strong { color: #0f172a; }
+.kalahamoon-dash-status a { color: var(--wp-admin-theme-color, #2271b1); font-size: 12px; text-decoration: underline; font-weight: 500; }
+.kalahamoon-dash-readiness {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	margin: 0 0 20px;
+	padding: 18px 20px;
+	border: 1px solid #e2e8f0;
+	border-inline-start: 4px solid #dba617;
+	background: #fffdf6;
+}
+.kalahamoon-dash-readiness.is-ready { border-inline-start-color: #10b981; background: #f0fdf8; }
+.kalahamoon-dash-readiness__eyebrow { margin: 0 0 4px; color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.kalahamoon-dash-readiness h2 { margin: 0; color: #0f172a; font-size: 16px; line-height: 1.3; }
+.kalahamoon-dash-readiness p:not(.kalahamoon-dash-readiness__eyebrow) { max-width: 720px; margin: 6px 0 0; color: #475569; font-size: 13px; line-height: 1.55; }
+.kalahamoon-dash-readiness .button { flex: 0 0 auto; }
+.kalahamoon-dash-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+.kalahamoon-dash .kalahamoon-stat-card {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-inline-start: 3px solid #64748b;
+	border-radius: 6px;
+	padding: 14px 16px;
+	text-decoration: none;
+	color: inherit;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	display: block;
+}
+.kalahamoon-dash .kalahamoon-stat-card:hover { border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.04); color: inherit; }
+.kalahamoon-dash .kalahamoon-stat-card:nth-child(1) { border-inline-start-color: var(--wp-admin-theme-color, #2271b1); }
+.kalahamoon-dash .kalahamoon-stat-card:nth-child(2) { border-inline-start-color: #3b82f6; }
+.kalahamoon-dash .kalahamoon-stat-card:nth-child(3) { border-inline-start-color: #10b981; }
+.kalahamoon-dash .kalahamoon-stat-card:nth-child(4) { border-inline-start-color: #f59e0b; }
+.kalahamoon-stat-icon {
+	color: #64748b;
+	display: inline-flex;
+	align-items: center;
+	margin-bottom: 8px;
+}
+.kalahamoon-dash .kalahamoon-stat-value { font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1; margin-bottom: 4px; letter-spacing: -0.02em; }
+.kalahamoon-dash .kalahamoon-stat-label { color: #64748b; font-size: 12px; font-weight: 500; }
+.kalahamoon-dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 20px; }
+.kalahamoon-dash-panel {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 16px;
+}
+.kalahamoon-dash-panel h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: #0f172a; }
+.kalahamoon-progress-bar { background: #f1f5f9; border-radius: 999px; height: 2px; margin-bottom: 12px; overflow: hidden; }
+.kalahamoon-progress-fill { background: var(--wp-admin-theme-color, #2271b1); height: 100%; border-radius: 999px; transition: width 0.3s; }
+.kalahamoon-step { padding: 8px 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; }
+.kalahamoon-step:last-child { border-bottom: 0; }
+.kalahamoon-step-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.kalahamoon-step-icon.done { background: #10b981; color: #fff; }
+.kalahamoon-step-icon.pending { border: 1.5px solid #cbd5e1; }
+.kalahamoon-step a { color: var(--wp-admin-theme-color, #2271b1); text-decoration: none; font-size: 13px; }
+.kalahamoon-step a.done { color: #64748b; text-decoration: line-through; }
+.kalahamoon-feature-card {
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 10px 12px;
+	transition: border-color 0.15s ease;
+}
+.kalahamoon-feature-card:hover { border-color: #cbd5e1; }
+.kalahamoon-feature-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; color: #0f172a; }
+.kalahamoon-feature-desc { color: #64748b; font-size: 11.5px; line-height: 1.45; margin-bottom: 8px; }
+.kalahamoon-feature-code {
+	display: block;
+	background: #f8fafc;
+	color: #0f172a;
+	padding: 6px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	word-break: break-all;
+	line-height: 1.4;
+	border: 1px solid #e2e8f0;
+}
+.kalahamoon-feature-copy {
+	position: absolute; inset-block-start: 4px; inset-inline-end: 4px;
+	background: #1e293b; color: #fff; border: 0; border-radius: 4px;
+	padding: 3px 8px; cursor: pointer; font-size: 10.5px;
+	opacity: 0; transition: opacity 0.15s;
+}
+.kalahamoon-feature-code-wrap { position: relative; }
+.kalahamoon-feature-code-wrap:hover .kalahamoon-feature-copy,
+.kalahamoon-feature-code-wrap:focus-within .kalahamoon-feature-copy { opacity: 1; }
+
+/* Data-heavy screens keep their real table semantics and scroll as one unit. */
+.kalahamoon-admin-filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-block-end: 16px;
+}
+
+.kalahamoon-table-scroll {
+	max-inline-size: 100%;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+.kalahamoon-table-scroll > .wp-list-table {
+	/* The fixed columns already consume more than 680px. Keep room for the
+	 * primary title instead of letting the browser collapse it character by character. */
+	min-inline-size: 1120px;
+}
+
+.kalahamoon-table-scroll--compact {
+	max-inline-size: 800px;
+}
+
+/* ─── Settings page (moved out of inline <style>) ─── */
+.kalahamoon-settings { max-width: 840px; text-align: start; }
+.kalahamoon-settings h1 { font-weight: 600; letter-spacing: -0.01em; margin-bottom: 20px; }
+.kalahamoon-card {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 24px 28px;
+	margin-bottom: 18px;
+}
+.kalahamoon-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.kalahamoon-card-header h2 { margin: 0; font-size: 15px; font-weight: 600; color: #111827; }
+.kalahamoon-card-subtitle { color: #6b7280; font-size: 13px; margin: 0 0 18px; line-height: 1.5; }
+.kalahamoon-connect-card {
+	background: linear-gradient(135deg, var(--wp-admin-theme-color, #2271b1) 0%, var(--wp-admin-theme-color-darker-20, #0a4b78) 100%);
+	color: #fff;
+	border: 0;
+	box-shadow: 0 4px 14px rgba(34,113,177,0.18);
+}
+.kalahamoon-connect-card h2, .kalahamoon-connect-card .kalahamoon-card-subtitle { color: #fff; }
+.kalahamoon-connect-card .kalahamoon-card-subtitle { color: rgba(255,255,255,0.85); }
+.kalahamoon-btn-connect {
+	background: #fff;
+	color: var(--wp-admin-theme-color, #2271b1);
+	padding: 10px 22px;
+	border-radius: 8px;
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: none;
+	cursor: pointer;
+	font-size: 13.5px;
+	transition: transform 0.15s;
+}
+.kalahamoon-btn-connect:hover { transform: translateY(-1px); color: var(--wp-admin-theme-color, #2271b1); }
+.kalahamoon-connected-card { border-inline-start: 4px solid #22c55e; }
+.kalahamoon-connected-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.kalahamoon-connected-dot {
+	width: 10px; height: 10px; border-radius: 50%;
+	background: #22c55e;
+	box-shadow: 0 0 0 4px rgba(34,197,94,0.15);
+	flex-shrink: 0;
+}
+.kalahamoon-connected-title { font-weight: 600; color: #14532d; font-size: 14px; }
+.kalahamoon-meta-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 13px; }
+.kalahamoon-meta-table td { padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+.kalahamoon-meta-table td:first-child { color: #6b7280; width: 140px; font-weight: 500; }
+.kalahamoon-meta-table td:last-child { color: #111827; }
+.kalahamoon-meta-table tr:last-child td { border-bottom: 0; }
+.kalahamoon-btn-secondary {
+	background: #fff;
+	color: #374151;
+	border: 1px solid #e5e7eb;
+	padding: 8px 16px;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+.kalahamoon-btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; }
+.kalahamoon-btn-danger { color: #dc2626; border-color: #fecaca; }
+.kalahamoon-btn-danger:hover { background: #fef2f2; border-color: #fca5a5; }
+.kalahamoon-btn-primary {
+	background: var(--wp-admin-theme-color, #2271b1); color: #fff; border: 0;
+	padding: 8px 18px; border-radius: 8px;
+	font-size: 13px; font-weight: 500; cursor: pointer;
+	transition: background 0.15s;
+}
+.kalahamoon-btn-primary:hover { background: var(--wp-admin-theme-color-darker-20, #0a4b78); }
+.kalahamoon-btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.kalahamoon-settings .kalahamoon-action-status { font-size: 13px; color: #6b7280; }
+.kalahamoon-settings .kalahamoon-action-status.success { color: #059669; }
+.kalahamoon-settings .kalahamoon-action-status.error { color: #dc2626; }
+.kalahamoon-notice { border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; font-size: 13px; }
+.kalahamoon-notice-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+.kalahamoon-notice-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+.kalahamoon-advanced-details { background: #f9fafb; border-radius: 10px; padding: 0; margin-top: 12px; border: 1px solid #e5e7eb; }
+.kalahamoon-advanced-details summary {
+	cursor: pointer; padding: 14px 20px; font-size: 13px; color: #6b7280; font-weight: 500;
+	display: flex; align-items: center; gap: 8px;
+}
+.kalahamoon-advanced-details[open] summary { border-bottom: 1px solid #e5e7eb; }
+.kalahamoon-advanced-details > div { padding: 20px; }
+.kalahamoon-advanced-details .form-table th { padding: 12px 0; padding-inline-end: 10px; font-weight: 500; font-size: 13px; }
+.kalahamoon-advanced-details .form-table td { padding: 10px 0; padding-inline-end: 10px; }
+
+/* ─── Changelog ─── */
+.kalahamoon-changelog .description {
+	max-width: 760px;
+	font-size: 14px;
+	line-height: 1.7;
+}
+
+.kalahamoon-changelog-timeline {
+	display: grid;
+	gap: 16px;
+	max-width: 920px;
+	margin-block-start: 20px;
+}
+
+.kalahamoon-changelog-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-inline-start: 4px solid #b94a24;
+	border-radius: 8px;
+	padding: 18px 20px;
+}
+
+.kalahamoon-changelog-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-block-end: 10px;
+}
+
+.kalahamoon-changelog-version {
+	display: inline-flex;
+	align-items: center;
+	border: 1px solid rgba(185, 74, 36, 0.25);
+	background: rgba(185, 74, 36, 0.08);
+	color: #8a3419;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-weight: 700;
+	padding: 4px 8px;
+}
+
+.kalahamoon-changelog-date {
+	color: #646970;
+	font-size: 12px;
+}
+
+.kalahamoon-changelog-card h2 {
+	margin: 0 0 8px;
+}
+
+.kalahamoon-changelog-card h3 {
+	margin: 16px 0 6px;
+	font-size: 12px;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: #646970;
+}
+
+.kalahamoon-changelog-card ul {
+	margin: 0;
+	padding-inline-start: 20px;
+}
+
+.kalahamoon-dark .kalahamoon-changelog-card {
+	background: #1e293b;
+	border-color: #334155;
+}
+
+.kalahamoon-dark .kalahamoon-changelog-date,
+.kalahamoon-dark .kalahamoon-changelog-card h3 {
+	color: #94a3b8;
+}
+
+.kalahamoon-page-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 20px 0 8px;
+}
+
+.kalahamoon-page-heading h1 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0;
+}
+
+.kalahamoon-count-badge,
+.kalahamoon-source-badge {
+	display: inline-flex;
+	align-items: center;
+	min-height: 22px;
+	padding: 0 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 999px;
+	background: #f6f7f7;
+	color: #50575e;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.kalahamoon-source-badge.is-local {
+	border-color: #8bc34a;
+	background: #f3faed;
+	color: #3c6416;
+}
+
+.kalahamoon-products-intro {
+	max-width: 760px;
+	margin: 0 0 18px;
+}
+
+.kalahamoon-products-heading {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	margin-block-end: 16px;
+}
+
+.kalahamoon-products-heading h1 {
+	margin: 0;
+}
+
+.kalahamoon-products-heading p {
+	margin: 7px 0 0;
+	max-width: 660px;
+	color: #50575e;
+}
+
+.kalahamoon-products-heading-actions,
+.kalahamoon-catalog-summary,
+.kalahamoon-catalog-source-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.kalahamoon-products-heading-actions {
+	flex: 0 0 auto;
+}
+
+.kalahamoon-public-ready-summary {
+	border-inline-start: 1px solid #dcdcde;
+	padding-inline-start: 8px;
+	color: #8a6500;
+}
+
+.kalahamoon-public-ready-summary.is-ready {
+	color: #1f6b4f;
+}
+
+.kalahamoon-catalog-summary {
+	margin: 0 0 14px;
+	padding: 12px 14px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+	font-size: 12px;
+}
+
+.kalahamoon-catalog-summary span {
+	padding-inline-end: 10px;
+	border-inline-end: 1px solid #dcdcde;
+}
+
+.kalahamoon-catalog-summary a {
+	font-weight: 600;
+}
+
+.kalahamoon-catalog-source-tabs {
+	margin: 0 0 14px;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.kalahamoon-catalog-source-tabs a {
+	padding: 8px 10px;
+	border-bottom: 2px solid transparent;
+	color: #50575e;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.kalahamoon-catalog-source-tabs a.is-active {
+	border-bottom-color: #2271b1;
+	color: #135e96;
+}
+
+.kalahamoon-product-table td {
+	vertical-align: top;
+	padding-block: 12px;
+}
+
+.kalahamoon-product-subtitle,
+.kalahamoon-connection-note,
+.kalahamoon-readiness-note {
+	margin: 5px 0 0;
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.45;
+}
+
+.kalahamoon-readiness-issues {
+	margin: 7px 0 0;
+	padding-inline-start: 18px;
+	color: #50575e;
+	font-size: 12px;
+	line-height: 1.45;
+}
+
+.kalahamoon-readiness-issues li + li {
+	margin-top: 3px;
+}
+
+.kalahamoon-product-reference {
+	margin-top: 7px;
+	color: #646970;
+	font-size: 11px;
+}
+
+.kalahamoon-product-reference summary {
+	cursor: pointer;
+	width: fit-content;
+}
+
+.kalahamoon-product-reference code {
+	display: inline-block;
+	max-width: 160px;
+	margin: 5px 6px 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+.kalahamoon-readiness-badge {
+	display: inline-flex;
+	padding: 4px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.kalahamoon-readiness-badge.is-ready { background: #dcfce7; color: #166534; }
+.kalahamoon-readiness-badge.is-warning { background: #fff3cd; color: #7a4c00; }
+.kalahamoon-readiness-badge.is-neutral { background: #f0f0f1; color: #50575e; }
+
+.kalahamoon-readiness-link {
+	display: block;
+	margin-top: 7px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+@media (max-width: 782px) {
+	.kalahamoon-products-heading {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.kalahamoon-products-heading-actions .button {
+		flex: 1 1 auto;
+		justify-content: center;
+	}
+
+	.kalahamoon-catalog-summary span {
+		border-inline-end: 0;
+	}
+}
+
+.kalahamoon-product-id {
+	display: inline-block;
+	max-width: 132px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+.kalahamoon-empty-cell {
+	padding: 40px 24px !important;
+	color: #646970;
+	text-align: center;
+}
+
+.kalahamoon-pagination {
+	margin-top: 18px;
+}
+
+.kalahamoon-pagination .page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin: 0;
+}
+
+.kalahamoon-pagination li {
+	margin: 0;
+}
+
+.kalahamoon-pagination a,
+.kalahamoon-pagination span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 30px;
+	min-height: 30px;
+	padding: 0 8px;
+	border: 1px solid #c3c4c7;
+	border-radius: 2px;
+	background: #fff;
+	text-decoration: none;
+}
+
+.kalahamoon-pagination .current {
+	border-color: #2271b1;
+	background: #2271b1;
+	color: #fff;
+}
+
+.kalahamoon-product-form {
+	max-width: 900px;
+}
+
+.kalahamoon-inline-form {
+	display: inline;
+}
+
+.kalahamoon-product-image-preview {
+	width: 180px;
+	margin-top: 12px;
+	overflow: hidden;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #f6f7f7;
+}
+
+.kalahamoon-product-image-preview img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+@media (max-width: 782px) {
+	.kalahamoon-admin-filters > .regular-text,
+	.kalahamoon-admin-filters > select {
+		inline-size: 100% !important;
+		max-inline-size: none;
+	}
+
+	.kalahamoon-card {
+		padding: 20px;
+	}
+
+	.kalahamoon-dash-connect-hero,
+	.kalahamoon-dash-status,
+	.kalahamoon-dash-readiness,
+	.kalahamoon-changelog-card-header {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.kalahamoon-dash-stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.kalahamoon-dash-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.kalahamoon-page-heading {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.kalahamoon-page-heading .page-title-action {
+		margin: 0;
+	}
+
+	.kalahamoon-table-scroll {
+		overflow: visible;
+	}
+
+	.kalahamoon-product-table,
+	.kalahamoon-product-table tbody,
+	.kalahamoon-product-table tr,
+	.kalahamoon-product-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.kalahamoon-product-table {
+		border: 0;
+		background: transparent;
+	}
+
+	.kalahamoon-product-table thead {
+		display: none;
+	}
+
+	.kalahamoon-product-table tbody {
+		display: grid;
+		gap: 12px;
+	}
+
+	.kalahamoon-product-table tr {
+		padding: 12px;
+		border: 1px solid #dcdcde;
+		background: #fff;
+	}
+
+	.kalahamoon-product-table td {
+		padding: 8px 0;
+		border: 0;
+	}
+
+	.kalahamoon-product-table td::before {
+		content: attr(data-label);
+		display: block;
+		margin-bottom: 4px;
+		color: #646970;
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: .06em;
+		text-transform: uppercase;
+	}
+
+	.kalahamoon-product-table td:first-child,
+	.kalahamoon-product-table .kalahamoon-empty-cell::before {
+		display: none;
+	}
+
+	.kalahamoon-product-table .kalahamoon-empty-cell {
+		padding: 20px 12px;
+		border: 1px solid #dcdcde;
+		background: #fff;
+	}
+}
+
+@media (max-width: 480px) {
+	.kalahamoon-dash-stats {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.kalahamoon-btn-row > button {
+		inline-size: 100%;
+	}
+
+	.kalahamoon-meta-table,
+	.kalahamoon-meta-table tbody,
+	.kalahamoon-meta-table tr,
+	.kalahamoon-meta-table td {
+		display: block;
+		inline-size: 100%;
+	}
+
+	.kalahamoon-meta-table td:first-child {
+		padding-block-end: 2px;
+	}
+
+	.kalahamoon-meta-table td:last-child {
+		padding-block-start: 2px;
+		overflow-wrap: anywhere;
+	}
+}
