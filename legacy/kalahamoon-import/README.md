@@ -31,3 +31,40 @@ git -C <kalahamoon> archive --output=/tmp/export.tar 10d89f6f^ -- \
 - The `wordpress-plugin` client-compatibility contract in
   `src/lib/extension/client-version.ts`: already-installed copies of this
   plugin still call the live panel API with that client type.
+
+## Port policy — why Chidemoon split, and what must NOT be ported
+
+Chidemoon was originally a **read-only projection surface of the Kalahamoon
+panel**: the WordPress plugin was literally a "catalog projection consumer"
+(`Kalahamoon_Catalog_Consumer` + connector client-id/secret + origin
+challenge), content launch gates counted products *synced from Kalahamoon*,
+and even affiliate linking and schema output branched on that consumer being
+enabled. The independent platform inverts this: Chidemoon owns its data,
+content, and logic (`chidemoon-core` ships native importer/blocks/forms/
+affiliate; `chidemoon-ai` replaces the panel-driven AI studio).
+
+Therefore this directory is **reference-only**. Do not import these into the
+active stack; they encode the old consumer protocol and must be rewritten
+from scratch if a similar need reappears:
+
+| Legacy piece | Why it must be rewritten, not ported |
+|---|---|
+| `includes/api/*`, `includes/auth/*` (API client, products, catalog consumer, token store), REST controller | Speaks the Kalahamoon connector protocol; its server side (panel API-key pages) was deleted too. Any future sync = fresh API-to-API design. |
+| `deploy/chidemoon/catalog-sync.php` + `mu-plugins/kalahamoon-runtime.php` | Wires the consumer env contract (`KALAHAMOON_CATALOG_CONNECTOR_*`, `KALAHAMOON_INTERNAL_API_URL`). |
+| `mu-plugins/chidemoon-launch-readiness.php` | Encodes the old content model (24+ synced products, kalahamoon-fed catalog). New readiness criteria must come from Chidemoon's own editorial model. |
+| Plugin affiliate stack (`auto-linker`, `link-cloaker`, `click-tracker`, `price-alert-mailer`) | Gated on the catalog consumer; `chidemoon-core-affiliate` is the native replacement. |
+| `theme/chidemoon-theme/` (June-era block theme) | Superseded by `themes/chidemoon-blocksy-child`. |
+| `scripts/deploy-chidemoon-vps.sh` (+ test) | Superseded by this repo's `ops/deploy-release-bundle.sh`. |
+
+Safe to consult (generic, no consumer coupling): neutral content blocks
+(faq, pros-cons, testimonials, cta, rating-box...), i18n/RTL helpers,
+fa_IR translations.
+
+## Operational loose end: Discourse
+
+`community.chidemoon.com` still runs from compose files that only exist on
+the VPS inside the retired kalahamoon deployment. Its deploy assets here
+(`chidemoon/deploy/compose.discourse.yml`, `deploy-community.sh`,
+`Caddyfile.community.example`) are snapshots, not a maintained pipeline.
+Decide explicitly: promote Discourse ops into this repo as first-class
+tooling, or decommission it.
