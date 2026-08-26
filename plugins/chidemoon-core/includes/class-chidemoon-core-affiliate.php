@@ -414,11 +414,13 @@ final class Chidemoon_Core_Affiliate {
 		$product = wc_get_product( $product_id );
 		if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product_id ) || ! $product->is_type( 'external' ) ) {
 			self::render_not_found();
+			return;
 		}
 
 		$url = self::get_affiliate_url( $product );
 		if ( '' === $url ) {
 			self::render_not_found();
+			return;
 		}
 
 		self::log_click( $product_id, $url );

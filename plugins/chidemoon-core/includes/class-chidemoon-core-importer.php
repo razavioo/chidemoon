@@ -628,8 +628,12 @@ final class Chidemoon_Core_Importer {
 				'post_status'            => 'any',
 				'fields'                 => 'ids',
 				'posts_per_page'         => 3,
-				'meta_key'               => Chidemoon_Core_Affiliate::META_SOURCE_KEY,
-				'meta_value'             => $source_key,
+				'meta_query'             => array(
+					array(
+						'key'   => Chidemoon_Core_Affiliate::META_SOURCE_KEY,
+						'value' => $source_key,
+					),
+				),
 				'no_found_rows'          => true,
 				'ignore_sticky_posts'    => true,
 				'suppress_filters'       => true,
