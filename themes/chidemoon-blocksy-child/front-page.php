@@ -72,8 +72,12 @@ $featured_id         = (int) $featured_story->ID;
 $featured_categories = get_the_category( $featured_id );
 ?>
 <article class="chidemoon-featured">
-<a class="chidemoon-featured__media" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">
-<?php echo get_the_post_thumbnail( $featured_story, 'large', array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+<a class="chidemoon-featured__media" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $featured_story ) ); ?>">
+<?php if ( has_post_thumbnail( $featured_story ) ) : ?>
+<?php echo get_the_post_thumbnail( $featured_story, 'large', array( 'fetchpriority' => 'high', 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+<?php else : ?>
+<span class="chidemoon-card__media-empty" aria-hidden="true"></span>
+<?php endif; ?>
 </a>
 <div class="chidemoon-featured__body">
 <?php if ( ! empty( $featured_categories ) ) : ?>
@@ -95,14 +99,18 @@ $side_post       = get_post( $side_id );
 $side_categories = get_the_category( $side_id );
 ?>
 <article class="chidemoon-side-story">
-<a class="chidemoon-side-story__media" href="<?php echo esc_url( get_permalink( $side_post ) ); ?>">
+<a class="chidemoon-side-story__media" href="<?php echo esc_url( get_permalink( $side_post ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $side_post ) ); ?>">
+<?php if ( has_post_thumbnail( $side_post ) ) : ?>
 <?php echo get_the_post_thumbnail( $side_post, 'medium', array( 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+<?php else : ?>
+<span class="chidemoon-card__media-empty" aria-hidden="true"></span>
+<?php endif; ?>
 </a>
 <div class="chidemoon-side-story__body">
 <?php if ( ! empty( $side_categories ) ) : ?>
 <span class="chidemoon-side-story__category"><?php echo esc_html( $side_categories[0]->name ); ?></span>
 <?php endif; ?>
-<h3 class="chidemoon-side-story__title"><a href="<?php echo esc_url( get_permalink( $side_post ) ); ?>"><?php echo esc_html( get_the_title( $side_post ) ); ?></a></h3>
+<h2 class="chidemoon-side-story__title"><a href="<?php echo esc_url( get_permalink( $side_post ) ); ?>"><?php echo esc_html( get_the_title( $side_post ) ); ?></a></h2>
 <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $side_post ) ); ?>"><?php echo esc_html( get_the_date( '', $side_post ) ); ?></time>
 </div>
 </article>

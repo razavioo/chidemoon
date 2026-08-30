@@ -59,7 +59,7 @@ $comparison_posts = new WP_Query(
 			<div class="chidemoon-card-grid chidemoon-card-grid--archive">
 				<?php while ( $comparison_posts->have_posts() ) : ?>
 					<?php $comparison_posts->the_post(); ?>
-					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact' ); ?>
+					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact', 3 ); ?>
 				<?php endwhile; ?>
 			</div>
 			<?php wp_reset_postdata(); ?>

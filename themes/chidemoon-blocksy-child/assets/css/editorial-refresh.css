@@ -17,6 +17,45 @@
 	--chidemoon-radius-sm: 0.65rem;
 	--chidemoon-radius: 1rem;
 	--chidemoon-radius-lg: 1.4rem;
+	--chidemoon-motion-fast: 140ms;
+	--chidemoon-motion-standard: 200ms;
+	--chidemoon-motion-image: 280ms;
+	--chidemoon-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html {
+	scroll-padding-top: 6rem;
+}
+
+.chidemoon-skip-link {
+	background: var(--chidemoon-forest-deep);
+	border-radius: 0 0 var(--chidemoon-radius-sm) var(--chidemoon-radius-sm);
+	color: #fffdfa;
+	font-family: var(--chidemoon-font-ui);
+	font-weight: 700;
+	inset-block-start: 0;
+	inset-inline-start: 1rem;
+	padding: 0.8rem 1rem;
+	position: fixed;
+	text-decoration: none;
+	transform: translateY(-120%);
+	transition: transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	z-index: 10000;
+}
+
+.chidemoon-skip-link:focus {
+	color: #fffdfa;
+	transform: translateY(0);
+}
+
+:where(.chidemoon-text-link, .chidemoon-side-story__all, .chidemoon-category-link, .chidemoon-route-card) {
+	touch-action: manipulation;
+}
+
+@media (pointer: coarse) {
+	:where(.chidemoon-text-link, .chidemoon-side-story__all) {
+		min-height: 2.75rem;
+	}
 }
 
 .chidemoon-section-shell {
@@ -72,8 +111,11 @@
 }
 
 .chidemoon-card:hover,
+.chidemoon-card:focus-within,
 .chidemoon-featured:hover,
-.chidemoon-side-story:hover {
+.chidemoon-featured:focus-within,
+.chidemoon-side-story:hover,
+.chidemoon-side-story:focus-within {
 	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
 	transform: translateY(-4px);
 }
@@ -146,7 +188,7 @@
 
 .chidemoon-side-story {
 	grid-template-columns: minmax(7.5rem, 42%) minmax(0, 1fr);
-	transition: box-shadow 180ms ease, transform 180ms ease;
+	transition: box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
 }
 
 .chidemoon-side-story__body {
@@ -429,10 +471,11 @@
 	border: 0;
 	border-radius: var(--chidemoon-radius);
 	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
-	transition: box-shadow 180ms ease, transform 180ms ease;
+	transition: box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
 }
 
-.woocommerce ul.products li.product:hover {
+.woocommerce ul.products li.product:hover,
+.woocommerce ul.products li.product:focus-within {
 	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
 	transform: translateY(-4px);
 }
@@ -554,6 +597,10 @@
 }
 
 @media (max-width: 640px) {
+	body {
+		font-size: 1rem;
+	}
+
 	.chidemoon-section-shell {
 		padding-inline: 0.9rem;
 	}
@@ -695,5 +742,30 @@
 
 	.woocommerce .related.products ul.products {
 		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.chidemoon-skip-link {
+		transition: none;
+	}
+
+	:where(
+		.chidemoon-card,
+		.chidemoon-featured,
+		.chidemoon-side-story,
+		.woocommerce ul.products li.product
+	):is(:hover, :focus-within) {
+		transform: none;
+	}
+
+	:where(
+		.chidemoon-card__media img,
+		.chidemoon-featured__media img,
+		.chidemoon-route-card,
+		.chidemoon-article__navigation .nav-previous,
+		.chidemoon-article__navigation .nav-next
+	) {
+		transform: none !important;
 	}
 }

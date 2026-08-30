@@ -43,6 +43,17 @@ function chidemoon_blocksy_enqueue_styles(): void {
 }
 add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_styles', 20 );
 
+/**
+ * Keep keyboard users out of the Blocksy navigation chrome when they want the
+ * page content. The target is shared by every public template in this theme.
+ */
+function chidemoon_blocksy_render_skip_link(): void {
+	?>
+	<a class="chidemoon-skip-link" href="#primary"><?php esc_html_e( 'رفتن به محتوای اصلی', 'chidemoon-blocksy-child' ); ?></a>
+	<?php
+}
+add_action( 'wp_body_open', 'chidemoon_blocksy_render_skip_link', 5 );
+
 function chidemoon_blocksy_setup(): void {
 	add_theme_support( 'woocommerce' );
 	add_theme_support( 'title-tag' );
@@ -56,6 +67,17 @@ function chidemoon_blocksy_body_classes( array $classes ): array {
 	return $classes;
 }
 add_filter( 'body_class', 'chidemoon_blocksy_body_classes' );
+
+add_filter(
+	'blocksy:breadcrumbs:items-array',
+	static function ( array $items ): array {
+		if ( isset( $items[0]['name'] ) && 'Home' === $items[0]['name'] ) {
+			$items[0]['name'] = 'خانه';
+		}
+
+		return $items;
+	}
+);
 
 /**
  * The presentation is Persian-first, so numerals are converted to Persian
@@ -121,8 +143,12 @@ function chidemoon_blocksy_page_url( string $slug ): string {
 /**
  * The presentation layer deliberately reads only public WordPress fields. It
  * does not infer product claims, merchant links, review state, or affiliate data.
+ *
+ * @param int    $post_id      Published post ID.
+ * @param string $variant      Optional lead or compact visual variant.
+ * @param int    $heading_level Card heading level, limited to h2 or h3.
  */
-function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '' ): void {
+function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '', int $heading_level = 3 ): void {
 	$post = get_post( $post_id );
 	if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status ) {
 		return;
@@ -135,6 +161,8 @@ function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '' 
 	$category       = ! empty( $categories ) ? $categories[0] : null;
 	$valid_variants = array( 'lead', 'compact' );
 	$variant_class  = in_array( $variant, $valid_variants, true ) ? ' chidemoon-story-card--' . $variant : '';
+	$heading_level  = in_array( $heading_level, array( 2, 3 ), true ) ? $heading_level : 3;
+	$heading_tag    = 'h' . $heading_level;
 	?>
 	<article class="chidemoon-card chidemoon-story-card<?php echo esc_attr( $variant_class ); ?>">
 		<a class="chidemoon-card__media" href="<?php echo esc_url( $permalink ); ?>" aria-label="<?php echo esc_attr( $title ); ?>">
@@ -193,7 +221,7 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 				<?php if ( $term instanceof WP_Term ) : ?>
 					<p class="chidemoon-card__meta"><span><?php echo esc_html( $term->name ); ?></span></p>
 				<?php endif; ?>
-				<h3 class="chidemoon-card__title"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></h3>
+				<<?php echo esc_html( $heading_tag ); ?> class="chidemoon-card__title"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></<?php echo esc_html( $heading_tag ); ?>>
 				<?php if ( '' !== $price_html ) : ?>
 					<p class="chidemoon-product-card__price"><?php echo wp_kses_post( $price_html ); ?></p>
 				<?php else : ?>
