@@ -10,7 +10,7 @@ referenced by the active Chidemoon stack (`compose.yml`, `plugins/`, `themes/`,
 | Path | Origin | Notes |
 |------|--------|-------|
 | `apps/wordpress-plugin/kalahamoon/` | kalahamoon worktree at v2.11.0 (`d8e67be0`) | The "kalahamoon" WordPress plugin as deployed on the retired embedded chidemoon.com stack (plugin v1.x line). Superseded by `plugins/chidemoon-core` + `plugins/chidemoon-ai`. |
-| `chidemoon/` | git history `10d89f6f^` (last state before removal on 2026-08-25) | Original June-2026 layout: `theme/chidemoone-theme` block theme source (incl. YekanBakh fonts), `deploy/build-packages.sh`, Discourse deploy assets, local dev compose/init scripts. |
+| `chidemoon/` | git history `10d89f6f^` (last state before removal on 2026-08-25) | Original June-2026 layout: `theme/chidemoone-theme` block theme source (incl. YekanBakh fonts), `deploy/build-packages.sh`, and local dev compose/init scripts. |
 | `deploy/chidemoon/` | git history `10d89f6f^` | Sealed-release install assets: `install.sh`, mu-plugins (`kalahamoon-runtime.php`, `chidemoon-launch-readiness.php`), `catalog-sync.php`, `compose.staging.yml`. |
 | `scripts/deploy-chidemoon-vps.sh` (+ `.test.ts`) | git history `10d89f6f^` | The guarded VPS deploy script used for chidemoon releases from inside kalahamoon bundles. Replaced by this repo's `ops/deploy-release-bundle.sh`. |
 
@@ -59,12 +59,3 @@ from scratch if a similar need reappears:
 Safe to consult (generic, no consumer coupling): neutral content blocks
 (faq, pros-cons, testimonials, cta, rating-box...), i18n/RTL helpers,
 fa_IR translations.
-
-## Operational loose end: Discourse
-
-`community.chidemoon.com` still runs from compose files that only exist on
-the VPS inside the retired kalahamoon deployment. Its deploy assets here
-(`chidemoon/deploy/compose.discourse.yml`, `deploy-community.sh`,
-`Caddyfile.community.example`) are snapshots, not a maintained pipeline.
-Decide explicitly: promote Discourse ops into this repo as first-class
-tooling, or decommission it.

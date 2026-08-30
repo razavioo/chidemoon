@@ -13,7 +13,7 @@ Chidemoon is the Persian-first editorial and affiliate surface for the Kalahamoo
 ## Repository layout
 
 - `theme/chidemoon-theme/` — Full Site Editing theme, templates, patterns, styles, and lightweight interactions.
-- `deploy/` — reproducible package builder and Discourse deployment definitions.
+- `deploy/` — reproducible package builder.
 - `packages/` — generated checksummed release artifacts. Do not edit generated ZIP files manually.
 - `../apps/wordpress-plugin/kalahamoon/` — the reusable catalog, affiliate, AI, form, alert, and block implementation.
 - `../deploy/chidemoon/mu-plugins/` — runtime authority, analytics, content migration, and launch-readiness controls.
@@ -77,7 +77,6 @@ The production gate requires all of the following from real data:
 - two comparison types with at least three compatible products each;
 - six reviewed Shop-the-Look stories with at least three valid hotspots each;
 - 12 fully reviewed editorial posts, including six guides;
-- a live community with eight topics, two categories, and three recently active topics with replies;
 - Persian locale, Tehran timezone, remote catalog authority, closed comments, and configured Matomo;
 - every required public route published.
 
@@ -101,7 +100,7 @@ Pure Chidemoon theme or site-content work is excluded from the Kalahamoon releas
 
 Before public launch, verify the public and authenticated-editor paths separately:
 
-- home, shop, Shop-the-Look, compare, guides, magazine, forms, community handoff, and 404;
+- home, shop, Shop-the-Look, compare, guides, magazine, forms, and 404;
 - desktop plus 320, 360, 390, 768, 1024, and 1280 pixel viewports;
 - keyboard focus, menu trapping/return focus, filters, quick view, favorites, same-type comparison, form validation/success/error, and AI no-result/rate-limit states;
 - one H1, Persian locale, canonical/title/description, Article schema where accurate, image alt/dimensions, no horizontal overflow, no console errors, and no broken images;
