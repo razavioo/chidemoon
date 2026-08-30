@@ -3,7 +3,8 @@ param(
     [string]$AdminUser,
     [string]$AdminPassword,
     [string]$AdminEmail,
-    [switch]$AllowNetworkThemeDownload
+    [switch]$AllowNetworkThemeDownload,
+    [switch]$Seed
 )
 
 Set-StrictMode -Version Latest
@@ -221,5 +222,10 @@ if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace(($samplePageId -j
 }
 
 Invoke-Wp rewrite flush --hard
+
+if ($Seed) {
+    Invoke-Wp eval-file /tools/seed-editorial.php
+}
+
 Write-Output "Chidemoon is ready at $siteUrl"
 Write-Output "Admin user: $adminUser"

@@ -15,7 +15,7 @@ get_header( 'shop' );
 
 <div class="chidemoon-shop-archive">
 	<section class="chidemoon-shop-archive__intro chidemoon-section-shell">
-		<p class="chidemoon-eyebrow"><?php esc_html_e( 'The product edit', 'chidemoon-blocksy-child' ); ?></p>
+		<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
 		<h1><?php woocommerce_page_title(); ?></h1>
 		<?php do_action( 'woocommerce_archive_description' ); ?>
 	</section>
@@ -35,7 +35,7 @@ get_header( 'shop' );
 
 			<?php do_action( 'woocommerce_after_shop_loop' ); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The product edit is being prepared.', 'chidemoon-blocksy-child' ), __( 'Products appear only after their merchant destination, category, imagery, and review status are ready for public use.', 'chidemoon-blocksy-child' ) ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'انتخاب کالا در حال آماده‌سازی است.', 'کالاها فقط وقتی نمایش داده می‌شوند که مقصد فروشنده، دسته‌بندی، تصویر و وضعیت بررسی‌شان آماده استفاده عمومی باشد.' ); ?>
 		<?php endif; ?>
 	</section>
 

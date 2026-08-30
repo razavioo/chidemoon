@@ -26,20 +26,26 @@ $comparison_posts = new WP_Query(
 	<?php while ( have_posts() ) : ?>
 		<?php the_post(); ?>
 		<header class="chidemoon-collection-page__hero chidemoon-section-shell">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'Evidence-led comparisons', 'chidemoon-blocksy-child' ); ?></p>
+			<p class="chidemoon-eyebrow"><?php esc_html_e( 'مقایسه‌های مبتنی بر شواهد', 'chidemoon-blocksy-child' ); ?></p>
 			<h1><?php the_title(); ?></h1>
 			<?php if ( has_excerpt() ) : ?>
 				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
 			<?php endif; ?>
 		</header>
 
+		<?php if ( has_post_thumbnail() ) : ?>
+			<figure class="chidemoon-collection-page__image chidemoon-section-shell">
+				<?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?>
+			</figure>
+		<?php endif; ?>
+
 		<section class="chidemoon-collection-page__content chidemoon-section-shell">
 			<div class="entry-content">
 				<?php the_content(); ?>
 			</div>
 			<aside class="chidemoon-collection-page__note">
-				<span class="chidemoon-eyebrow"><?php esc_html_e( 'How we compare', 'chidemoon-blocksy-child' ); ?></span>
-				<p><?php esc_html_e( 'Comparisons make their evidence and unresolved points visible so an editor can keep each decision accountable.', 'chidemoon-blocksy-child' ); ?></p>
+				<span class="chidemoon-eyebrow"><?php esc_html_e( 'روش مقایسه ما', 'chidemoon-blocksy-child' ); ?></span>
+				<p><?php esc_html_e( 'مقایسه‌ها شواهد و نکات حل‌نشده را آشکار نشان می‌دهند تا هر تصمیم قابل پاسخگویی بماند.', 'chidemoon-blocksy-child' ); ?></p>
 			</aside>
 		</section>
 	<?php endwhile; ?>
@@ -47,8 +53,8 @@ $comparison_posts = new WP_Query(
 	<section class="chidemoon-section-shell chidemoon-collection-page__feed" aria-labelledby="chidemoon-comparisons-feed">
 		<div class="chidemoon-section-heading">
 			<div>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'In the journal', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-comparisons-feed"><?php esc_html_e( 'Published comparisons', 'chidemoon-blocksy-child' ); ?></h2>
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'در مجله', 'chidemoon-blocksy-child' ); ?></p>
+				<h2 id="chidemoon-comparisons-feed"><?php esc_html_e( 'مقایسه‌های منتشرشده', 'chidemoon-blocksy-child' ); ?></h2>
 			</div>
 		</div>
 		<?php if ( $comparison_posts->have_posts() ) : ?>
@@ -60,7 +66,7 @@ $comparison_posts = new WP_Query(
 			</div>
 			<?php wp_reset_postdata(); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The first comparison is under editorial review.', 'chidemoon-blocksy-child' ), __( 'Only comparisons with checked product facts and clear sources will be published here.', 'chidemoon-blocksy-child' ) ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'اولین مقایسه در حال بررسی است.', 'فقط مقایسه‌هایی که واقعیت کالاهایشان بررسی و منبع‌شان شفاف باشد اینجا منتشر می‌شوند.' ); ?>
 		<?php endif; ?>
 	</section>
 </main>

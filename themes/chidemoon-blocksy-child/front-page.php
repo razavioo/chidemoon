@@ -1,163 +1,185 @@
 <?php
 /**
- * The home page is a public, content-led composition. Every card is sourced
- * from published WordPress or WooCommerce records, so an unprepared launch
- * stays honest instead of displaying made-up editorial material.
+ * The home page is a public, content-led magazine composition. Every card is
+ * sourced from published WordPress or WooCommerce records, so an unprepared
+ * launch stays honest instead of displaying made-up editorial material.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+exit;
 }
 
 get_header();
 
-$front_page_id    = (int) get_option( 'page_on_front' );
-$front_page        = $front_page_id > 0 ? get_post( $front_page_id ) : null;
-$hero_title        = $front_page instanceof WP_Post ? get_the_title( $front_page ) : get_bloginfo( 'name' );
-$hero_description  = $front_page instanceof WP_Post && has_excerpt( $front_page )
-	? get_the_excerpt( $front_page )
-	: get_bloginfo( 'description' );
-$shop_url          = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' );
-$stories           = new WP_Query(
-	array(
-		'post_type'           => 'post',
-		'post_status'         => 'publish',
-		'posts_per_page'      => 3,
-		'ignore_sticky_posts' => true,
-		'no_found_rows'       => true,
-	)
+$stories = new WP_Query(
+array(
+'post_type'           => 'post',
+'post_status'         => 'publish',
+'posts_per_page'      => 9,
+'ignore_sticky_posts' => true,
+'no_found_rows'       => true,
+)
 );
-$products          = function_exists( 'wc_get_products' )
-	? wc_get_products(
-		array(
-			'status'  => 'publish',
-			'limit'   => 4,
-			'orderby' => 'date',
-			'order'   => 'DESC',
-		)
-	)
-	: array();
+$story_ids      = array();
+$featured_story = null;
+$side_stories   = array();
+$grid_stories   = array();
+if ( $stories->have_posts() ) {
+while ( $stories->have_posts() ) {
+$stories->the_post();
+$story_ids[] = get_the_ID();
+}
+wp_reset_postdata();
+
+$featured_story = get_post( $story_ids[0] );
+$side_stories   = array_slice( $story_ids, 1, 2 );
+$grid_stories   = array_slice( $story_ids, 3 );
+}
+$products           = function_exists( 'wc_get_products' )
+? wc_get_products(
+array(
+'status'  => 'publish',
+'limit'   => 4,
+'orderby' => 'date',
+'order'   => 'DESC',
+)
+)
+: array();
 $product_categories = taxonomy_exists( 'product_cat' )
-	? get_terms(
-		array(
-			'taxonomy'   => 'product_cat',
-			'hide_empty' => true,
-			'number'     => 6,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		)
-	)
-	: array();
+? get_terms(
+array(
+'taxonomy'   => 'product_cat',
+'hide_empty' => true,
+'number'     => 6,
+'orderby'    => 'count',
+'order'      => 'DESC',
+)
+)
+: array();
+$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' );
 ?>
 
 <main id="primary" class="site-main chidemoon-home">
-	<section class="chidemoon-home__hero chidemoon-section-shell">
-		<div class="chidemoon-home__hero-copy">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'Home, design, and considered living', 'chidemoon-blocksy-child' ); ?></p>
-			<h1><?php echo esc_html( '' !== $hero_title ? $hero_title : get_bloginfo( 'name' ) ); ?></h1>
-			<?php if ( '' !== $hero_description ) : ?>
-				<p class="chidemoon-home__lede"><?php echo esc_html( $hero_description ); ?></p>
-			<?php endif; ?>
-			<div class="chidemoon-home__actions">
-				<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Explore selections', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">↗</span></a>
-				<a class="chidemoon-button chidemoon-button--quiet" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'guides' ) ); ?>"><?php esc_html_e( 'Read the journal', 'chidemoon-blocksy-child' ); ?></a>
-			</div>
-		</div>
-		<div class="chidemoon-home__hero-mark" aria-hidden="true">
-			<span>CM</span>
-			<i></i>
-			<b></b>
-		</div>
-	</section>
 
-	<?php if ( $front_page instanceof WP_Post && '' !== trim( $front_page->post_content ) ) : ?>
-		<section class="chidemoon-home__intro chidemoon-section-shell">
-			<div class="entry-content">
-				<?php echo apply_filters( 'the_content', $front_page->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</div>
-		</section>
-	<?php endif; ?>
+<?php if ( ! $featured_story instanceof WP_Post ) : ?>
+<h1 class="chidemoon-sr-only"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
+<?php endif; ?>
 
-	<section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-products-heading">
-		<div class="chidemoon-section-heading">
-			<div>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'A useful edit', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-products-heading"><?php esc_html_e( 'Products worth considering', 'chidemoon-blocksy-child' ); ?></h2>
-			</div>
-			<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Browse all products', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">↗</span></a>
-		</div>
+<?php if ( $featured_story instanceof WP_Post ) : ?>
+<section class="chidemoon-home__top chidemoon-section-shell" aria-label="برجسته‌ترین مطالب">
+<?php
+$featured_id         = (int) $featured_story->ID;
+$featured_categories = get_the_category( $featured_id );
+?>
+<article class="chidemoon-featured">
+<a class="chidemoon-featured__media" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">
+<?php echo get_the_post_thumbnail( $featured_story, 'large', array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+</a>
+<div class="chidemoon-featured__body">
+<?php if ( ! empty( $featured_categories ) ) : ?>
+<a class="chidemoon-card__badge chidemoon-card__badge--inline" href="<?php echo esc_url( get_category_link( $featured_categories[0]->term_id ) ); ?>"><?php echo esc_html( $featured_categories[0]->name ); ?></a>
+<?php endif; ?>
+<h1 class="chidemoon-featured__title"><a href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>"><?php echo esc_html( get_the_title( $featured_story ) ); ?></a></h1>
+<p class="chidemoon-featured__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $featured_story ), 32 ) ); ?></p>
+<div class="chidemoon-featured__meta">
+<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $featured_story ) ); ?>"><?php echo esc_html( get_the_date( '', $featured_story ) ); ?></time>
+<a class="chidemoon-text-link" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">خواندن راهنما<span aria-hidden="true">←</span></a>
+</div>
+</div>
+</article>
 
-		<?php if ( ! empty( $products ) ) : ?>
-			<div class="chidemoon-card-grid chidemoon-card-grid--products">
-				<?php chidemoon_blocksy_render_product_cards( $products ); ?>
-			</div>
-		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The first product edit is being reviewed.', 'chidemoon-blocksy-child' ), __( 'Only products with checked merchant details, imagery, and editorial review will appear here.', 'chidemoon-blocksy-child' ) ); ?>
-		<?php endif; ?>
-	</section>
+<div class="chidemoon-side-stories">
+<?php foreach ( $side_stories as $side_id ) : ?>
+<?php
+$side_post       = get_post( $side_id );
+$side_categories = get_the_category( $side_id );
+?>
+<article class="chidemoon-side-story">
+<a class="chidemoon-side-story__media" href="<?php echo esc_url( get_permalink( $side_post ) ); ?>">
+<?php echo get_the_post_thumbnail( $side_post, 'medium', array( 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+</a>
+<div class="chidemoon-side-story__body">
+<?php if ( ! empty( $side_categories ) ) : ?>
+<span class="chidemoon-side-story__category"><?php echo esc_html( $side_categories[0]->name ); ?></span>
+<?php endif; ?>
+<h3 class="chidemoon-side-story__title"><a href="<?php echo esc_url( get_permalink( $side_post ) ); ?>"><?php echo esc_html( get_the_title( $side_post ) ); ?></a></h3>
+<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $side_post ) ); ?>"><?php echo esc_html( get_the_date( '', $side_post ) ); ?></time>
+</div>
+</article>
+<?php endforeach; ?>
+<a class="chidemoon-side-story__all" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">همه مطالب مجله<span aria-hidden="true">←</span></a>
+</div>
+</section>
+<?php endif; ?>
+<?php if ( ! empty( $grid_stories ) ) : ?>
+<section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-latest-heading">
+<div class="chidemoon-section-heading">
+<div>
+<h2 id="chidemoon-latest-heading">آخرین مطالب</h2>
+</div>
+<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله<span aria-hidden="true">←</span></a>
+</div>
+<div class="chidemoon-card-grid chidemoon-card-grid--stories">
+<?php foreach ( $grid_stories as $grid_id ) : ?>
+<?php chidemoon_blocksy_render_post_card( (int) $grid_id ); ?>
+<?php endforeach; ?>
+</div>
+</section>
+<?php endif; ?>
 
-	<section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-categories-heading">
-		<div class="chidemoon-section-heading">
-			<div>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'Start with a room', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-categories-heading"><?php esc_html_e( 'Browse the home', 'chidemoon-blocksy-child' ); ?></h2>
-			</div>
-		</div>
+<section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-products-heading">
+<div class="chidemoon-section-heading">
+<div>
+<h2 id="chidemoon-products-heading">کالاهای برگزیده</h2>
+</div>
+<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه کالاها<span aria-hidden="true">←</span></a>
+</div>
 
-		<?php if ( ! is_wp_error( $product_categories ) && ! empty( $product_categories ) ) : ?>
-			<div class="chidemoon-category-grid">
-				<?php foreach ( $product_categories as $index => $category ) : ?>
-					<?php $category_link = get_term_link( $category ); ?>
-					<?php if ( ! is_wp_error( $category_link ) ) : ?>
-						<a class="chidemoon-category-link" href="<?php echo esc_url( $category_link ); ?>">
-							<span class="chidemoon-category-link__index">0<?php echo esc_html( (string) ( $index + 1 ) ); ?></span>
-							<span class="chidemoon-category-link__title"><?php echo esc_html( $category->name ); ?></span>
-							<span class="chidemoon-category-link__count"><?php echo esc_html( (string) $category->count ); ?></span>
-						</a>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'Collections will appear after catalogue review.', 'chidemoon-blocksy-child' ), __( 'The public catalogue intentionally starts empty until categories and affiliate products are approved.', 'chidemoon-blocksy-child' ) ); ?>
-		<?php endif; ?>
-	</section>
+<?php if ( ! empty( $products ) ) : ?>
+<div class="chidemoon-card-grid chidemoon-card-grid--products">
+<?php chidemoon_blocksy_render_product_cards( $products ); ?>
+</div>
+<?php else : ?>
+<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'کالاها فقط پس از تأیید دسته‌بندی، تصویر و مقصد فروشنده منتشر می‌شوند.' ); ?>
+<?php endif; ?>
+</section>
 
-	<section class="chidemoon-home__journal chidemoon-section-shell" aria-labelledby="chidemoon-journal-heading">
-		<div class="chidemoon-section-heading chidemoon-section-heading--inverse">
-			<div>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'The journal', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-journal-heading"><?php esc_html_e( 'Ideas with room to live', 'chidemoon-blocksy-child' ); ?></h2>
-			</div>
-			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'guides' ) ); ?>"><?php esc_html_e( 'Visit all guides', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">↗</span></a>
-		</div>
+<?php if ( ! is_wp_error( $product_categories ) && ! empty( $product_categories ) ) : ?>
+<section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-cats-heading">
+<div class="chidemoon-section-heading">
+<div>
+<h2 id="chidemoon-cats-heading">دسته‌بندی فروشگاه</h2>
+</div>
+</div>
+<div class="chidemoon-category-grid">
+<?php foreach ( $product_categories as $index => $category ) : ?>
+<?php $category_link = get_term_link( $category ); ?>
+<?php if ( ! is_wp_error( $category_link ) ) : ?>
+<a class="chidemoon-category-link" href="<?php echo esc_url( $category_link ); ?>">
+<span class="chidemoon-category-link__index"><?php echo esc_html( chidemoon_fa_digits( '0' . ( $index + 1 ) ) ); ?></span>
+<span class="chidemoon-category-link__title"><?php echo esc_html( $category->name ); ?></span>
+<span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> کالا</span>
+</a>
+<?php endif; ?>
+<?php endforeach; ?>
+</div>
+</section>
+<?php endif; ?>
 
-		<?php if ( $stories->have_posts() ) : ?>
-			<div class="chidemoon-card-grid chidemoon-card-grid--stories">
-				<?php while ( $stories->have_posts() ) : ?>
-					<?php $stories->the_post(); ?>
-					<?php chidemoon_blocksy_render_post_card( get_the_ID() ); ?>
-				<?php endwhile; ?>
-			</div>
-			<?php wp_reset_postdata(); ?>
-		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The journal is waiting for its first reviewed story.', 'chidemoon-blocksy-child' ), __( 'Guides, comparisons, and room ideas will be published here after editorial review.', 'chidemoon-blocksy-child' ) ); ?>
-		<?php endif; ?>
-	</section>
-
-	<section class="chidemoon-home__routes chidemoon-section-shell" aria-label="<?php esc_attr_e( 'Explore Chidemoon formats', 'chidemoon-blocksy-child' ); ?>">
-		<a class="chidemoon-route-card" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'comparisons' ) ); ?>">
-			<span class="chidemoon-eyebrow"><?php esc_html_e( 'Two to four products', 'chidemoon-blocksy-child' ); ?></span>
-			<strong><?php esc_html_e( 'Clear comparisons', 'chidemoon-blocksy-child' ); ?></strong>
-			<span><?php esc_html_e( 'Reviewed facts, visible trade-offs, no automatic recommendations.', 'chidemoon-blocksy-child' ); ?></span>
-			<i aria-hidden="true">↗</i>
-		</a>
-		<a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
-			<span class="chidemoon-eyebrow"><?php esc_html_e( 'Build a room', 'chidemoon-blocksy-child' ); ?></span>
-			<strong><?php esc_html_e( 'Shop the look', 'chidemoon-blocksy-child' ); ?></strong>
-			<span><?php esc_html_e( 'Editorial combinations connected to individual, direct merchant offers.', 'chidemoon-blocksy-child' ); ?></span>
-			<i aria-hidden="true">↗</i>
-		</a>
-	</section>
+<section class="chidemoon-home__routes chidemoon-section-shell" aria-label="فرمت‌های چیدمون">
+<a class="chidemoon-route-card" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'comparisons' ) ); ?>">
+<span class="chidemoon-eyebrow">دو تا چهار کالا</span>
+<strong>مقایسه‌های شفاف</strong>
+<span>شواهد بررسی‌شده، مبادلات روشن، بدون توصیه‌ی خودکار.</span>
+<i aria-hidden="true">←</i>
+</a>
+<a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
+<span class="chidemoon-eyebrow">یک اتاق را بچین</span>
+<strong>شاپ‌درلوک</strong>
+<span>ترکیب‌های ادیتوریال متصل به پیشنهاد مستقیم فروشنده.</span>
+<i aria-hidden="true">←</i>
+</a>
+</section>
 </main>
 
 <?php

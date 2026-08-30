@@ -26,20 +26,26 @@ $look_posts = new WP_Query(
 	<?php while ( have_posts() ) : ?>
 		<?php the_post(); ?>
 		<header class="chidemoon-collection-page__hero chidemoon-section-shell">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'A room, considered', 'chidemoon-blocksy-child' ); ?></p>
+			<p class="chidemoon-eyebrow"><?php esc_html_e( 'یک اتاق، با دقت', 'chidemoon-blocksy-child' ); ?></p>
 			<h1><?php the_title(); ?></h1>
 			<?php if ( has_excerpt() ) : ?>
 				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
 			<?php endif; ?>
 		</header>
 
+		<?php if ( has_post_thumbnail() ) : ?>
+			<figure class="chidemoon-collection-page__image chidemoon-section-shell">
+				<?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?>
+			</figure>
+		<?php endif; ?>
+
 		<section class="chidemoon-collection-page__content chidemoon-section-shell">
 			<div class="entry-content">
 				<?php the_content(); ?>
 			</div>
 			<aside class="chidemoon-collection-page__note">
-				<span class="chidemoon-eyebrow"><?php esc_html_e( 'Direct merchant offers', 'chidemoon-blocksy-child' ); ?></span>
-				<p><?php esc_html_e( 'Every selected product keeps its own destination. Chidemoon does not take payment or run a shopping cart.', 'chidemoon-blocksy-child' ); ?></p>
+				<span class="chidemoon-eyebrow"><?php esc_html_e( 'پیشنهاد مستقیم فروشنده', 'chidemoon-blocksy-child' ); ?></span>
+				<p><?php esc_html_e( 'هر کالای انتخابی مقصد مستقل خودش را دارد. چیدمون پرداخت نمی‌گیرد و سبد خرید ندارد.', 'chidemoon-blocksy-child' ); ?></p>
 			</aside>
 		</section>
 	<?php endwhile; ?>
@@ -47,8 +53,8 @@ $look_posts = new WP_Query(
 	<section class="chidemoon-section-shell chidemoon-collection-page__feed" aria-labelledby="chidemoon-looks-feed">
 		<div class="chidemoon-section-heading">
 			<div>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'Room notes', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-looks-feed"><?php esc_html_e( 'Published looks', 'chidemoon-blocksy-child' ); ?></h2>
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'نکته‌های اتاق', 'chidemoon-blocksy-child' ); ?></p>
+				<h2 id="chidemoon-looks-feed"><?php esc_html_e( 'ترکیب‌های منتشرشده', 'chidemoon-blocksy-child' ); ?></h2>
 			</div>
 		</div>
 		<?php if ( $look_posts->have_posts() ) : ?>
@@ -60,7 +66,7 @@ $look_posts = new WP_Query(
 			</div>
 			<?php wp_reset_postdata(); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The first room edit is being reviewed.', 'chidemoon-blocksy-child' ), __( 'A look appears only when its images, product destinations, and editorial narrative are complete.', 'chidemoon-blocksy-child' ) ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'اولین ترکیب در حال بررسی است.', 'یک ترکیب فقط وقتی منتشر می‌شود که تصاویرش، مقصد کالاهایش و روایت تحریریه‌اش کامل باشد.' ); ?>
 		<?php endif; ?>
 	</section>
 </main>

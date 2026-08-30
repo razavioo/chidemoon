@@ -42,6 +42,51 @@ function chidemoon_blocksy_body_classes( array $classes ): array {
 add_filter( 'body_class', 'chidemoon_blocksy_body_classes' );
 
 /**
+ * The presentation is Persian-first, so numerals are converted to Persian
+ * digits for dates and prices without touching stored data.
+ */
+function chidemoon_fa_digits( $text ): string {
+	return strtr(
+		(string) $text,
+		array(
+			'0' => '۰',
+			'1' => '۱',
+			'2' => '۲',
+			'3' => '۳',
+			'4' => '۴',
+			'5' => '۵',
+			'6' => '۶',
+			'7' => '۷',
+			'8' => '۸',
+			'9' => '۹',
+		)
+	);
+}
+
+add_filter( 'get_the_date', 'chidemoon_fa_digits' );
+add_filter( 'get_the_time', 'chidemoon_fa_digits' );
+add_filter( 'wc_price', 'chidemoon_fa_digits' );
+
+add_filter(
+	'woocommerce_currency_symbol',
+	static function ( string $symbol, string $currency ): string {
+		return 'IRR' === $currency ? 'تومان' : $symbol;
+	},
+	10,
+	2
+);
+
+/**
+ * Blocksy's default footer credit is English; the site is Persian-only.
+ */
+add_filter(
+	'blocksy:footer:copyright:default-value',
+	static function (): string {
+		return '© {current_year} چیدمون — مجله خرید خانه';
+	}
+);
+
+/**
  * Return a stable public URL when a curated landing page has not been created
  * yet. Navigation can therefore be styled before editorial setup is complete.
  */
@@ -80,19 +125,19 @@ function chidemoon_blocksy_render_post_card( int $post_id ): void {
 			<?php else : ?>
 				<span class="chidemoon-card__media-empty" aria-hidden="true"></span>
 			<?php endif; ?>
+			<?php if ( $category instanceof WP_Term ) : ?>
+				<span class="chidemoon-card__badge"><?php echo esc_html( $category->name ); ?></span>
+			<?php endif; ?>
 		</a>
 		<div class="chidemoon-card__body">
-			<div class="chidemoon-card__meta">
-				<?php if ( $category instanceof WP_Term ) : ?>
-					<span><?php echo esc_html( $category->name ); ?></span>
-				<?php endif; ?>
-				<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $post ) ); ?>"><?php echo esc_html( get_the_date( '', $post ) ); ?></time>
-			</div>
 			<h3 class="chidemoon-card__title"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></h3>
 			<?php if ( '' !== $excerpt ) : ?>
-				<p class="chidemoon-card__excerpt"><?php echo esc_html( $excerpt ); ?></p>
+				<p class="chidemoon-card__excerpt"><?php echo esc_html( wp_trim_words( $excerpt, 18 ) ); ?></p>
 			<?php endif; ?>
-			<a class="chidemoon-text-link" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'Read the guide', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">↗</span></a>
+			<div class="chidemoon-card__footer">
+				<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $post ) ); ?>"><?php echo esc_html( get_the_date( '', $post ) ); ?></time>
+				<a class="chidemoon-text-link" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'ادامه مطلب', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
+			</div>
 		</div>
 	</article>
 	<?php
@@ -134,9 +179,9 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 				<?php if ( '' !== $price_html ) : ?>
 					<p class="chidemoon-product-card__price"><?php echo wp_kses_post( $price_html ); ?></p>
 				<?php else : ?>
-					<p class="chidemoon-product-card__pending"><?php esc_html_e( 'Price under review', 'chidemoon-blocksy-child' ); ?></p>
+					<p class="chidemoon-product-card__pending"><?php esc_html_e( 'قیمت در حال بررسی', 'chidemoon-blocksy-child' ); ?></p>
 				<?php endif; ?>
-				<a class="chidemoon-text-link" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'View details', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">↗</span></a>
+				<a class="chidemoon-text-link" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
 			</div>
 		</article>
 		<?php

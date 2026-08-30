@@ -4,11 +4,52 @@ Theme URI: https://chidemoon.com
 Description: Persian-first editorial affiliate presentation for Chidemoon.
 Author: Chidemoon
 Template: blocksy
-Version: 1.1.0
+Version: 1.3.0
 Requires at least: 6.5
 Requires PHP: 8.1
 Text Domain: chidemoon-blocksy-child
 */
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("assets/fonts/Vazirmatn-Regular.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url("assets/fonts/Vazirmatn-Medium.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url("assets/fonts/Vazirmatn-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url("assets/fonts/Vazirmatn-Bold.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+	src: url("assets/fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
+}
+
 
 :root {
 	--chidemoon-paper: #f6f2e9;
@@ -24,7 +65,7 @@ Text Domain: chidemoon-blocksy-child
 	--chidemoon-line: rgba(23, 63, 53, 0.17);
 	--chidemoon-line-strong: rgba(23, 63, 53, 0.35);
 	--chidemoon-shadow: 0 24px 65px rgba(26, 44, 37, 0.11);
-	--chidemoon-serif: Georgia, "Times New Roman", serif;
+	--chidemoon-serif: Vazirmatn, Georgia, serif;
 	--chidemoon-sans: Vazirmatn, IRANSansX, "Segoe UI", Tahoma, Arial, sans-serif;
 	--theme-palette-color-1: var(--chidemoon-forest);
 	--theme-palette-color-2: var(--chidemoon-clay);
@@ -64,6 +105,16 @@ body.chidemoon-editorial-site {
 	padding-inline: clamp(1rem, 3vw, 2.25rem);
 }
 
+.chidemoon-sr-only {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
 .chidemoon-eyebrow,
 .chidemoon-card__meta,
 .chidemoon-category-link__index,
@@ -71,12 +122,11 @@ body.chidemoon-editorial-site {
 .chidemoon-empty-state__index {
 	color: var(--chidemoon-muted);
 	font-family: var(--chidemoon-sans);
-	font-size: 0.7rem;
-	font-weight: 750;
-	letter-spacing: 0.12em;
-	line-height: 1.4;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	line-height: 1.6;
 	margin: 0;
-	text-transform: uppercase;
 }
 
 .entry-content > :where(h1, h2, h3),
@@ -89,9 +139,9 @@ body.chidemoon-editorial-site {
 .woocommerce div.product .product_title {
 	color: var(--chidemoon-forest);
 	font-family: var(--chidemoon-serif);
-	font-weight: 600;
-	letter-spacing: -0.035em;
-	line-height: 1.08;
+	font-weight: 800;
+	letter-spacing: 0;
+	line-height: 1.25;
 }
 
 .entry-content > h2 {
@@ -189,7 +239,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-home {
-	padding-block: clamp(1.15rem, 3vw, 2.75rem) clamp(3.5rem, 8vw, 8rem);
+	padding-block: clamp(1rem, 2.5vw, 2rem) clamp(2.5rem, 5vw, 4rem);
 }
 
 .chidemoon-home__hero {
@@ -307,13 +357,8 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	width: 0.5rem;
 }
 
-.chidemoon-home__intro {
-	max-width: 830px;
-	padding-block: clamp(3rem, 8vw, 7rem) clamp(1rem, 3vw, 2rem);
-}
-
 .chidemoon-home__section {
-	padding-block: clamp(3rem, 7vw, 6.5rem);
+	padding-block: clamp(1.75rem, 3.5vw, 3rem);
 }
 
 .chidemoon-section-heading {
@@ -322,13 +367,13 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	display: flex;
 	gap: 1.25rem;
 	justify-content: space-between;
-	margin-bottom: clamp(1.35rem, 3vw, 2.45rem);
-	padding-bottom: 1rem;
+	margin-bottom: clamp(1rem, 2.2vw, 1.6rem);
+	padding-bottom: 0.85rem;
 }
 
 .chidemoon-section-heading h2 {
-	font-size: clamp(2.1rem, 4vw, 4.25rem);
-	margin: 0.35rem 0 0;
+	font-size: clamp(1.45rem, 2.6vw, 2.2rem);
+	margin: 0;
 }
 
 .chidemoon-card-grid {
@@ -1039,4 +1084,480 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
 	}
+}
+
+/* Home hero with a real editorial image */
+.chidemoon-home__hero-mark--image {
+	overflow: hidden;
+}
+
+.chidemoon-home__hero-mark--image::before,
+.chidemoon-home__hero-mark--image::after,
+.chidemoon-home__hero-mark--image i,
+.chidemoon-home__hero-mark--image b {
+	display: none;
+}
+
+.chidemoon-home__hero-mark--image img {
+	filter: saturate(0.92);
+	height: 100%;
+	inset: 0;
+	left: 0;
+	object-fit: cover;
+	position: absolute;
+	width: 100%;
+}
+
+.chidemoon-home__hero-mark--image::after {
+	display: block;
+}
+
+.chidemoon-home__hero-mark--image {
+	position: relative;
+}
+
+.chidemoon-home__hero-mark--image::after {
+	background: linear-gradient(180deg, transparent 55%, rgba(16, 45, 38, 0.32));
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+/* Editorial single article */
+.chidemoon-article {
+	padding-block: clamp(1.15rem, 3vw, 2.75rem) clamp(3rem, 7vw, 6rem);
+}
+
+.chidemoon-article__badge {
+	display: inline-block;
+	text-decoration: none;
+	transition: color 140ms ease;
+}
+
+.chidemoon-article__badge:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-article__hero h1 {
+	font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+	hyphens: none;
+	margin: 0.6rem 0 1rem;
+	max-width: 24ch;
+	overflow-wrap: normal;
+	word-break: normal;
+}
+
+.chidemoon-article__meta {
+	align-items: center;
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.86rem;
+	font-weight: 700;
+	gap: 0.6rem;
+}
+
+.chidemoon-article__lede {
+	color: var(--chidemoon-muted);
+	font-size: clamp(1.02rem, 1.8vw, 1.22rem);
+	line-height: 1.9;
+	margin: 1.4rem 0 0;
+	max-width: 42rem;
+}
+
+.chidemoon-article__image {
+	border: 1px solid var(--chidemoon-line-strong);
+	box-shadow: var(--chidemoon-shadow);
+	margin-block: clamp(1.5rem, 4vw, 3rem);
+	overflow: hidden;
+}
+
+.chidemoon-article__image img {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+.chidemoon-article__layout {
+	align-items: start;
+	display: grid;
+	gap: clamp(1.5rem, 4vw, 3.5rem);
+	grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.32fr);
+}
+
+.chidemoon-article__body {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	padding: clamp(1.4rem, 4vw, 3.2rem);
+}
+
+.chidemoon-article__aside {
+	display: grid;
+	gap: 1.25rem;
+	position: sticky;
+	top: 2rem;
+}
+
+.chidemoon-article__aside-box {
+	background: color-mix(in srgb, var(--chidemoon-forest) 8%, var(--chidemoon-surface));
+	border: 1px solid var(--chidemoon-line);
+	display: grid;
+	gap: 0.75rem;
+	padding: 1.35rem 1.25rem;
+}
+
+.chidemoon-article__aside-box p {
+	color: var(--chidemoon-muted);
+	font-size: 0.92rem;
+	line-height: 1.85;
+	margin: 0;
+}
+
+.chidemoon-article__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+}
+
+.chidemoon-article__tag {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	color: var(--chidemoon-forest);
+	font-size: 0.8rem;
+	font-weight: 800;
+	padding: 0.4rem 0.75rem;
+	text-decoration: none;
+	transition: background-color 140ms ease, color 140ms ease;
+}
+
+.chidemoon-article__tag:hover {
+	background: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+.chidemoon-article__navigation {
+	margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.chidemoon-article__navigation .nav-links {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: 1fr 1fr;
+}
+
+.chidemoon-article__navigation .nav-previous,
+.chidemoon-article__navigation .nav-next {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	display: grid;
+	gap: 0.5rem;
+	padding: 1.15rem 1.25rem;
+	text-decoration: none;
+	transition: border-color 140ms ease, transform 140ms ease;
+}
+
+.chidemoon-article__navigation .nav-previous:hover,
+.chidemoon-article__navigation .nav-next:hover {
+	border-color: var(--chidemoon-line-strong);
+	transform: translateY(-2px);
+}
+
+.chidemoon-article__nav-title {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-serif);
+	font-size: 1.08rem;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.chidemoon-article__navigation .nav-previous .nav-title a,
+.chidemoon-article__navigation .nav-next .nav-title a,
+.chidemoon-article__navigation .meta-nav {
+	text-decoration: none;
+}
+
+
+
+@media (max-width: 1024px) {
+	.chidemoon-article__layout {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-article__aside {
+		position: static;
+	}
+}
+
+.chidemoon-collection-page__image {
+	border: 1px solid var(--chidemoon-line-strong);
+	box-shadow: var(--chidemoon-shadow);
+	margin-block: clamp(1.25rem, 3vw, 2.5rem);
+	overflow: hidden;
+}
+
+.chidemoon-collection-page__image img {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+
+/* Magazine top: featured story + side rail */
+.chidemoon-home__top {
+	display: grid;
+	gap: clamp(1rem, 2vw, 1.5rem);
+	grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+	margin-top: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.chidemoon-featured {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-width: 0;
+}
+
+.chidemoon-featured__media {
+	aspect-ratio: 1.7 / 1;
+	background: var(--chidemoon-surface-muted);
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+.chidemoon-featured__media img {
+	height: 100%;
+	object-fit: cover;
+	transition: transform 280ms ease;
+	width: 100%;
+}
+
+.chidemoon-featured:hover .chidemoon-featured__media img {
+	transform: scale(1.03);
+}
+
+.chidemoon-featured__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.8rem;
+	padding: clamp(1.1rem, 2.4vw, 1.9rem);
+}
+
+.chidemoon-featured__title {
+	font-family: var(--chidemoon-serif);
+	font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+	font-weight: 800;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.chidemoon-featured__title a {
+	color: var(--chidemoon-ink);
+	text-decoration: none;
+}
+
+.chidemoon-featured__title a:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-featured__excerpt {
+	color: var(--chidemoon-muted);
+	font-size: 0.95rem;
+	line-height: 1.9;
+	margin: 0;
+}
+
+.chidemoon-featured__meta {
+	align-items: center;
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.84rem;
+	font-weight: 600;
+	gap: 1rem;
+	justify-content: space-between;
+	margin-top: auto;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--chidemoon-line);
+}
+
+/* Side rail stories */
+.chidemoon-side-stories {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(0.8rem, 1.6vw, 1.1rem);
+	min-width: 0;
+}
+
+.chidemoon-side-story {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	display: grid;
+	flex: 1;
+	grid-template-columns: minmax(6.5rem, 0.4fr) minmax(0, 1fr);
+	overflow: hidden;
+}
+
+.chidemoon-side-story__media {
+	background: var(--chidemoon-surface-muted);
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+.chidemoon-side-story__media img,
+.chidemoon-side-story__media .chidemoon-card__media-empty {
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.chidemoon-side-story__body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	padding: 0.9rem 1rem;
+}
+
+.chidemoon-side-story__category {
+	color: var(--chidemoon-clay);
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+.chidemoon-side-story__title {
+	font-family: var(--chidemoon-serif);
+	font-size: 0.98rem;
+	font-weight: 700;
+	line-height: 1.55;
+	margin: 0;
+}
+
+.chidemoon-side-story__title a {
+	color: var(--chidemoon-ink);
+	text-decoration: none;
+}
+
+.chidemoon-side-story__title a:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-side-story__body time {
+	color: var(--chidemoon-muted);
+	font-size: 0.74rem;
+	font-weight: 600;
+	margin-top: auto;
+}
+
+.chidemoon-side-story__all {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	color: #fffcf7;
+	display: flex;
+	font-size: 0.85rem;
+	font-weight: 800;
+	gap: 0.5rem;
+	justify-content: center;
+	padding: 0.85rem;
+	text-decoration: none;
+	transition: background-color 140ms ease;
+}
+
+.chidemoon-side-story__all:hover {
+	background: var(--chidemoon-forest-deep);
+	color: #fffcf7;
+}
+
+/* Category badge on card imagery */
+.chidemoon-card__media {
+	position: relative;
+}
+
+.chidemoon-card__badge {
+	background: var(--chidemoon-forest);
+	color: #fffcf7;
+	font-size: 0.72rem;
+	font-weight: 700;
+	inset-block-start: 0.75rem;
+	inset-inline-start: 0.75rem;
+	padding: 0.3rem 0.65rem;
+	position: absolute;
+	text-decoration: none;
+	z-index: 1;
+}
+
+.chidemoon-card__badge--inline {
+	align-self: flex-start;
+	display: inline-block;
+	inset: auto;
+	position: static;
+}
+
+/* Product archives render their own Chidemoon intro; skip the Blocksy hero */
+.post-type-archive-product .hero-section,
+.tax-product_cat .hero-section {
+	display: none;
+}
+
+/* Card footer row */
+.chidemoon-card__footer {
+	align-items: center;
+	border-top: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.76rem;
+	font-weight: 600;
+	gap: 0.75rem;
+	justify-content: space-between;
+	margin-top: auto;
+	padding-top: 0.7rem;
+}
+
+.chidemoon-story-card .chidemoon-card__media {
+	aspect-ratio: 1.55 / 1;
+}
+
+.chidemoon-card__title {
+	font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-home__top {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 640px) {
+	.chidemoon-side-story {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-side-story__media {
+		aspect-ratio: 2 / 1;
+	}
+}
+
+@media (max-width: 780px) {
+	.chidemoon-article__navigation .nav-links {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Warmer placeholder for cards without imagery */
+.chidemoon-story-card .chidemoon-card__media-empty {
+	background:
+		linear-gradient(135deg, transparent 0 46%, rgba(23, 63, 53, 0.16) 46% 47%, transparent 47% 100%),
+		linear-gradient(45deg, transparent 0 46%, rgba(182, 93, 61, 0.22) 46% 47%, transparent 47% 100%),
+		linear-gradient(180deg, color-mix(in srgb, var(--chidemoon-sage) 42%, var(--chidemoon-surface-muted)) 0%, var(--chidemoon-surface-muted) 100%);
+}
+
+.chidemoon-product-card .chidemoon-card__media-empty {
+	background:
+		radial-gradient(circle at 72% 26%, rgba(255, 252, 247, 0.85) 0 12%, transparent 12.5%),
+		linear-gradient(135deg, transparent 0 46%, rgba(23, 63, 53, 0.14) 46% 47%, transparent 47% 100%),
+		linear-gradient(180deg, color-mix(in srgb, var(--chidemoon-clay) 16%, var(--chidemoon-surface-muted)) 0%, var(--chidemoon-surface-muted) 100%);
 }

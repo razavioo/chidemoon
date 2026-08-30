@@ -91,6 +91,9 @@ services:
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+      - ./tools:/tools:ro
+      - ./vendor:/packages:ro
       - ./vendor:/packages:ro
 
   scheduler:

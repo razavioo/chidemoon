@@ -12,9 +12,9 @@ get_header();
 
 <main id="primary" class="site-main chidemoon-archive chidemoon-archive--journal">
 	<header class="chidemoon-archive__hero chidemoon-section-shell">
-		<p class="chidemoon-eyebrow"><?php esc_html_e( 'The journal', 'chidemoon-blocksy-child' ); ?></p>
-		<h1><?php esc_html_e( 'Guides for a more considered home', 'chidemoon-blocksy-child' ); ?></h1>
-		<p><?php esc_html_e( 'Long-form ideas, useful comparisons, and room-by-room notes written for real decisions.', 'chidemoon-blocksy-child' ); ?></p>
+		<p class="chidemoon-eyebrow"><?php esc_html_e( 'مجله چیدمون', 'chidemoon-blocksy-child' ); ?></p>
+		<h1><?php esc_html_e( 'راهنماهایی برای خانه‌ای که با نیت چیده شده', 'chidemoon-blocksy-child' ); ?></h1>
+		<p><?php esc_html_e( 'ایده‌های بلند، مقایسه‌های کاربردی و نکته‌های اتاق‌به‌اتاق برای تصمیم‌های واقعی خرید.', 'chidemoon-blocksy-child' ); ?></p>
 	</header>
 
 	<section class="chidemoon-section-shell">
@@ -27,7 +27,7 @@ get_header();
 			</div>
 			<?php the_posts_pagination( array( 'class' => 'chidemoon-pagination', 'mid_size' => 1 ) ); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( __( 'The journal is being prepared.', 'chidemoon-blocksy-child' ), __( 'No article has passed editorial review yet. Please return when the first guide is ready.', 'chidemoon-blocksy-child' ) ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'مجله در حال آماده‌سازی است.', 'هنوز مقاله‌ای از بررسی تحریریه گذشته است. منتظر اولین راهنما باشید.' ); ?>
 		<?php endif; ?>
 	</section>
 </main>
