@@ -13,8 +13,8 @@ get_header();
 <main id="primary" class="site-main chidemoon-archive chidemoon-archive--journal">
 	<header class="chidemoon-archive__hero chidemoon-section-shell">
 		<p class="chidemoon-eyebrow"><?php esc_html_e( 'مجله چیدمون', 'chidemoon-blocksy-child' ); ?></p>
-		<h1><?php esc_html_e( 'راهنماهایی برای خانه‌ای که با نیت چیده شده', 'chidemoon-blocksy-child' ); ?></h1>
-		<p><?php esc_html_e( 'ایده‌های بلند، مقایسه‌های کاربردی و نکته‌های اتاق‌به‌اتاق برای تصمیم‌های واقعی خرید.', 'chidemoon-blocksy-child' ); ?></p>
+		<h1><?php esc_html_e( 'راهنمای انتخاب و چیدمان وسایل خانه', 'chidemoon-blocksy-child' ); ?></h1>
+		<p><?php esc_html_e( 'راهنمای خرید، مقایسه‌ی کالاها و پیشنهادهای کاربردی برای چیدمان هر بخش از خانه.', 'chidemoon-blocksy-child' ); ?></p>
 	</header>
 
 	<section class="chidemoon-section-shell">

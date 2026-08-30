@@ -35,11 +35,6 @@ final class Chidemoon_Core_Blocks {
 	 */
 	private static function patterns(): array {
 		return array(
-			'chidemoon-core/affiliate-disclosure' => array(
-				'title'      => __( 'Affiliate disclosure', 'chidemoon-core' ),
-				'categories' => array( 'chidemoon-commerce' ),
-				'content'    => '<!-- wp:shortcode -->[chidemoon_affiliate_disclosure]<!-- /wp:shortcode -->',
-			),
 			'chidemoon-core/affiliate-cta' => array(
 				'title'      => __( 'Affiliate CTA', 'chidemoon-core' ),
 				'categories' => array( 'chidemoon-commerce' ),
@@ -88,7 +83,7 @@ final class Chidemoon_Core_Blocks {
 			'chidemoon-core/editorial-layout' => array(
 				'title'      => __( 'Editorial article layout', 'chidemoon-core' ),
 				'categories' => array( 'chidemoon-editorial' ),
-				'content'    => '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group"><!-- wp:post-title {"level":1} /--><!-- wp:post-excerpt /--><!-- wp:post-featured-image /--><!-- wp:post-content /--><!-- wp:shortcode -->[chidemoon_affiliate_disclosure]<!-- /wp:shortcode --></div><!-- /wp:group -->',
+				'content'    => '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group"><!-- wp:post-title {"level":1} /--><!-- wp:post-excerpt /--><!-- wp:post-featured-image /--><!-- wp:post-content /--></div><!-- /wp:group -->',
 			),
 		);
 	}

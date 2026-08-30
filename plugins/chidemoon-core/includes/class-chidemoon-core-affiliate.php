@@ -12,7 +12,6 @@ final class Chidemoon_Core_Affiliate {
 	public const META_MERCHANT_NAME  = '_chidemoon_merchant_name';
 	public const META_SOURCE_URL     = '_chidemoon_source_url';
 	public const META_SOURCE_CHECKED = '_chidemoon_source_checked_at';
-	public const META_DISCLOSURE     = '_chidemoon_disclosure';
 	public const META_REVIEW_STATE   = '_chidemoon_review_state';
 	public const META_FACTS          = '_chidemoon_product_facts';
 	public const META_SOURCE_KEY     = '_chidemoon_source_key';
@@ -36,7 +35,6 @@ final class Chidemoon_Core_Affiliate {
 		add_filter( 'woocommerce_loop_add_to_cart_args', array( __CLASS__, 'open_product_cta_in_new_tab' ), 100, 2 );
 		add_filter( 'woocommerce_widget_cart_item_visible', array( __CLASS__, 'hide_cart_widget_items' ) );
 		add_shortcode( 'chidemoon_affiliate_cta', array( __CLASS__, 'render_affiliate_cta' ) );
-		add_shortcode( 'chidemoon_affiliate_disclosure', array( __CLASS__, 'render_disclosure' ) );
 	}
 
 	public static function register_redirect_rewrite(): void {
@@ -148,15 +146,6 @@ final class Chidemoon_Core_Affiliate {
 		);
 		woocommerce_wp_textarea_input(
 			array(
-				'id'          => self::META_DISCLOSURE,
-				'label'       => __( 'Product-specific disclosure', 'chidemoon-core' ),
-				'desc_tip'    => true,
-				'description' => __( 'Optional copy that overrides the site-wide affiliate disclosure for this product.', 'chidemoon-core' ),
-				'value'       => get_post_meta( $product_id, self::META_DISCLOSURE, true ),
-			)
-		);
-		woocommerce_wp_textarea_input(
-			array(
 				'id'          => self::META_FACTS,
 				'label'       => __( 'Structured product facts (JSON)', 'chidemoon-core' ),
 				'desc_tip'    => true,
@@ -195,7 +184,7 @@ final class Chidemoon_Core_Affiliate {
 		$product->update_meta_data( self::META_SOURCE_URL, $source_url );
 		$product->update_meta_data( self::META_SOURCE_CHECKED, self::normalize_datetime( self::request_string( self::META_SOURCE_CHECKED, 32 ) ) );
 		$product->update_meta_data( self::META_REVIEW_STATE, self::review_state( self::request_string( self::META_REVIEW_STATE, 20 ) ) );
-		$product->update_meta_data( self::META_DISCLOSURE, self::request_string( self::META_DISCLOSURE, 1000 ) );
+		$product->delete_meta_data( '_chidemoon_disclosure' );
 
 		$facts = self::request_raw_string( self::META_FACTS, 20000 );
 		if ( '' === $facts ) {
@@ -366,27 +355,6 @@ final class Chidemoon_Core_Affiliate {
 			esc_url( self::tracking_url( $product_id ) ),
 			esc_html( $attributes['label'] )
 		);
-	}
-
-	/**
-	 * @param array<string, string> $attributes Shortcode attributes.
-	 */
-	public static function render_disclosure( array $attributes = array() ): string {
-		$attributes = shortcode_atts(
-			array( 'product_id' => (string) get_the_ID() ),
-			$attributes,
-			'chidemoon_affiliate_disclosure'
-		);
-		$product_id = absint( $attributes['product_id'] );
-		$disclosure = $product_id > 0 ? trim( (string) get_post_meta( $product_id, self::META_DISCLOSURE, true ) ) : '';
-		if ( '' === $disclosure ) {
-			$disclosure = trim( (string) get_option( 'chidemoon_core_disclosure_text', '' ) );
-		}
-		if ( '' === $disclosure ) {
-			return '';
-		}
-
-		return '<p class="chidemoon-affiliate-disclosure">' . esc_html( $disclosure ) . '</p>';
 	}
 
 	public static function tracking_url( int $product_id ): string {

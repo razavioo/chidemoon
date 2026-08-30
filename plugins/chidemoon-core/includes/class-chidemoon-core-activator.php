@@ -125,7 +125,6 @@ final class Chidemoon_Core_Activator {
 
 	private static function set_defaults(): void {
 		$defaults = array(
-			'chidemoon_core_disclosure_text'       => __( 'This page may contain affiliate links. Chidemoon may earn a commission at no extra cost to you.', 'chidemoon-core' ),
 			'chidemoon_core_freshness_days'        => 30,
 			'chidemoon_core_click_retention_days'  => 90,
 			'chidemoon_core_form_rate_limit'       => 5,

@@ -133,10 +133,21 @@ html {
 	padding: clamp(1rem, 1.8vw, 1.35rem);
 }
 
+.chidemoon-card__title,
+.chidemoon-card__title a {
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+	letter-spacing: 0;
+}
+
 .chidemoon-card__title {
-	font-size: clamp(1.02rem, 1.35vw, 1.25rem);
-	font-weight: 750;
-	line-height: 1.55;
+	font-size: clamp(1.08rem, 1.45vw, 1.3rem);
+	font-weight: 700;
+	line-height: 1.6;
+}
+
+.chidemoon-card__title a {
+	font: inherit;
 }
 
 .chidemoon-card__excerpt {

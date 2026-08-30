@@ -101,9 +101,64 @@ function chidemoon_fa_digits( $text ): string {
 	);
 }
 
-add_filter( 'get_the_date', 'chidemoon_fa_digits' );
 add_filter( 'get_the_time', 'chidemoon_fa_digits' );
 add_filter( 'wc_price', 'chidemoon_fa_digits' );
+
+/**
+ * Convert a Gregorian date to the Solar Hijri calendar used in Persian copy.
+ *
+ * @return int[] Jalali year, month, and day.
+ */
+function chidemoon_gregorian_to_jalali( int $year, int $month, int $day ): array {
+	$gregorian_days = array( 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 );
+	$year_offset    = $year > 1600 ? 979 : 0;
+	$year           = $year > 1600 ? $year - 1600 : $year - 621;
+	$year_two       = $month > 2 ? $year + 1 : $year;
+	$days           = ( 365 * $year ) + intdiv( $year_two + 3, 4 ) - intdiv( $year_two + 99, 100 ) + intdiv( $year_two + 399, 400 ) - 80 + $day + $gregorian_days[ $month - 1 ];
+	$jalali_year    = $year_offset + ( 33 * intdiv( $days, 12053 ) );
+	$days          %= 12053;
+	$jalali_year   += 4 * intdiv( $days, 1461 );
+	$days          %= 1461;
+
+	if ( $days > 365 ) {
+		$jalali_year += intdiv( $days - 1, 365 );
+		$days         = ( $days - 1 ) % 365;
+	}
+
+	if ( $days < 186 ) {
+		$jalali_month = 1 + intdiv( $days, 31 );
+		$jalali_day   = 1 + ( $days % 31 );
+	} else {
+		$jalali_month = 7 + intdiv( $days - 186, 30 );
+		$jalali_day   = 1 + ( ( $days - 186 ) % 30 );
+	}
+
+	return array( $jalali_year, $jalali_month, $jalali_day );
+}
+
+/**
+ * Keep machine-readable dates Gregorian while presenting Solar Hijri dates.
+ */
+function chidemoon_solar_hijri_post_date( string $date, string $format, WP_Post $post ): string {
+	if ( DATE_W3C === $format || 'c' === $format ) {
+		return $date;
+	}
+
+	$timestamp = get_post_timestamp( $post );
+	if ( false === $timestamp ) {
+		return chidemoon_fa_digits( $date );
+	}
+
+	list( $year, $month, $day ) = chidemoon_gregorian_to_jalali(
+		(int) wp_date( 'Y', $timestamp ),
+		(int) wp_date( 'n', $timestamp ),
+		(int) wp_date( 'j', $timestamp )
+	);
+	$month_names = array( 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند' );
+
+	return chidemoon_fa_digits( sprintf( '%d %s %d', $day, $month_names[ $month - 1 ], $year ) );
+}
+add_filter( 'get_the_date', 'chidemoon_solar_hijri_post_date', 10, 3 );
 
 add_filter(
 	'woocommerce_currency_symbol',

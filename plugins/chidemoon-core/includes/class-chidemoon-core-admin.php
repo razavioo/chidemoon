@@ -19,16 +19,6 @@ final class Chidemoon_Core_Admin {
 	}
 
 	public static function register_settings(): void {
-		register_setting(
-			'chidemoon_core_settings',
-			'chidemoon_core_disclosure_text',
-			array(
-				'type'              => 'string',
-				'sanitize_callback' => static function ( $value ): string {
-					return substr( sanitize_text_field( (string) $value ), 0, 1000 );
-				},
-			)
-		);
 		foreach ( array( 'chidemoon_core_freshness_days', 'chidemoon_core_click_retention_days', 'chidemoon_core_form_rate_limit' ) as $option_name ) {
 			register_setting(
 				'chidemoon_core_settings',
@@ -49,13 +39,6 @@ final class Chidemoon_Core_Admin {
 				echo '<p>' . esc_html__( 'These values are stored only in this WordPress installation.', 'chidemoon-core' ) . '</p>';
 			},
 			'chidemoon-readiness'
-		);
-		add_settings_field(
-			'chidemoon_core_disclosure_text',
-			__( 'Default affiliate disclosure', 'chidemoon-core' ),
-			array( __CLASS__, 'render_disclosure_field' ),
-			'chidemoon-readiness',
-			'chidemoon_core_policy'
 		);
 		add_settings_field(
 			'chidemoon_core_freshness_days',
@@ -81,10 +64,6 @@ final class Chidemoon_Core_Admin {
 			'chidemoon_core_policy',
 			array( 'option' => 'chidemoon_core_form_rate_limit', 'maximum' => 20 )
 		);
-	}
-
-	public static function render_disclosure_field(): void {
-		echo '<textarea class="large-text" rows="3" name="chidemoon_core_disclosure_text" maxlength="1000">' . esc_textarea( (string) get_option( 'chidemoon_core_disclosure_text', '' ) ) . '</textarea>';
 	}
 
 	/**
