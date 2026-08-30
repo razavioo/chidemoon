@@ -52,7 +52,7 @@ $comparison_posts = new WP_Query(
 		<div class="chidemoon-section-heading">
 			<div>
 				<p class="chidemoon-eyebrow"><?php esc_html_e( 'در مجله', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-comparisons-feed"><?php esc_html_e( 'مقایسه‌های منتشرشده', 'chidemoon-blocksy-child' ); ?></h2>
+				<h2 id="chidemoon-comparisons-feed"><?php esc_html_e( 'تفاوت‌ها را پیش از خرید ببینید', 'chidemoon-blocksy-child' ); ?></h2>
 			</div>
 		</div>
 		<?php if ( $comparison_posts->have_posts() ) : ?>
