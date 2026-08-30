@@ -702,44 +702,111 @@ html {
 		grid-template-columns: 1fr;
 	}
 
-	/* Keep the shop controls grouped above the single-column product list. */
-	.chidemoon-shop-archive__catalogue .woocommerce-before-shop-loop,
+	/* Keep the shop controls in one readable column on narrow screens. */
+	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper,
 	.chidemoon-shop-archive__catalogue .woocommerce-result-count,
 	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+		clear: both;
 		float: none;
-		margin-block: 0 0.85rem;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper {
+		margin-block-end: 0.85rem;
+	}
+
+	.chidemoon-shop-archive__catalogue .woocommerce-result-count {
+		margin-block: 0 0.7rem;
+	}
+
+	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+		margin-block: 0 1.25rem;
+	}
+
+	.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
+		box-sizing: border-box;
+		max-width: 100%;
+		min-height: 2.75rem;
+		width: 100%;
+	}
+
+	.chidemoon-product-card,
+	.woocommerce ul.products,
+	.woocommerce ul.products li.product {
+		box-sizing: border-box;
+		max-width: 100%;
+		min-width: 0;
 	}
 
 	.chidemoon-product-card,
 	.woocommerce ul.products li.product {
-		display: grid;
-		grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr);
+		display: flex;
+		flex-direction: column;
 	}
 
 	.chidemoon-product-card .chidemoon-card__media,
-	.woocommerce ul.products li.product a:first-child img {
-		aspect-ratio: 1 / 1;
-		height: 100%;
+	.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
+		box-sizing: border-box;
+		flex: 0 0 auto;
+		width: 100%;
 	}
 
-	.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
-		display: contents;
+	.chidemoon-product-card .chidemoon-card__media {
+		aspect-ratio: 1 / 0.9;
+	}
+
+	.chidemoon-product-card .chidemoon-card__media img,
+	.woocommerce ul.products li.product a.woocommerce-LoopProduct-link img {
+		box-sizing: border-box;
+		height: auto;
+		max-height: 18rem;
+		min-height: 0;
+		object-fit: contain;
+		width: 100%;
+	}
+
+	.woocommerce ul.products li.product a.woocommerce-LoopProduct-link {
+		display: block;
 	}
 
 	.woocommerce ul.products li.product .woocommerce-loop-product__title,
-	.woocommerce ul.products li.product .price,
-	.woocommerce ul.products li.product .button {
-		grid-column: 2;
+	.woocommerce ul.products li.product .price {
+		box-sizing: border-box;
+		display: block;
+		max-width: 100%;
+		min-height: 0;
+		overflow-wrap: anywhere;
+		padding-inline: 0;
 	}
 
 	.woocommerce ul.products li.product .woocommerce-loop-product__title {
-		align-self: end;
-		margin-top: 1rem;
-		min-height: 0;
+		margin: 0.9rem 1rem 0.35rem;
 	}
 
-	.woocommerce ul.products li.product .button {
-		margin: 0.6rem 1rem 1rem;
+	.woocommerce ul.products li.product .price {
+		margin: 0 1rem 1rem;
+	}
+
+	.woocommerce ul.products li.product :where(.button, .added_to_cart) {
+		box-sizing: border-box;
+		justify-content: center;
+		margin: 0 1rem 1rem;
+		max-width: calc(100% - 2rem);
+		min-height: 2.75rem;
+		width: calc(100% - 2rem);
+	}
+
+	.chidemoon-product-card .chidemoon-card__body {
+		box-sizing: border-box;
+		min-width: 0;
+		padding: 1rem;
+		width: 100%;
+	}
+
+	.chidemoon-product-card .chidemoon-card__title {
+		min-height: 0;
+		overflow-wrap: anywhere;
 	}
 
 	.chidemoon-archive__hero,
@@ -777,12 +844,34 @@ html {
 
 	.woocommerce div.product div.images,
 	.woocommerce div.product div.summary {
+		clear: both;
+		float: none;
+		margin-inline: 0;
+		max-width: 100%;
 		width: 100%;
 	}
 
 	.woocommerce div.product div.images img {
 		max-height: 28rem;
 		object-fit: contain;
+	}
+
+	.woocommerce div.product .woocommerce-tabs ul.tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+	}
+
+	.woocommerce div.product .woocommerce-tabs ul.tabs li {
+		margin: 0;
+	}
+
+	.woocommerce div.product .single_add_to_cart_button {
+		justify-content: center;
+		max-width: 100%;
+		min-height: 2.75rem;
+		white-space: normal;
+		width: 100%;
 	}
 
 	.woocommerce .related.products ul.products {
