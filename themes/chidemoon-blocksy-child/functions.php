@@ -82,7 +82,7 @@ add_filter(
 add_filter(
 	'blocksy:footer:copyright:default-value',
 	static function (): string {
-		return '© {current_year} چیدمون — مجله خرید خانه';
+		return '© {current_year} چیدمون — راهنمای انتخاب و چیدمان خانه';
 	}
 );
 
