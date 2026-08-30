@@ -769,3 +769,71 @@ html {
 		transform: none !important;
 	}
 }
+
+/* Blocksy footer: preserve Footer Builder markup, replace its visual language. */
+.ct-footer {
+	background: var(--chidemoon-forest-deep);
+	border-top: 0;
+	color: #fffcf7;
+	font-family: var(--chidemoon-font-ui);
+	margin-top: clamp(3rem, 7vw, 6rem);
+	position: relative;
+}
+
+.ct-footer::before {
+	background: var(--chidemoon-clay);
+	content: "";
+	display: block;
+	height: 0.35rem;
+	inset-block-start: 0;
+	inset-inline: 0;
+	position: absolute;
+}
+
+.ct-footer .ct-container {
+	padding-block: clamp(2.75rem, 6vw, 5.5rem);
+}
+
+.ct-footer :where(.ct-footer-middle-row, .ct-footer-top-row, .ct-footer-bottom-row) {
+	border-color: rgba(255, 252, 247, 0.18);
+}
+
+.ct-footer .ct-widget-title {
+	color: var(--chidemoon-clay-soft);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1rem;
+	font-weight: 800;
+	margin-bottom: 1rem;
+}
+
+.ct-footer :where(a, .ct-menu-link) {
+	color: #fffcf7;
+	text-decoration-color: transparent;
+	text-underline-offset: 0.25em;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), text-decoration-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.ct-footer :where(a, .ct-menu-link):hover {
+	color: var(--chidemoon-clay-soft);
+	text-decoration-color: var(--chidemoon-clay-soft);
+}
+
+.ct-footer :where(a, .ct-menu-link):focus-visible {
+	outline-color: var(--chidemoon-clay-soft);
+}
+
+.ct-footer .ct-footer-copyright {
+	display: none !important;
+}
+
+@media (max-width: 780px) {
+	.ct-footer .ct-container {
+		padding-block: 2.5rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ct-footer :where(a, .ct-menu-link) {
+		transition: none;
+	}
+}

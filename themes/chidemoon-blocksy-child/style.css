@@ -88,14 +88,6 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	font-weight: 700;
 }
 
-.ct-footer .ct-footer-copyright {
-	font-family: var(--chidemoon-font-ui);
-	font-size: 0.86rem;
-	font-weight: 500;
-	letter-spacing: 0;
-	line-height: 1.9;
-}
-
 @media (max-width: 999.98px) {
 	.ct-header [data-device="mobile"] [data-row="middle"] > .ct-container {
 		direction: rtl;
@@ -104,28 +96,40 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		position: relative;
 	}
 
+
 	.ct-header [data-device="mobile"] [data-column="start"] {
 		justify-content: center;
 	}
 
 	.ct-header [data-device="mobile"] [data-column="end"] {
 		display: flex !important;
-		inset-inline-start: 0 !important;
-		inset-block-start: 50% !important;
+		height: 2.75rem;
+		left: auto !important;
 		position: absolute !important;
+		right: 1rem !important;
+		top: 50% !important;
 		transform: translateY(-50%);
-		z-index: 2;
+		width: 2.75rem;
+		z-index: 6;
 	}
 
 	.ct-header [data-device="mobile"] [data-column="end"] > [data-items="primary"] {
 		display: flex !important;
 	}
 
+
 	.ct-header [data-device="mobile"] [data-id="trigger"] {
 		display: inline-flex !important;
 		opacity: 1 !important;
 		position: static;
 		transform: none;
+		visibility: visible !important;
+	}
+
+	.ct-header [data-device="mobile"] [data-id="trigger"] .ct-icon {
+		display: block !important;
+		fill: currentColor;
+		opacity: 1 !important;
 		visibility: visible !important;
 	}
 
@@ -153,26 +157,27 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 	#offcanvas {
 		--side-panel-width: min(88vw, 24rem);
+		background: rgba(16, 45, 38, 0.42);
 		direction: rtl;
 	}
 
 	#offcanvas[data-behaviour*="side"] .ct-panel-inner {
-		align-self: flex-end;
+		align-self: auto;
 		background: var(--chidemoon-forest-deep);
 		border-inline-start: 1px solid rgba(255, 252, 247, 0.14);
 		box-shadow: -24px 0 65px rgba(16, 45, 38, 0.28);
-		inset-inline-end: 0;
-		inset-inline-start: auto;
-		margin-inline-end: var(--side-panel-offset, 0px);
-		margin-inline-start: auto;
+		left: auto;
+		margin: 0;
+		right: 0;
 	}
 
+	#offcanvas[data-behaviour*="side"].active .ct-panel-inner,
 	[data-panel*="in"] #offcanvas[data-behaviour*="side"].active .ct-panel-inner {
-		transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0) !important;
 	}
 
 	#offcanvas[data-behaviour*="side"]:not(.active) .ct-panel-inner {
-		transform: translate3d(100%, 0, 0);
+		transform: translate3d(100%, 0, 0) !important;
 	}
 
 	#offcanvas .ct-panel-actions {

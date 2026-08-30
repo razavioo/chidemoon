@@ -115,13 +115,15 @@ add_filter(
 );
 
 /**
- * Blocksy's default footer credit is English; the site is Persian-only.
+ * Copyright is intentionally omitted from the public site.
  */
 add_filter(
 	'blocksy:footer:copyright:default-value',
-	static function (): string {
-		return '© {current_year} چیدمون — راهنمای انتخاب و چیدمان خانه';
-	}
+	'__return_empty_string'
+);
+add_filter(
+	'blocksy:footer:copyright:value',
+	'__return_empty_string'
 );
 
 /**
@@ -221,7 +223,7 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 				<?php if ( $term instanceof WP_Term ) : ?>
 					<p class="chidemoon-card__meta"><span><?php echo esc_html( $term->name ); ?></span></p>
 				<?php endif; ?>
-				<<?php echo esc_html( $heading_tag ); ?> class="chidemoon-card__title"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></<?php echo esc_html( $heading_tag ); ?>>
+				<h3 class="chidemoon-card__title"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></h3>
 				<?php if ( '' !== $price_html ) : ?>
 					<p class="chidemoon-product-card__price"><?php echo wp_kses_post( $price_html ); ?></p>
 				<?php else : ?>
