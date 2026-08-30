@@ -4,52 +4,19 @@ Theme URI: https://chidemoon.com
 Description: Persian-first editorial affiliate presentation for Chidemoon.
 Author: Chidemoon
 Template: blocksy
-Version: 1.3.0
+Version: 1.4.2
 Requires at least: 6.5
 Requires PHP: 8.1
 Text Domain: chidemoon-blocksy-child
 */
 
 @font-face {
-	font-family: Vazirmatn;
+	font-family: Estedad;
 	font-style: normal;
-	font-weight: 400;
+	font-weight: 100 900;
 	font-display: swap;
-	src: url("assets/fonts/Vazirmatn-Regular.woff2") format("woff2");
+	src: url("assets/fonts/Estedad-Variable.woff2") format("woff2-variations");
 }
-
-@font-face {
-	font-family: Vazirmatn;
-	font-style: normal;
-	font-weight: 500;
-	font-display: swap;
-	src: url("assets/fonts/Vazirmatn-Medium.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: Vazirmatn;
-	font-style: normal;
-	font-weight: 600;
-	font-display: swap;
-	src: url("assets/fonts/Vazirmatn-SemiBold.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: Vazirmatn;
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-	src: url("assets/fonts/Vazirmatn-Bold.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: Vazirmatn;
-	font-style: normal;
-	font-weight: 800;
-	font-display: swap;
-	src: url("assets/fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
-}
-
 
 :root {
 	--chidemoon-paper: #f6f2e9;
@@ -65,8 +32,6 @@ Text Domain: chidemoon-blocksy-child
 	--chidemoon-line: rgba(23, 63, 53, 0.17);
 	--chidemoon-line-strong: rgba(23, 63, 53, 0.35);
 	--chidemoon-shadow: 0 24px 65px rgba(26, 44, 37, 0.11);
-	--chidemoon-serif: Vazirmatn, Georgia, serif;
-	--chidemoon-sans: Vazirmatn, IRANSansX, "Segoe UI", Tahoma, Arial, sans-serif;
 	--theme-palette-color-1: var(--chidemoon-forest);
 	--theme-palette-color-2: var(--chidemoon-clay);
 	--theme-link-hover-color: var(--chidemoon-clay);
@@ -79,7 +44,7 @@ Text Domain: chidemoon-blocksy-child
 body {
 	background: var(--chidemoon-paper);
 	color: var(--chidemoon-ink);
-	font-family: var(--chidemoon-sans);
+	font-family: var(--chidemoon-font-ui);
 }
 
 body.rtl {
@@ -88,6 +53,175 @@ body.rtl {
 
 body.chidemoon-editorial-site {
 	font-feature-settings: "kern" 1, "liga" 1;
+}
+
+body.chidemoon-persian :where(h1, h2, h3, .chidemoon-card__title, .chidemoon-route-card strong) {
+	letter-spacing: 0;
+	text-wrap: balance;
+}
+
+body.chidemoon-persian :where(p, li, blockquote, figcaption) {
+	text-wrap: pretty;
+}
+
+/* Blocksy owns the shell markup, so brand, navigation, and copyright roles are explicit. */
+.ct-header .site-title,
+#offcanvas .site-title {
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.35rem, 2vw, 1.75rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	line-height: 1.25;
+}
+
+.ct-header .site-title a,
+#offcanvas .site-title a {
+	font: inherit;
+}
+
+.ct-header [data-id="menu"] > ul > li > a {
+	--theme-font-family: var(--chidemoon-font-ui);
+	--theme-font-size: 0.86rem;
+	--theme-font-weight: 600;
+	--theme-letter-spacing: 0;
+	--theme-line-height: 1.6;
+	--theme-text-transform: none;
+	font-family: var(--chidemoon-font-ui);
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.ct-header [data-id="menu"] > ul > li.current-menu-item > a,
+.ct-header [data-id="menu"] > ul > li > a:hover {
+	font-weight: 700;
+}
+
+.ct-footer .ct-footer-copyright {
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.86rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 1.9;
+}
+
+@media (max-width: 999.98px) {
+	.ct-header [data-device="mobile"] [data-row="middle"] > .ct-container {
+		direction: rtl;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		position: relative;
+	}
+
+	.ct-header [data-device="mobile"] [data-column="start"] {
+		grid-column: 2;
+		justify-content: center;
+	}
+
+	.ct-header [data-device="mobile"] [data-column="end"] {
+		grid-column: 1;
+		grid-row: 1;
+		justify-content: flex-start;
+		justify-self: start;
+	}
+
+	.ct-header [data-id="trigger"] {
+		align-items: center;
+		background: transparent;
+		border: 1px solid var(--chidemoon-line-strong);
+		box-shadow: none;
+		color: var(--chidemoon-forest);
+		display: inline-flex;
+		height: 2.75rem;
+		justify-content: center;
+		width: 2.75rem;
+	}
+
+	.ct-header [data-id="trigger"]:hover {
+		background: var(--chidemoon-forest);
+		border-color: var(--chidemoon-forest);
+		color: #fffcf7;
+		transform: none;
+	}
+
+	#offcanvas {
+		--side-panel-width: min(88vw, 24rem);
+		direction: rtl;
+	}
+
+	#offcanvas[data-behaviour*="side"] .ct-panel-inner {
+		align-self: flex-end;
+		background: var(--chidemoon-forest-deep);
+		border-inline-start: 1px solid rgba(255, 252, 247, 0.14);
+		box-shadow: -24px 0 65px rgba(16, 45, 38, 0.28);
+		inset-inline-end: 0;
+		inset-inline-start: auto;
+		margin-inline-end: var(--side-panel-offset, 0px);
+		margin-inline-start: auto;
+	}
+
+	[data-panel*="in"] #offcanvas[data-behaviour*="side"].active .ct-panel-inner {
+		transform: translate3d(0, 0, 0);
+	}
+
+	#offcanvas[data-behaviour*="side"]:not(.active) .ct-panel-inner {
+		transform: translate3d(100%, 0, 0);
+	}
+
+	#offcanvas .ct-panel-actions {
+		direction: rtl;
+		justify-content: flex-start;
+		padding: 1rem clamp(1rem, 5vw, 1.5rem);
+	}
+
+	#offcanvas .ct-toggle-close {
+		border: 1px solid rgba(255, 252, 247, 0.28);
+		color: #fffcf7;
+		height: 2.65rem;
+		width: 2.65rem;
+	}
+
+	#offcanvas .ct-panel-content-inner {
+		align-items: stretch;
+		padding: 0 clamp(1rem, 6vw, 1.75rem) 2rem;
+	}
+
+	#offcanvas .mobile-menu {
+		text-align: right;
+		width: 100%;
+	}
+
+	#offcanvas .mobile-menu > ul {
+		border-top: 1px solid rgba(255, 252, 247, 0.16);
+		width: 100%;
+	}
+
+	#offcanvas .mobile-menu li {
+		border-bottom: 1px solid rgba(255, 252, 247, 0.12);
+	}
+
+	#offcanvas .mobile-menu .ct-menu-link {
+		--theme-font-family: var(--chidemoon-font-display);
+		--theme-font-size: clamp(1.25rem, 5vw, 1.55rem);
+		--theme-font-weight: 600;
+		--theme-letter-spacing: 0;
+		--theme-line-height: 1.5;
+		--theme-text-transform: none;
+		align-items: center;
+		color: #fffcf7;
+		display: flex;
+		font-family: var(--chidemoon-font-display);
+		justify-content: flex-start;
+		letter-spacing: 0;
+		min-height: 4rem;
+		padding: 0.8rem 0.25rem;
+		text-align: right;
+		text-transform: none;
+	}
+
+	#offcanvas .mobile-menu .current-menu-item > .ct-menu-link,
+	#offcanvas .mobile-menu .ct-menu-link:hover {
+		color: var(--chidemoon-clay-soft);
+	}
 }
 
 .ct-container,
@@ -121,7 +255,7 @@ body.chidemoon-editorial-site {
 .chidemoon-category-link__count,
 .chidemoon-empty-state__index {
 	color: var(--chidemoon-muted);
-	font-family: var(--chidemoon-sans);
+	font-family: var(--chidemoon-font-ui);
 	font-size: 0.72rem;
 	font-weight: 700;
 	letter-spacing: 0.02em;
@@ -138,7 +272,7 @@ body.chidemoon-editorial-site {
 .chidemoon-shop-archive h1,
 .woocommerce div.product .product_title {
 	color: var(--chidemoon-forest);
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-weight: 800;
 	letter-spacing: 0;
 	line-height: 1.25;
@@ -152,6 +286,33 @@ body.chidemoon-editorial-site {
 
 .entry-content :where(p, li) {
 	line-height: 2;
+}
+
+/* Editorial notes are a distinct reading voice, not ordinary body copy. */
+.entry-content .wp-block-quote {
+	background: color-mix(in srgb, var(--chidemoon-sage) 16%, var(--chidemoon-surface));
+	border: 0;
+	border-inline-start: 4px solid var(--chidemoon-clay);
+	margin-block: clamp(2rem, 5vw, 3.5rem);
+	padding: clamp(1.15rem, 3vw, 1.75rem);
+}
+
+.entry-content .wp-block-quote p {
+	color: var(--chidemoon-forest-deep);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+	font-weight: 600;
+	letter-spacing: 0;
+	line-height: 1.9;
+	margin: 0;
+}
+
+.entry-content .wp-block-quote cite {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.82rem;
+	font-style: normal;
+	font-weight: 500;
 }
 
 .entry-content a:not(.wp-element-button) {
@@ -174,12 +335,12 @@ body.chidemoon-editorial-site {
 	box-shadow: 4px 4px 0 var(--chidemoon-sage);
 	color: #fffcf7;
 	display: inline-flex;
-	font-family: var(--chidemoon-sans);
+	font-family: var(--chidemoon-font-ui);
 	font-size: 0.82rem;
-	font-weight: 800;
+	font-weight: 700;
 	gap: 0.65rem;
 	justify-content: center;
-	letter-spacing: 0.035em;
+	letter-spacing: 0;
 	line-height: 1.2;
 	min-height: 2.8rem;
 	padding: 0.8rem 1.05rem;
@@ -218,9 +379,9 @@ body.chidemoon-editorial-site {
 	color: var(--chidemoon-forest);
 	display: inline-flex;
 	font-size: 0.82rem;
-	font-weight: 800;
+	font-weight: 700;
 	gap: 0.55rem;
-	letter-spacing: 0.025em;
+	letter-spacing: 0;
 	text-decoration: none;
 }
 
@@ -327,7 +488,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 .chidemoon-home__hero-mark span {
 	color: var(--chidemoon-forest-deep);
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(4.5rem, 11vw, 8.5rem);
 	font-weight: 600;
 	letter-spacing: -0.12em;
@@ -459,10 +620,10 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-card__title {
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.25rem, 2vw, 1.62rem);
 	font-weight: 600;
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 	line-height: 1.25;
 	margin: 0;
 }
@@ -498,8 +659,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 .chidemoon-product-card__pending {
 	color: var(--chidemoon-muted);
 	font-size: 0.79rem;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
+	letter-spacing: 0;
 }
 
 .chidemoon-category-grid {
@@ -536,10 +696,10 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-category-link__title {
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.25rem, 2vw, 1.7rem);
 	font-weight: 600;
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 }
 
 .chidemoon-home__journal {
@@ -609,11 +769,11 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-route-card strong {
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(2.1rem, 4vw, 4rem);
 	font-weight: 600;
-	letter-spacing: -0.04em;
-	line-height: 1;
+	letter-spacing: 0;
+	line-height: 1.2;
 	margin-block: 1rem;
 }
 
@@ -650,10 +810,10 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 .chidemoon-empty-state h3 {
 	color: var(--chidemoon-forest);
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: 1.5rem;
 	font-weight: 600;
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 	margin: 0;
 }
 
@@ -736,6 +896,10 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	padding-block: clamp(2.25rem, 5vw, 5rem);
 }
 
+.chidemoon-collection-page__content--single {
+	grid-template-columns: minmax(0, 1fr);
+}
+
 .chidemoon-collection-page__note {
 	align-self: start;
 	border-top: 3px solid var(--chidemoon-clay);
@@ -798,22 +962,38 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
+	--theme-font-family: var(--chidemoon-font-display);
+	--theme-font-size: 1.25rem;
+	--theme-font-weight: 650;
+	--theme-letter-spacing: 0;
+	--theme-line-height: 1.5;
+	--theme-text-transform: none;
 	color: var(--chidemoon-ink);
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: 1.25rem;
-	font-weight: 600;
-	line-height: 1.38;
+	font-weight: 650;
+	letter-spacing: 0;
+	line-height: 1.5;
 	margin-bottom: 0.65rem;
 	min-height: 3.35em;
 	padding: 0;
+	text-transform: none;
 }
 
 .woocommerce ul.products li.product .price,
 .woocommerce div.product p.price,
 .woocommerce div.product span.price {
 	color: var(--chidemoon-clay);
+	font-family: var(--chidemoon-font-ui);
 	font-size: 1rem;
-	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.65;
+}
+
+.woocommerce .price :where(.woocommerce-Price-amount, .woocommerce-Price-currencySymbol, bdi) {
+	font: inherit;
 }
 
 .woocommerce ul.products li.product .button {
@@ -871,8 +1051,30 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 .woocommerce .woocommerce-breadcrumb,
 .woocommerce .woocommerce-result-count,
 .woocommerce .woocommerce-ordering {
+	--theme-font-family: var(--chidemoon-font-ui);
+	--theme-letter-spacing: 0;
+	--theme-text-transform: none;
 	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
 	font-size: 0.86rem;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.woocommerce .woocommerce-breadcrumb :where(a, span),
+.woocommerce ul.products .entry-meta,
+.woocommerce ul.products .entry-meta a {
+	--theme-font-family: var(--chidemoon-font-ui);
+	--theme-letter-spacing: 0;
+	--theme-text-transform: none;
+	font-family: var(--chidemoon-font-ui);
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.woocommerce ul.products .entry-meta {
+	font-size: 0.78rem;
+	font-weight: 600;
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs {
@@ -898,8 +1100,16 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	--theme-font-family: var(--chidemoon-font-ui);
+	--theme-font-size: 0.9rem;
+	--theme-font-weight: 600;
+	--theme-letter-spacing: 0;
+	--theme-text-transform: none;
 	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	letter-spacing: 0;
 	padding: 0.75rem 0;
+	text-transform: none;
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
@@ -1037,6 +1247,19 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 	.chidemoon-home__hero-copy {
 		padding: 1.2rem;
+	}
+
+	.chidemoon-home__hero h1,
+	.chidemoon-archive__hero h1,
+	.chidemoon-collection-page__hero h1,
+	.chidemoon-shop-archive__intro h1 {
+		font-size: clamp(2.35rem, 12vw, 3.4rem);
+		line-height: 1.3;
+	}
+
+	.woocommerce div.product .product_title {
+		font-size: clamp(2rem, 10vw, 3rem);
+		line-height: 1.3;
 	}
 
 	.chidemoon-home__actions,
@@ -1264,7 +1487,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 .chidemoon-article__nav-title {
 	color: var(--chidemoon-forest);
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: 1.08rem;
 	font-weight: 600;
 	line-height: 1.4;
@@ -1347,7 +1570,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-featured__title {
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.5rem, 2.8vw, 2.3rem);
 	font-weight: 800;
 	line-height: 1.4;
@@ -1429,7 +1652,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-side-story__title {
-	font-family: var(--chidemoon-serif);
+	font-family: var(--chidemoon-font-display);
 	font-size: 0.98rem;
 	font-weight: 700;
 	line-height: 1.55;

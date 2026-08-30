@@ -39,15 +39,13 @@ $comparison_posts = new WP_Query(
 			</figure>
 		<?php endif; ?>
 
-		<section class="chidemoon-collection-page__content chidemoon-section-shell">
-			<div class="entry-content">
-				<?php the_content(); ?>
-			</div>
-			<aside class="chidemoon-collection-page__note">
-				<span class="chidemoon-eyebrow"><?php esc_html_e( 'روش مقایسه ما', 'chidemoon-blocksy-child' ); ?></span>
-				<p><?php esc_html_e( 'مقایسه‌ها شواهد و نکات حل‌نشده را آشکار نشان می‌دهند تا هر تصمیم قابل پاسخگویی بماند.', 'chidemoon-blocksy-child' ); ?></p>
-			</aside>
-		</section>
+		<?php if ( '' !== trim( wp_strip_all_tags( get_the_content() ) ) ) : ?>
+			<section class="chidemoon-collection-page__content chidemoon-collection-page__content--single chidemoon-section-shell">
+				<div class="entry-content">
+					<?php the_content(); ?>
+				</div>
+			</section>
+		<?php endif; ?>
 	<?php endwhile; ?>
 
 	<section class="chidemoon-section-shell chidemoon-collection-page__feed" aria-labelledby="chidemoon-comparisons-feed">
@@ -61,7 +59,7 @@ $comparison_posts = new WP_Query(
 			<div class="chidemoon-card-grid chidemoon-card-grid--archive">
 				<?php while ( $comparison_posts->have_posts() ) : ?>
 					<?php $comparison_posts->the_post(); ?>
-					<?php chidemoon_blocksy_render_post_card( get_the_ID() ); ?>
+					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact' ); ?>
 				<?php endwhile; ?>
 			</div>
 			<?php wp_reset_postdata(); ?>

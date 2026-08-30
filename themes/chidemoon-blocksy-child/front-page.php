@@ -120,8 +120,8 @@ $side_categories = get_the_category( $side_id );
 <a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله<span aria-hidden="true">←</span></a>
 </div>
 <div class="chidemoon-card-grid chidemoon-card-grid--stories">
-<?php foreach ( $grid_stories as $grid_id ) : ?>
-<?php chidemoon_blocksy_render_post_card( (int) $grid_id ); ?>
+<?php foreach ( $grid_stories as $grid_index => $grid_id ) : ?>
+<?php chidemoon_blocksy_render_post_card( (int) $grid_id, 0 === $grid_index ? 'lead' : 'compact' ); ?>
 <?php endforeach; ?>
 </div>
 </section>
@@ -175,7 +175,7 @@ $side_categories = get_the_category( $side_id );
 </a>
 <a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
 <span class="chidemoon-eyebrow">یک اتاق را بچین</span>
-<strong>شاپ‌درلوک</strong>
+<strong>از تصویر بخر</strong>
 <span>ترکیب‌های ادیتوریال متصل به پیشنهاد مستقیم فروشنده.</span>
 <i aria-hidden="true">←</i>
 </a>

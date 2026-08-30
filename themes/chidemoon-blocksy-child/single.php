@@ -42,17 +42,9 @@ $categories = get_the_category();
 		<div class="chidemoon-article__layout chidemoon-section-shell">
 			<article class="chidemoon-article__body entry-content">
 				<?php the_content(); ?>
-				<?php if ( shortcode_exists( 'chidemoon_affiliate_disclosure' ) ) : ?>
-					<?php echo do_shortcode( '[chidemoon_affiliate_disclosure]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<?php endif; ?>
 			</article>
 
 			<aside class="chidemoon-article__aside">
-				<div class="chidemoon-article__aside-box">
-					<span class="chidemoon-eyebrow"><?php esc_html_e( 'مجله چیدمون', 'chidemoon-blocksy-child' ); ?></span>
-					<p><?php esc_html_e( 'هر راهنما با معیارهای بررسی‌شده نوشته می‌شود و با تغییر شواهد به‌روز می‌ماند.', 'chidemoon-blocksy-child' ); ?></p>
-					<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'guides' ) ); ?>"><?php esc_html_e( 'بازگشت به همه راهنماها', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
-				</div>
 				<?php $tags = get_the_tags(); ?>
 				<?php if ( is_array( $tags ) && ! empty( $tags ) ) : ?>
 					<div class="chidemoon-article__tags">

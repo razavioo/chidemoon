@@ -26,7 +26,7 @@ get_header();
 			<div class="chidemoon-card-grid chidemoon-card-grid--archive">
 				<?php while ( have_posts() ) : ?>
 					<?php the_post(); ?>
-					<?php chidemoon_blocksy_render_post_card( get_the_ID() ); ?>
+					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact' ); ?>
 				<?php endwhile; ?>
 			</div>
 			<?php the_posts_pagination( array( 'class' => 'chidemoon-pagination', 'mid_size' => 1 ) ); ?>

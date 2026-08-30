@@ -1,0 +1,12 @@
+.editor-styles-wrapper {
+	background: #fffcf7;
+	color: #1f2a26;
+}
+
+.editor-styles-wrapper :where(h1, h2, h3) {
+	color: #173f35;
+}
+
+.editor-styles-wrapper :where(.wp-block-post-title, .wp-block-heading) {
+	text-wrap: balance;
+}

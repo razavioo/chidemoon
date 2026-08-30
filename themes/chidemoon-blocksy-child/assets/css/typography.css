@@ -1,0 +1,163 @@
+@font-face {
+	font-display: swap;
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/Vazirmatn-Regular.woff2") format("woff2");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 500;
+	src: url("../fonts/Vazirmatn-Medium.woff2") format("woff2");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 600;
+	src: url("../fonts/Vazirmatn-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 700;
+	src: url("../fonts/Vazirmatn-Bold.woff2") format("woff2");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 800;
+	src: url("../fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Estedad;
+	font-style: normal;
+	font-weight: 100 900;
+	src: url("../fonts/Estedad-Variable.woff2") format("woff2-variations");
+}
+
+:root {
+	--chidemoon-font-body: Vazirmatn, Tahoma, Arial, sans-serif;
+	--chidemoon-font-ui: Vazirmatn, Tahoma, Arial, sans-serif;
+	--chidemoon-font-display: Estedad, Vazirmatn, Tahoma, Arial, sans-serif;
+	--chidemoon-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+	/* Public blocks consume these stable compatibility variables. */
+	--chidemoon-sans: var(--chidemoon-font-body);
+	--chidemoon-serif: var(--chidemoon-font-display);
+	--kalahamoon-font-family: var(--chidemoon-font-body);
+	--kalahamoon-font-body: var(--chidemoon-font-body);
+	--kalahamoon-font-display: var(--chidemoon-font-display);
+	--kalahamoon-font-mono: var(--chidemoon-font-mono);
+}
+
+body,
+.editor-styles-wrapper {
+	font-family: var(--chidemoon-font-body);
+	font-kerning: normal;
+	text-rendering: optimizeLegibility;
+}
+
+:where(button, input, optgroup, select, textarea) {
+	font: inherit;
+}
+
+:where(
+	h1,
+	h2,
+	h3,
+	.site-title,
+	.site-title a,
+	.entry-title,
+	.page-title,
+	.widget-title,
+	.ct-widget-title,
+	.woocommerce-loop-product__title,
+	.woocommerce div.product .product_title,
+	.woocommerce div.product .woocommerce-tabs h2,
+	.woocommerce .related > h2,
+	.woocommerce .upsells > h2,
+	.chidemoon-card__title,
+	.chidemoon-featured__title,
+	.chidemoon-side-story__title,
+	.chidemoon-category-link__title,
+	.chidemoon-route-card strong,
+	.chidemoon-empty-state h3,
+	.chidemoon-article__nav-title
+) {
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+}
+
+:where(h4, h5, h6) {
+	font-family: var(--chidemoon-font-body);
+}
+
+:where(
+	.ct-header,
+	.ct-footer,
+	.ct-footer-copyright,
+	.ct-header-trigger,
+	.ct-menu-link,
+	.menu,
+	.sub-menu,
+	.mobile-menu,
+	.site-description,
+	.chidemoon-eyebrow,
+	.chidemoon-card__meta,
+	.chidemoon-card__badge,
+	.chidemoon-text-link,
+	.chidemoon-button,
+	.chidemoon-article__meta,
+	.chidemoon-article__tag,
+	.chidemoon-pagination,
+	.wp-element-button,
+	.button,
+	button,
+	input,
+	select,
+	textarea,
+	label,
+	.woocommerce-breadcrumb,
+	.woocommerce-result-count,
+	.woocommerce-ordering,
+	.woocommerce-message,
+	.woocommerce-info,
+	.woocommerce-error,
+	.woocommerce div.product .price,
+	.woocommerce div.product .product_meta,
+	.woocommerce div.product .woocommerce-tabs ul.tabs,
+	.woocommerce nav.woocommerce-pagination,
+	.woocommerce form,
+	.woocommerce table.shop_table
+) {
+	font-family: var(--chidemoon-font-ui);
+}
+
+:where(code, kbd, samp, pre, .tag-mono, .price-mono, .code-mono, .chidemoon-tag-mono) {
+	direction: ltr;
+	font-family: var(--chidemoon-font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+.editor-styles-wrapper :where(h1, h2, h3) {
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+	letter-spacing: 0;
+	line-height: 1.35;
+}
+
+.editor-styles-wrapper :where(p, li, blockquote, figcaption) {
+	font-family: var(--chidemoon-font-body);
+	line-height: 2;
+}

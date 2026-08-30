@@ -33,6 +33,7 @@ final class Chidemoon_Core_Affiliate {
 		add_filter( 'woocommerce_is_purchasable', array( __CLASS__, 'only_external_products_are_purchasable' ), 100, 2 );
 		add_filter( 'woocommerce_add_to_cart_validation', array( __CLASS__, 'prevent_cart_additions' ), 100, 2 );
 		add_filter( 'woocommerce_product_add_to_cart_url', array( __CLASS__, 'use_tracking_url_for_product_cta' ), 100, 2 );
+		add_filter( 'woocommerce_loop_add_to_cart_args', array( __CLASS__, 'open_product_cta_in_new_tab' ), 100, 2 );
 		add_filter( 'woocommerce_widget_cart_item_visible', array( __CLASS__, 'hide_cart_widget_items' ) );
 		add_shortcode( 'chidemoon_affiliate_cta', array( __CLASS__, 'render_affiliate_cta' ) );
 		add_shortcode( 'chidemoon_affiliate_disclosure', array( __CLASS__, 'render_disclosure' ) );
@@ -293,6 +294,23 @@ final class Chidemoon_Core_Affiliate {
 		}
 
 		return self::tracking_url( $product->get_id() );
+	}
+
+	/**
+	 * @param array<string, mixed> $args    WooCommerce CTA attributes.
+	 * @param WC_Product           $product Current product.
+	 * @return array<string, mixed>
+	 */
+	public static function open_product_cta_in_new_tab( array $args, WC_Product $product ): array {
+		if ( ! $product->is_type( 'external' ) || '' === self::get_affiliate_url( $product ) ) {
+			return $args;
+		}
+
+		$args['attributes'] = isset( $args['attributes'] ) && is_array( $args['attributes'] ) ? $args['attributes'] : array();
+		$args['attributes']['target'] = '_blank';
+		$args['attributes']['rel']    = 'nofollow sponsored noopener';
+
+		return $args;
 	}
 
 	public static function handle_frontend_redirects(): void {

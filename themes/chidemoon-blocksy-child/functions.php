@@ -14,15 +14,31 @@ add_action(
 	'after_setup_theme',
 	static function (): void {
 		load_child_theme_textdomain( 'chidemoon-blocksy-child', get_stylesheet_directory() . '/languages' );
+		add_theme_support( 'editor-styles' );
+		add_editor_style( array( 'assets/css/typography.css', 'assets/css/editor.css' ) );
 	}
 );
 
 function chidemoon_blocksy_enqueue_styles(): void {
+	$version = (string) wp_get_theme()->get( 'Version' );
+
+	wp_enqueue_style(
+		'chidemoon-typography',
+		get_stylesheet_directory_uri() . '/assets/css/typography.css',
+		array(),
+		$version
+	);
 	wp_enqueue_style(
 		'chidemoon-blocksy-child',
 		get_stylesheet_uri(),
-		array(),
-		(string) wp_get_theme()->get( 'Version' )
+		array( 'chidemoon-typography' ),
+		$version
+	);
+	wp_enqueue_style(
+		'chidemoon-editorial-refresh',
+		get_stylesheet_directory_uri() . '/assets/css/editorial-refresh.css',
+		array( 'chidemoon-blocksy-child' ),
+		$version
 	);
 }
 add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_styles', 20 );
@@ -106,7 +122,7 @@ function chidemoon_blocksy_page_url( string $slug ): string {
  * The presentation layer deliberately reads only public WordPress fields. It
  * does not infer product claims, merchant links, review state, or affiliate data.
  */
-function chidemoon_blocksy_render_post_card( int $post_id ): void {
+function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '' ): void {
 	$post = get_post( $post_id );
 	if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status ) {
 		return;
@@ -116,9 +132,11 @@ function chidemoon_blocksy_render_post_card( int $post_id ): void {
 	$title      = get_the_title( $post );
 	$excerpt    = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 24 );
 	$categories = get_the_category( $post_id );
-	$category   = ! empty( $categories ) ? $categories[0] : null;
+	$category       = ! empty( $categories ) ? $categories[0] : null;
+	$valid_variants = array( 'lead', 'compact' );
+	$variant_class  = in_array( $variant, $valid_variants, true ) ? ' chidemoon-story-card--' . $variant : '';
 	?>
-	<article class="chidemoon-card chidemoon-story-card">
+	<article class="chidemoon-card chidemoon-story-card<?php echo esc_attr( $variant_class ); ?>">
 		<a class="chidemoon-card__media" href="<?php echo esc_url( $permalink ); ?>" aria-label="<?php echo esc_attr( $title ); ?>">
 			<?php if ( has_post_thumbnail( $post ) ) : ?>
 				<?php echo get_the_post_thumbnail( $post, 'large', array( 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -203,19 +221,3 @@ function chidemoon_blocksy_render_empty_state( string $title, string $descriptio
 	</div>
 	<?php
 }
-
-/**
- * The affiliate disclosure is a Core-owned value. The theme only reserves a
- * visually consistent position for it when the plugin elects to render one.
- */
-function chidemoon_blocksy_render_single_product_disclosure(): void {
-	if ( ! shortcode_exists( 'chidemoon_affiliate_disclosure' ) ) {
-		return;
-	}
-
-	$disclosure = do_shortcode( '[chidemoon_affiliate_disclosure]' );
-	if ( '' !== trim( $disclosure ) ) {
-		echo '<div class="chidemoon-product-disclosure">' . $disclosure . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-}
-add_action( 'woocommerce_single_product_summary', 'chidemoon_blocksy_render_single_product_disclosure', 38 );

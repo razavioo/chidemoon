@@ -1,0 +1,699 @@
+/* Chidemoon's public editorial system. Header and footer remain Blocksy-owned. */
+:root {
+	--chidemoon-paper: #f3f4f1;
+	--chidemoon-surface: #fffdfa;
+	--chidemoon-surface-muted: #eee8dc;
+	--chidemoon-ink: #17241f;
+	--chidemoon-muted: #607069;
+	--chidemoon-forest: #123f34;
+	--chidemoon-forest-deep: #092c25;
+	--chidemoon-clay: #b95d3e;
+	--chidemoon-clay-soft: #e6b29e;
+	--chidemoon-sage: #a9b69e;
+	--chidemoon-line: rgba(18, 63, 52, 0.12);
+	--chidemoon-line-strong: rgba(18, 63, 52, 0.25);
+	--chidemoon-shadow: 0 18px 50px rgba(13, 43, 35, 0.09);
+	--chidemoon-shadow-soft: 0 8px 26px rgba(13, 43, 35, 0.07);
+	--chidemoon-radius-sm: 0.65rem;
+	--chidemoon-radius: 1rem;
+	--chidemoon-radius-lg: 1.4rem;
+}
+
+.chidemoon-section-shell {
+	max-width: 1320px;
+	padding-inline: clamp(1rem, 3.4vw, 3rem);
+}
+
+.chidemoon-home,
+.chidemoon-archive,
+.chidemoon-collection-page,
+.chidemoon-shop-archive,
+.chidemoon-product-page,
+.chidemoon-article {
+	background: var(--chidemoon-paper);
+}
+
+.chidemoon-home__section {
+	padding-block: clamp(2.5rem, 5vw, 4.8rem);
+}
+
+.chidemoon-section-heading {
+	align-items: center;
+	border-bottom: 0;
+	margin-bottom: clamp(1.2rem, 2.5vw, 2rem);
+	padding-bottom: 0;
+}
+
+.chidemoon-section-heading > div {
+	align-items: center;
+	display: flex;
+	gap: 0.85rem;
+}
+
+.chidemoon-section-heading > div::before {
+	background: var(--chidemoon-clay);
+	border-radius: 999px;
+	content: "";
+	height: 1.65rem;
+	width: 0.3rem;
+}
+
+.chidemoon-section-heading h2 {
+	font-size: clamp(1.55rem, 2.4vw, 2.25rem);
+}
+
+.chidemoon-card,
+.chidemoon-featured,
+.chidemoon-side-story {
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	overflow: hidden;
+}
+
+.chidemoon-card:hover,
+.chidemoon-featured:hover,
+.chidemoon-side-story:hover {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
+	transform: translateY(-4px);
+}
+
+.chidemoon-card__badge {
+	backdrop-filter: blur(8px);
+	background: color-mix(in srgb, var(--chidemoon-forest) 92%, transparent);
+	border-radius: 999px;
+	inset-block-start: 0.85rem;
+	inset-inline-start: 0.85rem;
+	padding: 0.35rem 0.7rem;
+}
+
+.chidemoon-card__body {
+	padding: clamp(1rem, 1.8vw, 1.35rem);
+}
+
+.chidemoon-card__title {
+	font-size: clamp(1.02rem, 1.35vw, 1.25rem);
+	font-weight: 750;
+	line-height: 1.55;
+}
+
+.chidemoon-card__excerpt {
+	font-size: 0.88rem;
+	line-height: 1.9;
+}
+
+.chidemoon-card__footer {
+	border-color: var(--chidemoon-line);
+}
+
+/* Home: dense media front rather than a uniform card catalogue. */
+.chidemoon-home {
+	padding-block: clamp(1rem, 2vw, 1.75rem) clamp(3rem, 6vw, 5rem);
+}
+
+.chidemoon-home__top {
+	gap: clamp(0.9rem, 1.8vw, 1.35rem);
+	grid-template-columns: minmax(0, 1.78fr) minmax(18rem, 0.82fr);
+	margin-top: clamp(1rem, 2.4vw, 2rem);
+}
+
+.chidemoon-featured {
+	position: relative;
+}
+
+.chidemoon-featured__media {
+	aspect-ratio: 16 / 8.7;
+}
+
+.chidemoon-featured__body {
+	background: linear-gradient(180deg, rgba(255, 253, 250, 0.96), var(--chidemoon-surface));
+	gap: 0.65rem;
+	padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.chidemoon-featured__title {
+	font-size: clamp(1.65rem, 3vw, 2.65rem);
+	line-height: 1.35;
+}
+
+.chidemoon-featured__excerpt {
+	max-width: 62ch;
+}
+
+.chidemoon-side-stories {
+	gap: 0.8rem;
+}
+
+.chidemoon-side-story {
+	grid-template-columns: minmax(7.5rem, 42%) minmax(0, 1fr);
+	transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.chidemoon-side-story__body {
+	padding: 1rem;
+}
+
+.chidemoon-side-story__all {
+	border-radius: var(--chidemoon-radius-sm);
+	min-height: 3.15rem;
+}
+
+.chidemoon-card-grid--stories,
+.chidemoon-card-grid--archive {
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.chidemoon-card-grid--stories > .chidemoon-story-card,
+.chidemoon-card-grid--archive > .chidemoon-story-card {
+	grid-column: span 4;
+}
+
+.chidemoon-card-grid--stories > .chidemoon-story-card--lead {
+	grid-column: span 8;
+	grid-row: span 2;
+}
+
+.chidemoon-story-card--lead .chidemoon-card__media {
+	aspect-ratio: 16 / 8.8;
+}
+
+.chidemoon-story-card--lead .chidemoon-card__title {
+	font-size: clamp(1.35rem, 2.3vw, 2rem);
+}
+
+.chidemoon-card-grid--archive > .chidemoon-story-card:first-child {
+	grid-column: span 8;
+}
+
+.chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
+	aspect-ratio: 16 / 8.6;
+}
+
+.chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__title {
+	font-size: clamp(1.25rem, 2vw, 1.8rem);
+}
+
+.chidemoon-card-grid--products {
+	gap: clamp(0.8rem, 1.7vw, 1.35rem);
+}
+
+.chidemoon-product-card .chidemoon-card__media {
+	aspect-ratio: 1 / 0.92;
+}
+
+.chidemoon-product-card .chidemoon-card__media img {
+	padding: 0.8rem;
+}
+
+.chidemoon-product-card__price {
+	font-size: 0.86rem;
+}
+
+.chidemoon-category-grid {
+	background: var(--chidemoon-surface);
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	overflow: hidden;
+}
+
+.chidemoon-category-link {
+	min-height: 6.5rem;
+}
+
+.chidemoon-home__routes {
+	gap: clamp(1rem, 2vw, 1.5rem);
+	padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.chidemoon-route-card {
+	border: 0;
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow-soft);
+	min-height: clamp(13rem, 22vw, 17rem);
+}
+
+.chidemoon-route-card strong {
+	font-size: clamp(2rem, 3.5vw, 3.6rem);
+}
+
+/* Archive and collection mastheads are informative, not empty billboards. */
+.chidemoon-archive,
+.chidemoon-shop-archive,
+.chidemoon-collection-page {
+	padding-block: 0 clamp(3.5rem, 7vw, 6rem);
+}
+
+.chidemoon-archive__hero,
+.chidemoon-collection-page__hero,
+.chidemoon-shop-archive__intro {
+	background:
+		radial-gradient(circle at 8% 15%, rgba(230, 178, 158, 0.45) 0 8rem, transparent 8.1rem),
+		linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 24%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	border: 0;
+	border-radius: var(--chidemoon-radius-lg);
+	margin-block: clamp(1rem, 2.5vw, 2rem) 0;
+	padding-block: clamp(2.2rem, 5vw, 4.5rem);
+	position: relative;
+}
+
+.chidemoon-archive__hero::after,
+.chidemoon-collection-page__hero::after,
+.chidemoon-shop-archive__intro::after {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 50%;
+	content: "";
+	height: clamp(3rem, 8vw, 6rem);
+	inset-block-end: 1.5rem;
+	inset-inline-start: clamp(1.5rem, 4vw, 4rem);
+	position: absolute;
+	width: clamp(3rem, 8vw, 6rem);
+}
+
+.chidemoon-archive__hero h1,
+.chidemoon-collection-page__hero h1,
+.chidemoon-shop-archive__intro h1 {
+	font-size: clamp(2.4rem, 5.5vw, 5rem);
+	margin-block: 0.5rem 0.8rem;
+	max-width: 16ch;
+}
+
+.chidemoon-archive > .chidemoon-section-shell,
+.chidemoon-collection-page__feed {
+	padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.chidemoon-collection-page__image,
+.chidemoon-article__image {
+	border: 0;
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow);
+}
+
+.chidemoon-collection-page__image img,
+.chidemoon-article__image img {
+	aspect-ratio: 16 / 7.2;
+	object-fit: cover;
+}
+
+.chidemoon-collection-page__content {
+	gap: clamp(1.5rem, 4vw, 3.5rem);
+	grid-template-columns: minmax(0, 1.7fr) minmax(16rem, 0.55fr);
+	padding-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+.chidemoon-collection-page__content > .entry-content {
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.chidemoon-collection-page__content > .entry-content:empty {
+	display: none;
+}
+
+.chidemoon-collection-page__content:has(> .entry-content:empty) {
+	grid-template-columns: minmax(0, 44rem);
+	justify-content: end;
+}
+
+.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card,
+.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child {
+	grid-column: span 4;
+}
+
+.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
+	aspect-ratio: 1.55 / 1;
+}
+
+.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__title {
+	font-size: clamp(1.02rem, 1.35vw, 1.25rem);
+}
+
+.chidemoon-collection-page__note {
+	background: color-mix(in srgb, var(--chidemoon-sage) 18%, var(--chidemoon-surface));
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: inset 0 4px 0 var(--chidemoon-clay);
+	padding: 1.35rem;
+	position: sticky;
+	top: 2rem;
+}
+
+/* Article reading experience. */
+.chidemoon-article {
+	padding-block: clamp(1rem, 2vw, 2rem) clamp(3rem, 6vw, 5rem);
+}
+
+.chidemoon-article__hero {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 18%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	border-radius: var(--chidemoon-radius-lg);
+	padding-block: clamp(2rem, 5vw, 4.5rem);
+}
+
+.chidemoon-article__hero h1 {
+	font-size: clamp(2.3rem, 5.2vw, 4.6rem);
+	line-height: 1.3;
+	max-width: 20ch;
+}
+
+.chidemoon-article__lede {
+	max-width: 55ch;
+}
+
+.chidemoon-article__layout {
+	gap: clamp(1.5rem, 3.5vw, 3rem);
+	grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.32fr);
+	max-width: 1160px;
+}
+
+.chidemoon-article__body {
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	font-size: clamp(1rem, 1.2vw, 1.08rem);
+	padding: clamp(1.4rem, 4vw, 3.5rem);
+}
+
+.chidemoon-article__body > * {
+	margin-inline: auto;
+	max-width: 68ch;
+}
+
+.chidemoon-article__body > :where(figure, .wp-block-image, .wp-block-gallery, .alignwide) {
+	max-width: 100%;
+}
+
+.chidemoon-article__body :where(p, li) {
+	line-height: 2.15;
+}
+
+.chidemoon-article__aside-box,
+.chidemoon-article__navigation .nav-previous,
+.chidemoon-article__navigation .nav-next {
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+}
+
+.chidemoon-article__navigation .nav-previous:hover,
+.chidemoon-article__navigation .nav-next:hover {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+}
+
+/* WooCommerce catalogue and product detail. */
+.chidemoon-shop-archive__catalogue {
+	padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper + :where(.woocommerce-result-count, .woocommerce-ordering),
+.chidemoon-shop-archive__catalogue .woocommerce-result-count,
+.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+	margin-bottom: 1.5rem;
+}
+
+.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	min-height: 2.9rem;
+	padding-inline: 0.85rem;
+}
+
+.woocommerce ul.products {
+	gap: clamp(0.85rem, 1.7vw, 1.35rem);
+}
+
+.woocommerce ul.products li.product {
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.woocommerce ul.products li.product:hover {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
+	transform: translateY(-4px);
+}
+
+.woocommerce ul.products li.product a img {
+	aspect-ratio: 1 / 0.93;
+	padding: 0.8rem;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title {
+	font-size: 1.08rem;
+	min-height: 3em;
+	padding-inline: 1.1rem;
+}
+
+.woocommerce ul.products li.product .price {
+	margin-inline: 1.1rem;
+}
+
+.chidemoon-product-page {
+	padding-block: clamp(1rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem);
+}
+
+.chidemoon-product-page__frame {
+	max-width: 1320px;
+}
+
+.woocommerce div.product {
+	border: 0;
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow);
+	padding: clamp(1rem, 3vw, 2.4rem);
+}
+
+.woocommerce div.product div.images img {
+	border-radius: var(--chidemoon-radius);
+}
+
+.woocommerce div.product .product_title {
+	font-size: clamp(2rem, 4vw, 3.7rem);
+	line-height: 1.25;
+}
+
+.woocommerce div.product .summary {
+	padding-inline-start: clamp(0rem, 3vw, 2.2rem);
+}
+
+.woocommerce div.product p.price,
+.woocommerce div.product span.price {
+	font-size: 1.08rem;
+}
+
+.woocommerce div.product .woocommerce-tabs {
+	border-top: 1px solid var(--chidemoon-line);
+	clear: both;
+	padding-top: 1.4rem;
+}
+
+.woocommerce .related.products {
+	clear: both;
+	padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.woocommerce .related.products > h2 {
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.5rem, 2.4vw, 2rem);
+	margin-bottom: 1.25rem;
+}
+
+.chidemoon-affiliate-disclosure,
+.chidemoon-source-note {
+	border: 0;
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: inset -4px 0 0 var(--chidemoon-sage);
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-home__top {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-side-stories {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.chidemoon-side-story__all {
+		grid-column: 1 / -1;
+	}
+
+	.chidemoon-card-grid--products,
+	.woocommerce ul.products {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.chidemoon-article__layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.chidemoon-article__aside,
+	.chidemoon-collection-page__note {
+		position: static;
+	}
+}
+
+@media (max-width: 780px) {
+	.chidemoon-card-grid--stories > .chidemoon-story-card,
+	.chidemoon-card-grid--archive > .chidemoon-story-card,
+	.chidemoon-card-grid--stories > .chidemoon-story-card--lead,
+	.chidemoon-card-grid--archive > .chidemoon-story-card:first-child,
+	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card,
+	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child {
+		grid-column: span 6;
+	}
+
+	.chidemoon-collection-page__content {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 640px) {
+	.chidemoon-section-shell {
+		padding-inline: 0.9rem;
+	}
+
+	.chidemoon-home__top {
+		margin-top: 0.9rem;
+	}
+
+	.chidemoon-featured__media,
+	.chidemoon-story-card--lead .chidemoon-card__media,
+	.chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
+		aspect-ratio: 16 / 10;
+	}
+
+	.chidemoon-side-stories {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-side-story {
+		grid-template-columns: 7rem minmax(0, 1fr);
+		min-height: 7.5rem;
+	}
+
+	.chidemoon-side-story__media {
+		aspect-ratio: auto;
+	}
+
+	.chidemoon-card-grid--stories,
+	.chidemoon-card-grid--archive {
+		gap: 0.85rem;
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-card-grid--stories > .chidemoon-story-card,
+	.chidemoon-card-grid--archive > .chidemoon-story-card,
+	.chidemoon-card-grid--stories > .chidemoon-story-card--lead,
+	.chidemoon-card-grid--archive > .chidemoon-story-card:first-child,
+	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card,
+	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child {
+		grid-column: auto;
+	}
+
+	.chidemoon-story-card--compact {
+		display: grid;
+		grid-template-columns: 7.5rem minmax(0, 1fr);
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__media {
+		aspect-ratio: auto;
+		min-height: 100%;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__body {
+		padding: 0.85rem;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__excerpt {
+		display: none;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__footer time {
+		display: none;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__badge {
+		font-size: 0.62rem;
+		inset: 0.5rem auto auto 0.5rem;
+	}
+
+	.chidemoon-card-grid--products,
+	.woocommerce ul.products {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-product-card,
+	.woocommerce ul.products li.product {
+		display: grid;
+		grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr);
+	}
+
+	.chidemoon-product-card .chidemoon-card__media,
+	.woocommerce ul.products li.product a:first-child img {
+		aspect-ratio: 1 / 1;
+		height: 100%;
+	}
+
+	.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
+		display: contents;
+	}
+
+	.woocommerce ul.products li.product .woocommerce-loop-product__title,
+	.woocommerce ul.products li.product .price,
+	.woocommerce ul.products li.product .button {
+		grid-column: 2;
+	}
+
+	.woocommerce ul.products li.product .woocommerce-loop-product__title {
+		align-self: end;
+		margin-top: 1rem;
+		min-height: 0;
+	}
+
+	.woocommerce ul.products li.product .button {
+		margin: 0.6rem 1rem 1rem;
+	}
+
+	.chidemoon-archive__hero,
+	.chidemoon-collection-page__hero,
+	.chidemoon-shop-archive__intro,
+	.chidemoon-article__hero {
+		border-radius: var(--chidemoon-radius);
+	}
+
+	.chidemoon-archive__hero h1,
+	.chidemoon-collection-page__hero h1,
+	.chidemoon-shop-archive__intro h1,
+	.chidemoon-article__hero h1 {
+		font-size: clamp(2.1rem, 11vw, 3.1rem);
+		line-height: 1.35;
+	}
+
+	.chidemoon-collection-page__image img,
+	.chidemoon-article__image img {
+		aspect-ratio: 4 / 3;
+	}
+
+	.chidemoon-article__body {
+		padding: 1.25rem 1rem;
+	}
+
+	.woocommerce div.product {
+		border-radius: var(--chidemoon-radius);
+		margin-inline: 0;
+	}
+
+	.woocommerce div.product .summary {
+		padding-inline: 0;
+	}
+
+	.woocommerce .related.products ul.products {
+		grid-template-columns: 1fr;
+	}
+}
