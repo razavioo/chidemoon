@@ -4,7 +4,7 @@ Theme URI: https://chidemoon.com
 Description: Persian-first editorial affiliate presentation for Chidemoon.
 Author: Chidemoon
 Template: blocksy
-Version: 1.4.5
+Version: 1.4.6
 Requires at least: 6.5
 Requires PHP: 8.1
 Text Domain: chidemoon-blocksy-child
@@ -271,12 +271,13 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	font-family: var(--chidemoon-font-ui);
 	font-size: 0.72rem;
 	font-weight: 700;
-	letter-spacing: 0.02em;
+	letter-spacing: 0;
 	line-height: 1.6;
 	margin: 0;
 }
 
 .entry-content > :where(h1, h2, h3),
+.chidemoon-article__hero h1,
 .chidemoon-home h1,
 .chidemoon-home h2,
 .chidemoon-archive h1,
@@ -1254,6 +1255,17 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		grid-template-columns: 1fr;
 	}
 
+	/* Give tablet cards a stable measure before the mobile compact variant. */
+	.chidemoon-card-grid--stories,
+	.chidemoon-card-grid--archive {
+		gap: 1rem;
+	}
+
+	.chidemoon-card-grid--stories .chidemoon-story-card,
+	.chidemoon-card-grid--archive .chidemoon-story-card {
+		min-width: 0;
+	}
+
 	.woocommerce div.product .summary {
 		padding-inline-start: 0;
 	}
@@ -1385,8 +1397,17 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-article__hero h1 {
+	--theme-font-family: var(--chidemoon-font-display);
+	--theme-font-weight: 700;
+	--theme-letter-spacing: 0;
+	--theme-line-height: 1.35;
+	--theme-text-transform: none;
+	font-family: var(--chidemoon-font-display);
 	font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+	font-synthesis: none;
+	font-weight: 700;
 	hyphens: none;
+	letter-spacing: 0;
 	margin: 0.6rem 0 1rem;
 	max-width: 24ch;
 	overflow-wrap: normal;
