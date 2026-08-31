@@ -22,11 +22,18 @@ add_action(
 function chidemoon_blocksy_enqueue_styles(): void {
 	$version = (string) wp_get_theme()->get( 'Version' );
 
+	// Static assets change between sealed releases while the theme header
+	// version may not; bust edge/browser caches with the file's own mtime.
+	$asset_version = static function ( string $relative ): string {
+		$mtime = @filemtime( get_stylesheet_directory() . '/' . $relative );
+		return $mtime ? $version . '.' . $mtime : $version;
+	};
+
 	wp_enqueue_style(
 		'chidemoon-typography',
 		get_stylesheet_directory_uri() . '/assets/css/typography.css',
 		array(),
-		$version
+		$asset_version( 'assets/css/typography.css' )
 	);
 	wp_enqueue_style(
 		'chidemoon-blocksy-child',
@@ -38,7 +45,7 @@ function chidemoon_blocksy_enqueue_styles(): void {
 		'chidemoon-editorial-refresh',
 		get_stylesheet_directory_uri() . '/assets/css/editorial-refresh.css',
 		array( 'chidemoon-blocksy-child' ),
-		$version
+		$asset_version( 'assets/css/editorial-refresh.css' )
 	);
 }
 add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_styles', 20 );
