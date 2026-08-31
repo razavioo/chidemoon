@@ -1067,13 +1067,14 @@ function cm_seed_related_product_markup( array $product_slugs ): string {
 
 		$image = $product->get_image( 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) );
 		$cards[] = sprintf(
-			'<article class="chidemoon-article-product"><a class="chidemoon-article-product__image" href="%1$s">%2$s</a><div class="chidemoon-article-product__body"><h3><a href="%1$s">%3$s</a></h3><p>%4$s</p><strong>%5$s</strong><a class="chidemoon-text-link" href="%1$s">%6$s<span aria-hidden="true">←</span></a></div></article>',
+			'<article class="chidemoon-article-product"><a class="chidemoon-article-product__image" href="%1$s" aria-label="%7$s">%2$s</a><div class="chidemoon-article-product__body"><h3><a href="%1$s">%3$s</a></h3><p>%4$s</p><strong>%5$s</strong><a class="chidemoon-text-link" href="%1$s">%6$s<span aria-hidden="true">←</span></a></div></article>',
 			esc_url( get_permalink( $product_id ) ),
 			$image,
 			esc_html( $product->get_name() ),
 			esc_html( wp_trim_words( $product->get_short_description(), 18 ) ),
 			wp_kses_post( $product->get_price_html() ),
-			esc_html__( 'دیدن جزئیات کالا', 'chidemoon-blocksy-child' )
+			esc_html__( 'دیدن جزئیات کالا', 'chidemoon-blocksy-child' ),
+			esc_attr( sprintf( 'مشاهده %s', $product->get_name() ) )
 		);
 	}
 

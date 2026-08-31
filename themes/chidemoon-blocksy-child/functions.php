@@ -61,6 +61,29 @@ function chidemoon_blocksy_setup(): void {
 }
 add_action( 'after_setup_theme', 'chidemoon_blocksy_setup' );
 
+/**
+ * WooCommerce's gallery links contain only an image. Give the zoom destination
+ * a useful accessible name without altering WooCommerce gallery behavior.
+ */
+function chidemoon_blocksy_label_product_gallery_links( string $html, int $attachment_id ): string {
+	if ( ! is_product() || str_contains( $html, 'aria-label=' ) ) {
+		return $html;
+	}
+
+	$label = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+	if ( ! is_string( $label ) || '' === trim( $label ) ) {
+		$label = get_the_title();
+	}
+
+	return preg_replace(
+		'/<a\s+href=/',
+		'<a aria-label="' . esc_attr( sprintf( 'نمایش تصویر بزرگ %s', $label ) ) . '" href=',
+		$html,
+		1
+	) ?? $html;
+}
+add_filter( 'woocommerce_single_product_image_thumbnail_html', 'chidemoon_blocksy_label_product_gallery_links', 10, 2 );
+
 function chidemoon_blocksy_body_classes( array $classes ): array {
 	$classes[] = 'chidemoon-editorial-site';
 	$classes[] = is_rtl() ? 'chidemoon-persian' : 'chidemoon-ltr';
