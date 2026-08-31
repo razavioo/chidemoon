@@ -128,6 +128,23 @@ add_filter( 'get_the_time', 'chidemoon_fa_digits' );
 add_filter( 'wc_price', 'chidemoon_fa_digits' );
 
 /**
+ * WooCommerce has no built-in symbol for the Iranian toman. Returning plain
+ * text (never an HTML entity) keeps the Persian-digit price filter from
+ * corrupting numeric character references such as &#36;.
+ */
+add_filter(
+	'woocommerce_currency_symbol',
+	static function ( $symbol, $currency ) {
+		if ( 'IRT' === $currency ) {
+			return 'تومان';
+		}
+		return $symbol;
+	},
+	10,
+	2
+);
+
+/**
  * Convert a Gregorian date to the Solar Hijri calendar used in Persian copy.
  *
  * @return int[] Jalali year, month, and day.

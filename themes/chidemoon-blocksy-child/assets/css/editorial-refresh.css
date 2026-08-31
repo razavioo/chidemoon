@@ -1396,3 +1396,68 @@ html {
 		transition: none;
 	}
 }
+
+/* ------------------------------------------------------------------ */
+/* Commerce polish: related-products shell, product card typography,  */
+/* and the mobile compact story card fix.                             */
+/* ------------------------------------------------------------------ */
+
+/* The WooCommerce related-products section prints outside the theme
+ * container; give it the same editorial shell and breathing room as
+ * other sections so its cards never touch the viewport edge. */
+.single-product .related.products {
+	margin-inline: auto;
+	margin-block: clamp(2rem, 4.5vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
+	max-width: 1320px;
+	padding-inline: clamp(1rem, 3.4vw, 3rem);
+}
+
+.single-product .related.products > h2 {
+	margin-block-end: 1.2rem;
+}
+
+/* Blocksy's default face reads clunky in Persian on commerce surfaces;
+ * pin product card titles to the editorial body font instead. The
+ * selectors are intentionally specific so they win over Blocksy. */
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce .related.products .woocommerce-loop-product__title,
+.chidemoon-article-product h3,
+.single-product .product_title {
+	font-family: var(--chidemoon-font-body);
+	font-weight: 700;
+	letter-spacing: 0;
+}
+
+.chidemoon-article-product h3 {
+	font-size: 1.06rem;
+	line-height: 1.6;
+}
+
+.chidemoon-article-product__body p {
+	font-family: var(--chidemoon-font-body);
+}
+
+/* Mobile: the compact story card lays media and body side by side.
+ * The collection-feed first-child aspect-ratio override is stronger
+ * than the compact rules and squeezes the body under the media, so
+ * reset it here and clip the media cell defensively. */
+@media (max-width: 640px) {
+	.chidemoon-story-card--compact .chidemoon-card__media,
+	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
+		aspect-ratio: auto;
+		min-width: 0;
+		overflow: hidden;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__media img {
+		height: 100%;
+		object-fit: cover;
+		position: absolute;
+		inset: 0;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__media {
+		min-height: 6.5rem;
+		position: relative;
+	}
+}
