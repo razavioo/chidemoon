@@ -34,8 +34,15 @@ $categories = get_the_category();
 		</header>
 
 		<?php if ( has_post_thumbnail() ) : ?>
+			<?php
+			$thumbnail_id = (int) get_post_thumbnail_id();
+			$caption      = wp_get_attachment_caption( $thumbnail_id );
+			?>
 			<figure class="chidemoon-article__image chidemoon-section-shell">
-				<?php the_post_thumbnail( 'full', array( 'loading' => 'eager' ) ); ?>
+				<?php the_post_thumbnail( 'full', array( 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
+				<?php if ( ! empty( $caption ) ) : ?>
+					<figcaption class="chidemoon-article__image-caption"><?php echo esc_html( $caption ); ?></figcaption>
+				<?php endif; ?>
 			</figure>
 		<?php endif; ?>
 

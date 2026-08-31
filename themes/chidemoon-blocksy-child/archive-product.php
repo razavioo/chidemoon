@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 get_header( 'shop' );
+
+// The template renders its own semantic archive heading and description.
+remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 ?>
 
 <div class="chidemoon-shop-archive">

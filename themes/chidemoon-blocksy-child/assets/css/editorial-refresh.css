@@ -338,15 +338,37 @@ html {
 
 .chidemoon-collection-page__image,
 .chidemoon-article__image {
+	background: var(--chidemoon-surface-muted);
 	border: 0;
 	border-radius: var(--chidemoon-radius-lg);
 	box-shadow: var(--chidemoon-shadow);
+	overflow: hidden;
+	position: relative;
 }
 
 .chidemoon-collection-page__image img,
 .chidemoon-article__image img {
-	aspect-ratio: 16 / 7.2;
+	aspect-ratio: 16 / 7.6;
+	display: block;
 	object-fit: cover;
+	transition: transform var(--chidemoon-motion-image, 280ms) var(--chidemoon-ease-out, ease);
+	width: 100%;
+}
+
+.chidemoon-article__image:hover img {
+	transform: scale(1.015);
+}
+
+.chidemoon-article__image-caption {
+	background: color-mix(in srgb, var(--chidemoon-surface) 94%, var(--chidemoon-surface-muted));
+	border-top: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.86rem;
+	font-weight: 500;
+	line-height: 1.7;
+	padding: 0.85rem 1.4rem;
+	text-align: center;
 }
 
 .chidemoon-collection-page__content {
@@ -449,6 +471,294 @@ html {
 
 .chidemoon-article__body :where(p, li) {
 	line-height: 2.15;
+}
+
+/* In-content figures, editorial images and galleries */
+.entry-content figure.wp-block-image,
+.entry-content .wp-block-image {
+	background: var(--chidemoon-surface);
+	border: 0;
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	margin-block: clamp(1.8rem, 3.8vw, 3rem);
+	overflow: hidden;
+	position: relative;
+	transition: box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
+}
+
+.entry-content figure.wp-block-image:hover,
+.entry-content .wp-block-image:hover {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
+}
+
+.entry-content .wp-block-image img {
+	border-radius: var(--chidemoon-radius) var(--chidemoon-radius) 0 0;
+	display: block;
+	height: auto;
+	max-width: 100%;
+	object-fit: cover;
+	transition: transform var(--chidemoon-motion-image, 280ms) var(--chidemoon-ease-out, ease);
+	width: 100%;
+}
+
+.entry-content .wp-block-image:hover img {
+	transform: scale(1.015);
+}
+
+.entry-content figcaption,
+.entry-content .wp-element-caption {
+	background: color-mix(in srgb, var(--chidemoon-surface) 92%, var(--chidemoon-surface-muted));
+	border-top: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.86rem;
+	font-weight: 500;
+	line-height: 1.7;
+	margin: 0;
+	padding: 0.8rem 1.25rem;
+	text-align: center;
+}
+
+/* In-content Gallery Grid */
+.entry-content .wp-block-gallery,
+.entry-content .chidemoon-gallery {
+	display: grid;
+	gap: clamp(0.9rem, 2vw, 1.4rem);
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	margin-block: clamp(1.8rem, 3.8vw, 3rem);
+}
+
+.entry-content .wp-block-gallery .wp-block-image,
+.entry-content .wp-block-gallery figure {
+	margin: 0;
+}
+
+/* Editorial comparison & criteria tables */
+.entry-content .wp-block-table,
+.entry-content table {
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	margin-block: clamp(1.8rem, 3.5vw, 2.8rem);
+	overflow: hidden;
+	width: 100%;
+}
+
+.entry-content table thead th {
+	background: color-mix(in srgb, var(--chidemoon-forest) 8%, var(--chidemoon-surface));
+	color: var(--chidemoon-forest-deep);
+	font-family: var(--chidemoon-font-display);
+	font-size: 0.95rem;
+	font-weight: 700;
+	padding: 0.9rem 1.2rem;
+	text-align: start;
+	border-bottom: 1px solid var(--chidemoon-line-strong);
+}
+
+.entry-content table tbody td {
+	background: var(--chidemoon-surface);
+	border-bottom: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-ink);
+	font-size: 0.94rem;
+	line-height: 1.8;
+	padding: 0.85rem 1.2rem;
+	text-align: start;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.entry-content table tbody tr:hover td {
+	background: color-mix(in srgb, var(--chidemoon-sage) 12%, var(--chidemoon-surface));
+}
+
+/* Editorial multi-columns & pros/cons callouts */
+.entry-content .wp-block-columns {
+	display: grid;
+	gap: clamp(1rem, 2vw, 1.6rem);
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	margin-block: clamp(1.8rem, 3.5vw, 2.8rem);
+}
+
+.entry-content .wp-block-column {
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	padding: clamp(1.1rem, 2.5vw, 1.6rem);
+}
+
+.entry-content .wp-block-column h3 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.15rem;
+	font-weight: 700;
+	margin-bottom: 0.8rem;
+}
+
+.entry-content .wp-block-column ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.entry-content .wp-block-column ul li {
+	position: relative;
+	padding-inline-start: 1.5rem;
+	margin-bottom: 0.5rem;
+	line-height: 1.8;
+}
+
+.entry-content .wp-block-column ul li::before {
+	content: "•";
+	color: var(--chidemoon-clay);
+	font-size: 1.4rem;
+	position: absolute;
+	inset-inline-start: 0.2rem;
+	inset-block-start: -0.1rem;
+}
+
+/* Details and FAQ Accordion */
+.entry-content .wp-block-details,
+.entry-content details {
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	margin-block: 0.9rem;
+	overflow: hidden;
+	transition: box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content .wp-block-details[open],
+.entry-content details[open] {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+}
+
+.entry-content details summary {
+	cursor: pointer;
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.02rem;
+	font-weight: 700;
+	color: var(--chidemoon-forest-deep);
+	padding: 0.95rem 1.3rem;
+	list-style: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	user-select: none;
+}
+
+.entry-content details summary::-webkit-details-marker {
+	display: none;
+}
+
+.entry-content details summary::after {
+	content: "+";
+	font-size: 1.25rem;
+	font-family: var(--chidemoon-font-ui);
+	color: var(--chidemoon-clay);
+	transition: transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content details[open] summary::after {
+	content: "−";
+	transform: rotate(180deg);
+}
+
+.entry-content details > :not(summary) {
+	padding-inline: 1.3rem;
+	padding-block-end: 1.1rem;
+	border-top: 1px solid var(--chidemoon-line);
+	margin-top: 0;
+	padding-top: 0.8rem;
+}
+
+/* Affiliate disclosure & transparency callouts */
+.entry-content .chidemoon-affiliate-disclosure,
+.entry-content .chidemoon-article-disclosure {
+	background: color-mix(in srgb, var(--chidemoon-sage) 14%, var(--chidemoon-surface));
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: inset -4px 0 0 var(--chidemoon-forest);
+	margin-block: clamp(1.8rem, 3.5vw, 2.8rem);
+	padding: clamp(1.1rem, 2.5vw, 1.6rem);
+}
+
+.entry-content .chidemoon-affiliate-disclosure h3,
+.entry-content .chidemoon-article-disclosure h3 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.1rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}
+
+.entry-content .chidemoon-affiliate-disclosure p,
+.entry-content .chidemoon-article-disclosure p {
+	color: var(--chidemoon-muted);
+	font-size: 0.92rem;
+	line-height: 1.9;
+	margin: 0;
+}
+
+/* Rating badge callout */
+.entry-content .chidemoon-rating-box {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.2rem;
+	margin-block: clamp(1.8rem, 3.5vw, 2.8rem);
+	padding: 1.2rem 1.6rem;
+}
+
+.entry-content .chidemoon-rating-score {
+	background: var(--chidemoon-forest);
+	border-radius: var(--chidemoon-radius-sm);
+	color: #fffdfa;
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.6rem;
+	font-weight: 800;
+	padding: 0.5rem 1rem;
+	text-align: center;
+}
+
+/* Step-by-step ordered lists */
+.entry-content ol {
+	counter-reset: chidemoon-step;
+	list-style: none;
+	padding-inline-start: 0;
+	margin-block: 1.4rem;
+}
+
+.entry-content ol > li {
+	counter-increment: chidemoon-step;
+	line-height: 2;
+	margin-bottom: 1rem;
+	padding-inline-start: 2.8rem;
+	position: relative;
+}
+
+.entry-content ol > li::before {
+	align-items: center;
+	background: color-mix(in srgb, var(--chidemoon-sage) 25%, var(--chidemoon-surface));
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 50%;
+	color: var(--chidemoon-forest);
+	content: counter(chidemoon-step);
+	display: inline-flex;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.85rem;
+	font-weight: 700;
+	height: 1.85rem;
+	inset-block-start: 0.2rem;
+	inset-inline-start: 0;
+	justify-content: center;
+	position: absolute;
+	width: 1.85rem;
 }
 
 .chidemoon-article__aside-box,
@@ -739,6 +1049,9 @@ html {
 		min-width: 0;
 	}
 
+	/* Product cards use a stable vertical composition at narrow widths. Keeping
+	 * image, title, price, category, and CTA in one flow prevents compressed
+	 * buttons and missing media when Persian labels wrap. */
 	.chidemoon-product-card,
 	.woocommerce ul.products li.product {
 		display: flex;
@@ -746,55 +1059,85 @@ html {
 	}
 
 	.chidemoon-product-card .chidemoon-card__media,
-	.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
+	.woocommerce ul.products li.product > figure {
 		box-sizing: border-box;
 		flex: 0 0 auto;
+		margin: 0;
+		min-width: 0;
 		width: 100%;
 	}
 
+	.woocommerce ul.products li.product > figure:empty {
+		aspect-ratio: 4 / 3;
+		background: var(--chidemoon-surface-muted);
+	}
+
 	.chidemoon-product-card .chidemoon-card__media {
-		aspect-ratio: 1 / 0.9;
+		aspect-ratio: 4 / 3;
 	}
 
 	.chidemoon-product-card .chidemoon-card__media img,
-	.woocommerce ul.products li.product a.woocommerce-LoopProduct-link img {
+	.woocommerce ul.products li.product > figure img {
+		aspect-ratio: 4 / 3 !important;
 		box-sizing: border-box;
+		display: block;
 		height: auto;
-		max-height: 18rem;
+		margin: 0;
+		max-height: none;
 		min-height: 0;
 		object-fit: contain;
 		width: 100%;
 	}
 
-	.woocommerce ul.products li.product a.woocommerce-LoopProduct-link {
+	.woocommerce ul.products li.product > figure .ct-media-container {
 		display: block;
+		width: 100%;
 	}
 
-	.woocommerce ul.products li.product .woocommerce-loop-product__title,
-	.woocommerce ul.products li.product .price {
+	.woocommerce ul.products li.product > :where(
+		.woocommerce-loop-product__title,
+		.price,
+		.entry-meta,
+		.ct-woo-card-actions
+	) {
 		box-sizing: border-box;
-		display: block;
 		max-width: 100%;
-		min-height: 0;
+		min-width: 0;
 		overflow-wrap: anywhere;
-		padding-inline: 0;
 	}
 
 	.woocommerce ul.products li.product .woocommerce-loop-product__title {
-		margin: 0.9rem 1rem 0.35rem;
+		font-size: clamp(1.08rem, 5vw, 1.3rem);
+		margin: 1rem 1rem 0.4rem;
+		min-height: 0;
+		padding: 0;
 	}
 
 	.woocommerce ul.products li.product .price {
-		margin: 0 1rem 1rem;
+		margin: 0 1rem 0.75rem;
+	}
+
+	.woocommerce ul.products li.product .entry-meta {
+		margin: 0 1rem 0.9rem;
+	}
+
+	.woocommerce ul.products li.product .ct-woo-card-actions {
+		display: block;
+		margin-inline: 0 !important;
+		margin-top: auto;
+		padding: 0 1rem 1rem;
 	}
 
 	.woocommerce ul.products li.product :where(.button, .added_to_cart) {
 		box-sizing: border-box;
+		display: flex;
 		justify-content: center;
-		margin: 0 1rem 1rem;
-		max-width: calc(100% - 2rem);
-		min-height: 2.75rem;
-		width: calc(100% - 2rem);
+		margin: 0;
+		max-width: none;
+		min-height: 3rem;
+		padding-inline: 0.9rem;
+		white-space: normal;
+		width: 100%;
 	}
 
 	.chidemoon-product-card .chidemoon-card__body {
@@ -960,7 +1303,89 @@ html {
 	display: none !important;
 }
 
+.chidemoon-article-products {
+	margin-block: clamp(2rem, 6vw, 4rem);
+	padding-block-start: clamp(1.5rem, 4vw, 2.5rem);
+	border-block-start: 1px solid var(--chidemoon-line);
+}
+
+.chidemoon-article-products > p {
+	max-width: 46rem;
+	color: var(--chidemoon-muted);
+}
+
+.chidemoon-article-products__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	margin-block-start: 1.5rem;
+}
+
+.chidemoon-article-product {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
+	background: var(--chidemoon-surface);
+}
+
+.chidemoon-article-product__image {
+	display: block;
+	aspect-ratio: 4 / 3;
+	background: var(--chidemoon-surface-muted);
+}
+
+.chidemoon-article-product__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.chidemoon-article-product__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.65rem;
+	padding: 1rem;
+}
+
+.chidemoon-article-product__body :where(h3, p) {
+	margin: 0;
+}
+
+.chidemoon-article-product__body h3 {
+	font-size: 1.05rem;
+}
+
+.chidemoon-article-product__body p {
+	color: var(--chidemoon-muted);
+	font-size: 0.88rem;
+	line-height: 1.8;
+}
+
+.chidemoon-article-product__body strong {
+	margin-block-start: auto;
+	color: var(--chidemoon-clay);
+}
+
 @media (max-width: 780px) {
+	.chidemoon-article-products__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-article-product {
+		display: grid;
+		grid-template-columns: minmax(7rem, 34%) 1fr;
+	}
+
+	.chidemoon-article-product__image {
+		aspect-ratio: auto;
+		min-height: 100%;
+	}
+
 	.ct-footer .ct-container {
 		padding-block: 2.5rem;
 	}

@@ -35,6 +35,11 @@ final class Chidemoon_Core_Blocks {
 	 */
 	private static function patterns(): array {
 		return array(
+			'chidemoon-core/affiliate-disclosure' => array(
+				'title'      => __( 'Affiliate disclosure', 'chidemoon-core' ),
+				'categories' => array( 'chidemoon-commerce', 'chidemoon-editorial' ),
+				'content'    => '<!-- wp:group {"className":"chidemoon-affiliate-disclosure"} --><div class="wp-block-group chidemoon-affiliate-disclosure"><!-- wp:heading {"level":3} --><h3>' . esc_html__( 'Editorial transparency', 'chidemoon-core' ) . '</h3><!-- /wp:heading --><!-- wp:paragraph --><p>' . esc_html__( 'Explain that purchasing happens at the destination store and that price, availability, and final terms must be checked there.', 'chidemoon-core' ) . '</p><!-- /wp:paragraph --></div><!-- /wp:group -->',
+			),
 			'chidemoon-core/affiliate-cta' => array(
 				'title'      => __( 'Affiliate CTA', 'chidemoon-core' ),
 				'categories' => array( 'chidemoon-commerce' ),
