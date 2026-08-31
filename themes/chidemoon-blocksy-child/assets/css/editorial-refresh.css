@@ -1535,3 +1535,48 @@ html {
 :where(button, .wp-element-button, .button) {
 	border-radius: var(--chidemoon-radius-sm);
 }
+
+/* Public forms: hide the honeypot field from humans, theme the
+ * controls, and keep the comment submit button on the editorial face. */
+.chidemoon-honeypot {
+	clip-path: inset(50%);
+	height: 1px !important;
+	overflow: hidden !important;
+	position: absolute !important;
+	white-space: nowrap;
+	width: 1px !important;
+}
+
+.chidemoon-public-form button,
+.comment-form .submit,
+.comment-form input[type="submit"] {
+	font-family: var(--chidemoon-font-body);
+	font-weight: 700;
+}
+
+.chidemoon-public-form button {
+	background: var(--chidemoon-forest);
+	border: 0;
+	color: #fffcf7;
+	cursor: pointer;
+	padding: 0.8rem 1.6rem;
+	transition: background var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+.chidemoon-public-form button:hover {
+	background: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-public-form :where(input:not([type="checkbox"]), textarea) {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
+	font-family: var(--chidemoon-font-body);
+	padding: 0.65rem 0.8rem;
+	width: 100%;
+}
+
+.chidemoon-public-form :where(input:not([type="checkbox"]), textarea):focus {
+	border-color: var(--chidemoon-forest);
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
+}
