@@ -812,7 +812,6 @@ html {
 
 .woocommerce ul.products li.product a img {
 	aspect-ratio: 1 / 0.93;
-	padding: 0.8rem;
 }
 
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
@@ -1085,7 +1084,7 @@ html {
 		margin: 0;
 		max-height: none;
 		min-height: 0;
-		object-fit: contain;
+		object-fit: cover;
 		width: 100%;
 	}
 

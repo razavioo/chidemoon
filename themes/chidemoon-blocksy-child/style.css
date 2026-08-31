@@ -603,8 +603,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-product-card .chidemoon-card__media img {
-	object-fit: contain;
-	padding: 1rem;
+	object-fit: cover;
 }
 
 .chidemoon-card:hover .chidemoon-card__media img {
@@ -968,10 +967,8 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 .woocommerce ul.products li.product a img {
 	aspect-ratio: 0.9 / 1;
-	background: var(--chidemoon-surface-muted);
 	margin: 0;
-	object-fit: contain;
-	padding: 0.9rem;
+	object-fit: cover;
 	width: 100%;
 }
 
