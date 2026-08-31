@@ -163,7 +163,7 @@ final class Chidemoon_Core_Forms {
 		$attributes = shortcode_atts(
 			array(
 				'intent' => 'contact',
-				'title'  => __( 'Contact Chidemoon', 'chidemoon-core' ),
+				'title'  => __( 'تماس با چیدمون', 'chidemoon-core' ),
 			),
 			$attributes,
 			'chidemoon_lead_form'
@@ -173,13 +173,13 @@ final class Chidemoon_Core_Forms {
 		return sprintf(
 			'<form class="chidemoon-public-form" data-chidemoon-form="lead" action="%1$s" method="post" novalidate>
 				<h2>%2$s</h2>
-				<label>Name <input name="name" type="text" maxlength="160" autocomplete="name"></label>
-				<label>Email <input name="email" type="email" maxlength="320" autocomplete="email" required></label>
-				<label>Message <textarea name="message" maxlength="4000" required></textarea></label>
+				<label>نام <input name="name" type="text" maxlength="160" autocomplete="name"></label>
+				<label>ایمیل <input name="email" type="email" maxlength="320" autocomplete="email" required></label>
+				<label>پیام شما <textarea name="message" maxlength="4000" required></textarea></label>
 				<input name="intent" type="hidden" value="%3$s">
 				<label class="chidemoon-honeypot" aria-hidden="true">Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-				<label><input name="consent" type="checkbox" value="1" required> I consent to Chidemoon storing this request.</label>
-				<button type="submit">Send request</button><p class="chidemoon-form-status" aria-live="polite"></p>
+				<label><input name="consent" type="checkbox" value="1" required> با ذخیره‌ی این درخواست در چیدمون موافقم.</label>
+				<button type="submit">ارسال درخواست</button><p class="chidemoon-form-status" aria-live="polite"></p>
 			</form>',
 			esc_url( rest_url( self::REST_NAMESPACE . '/leads' ) ),
 			esc_html( $attributes['title'] ),
@@ -194,7 +194,7 @@ final class Chidemoon_Core_Forms {
 		$attributes = shortcode_atts(
 			array(
 				'product_id' => (string) get_the_ID(),
-				'title'      => __( 'Price alert', 'chidemoon-core' ),
+				'title'      => __( 'خبرم کن وقتی ارزان‌تر شد', 'chidemoon-core' ),
 			),
 			$attributes,
 			'chidemoon_price_alert_form'
@@ -209,12 +209,12 @@ final class Chidemoon_Core_Forms {
 		return sprintf(
 			'<form class="chidemoon-public-form" data-chidemoon-form="price-alert" action="%1$s" method="post" novalidate>
 				<h2>%2$s</h2>
-				<label>Email <input name="email" type="email" maxlength="320" autocomplete="email" required></label>
-				<label>Target price <input name="targetPrice" type="number" min="0" step="0.01" required></label>
+				<label>ایمیل <input name="email" type="email" maxlength="320" autocomplete="email" required></label>
+				<label>قیمت هدف (تومان) <input name="targetPrice" type="number" min="0" step="0.01" required></label>
 				<input name="productId" type="hidden" value="%3$d">
 				<label class="chidemoon-honeypot" aria-hidden="true">Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-				<label><input name="consent" type="checkbox" value="1" required> I consent to Chidemoon storing this alert request.</label>
-				<button type="submit">Create alert</button><p class="chidemoon-form-status" aria-live="polite"></p>
+				<label><input name="consent" type="checkbox" value="1" required> با ذخیره‌ی این درخواست هشدار قیمت در چیدمون موافقم.</label>
+				<button type="submit">ثبت هشدار</button><p class="chidemoon-form-status" aria-live="polite"></p>
 			</form>',
 			esc_url( rest_url( self::REST_NAMESPACE . '/price-alerts' ) ),
 			esc_html( $attributes['title'] ),

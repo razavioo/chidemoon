@@ -14,9 +14,9 @@
 	--chidemoon-line-strong: rgba(18, 63, 52, 0.25);
 	--chidemoon-shadow: 0 18px 50px rgba(13, 43, 35, 0.09);
 	--chidemoon-shadow-soft: 0 8px 26px rgba(13, 43, 35, 0.07);
-	--chidemoon-radius-sm: 0.65rem;
-	--chidemoon-radius: 1rem;
-	--chidemoon-radius-lg: 1.4rem;
+	--chidemoon-radius-sm: 0.35rem;
+	--chidemoon-radius: 0.5rem;
+	--chidemoon-radius-lg: 0.7rem;
 	--chidemoon-motion-fast: 140ms;
 	--chidemoon-motion-standard: 200ms;
 	--chidemoon-motion-image: 280ms;
@@ -1460,4 +1460,78 @@ html {
 		min-height: 6.5rem;
 		position: relative;
 	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography + radius calibration for commerce and editorial content */
+/* ------------------------------------------------------------------ */
+
+/* Blocksy leaks its system font stack into WooCommerce review/comment
+ * surfaces and renders entry headings in a very heavy weight. Pin the
+ * editorial faces here with specific selectors. */
+.woocommerce-Reviews h2,
+.woocommerce-Reviews .comment-reply-title,
+.woocommerce-Reviews :where(label, p, time, .description),
+.comment-respond label,
+.chidemoon-public-form :where(h2, label, button, p),
+.chidemoon-rating-box :where(h3, p) {
+	font-family: var(--chidemoon-font-body);
+}
+
+.entry-content :where(h2, h3) {
+	font-family: var(--chidemoon-font-body);
+	font-weight: 700;
+	letter-spacing: 0;
+}
+
+.entry-content h2 {
+	font-size: clamp(1.35rem, 2.1vw, 1.75rem);
+	line-height: 1.45;
+}
+
+.entry-content h3 {
+	font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+	line-height: 1.5;
+}
+
+/* Block fonts registered by inactive themes (e.g. Cardo) that surface
+ * through legacy block markup and render Persian with a serif fallback. */
+[class*="has-cardo-font-family"] {
+	font-family: var(--chidemoon-font-body);
+}
+
+/* Calmer corner radii: the previous defaults (up to 1.4rem) read bubbly
+ * for an editorial catalogue. Covers Blocksy surfaces and core blocks. */
+:root {
+	--theme-border-radius: 0.5rem;
+	--theme-button-border-radius: 0.35rem;
+}
+
+:where(
+	button,
+	.wp-element-button,
+	.button,
+	input[type="text"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	select,
+	textarea,
+	.woocommerce ul.products li.product,
+	.woocommerce div.product,
+	.chidemoon-article-product,
+	.chidemoon-rating-box,
+	.woocommerce table.shop_table,
+	.entry-content .wp-block-cover,
+	.entry-content .wp-block-table table,
+	.entry-content .wp-block-quote,
+	.entry-content .wp-block-details,
+	.entry-content .wp-block-image img,
+	.entry-content .wp-block-pullquote
+) {
+	border-radius: var(--chidemoon-radius);
+}
+
+:where(button, .wp-element-button, .button) {
+	border-radius: var(--chidemoon-radius-sm);
 }
