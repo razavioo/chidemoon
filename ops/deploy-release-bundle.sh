@@ -32,7 +32,7 @@ if [[ -e "$current_link" && ! -L "$current_link" ]]; then
 	fail 'The current release path exists but is not a symlink.'
 fi
 
-archive_root="$(tar -tzf "$bundle_path" | head -n 1)"
+archive_root="$(tar -tzf "$bundle_path" | sed -n '1p')"
 release_name="${archive_root%%/*}"
 [[ "$release_name" =~ ^chidemoon-release-[A-Za-z0-9._-]+$ ]] || fail 'Release root name is invalid.'
 release_dir="$releases_dir/$release_name"
