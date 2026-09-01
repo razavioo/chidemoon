@@ -47,6 +47,17 @@
 		return node.innerHTML;
 	}
 
+	function faDigits(value) {
+		return String(value).replace(/[0-9]/g, function (digit) { return '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]; });
+	}
+
+	function showBarHint(bar, message) {
+		var hint = bar.querySelector('.chidemoon-compare-bar__hint');
+		if (!hint) return;
+		hint.textContent = message;
+		hint.hidden = false;
+	}
+
 	function syncControls(items) {
 		document.querySelectorAll('[data-compare-product]').forEach(function (control) {
 			var active = selected(control.dataset.compareProduct, items);
@@ -117,7 +128,7 @@
 			bar = document.createElement('aside');
 			bar.className = 'chidemoon-compare-bar';
 			bar.setAttribute('aria-label', config.labels.compare);
-			bar.innerHTML = '<div class="chidemoon-compare-bar__summary" aria-live="polite"></div><div class="chidemoon-compare-bar__items"></div><div class="chidemoon-compare-bar__actions"><button type="button" class="chidemoon-compare-bar__clear"></button><button type="button" class="chidemoon-compare-bar__go"></button></div>';
+			bar.innerHTML = '<div class="chidemoon-compare-bar__summary" aria-live="polite"></div><div class="chidemoon-compare-bar__items"></div><div class="chidemoon-compare-bar__actions"><button type="button" class="chidemoon-compare-bar__clear"></button><button type="button" class="chidemoon-compare-bar__go"></button></div><p class="chidemoon-compare-bar__hint" hidden></p>';
 			document.body.appendChild(bar);
 			bar.addEventListener('click', function (event) {
 				var remove = event.target.closest('[data-remove-compare]');
@@ -134,7 +145,7 @@
 				if (event.target.closest('.chidemoon-compare-bar__go')) {
 					var selectedItems = read();
 					if (selectedItems.length < 2) {
-						bar.querySelector('.chidemoon-compare-bar__summary').textContent = config.labels.needMore;
+						showBarHint(bar, config.labels.needMore);
 						announce(config.labels.needMore);
 						return;
 					}
@@ -151,14 +162,25 @@
 			setBarOffset(bar);
 			return;
 		}
-		bar.querySelector('.chidemoon-compare-bar__summary').textContent = items.length + ' ' + config.labels.count;
+		bar.querySelector('.chidemoon-compare-bar__summary').textContent = faDigits(items.length) + ' ' + config.labels.count;
 		bar.querySelector('.chidemoon-compare-bar__items').innerHTML = items.map(function (item) {
-			return '<button type="button" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + config.labels.removed) + '">' + escapeHtml(item.name || ('#' + item.id)) + ' ×</button>';
+			return '<button type="button" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + config.labels.removed) + '"><span dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span data-compare-chip-remove aria-hidden="true">×</span></button>';
 		}).join('');
 		bar.querySelector('.chidemoon-compare-bar__clear').textContent = config.labels.clear;
 		var go = bar.querySelector('.chidemoon-compare-bar__go');
 		go.textContent = config.labels.compare;
-		go.disabled = items.length < 2;
+		/* One selected product is still worth showing (the choice survives
+		 * page navigation), but the compare action is meaningless before two:
+		 * swap the action for guidance instead of a dead disabled button. */
+		var hint = bar.querySelector('.chidemoon-compare-bar__hint');
+		if (items.length < 2) {
+			go.hidden = true;
+			hint.hidden = false;
+			hint.textContent = config.labels.oneMore;
+		} else {
+			go.hidden = false;
+			hint.hidden = true;
+		}
 		setBarOffset(bar);
 	}
 
@@ -204,7 +226,7 @@
 						results.hidden = false;
 						results.innerHTML = products.map(function (product) {
 							var active = selected(product.id);
-								return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '"><span>' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
+								return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '"><span dir="auto">' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
 						}).join('');
 					})
 					.catch(function (error) {
@@ -237,6 +259,8 @@
 				write(items);
 			} else {
 				announce(config.labels.full);
+				var bar = document.querySelector('.chidemoon-compare-bar');
+				if (bar && !bar.hidden) showBarHint(bar, config.labels.full);
 				return;
 			}
 			refresh();

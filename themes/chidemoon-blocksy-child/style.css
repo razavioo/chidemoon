@@ -10,20 +10,10 @@ Requires PHP: 8.1
 Text Domain: chidemoon-blocksy-child
 */
 
+/* Design tokens live in one place: assets/css/editorial-refresh.css (canonical
+ * per design-system/chidemoon/MASTER.md). Only the Blocksy theme-variable
+ * mappings belong here; they resolve against the canonical tokens at runtime. */
 :root {
-	--chidemoon-paper: #f6f2e9;
-	--chidemoon-surface: #fffcf7;
-	--chidemoon-surface-muted: #ece5d8;
-	--chidemoon-ink: #1f2a26;
-	--chidemoon-muted: #65716b;
-	--chidemoon-forest: #173f35;
-	--chidemoon-forest-deep: #102d26;
-	--chidemoon-clay: #b65d3d;
-	--chidemoon-clay-soft: #e2b19d;
-	--chidemoon-sage: #9eab92;
-	--chidemoon-line: rgba(23, 63, 53, 0.17);
-	--chidemoon-line-strong: rgba(23, 63, 53, 0.35);
-	--chidemoon-shadow: 0 24px 65px rgba(26, 44, 37, 0.11);
 	--theme-palette-color-1: var(--chidemoon-forest);
 	--theme-palette-color-2: var(--chidemoon-clay);
 	--theme-link-hover-color: var(--chidemoon-clay);

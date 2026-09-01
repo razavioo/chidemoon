@@ -114,21 +114,35 @@ add_filter(
  * digits for dates and prices without touching stored data.
  */
 function chidemoon_fa_digits( $text ): string {
-	return strtr(
-		(string) $text,
-		array(
-			'0' => '۰',
-			'1' => '۱',
-			'2' => '۲',
-			'3' => '۳',
-			'4' => '۴',
-			'5' => '۵',
-			'6' => '۶',
-			'7' => '۷',
-			'8' => '۸',
-			'9' => '۹',
-		)
+	$digits = array(
+		'0' => '۰',
+		'1' => '۱',
+		'2' => '۲',
+		'3' => '۳',
+		'4' => '۴',
+		'5' => '۵',
+		'6' => '۶',
+		'7' => '۷',
+		'8' => '۸',
+		'9' => '۹',
 	);
+
+	$text = (string) $text;
+
+	// Prices arrive as HTML. Numeric character references such as &#36; or
+	// &#x6F0; must keep their ASCII digits, otherwise the browser renders the
+	// literal entity text instead of the digit or currency symbol it encodes.
+	if ( ! str_contains( $text, '&' ) ) {
+		return strtr( $text, $digits );
+	}
+
+	return preg_replace_callback(
+		'/&(?:#[0-9]+|#[xX][0-9a-fA-F]+);|[^&]/s',
+		static fn( array $matches ): string => str_starts_with( $matches[0], '&' )
+			? $matches[0]
+			: strtr( $matches[0], $digits ),
+		$text
+	) ?? $text;
 }
 
 add_filter( 'get_the_time', 'chidemoon_fa_digits' );
@@ -142,13 +156,55 @@ add_filter( 'wc_price', 'chidemoon_fa_digits' );
 add_filter(
 	'woocommerce_currency_symbol',
 	static function ( $symbol, $currency ) {
-		if ( 'IRT' === $currency ) {
+		if ( in_array( $currency, array( 'IRT', 'IRR' ), true ) ) {
 			return 'تومان';
 		}
 		return $symbol;
 	},
 	10,
 	2
+);
+
+/**
+ * Blocksy's header search modal ships English defaults ("Start typing to
+ * search"). There is no fa_IR translation shipped for them, so bridge the
+ * handful of visible strings to Persian without touching Blocksy itself.
+ */
+function chidemoon_blocksy_translation_overrides( array $overrides ): array {
+	return array(
+		'Start typing to search' => 'برای جست‌وجو بنویسید…',
+		'Search modal'           => 'پنجرهٔ جست‌وجو',
+		'Close search modal'     => 'بستن پنجرهٔ جست‌وجو',
+		'Search for...'          => 'جست‌وجو…',
+		'Search'                 => 'جست‌وجو',
+		'Search products&hellip;' => 'جست‌وجوی محصولات…',
+	);
+}
+
+add_filter(
+	'gettext',
+	static function ( $translation, $text, $domain ) {
+		if ( 'blocksy' !== $domain ) {
+			return $translation;
+		}
+		$overrides = chidemoon_blocksy_translation_overrides( array() );
+		return $overrides[ $text ] ?? $translation;
+	},
+	10,
+	3
+);
+
+add_filter(
+	'gettext_with_context',
+	static function ( $translation, $text, $context, $domain ) {
+		if ( 'blocksy' !== $domain ) {
+			return $translation;
+		}
+		$overrides = chidemoon_blocksy_translation_overrides( array() );
+		return $overrides[ $text ] ?? $translation;
+	},
+	10,
+	4
 );
 
 /**
@@ -206,15 +262,6 @@ function chidemoon_solar_hijri_post_date( string $date, string $format, WP_Post 
 	return chidemoon_fa_digits( sprintf( '%d %s %d', $day, $month_names[ $month - 1 ], $year ) );
 }
 add_filter( 'get_the_date', 'chidemoon_solar_hijri_post_date', 10, 3 );
-
-add_filter(
-	'woocommerce_currency_symbol',
-	static function ( string $symbol, string $currency ): string {
-		return 'IRR' === $currency ? 'تومان' : $symbol;
-	},
-	10,
-	2
-);
 
 /**
  * Copyright is intentionally omitted from the public site.
@@ -353,7 +400,7 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 function chidemoon_blocksy_render_empty_state( string $title, string $description ): void {
 	?>
 	<div class="chidemoon-empty-state">
-		<span class="chidemoon-empty-state__index" aria-hidden="true">01</span>
+		<span class="chidemoon-empty-state__index" aria-hidden="true">۰۱</span>
 		<div>
 			<h3><?php echo esc_html( $title ); ?></h3>
 			<p><?php echo esc_html( $description ); ?></p>

@@ -59,6 +59,7 @@ final class Chidemoon_Core_Compare {
 						'compare'        => __( 'مقایسه محصولات', 'chidemoon-core' ),
 						'clear'          => __( 'پاک کردن همه', 'chidemoon-core' ),
 						'needMore'       => __( 'برای مقایسه حداقل دو محصول انتخاب کنید.', 'chidemoon-core' ),
+						'oneMore'        => __( 'برای شروع مقایسه، یک محصول دیگر انتخاب کنید.', 'chidemoon-core' ),
 						'count'          => __( 'محصول برای مقایسه', 'chidemoon-core' ),
 						'loading'        => __( 'در حال جست‌وجوی محصولات…', 'chidemoon-core' ),
 						'noResults'      => __( 'محصولی پیدا نشد.', 'chidemoon-core' ),
