@@ -54,7 +54,7 @@ Use a 4/8px rhythm and fluid clamps between breakpoints.
 - Component: 12–16px
 - Card/section internal: 20–32px
 - Section separation: 40–76px
-- Radius small/default/large: `0.65rem` / `1rem` / `1.4rem`
+- Radius small/default/large: `0.35rem` / `0.5rem` / `0.7rem`; deliberately restrained for the current editorial system
 - Shadows communicate elevation only; use the shared soft/default shadow tokens
 
 ## Components

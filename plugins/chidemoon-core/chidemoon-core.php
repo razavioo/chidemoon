@@ -3,7 +3,7 @@
  * Plugin Name: Chidemoon Core
  * Plugin URI: https://chidemoon.com
  * Description: Independent affiliate, editorial, readiness, and local audience foundations for Chidemoon.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Requires at least: 6.4
  * Requires PHP: 8.0
  * Requires Plugins: woocommerce
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CHIDEMOON_CORE_VERSION', '0.1.0' );
+define( 'CHIDEMOON_CORE_VERSION', '0.2.0' );
 define( 'CHIDEMOON_CORE_FILE', __FILE__ );
 define( 'CHIDEMOON_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CHIDEMOON_CORE_URL', plugin_dir_url( __FILE__ ) );
@@ -29,6 +29,8 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-affiliate.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-forms.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-admin.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-blocks.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-shop-the-look.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-compare.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-importer.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 

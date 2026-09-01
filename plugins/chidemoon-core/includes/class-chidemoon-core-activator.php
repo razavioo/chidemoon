@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Chidemoon_Core_Activator {
 	public const DB_VERSION = '1';
+	private const REWRITE_VERSION_OPTION = 'chidemoon_core_rewrite_version';
+	private const REWRITE_PENDING_OPTION = 'chidemoon_core_rewrite_flush_pending';
 
 	public static function activate(): void {
 		if ( ! self::woocommerce_is_active() ) {
@@ -24,7 +26,7 @@ final class Chidemoon_Core_Activator {
 		self::set_defaults();
 		self::grant_capabilities();
 		self::schedule_events();
-		flush_rewrite_rules();
+		self::mark_rewrite_flush_pending();
 	}
 
 	public static function deactivate(): void {
@@ -37,9 +39,23 @@ final class Chidemoon_Core_Activator {
 			self::create_tables();
 		}
 
+		if ( CHIDEMOON_CORE_VERSION !== (string) get_option( self::REWRITE_VERSION_OPTION, '' ) ) {
+			self::mark_rewrite_flush_pending();
+		}
+
 		self::set_defaults();
 		self::grant_capabilities();
 		self::schedule_events();
+	}
+
+	public static function flush_rewrite_rules_if_pending(): void {
+		if ( ! get_option( self::REWRITE_PENDING_OPTION, false ) ) {
+			return;
+		}
+
+		flush_rewrite_rules();
+		update_option( self::REWRITE_VERSION_OPTION, CHIDEMOON_CORE_VERSION, false );
+		delete_option( self::REWRITE_PENDING_OPTION );
 	}
 
 	public static function woocommerce_is_active(): bool {
@@ -121,6 +137,10 @@ final class Chidemoon_Core_Activator {
 		dbDelta( $sql );
 
 		update_option( 'chidemoon_core_db_version', self::DB_VERSION, false );
+	}
+
+	private static function mark_rewrite_flush_pending(): void {
+		update_option( self::REWRITE_PENDING_OPTION, 1, false );
 	}
 
 	private static function set_defaults(): void {

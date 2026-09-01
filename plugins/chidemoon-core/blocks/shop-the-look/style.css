@@ -1,0 +1,21 @@
+.chidemoon-shop-the-look { container-type: inline-size; margin: 0; }
+.chidemoon-shop-the-look__canvas { display: block; line-height: 0; position: relative; }
+.chidemoon-shop-the-look__image { display: block; height: auto; width: 100%; }
+.chidemoon-shop-the-look__hotspot { align-items: center; background: var(--chidemoon-surface, #fff); border: 2px solid var(--chidemoon-forest, #173f35); border-radius: 50%; color: var(--chidemoon-forest, #173f35); cursor: pointer; display: flex; height: 2.75rem; justify-content: center; line-height: 1; padding: 0; position: absolute; transform: translate(-50%, -50%); width: 2.75rem; z-index: 2; }
+.chidemoon-shop-the-look__hotspot::after { animation: chidemoon-look-pulse 2s ease-out infinite; background: color-mix(in srgb, var(--chidemoon-clay, #b65d3d) 25%, transparent); border-radius: 50%; content: ''; inset: -.4rem; position: absolute; z-index: -1; }
+.chidemoon-shop-the-look__hotspot:hover, .chidemoon-shop-the-look__hotspot[aria-expanded="true"] { background: var(--chidemoon-forest); color: #fff; transform: translate(-50%, -50%) scale(1.08); }
+.chidemoon-shop-the-look__hotspot:focus-visible, .chidemoon-shop-the-look__close:focus-visible { outline: 3px solid var(--chidemoon-clay, #b65d3d); outline-offset: 3px; }
+.chidemoon-shop-the-look__tooltip { background: var(--chidemoon-surface, #fff); border: 1px solid var(--chidemoon-line, rgba(23,63,53,.17)); box-shadow: var(--chidemoon-shadow, 0 24px 65px rgba(26,44,37,.11)); max-width: min(18rem, calc(100% - 1.5rem)); overflow: hidden; position: absolute; width: 18rem; z-index: 5; }
+.chidemoon-shop-the-look__close { align-items: center; background: var(--chidemoon-forest); border: 0; color: #fff; cursor: pointer; display: flex; font-size: 1.2rem; height: 2.75rem; justify-content: center; line-height: 1; position: absolute; inset-inline-end: .5rem; top: .5rem; width: 2.75rem; z-index: 2; }
+.chidemoon-shop-the-look__product-image { aspect-ratio: 4 / 3; display: block; object-fit: cover; width: 100%; }
+.chidemoon-shop-the-look__tooltip-body { padding: 1rem; }
+.chidemoon-shop-the-look__tooltip-body h3 { color: var(--chidemoon-forest); font-size: 1rem; line-height: 1.6; margin: 0 2.75rem .5rem 0; }
+.chidemoon-shop-the-look__price { color: var(--chidemoon-clay); font-weight: 800; margin-bottom: .85rem; }
+.chidemoon-shop-the-look__tooltip .chidemoon-button { display: flex; width: 100%; }
+.chidemoon-shop-the-look__fallback { display: grid; gap: .6rem; list-style: none; margin: 1rem 0 0; padding: 0; }
+.chidemoon-shop-the-look.is-enhanced .chidemoon-shop-the-look__fallback { display: none; }
+.chidemoon-shop-the-look__fallback li { align-items: center; background: var(--chidemoon-surface, #fff); border: 1px solid var(--chidemoon-line, rgba(23,63,53,.17)); display: flex; flex-wrap: wrap; gap: .5rem 1rem; justify-content: space-between; padding: .75rem 1rem; }
+.chidemoon-shop-the-look__fallback li a { color: var(--chidemoon-forest); font-weight: 700; }
+@keyframes chidemoon-look-pulse { 0%, 100% { opacity: .7; transform: scale(1); } 50% { opacity: 0; transform: scale(1.35); } }
+@media (max-width: 640px) { .chidemoon-shop-the-look__tooltip--mobile { bottom: max(.75rem, env(safe-area-inset-bottom)); inset-inline: .75rem !important; position: fixed; top: auto !important; width: auto; } }
+@media (prefers-reduced-motion: reduce) { .chidemoon-shop-the-look__hotspot::after { animation: none; } .chidemoon-shop-the-look__hotspot { transition: none; } }

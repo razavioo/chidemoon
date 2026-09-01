@@ -523,6 +523,15 @@ function cm_seed_post( array $spec ): void {
 				)
 			);
 		}
+		if ( ! empty( $spec['tags'] ) ) {
+			wp_set_object_terms( $existing_id, $spec['tags'], 'post_tag', false );
+			if ( in_array( 'shop-the-look', $spec['tags'], true ) && class_exists( 'Chidemoon_Core_Shop_The_Look' ) ) {
+				$room = Chidemoon_Core_Shop_The_Look::room_for_tags( $spec['tags'] );
+				if ( '' !== $room ) {
+					wp_set_object_terms( $existing_id, $room, Chidemoon_Core_Shop_The_Look::TAXONOMY, false );
+				}
+			}
+		}
 		WP_CLI::log( 'Post refreshed with figures: ' . $spec['slug'] );
 		return;
 	}
@@ -550,6 +559,12 @@ function cm_seed_post( array $spec ): void {
 	wp_set_object_terms( $post_id, array( $spec['category'] ), 'category', false );
 	if ( ! empty( $spec['tags'] ) ) {
 		wp_set_object_terms( $post_id, $spec['tags'], 'post_tag', false );
+		if ( in_array( 'shop-the-look', $spec['tags'], true ) && class_exists( 'Chidemoon_Core_Shop_The_Look' ) ) {
+			$room = Chidemoon_Core_Shop_The_Look::room_for_tags( $spec['tags'] );
+			if ( '' !== $room ) {
+				wp_set_object_terms( $post_id, $room, Chidemoon_Core_Shop_The_Look::TAXONOMY, false );
+			}
+		}
 	}
 
 	$image_id = cm_seed_image(

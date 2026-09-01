@@ -1580,6 +1580,301 @@ html {
 	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
 }
 
+/* Shop the Look room navigation and editorial layout cards. */
+.chidemoon-look-rooms {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.65rem;
+	margin-block: clamp(1.25rem, 3vw, 2rem);
+}
+
+.chidemoon-look-room {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	font-size: 0.9rem;
+	font-weight: 700;
+	gap: 0.55rem;
+	min-height: 2.85rem;
+	padding: 0.55rem 0.9rem;
+	text-decoration: none;
+	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-look-room span {
+	color: var(--chidemoon-muted);
+	font-size: 0.75rem;
+}
+
+.chidemoon-look-room:hover,
+.chidemoon-look-room.is-active {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+.chidemoon-look-room:hover span,
+.chidemoon-look-room.is-active span {
+	color: var(--chidemoon-clay-soft);
+}
+
+.chidemoon-look-list {
+	display: grid;
+	gap: clamp(2rem, 5vw, 4rem);
+}
+
+.chidemoon-look-card {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	box-shadow: var(--chidemoon-shadow-soft);
+	padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.chidemoon-look-card__header {
+	border-bottom: 1px solid var(--chidemoon-line);
+	margin-block-end: clamp(1rem, 2.5vw, 2rem);
+	padding-block-end: 1rem;
+}
+
+.chidemoon-look-card__header h3 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.5rem, 3vw, 2.4rem);
+	line-height: 1.4;
+	margin: 0;
+}
+
+.chidemoon-look-card__header p {
+	color: var(--chidemoon-muted);
+	line-height: 1.9;
+	margin: 0.65rem 0 0;
+	max-width: 52rem;
+}
+
+.chidemoon-look-card__content > :first-child {
+	margin-top: 0;
+}
+
+@media (max-width: 640px) {
+	.chidemoon-look-rooms {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		padding-block-end: 0.35rem;
+		scroll-snap-type: x proximity;
+	}
+
+	.chidemoon-look-room {
+		flex: 0 0 auto;
+		scroll-snap-align: start;
+	}
+}
+
+/* Product comparison selection and responsive evidence table. */
+.chidemoon-comparison-picker,
+.chidemoon-comparison-table-section {
+	padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.chidemoon-comparison-picker > p {
+	color: var(--chidemoon-muted);
+	max-width: 48rem;
+}
+
+.chidemoon-comparison-table-wrap {
+	overflow-x: auto;
+	outline-offset: 4px;
+}
+
+.chidemoon-comparison-table {
+	border-collapse: separate;
+	border-spacing: 0;
+	min-width: 48rem;
+	width: 100%;
+}
+
+.chidemoon-comparison-table :where(th, td) {
+	background: var(--chidemoon-surface);
+	border-bottom: 1px solid var(--chidemoon-line);
+	border-inline-end: 1px solid var(--chidemoon-line);
+	padding: 1rem;
+	text-align: start;
+	vertical-align: top;
+}
+
+.chidemoon-comparison-table thead th {
+	background: color-mix(in srgb, var(--chidemoon-sage) 20%, var(--chidemoon-surface));
+	font-family: var(--chidemoon-font-body);
+	font-weight: 700;
+	min-width: 11rem;
+}
+
+.chidemoon-comparison-table :is(th:first-child, td:first-child) {
+	border-inline-start: 1px solid var(--chidemoon-line);
+}
+
+.chidemoon-comparison-table tbody th {
+	background: color-mix(in srgb, var(--chidemoon-forest) 7%, var(--chidemoon-surface));
+	color: var(--chidemoon-forest);
+	font-weight: 800;
+	inset-inline-start: 0;
+	min-width: 9rem;
+	position: sticky;
+	z-index: 2;
+}
+
+.chidemoon-comparison-table thead a {
+	color: var(--chidemoon-forest);
+	display: grid;
+	gap: 0.65rem;
+	text-decoration: none;
+}
+
+.chidemoon-comparison-table thead img {
+	aspect-ratio: 1 / .85;
+	object-fit: cover;
+	width: 100%;
+}
+
+.chidemoon-comparison-table__remove {
+	background: transparent;
+	border: 0;
+	color: var(--chidemoon-clay);
+	cursor: pointer;
+	font: inherit;
+	font-size: .8rem;
+	font-weight: 800;
+	margin-top: .7rem;
+	padding: .3rem 0;
+}
+
+@media (max-width: 640px) {
+	.chidemoon-comparison-table-wrap {
+		margin-inline: -0.25rem;
+		padding-inline: 0.25rem;
+	}
+
+	.chidemoon-comparison-table :where(th, td) {
+		padding: .8rem;
+	}
+}
+
+.chidemoon-product-card__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-top: auto;
+	padding-top: 1rem;
+}
+
+.chidemoon-product-card__actions .chidemoon-button {
+	flex: 1 1 10rem;
+	margin: 0;
+}
+
+.chidemoon-product-card__actions .chidemoon-compare-control {
+	margin-top: 0;
+}
+
+.chidemoon-comparison-search {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	box-shadow: var(--chidemoon-shadow-soft);
+	margin-top: 1.5rem;
+	max-width: 48rem;
+	padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.chidemoon-comparison-search label {
+	color: var(--chidemoon-forest);
+	display: block;
+	font-family: var(--chidemoon-font-body);
+	font-weight: 800;
+	margin-bottom: 0.6rem;
+}
+
+.chidemoon-comparison-search__field {
+	align-items: center;
+	border: 1px solid var(--chidemoon-line-strong);
+	display: flex;
+	gap: 0.7rem;
+	padding-inline: 0.8rem;
+}
+
+.chidemoon-comparison-search__field:focus-within {
+	border-color: var(--chidemoon-forest);
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 25%, transparent);
+}
+
+.chidemoon-comparison-search__field svg {
+	fill: none;
+	flex: 0 0 auto;
+	height: 1.2rem;
+	stroke: var(--chidemoon-forest);
+	stroke-linecap: round;
+	stroke-width: 1.8;
+	width: 1.2rem;
+}
+
+.chidemoon-comparison-search input {
+	background: transparent;
+	border: 0;
+	font: inherit;
+	min-height: 3rem;
+	outline: 0;
+	width: 100%;
+}
+
+.chidemoon-comparison-search__hint,
+.chidemoon-comparison-search__empty {
+	color: var(--chidemoon-muted);
+	font-size: 0.86rem;
+	line-height: 1.8;
+	margin: 0.75rem 0 0;
+}
+
+.chidemoon-comparison-search__results {
+	border-top: 1px solid var(--chidemoon-line);
+	margin-top: 0.9rem;
+	padding-top: 0.7rem;
+}
+
+.chidemoon-comparison-search__result {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	cursor: pointer;
+	display: flex;
+	font: inherit;
+	font-weight: 700;
+	justify-content: space-between;
+	min-height: 3rem;
+	padding: 0.5rem 0;
+	text-align: start;
+	width: 100%;
+}
+
+.chidemoon-comparison-search__result small {
+	color: var(--chidemoon-clay);
+	font-size: 0.76rem;
+}
+
+.chidemoon-article-product__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-top: auto;
+	padding-top: 0.5rem;
+}
+
+.chidemoon-article-product__actions .chidemoon-button,
+.chidemoon-article-product__actions .chidemoon-compare-control {
+	margin-top: 0;
+}
+
 /* Images must always fill their media box: figures with a cropped
  * aspect ratio and cover-block backgrounds otherwise letterbox inside
  * the frame when the source photo's shape differs. */

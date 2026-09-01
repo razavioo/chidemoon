@@ -9,6 +9,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Chidemoon_Core_Blocks {
 	public static function register(): void {
 		add_action( 'init', array( __CLASS__, 'register_patterns' ) );
+		add_action( 'init', array( __CLASS__, 'register_shop_the_look_block' ) );
+		add_filter( 'block_categories_all', array( __CLASS__, 'register_block_category' ) );
+	}
+
+	/** @param array<int, array<string, string>> $categories @return array<int, array<string, string>> */
+	public static function register_block_category( array $categories ): array {
+		foreach ( $categories as $category ) {
+			if ( isset( $category['slug'] ) && 'chidemoon-commerce' === $category['slug'] ) {
+				return $categories;
+			}
+		}
+
+		$categories[] = array(
+			'slug'  => 'chidemoon-commerce',
+			'title' => __( 'Chidemoon commerce', 'chidemoon-core' ),
+		);
+		return $categories;
+	}
+
+	public static function register_shop_the_look_block(): void {
+		$directory = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look';
+		if ( function_exists( 'register_block_type' ) && file_exists( $directory . '/block.json' ) ) {
+			register_block_type( $directory );
+		}
 	}
 
 	public static function register_patterns(): void {
@@ -78,7 +102,7 @@ final class Chidemoon_Core_Blocks {
 			'chidemoon-core/shop-the-look' => array(
 				'title'      => __( 'Shop the look', 'chidemoon-core' ),
 				'categories' => array( 'chidemoon-commerce', 'chidemoon-editorial' ),
-				'content'    => '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group"><!-- wp:heading {"level":2} --><h2>' . esc_html__( 'Shop the look', 'chidemoon-core' ) . '</h2><!-- /wp:heading --><!-- wp:paragraph --><p>' . esc_html__( 'Introduce the space and explain the editorial choice.', 'chidemoon-core' ) . '</p><!-- /wp:paragraph --><!-- wp:shortcode -->[chidemoon_affiliate_cta]<!-- /wp:shortcode --></div><!-- /wp:group -->',
+				'content'    => '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group"><!-- wp:heading {"level":2} --><h2>' . esc_html__( 'Shop the look', 'chidemoon-core' ) . '</h2><!-- /wp:heading --><!-- wp:paragraph --><p>' . esc_html__( 'Introduce the space and explain the editorial choice.', 'chidemoon-core' ) . '</p><!-- /wp:paragraph --><!-- wp:chidemoon/shop-the-look /--></div><!-- /wp:group -->',
 			),
 			'chidemoon-core/testimonials' => array(
 				'title'      => __( 'Testimonial', 'chidemoon-core' ),

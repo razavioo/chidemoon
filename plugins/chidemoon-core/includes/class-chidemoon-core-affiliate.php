@@ -254,11 +254,7 @@ final class Chidemoon_Core_Affiliate {
 	 * @param WC_Product $product     Current product.
 	 */
 	public static function only_external_products_are_purchasable( bool $purchasable, WC_Product $product ): bool {
-		if ( ! $product->is_type( 'external' ) ) {
-			return false;
-		}
-
-		return $purchasable && '' !== self::get_affiliate_url( $product );
+		return $purchasable && self::is_publicly_eligible( $product );
 	}
 
 	/**
@@ -346,7 +342,7 @@ final class Chidemoon_Core_Affiliate {
 
 		$product_id = absint( $attributes['product_id'] );
 		$product    = $product_id > 0 ? wc_get_product( $product_id ) : false;
-		if ( ! $product instanceof WC_Product || '' === self::get_affiliate_url( $product ) ) {
+		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
 			return '';
 		}
 
@@ -355,6 +351,13 @@ final class Chidemoon_Core_Affiliate {
 			esc_url( self::tracking_url( $product_id ) ),
 			esc_html( $attributes['label'] )
 		);
+	}
+
+	public static function is_publicly_eligible( WC_Product $product ): bool {
+		return 'publish' === get_post_status( $product->get_id() )
+			&& 'reviewed' === (string) $product->get_meta( self::META_REVIEW_STATE, true )
+			&& $product->is_type( 'external' )
+			&& '' !== self::get_affiliate_url( $product );
 	}
 
 	public static function tracking_url( int $product_id ): string {

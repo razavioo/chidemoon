@@ -312,6 +312,7 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 		$price_html = $product->get_price_html();
 		$terms      = get_the_terms( $product_id, 'product_cat' );
 		$term       = is_array( $terms ) && ! empty( $terms ) ? $terms[0] : null;
+		$eligible   = class_exists( 'Chidemoon_Core_Affiliate' ) && Chidemoon_Core_Affiliate::is_publicly_eligible( $product );
 		?>
 		<article class="chidemoon-card chidemoon-product-card">
 			<a class="chidemoon-card__media" href="<?php echo esc_url( $permalink ); ?>" aria-label="<?php echo esc_attr( $title ); ?>">
@@ -331,7 +332,14 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 				<?php else : ?>
 					<p class="chidemoon-product-card__pending"><?php esc_html_e( 'قیمت در حال بررسی', 'chidemoon-blocksy-child' ); ?></p>
 				<?php endif; ?>
-				<a class="chidemoon-text-link" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
+				<div class="chidemoon-product-card__actions">
+					<?php if ( $eligible ) : ?>
+						<a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product_id ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-blocksy-child' ); ?></a>
+						<?php echo Chidemoon_Core_Compare::control( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php else : ?>
+						<a class="chidemoon-button" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'مشاهدهٔ جزئیات', 'chidemoon-blocksy-child' ); ?></a>
+					<?php endif; ?>
+				</div>
 			</div>
 		</article>
 		<?php

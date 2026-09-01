@@ -27,6 +27,9 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Forms::register();
 		Chidemoon_Core_Admin::register();
 		Chidemoon_Core_Blocks::register();
+		Chidemoon_Core_Shop_The_Look::register();
+		Chidemoon_Core_Compare::register();
 		Chidemoon_Core_Importer::register();
+		add_action( 'init', array( 'Chidemoon_Core_Activator', 'flush_rewrite_rules_if_pending' ), 99 );
 	}
 }

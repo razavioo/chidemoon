@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "chidemoon/shop-the-look",
+  "version": "1.0.0",
+  "title": "از تصویر بخر",
+  "category": "chidemoon-commerce",
+  "icon": "camera",
+  "description": "تصویر چیدمان با نقاط قابل کلیک برای نمایش کالاها.",
+  "keywords": ["shop", "look", "hotspot", "image", "اتاق", "تصویر"],
+  "supports": { "html": false, "anchor": true, "align": ["wide", "full"], "spacing": { "margin": true }, "shadow": true },
+  "attributes": {
+    "imageId": { "type": "integer", "default": 0 },
+    "imageAlt": { "type": "string", "default": "" },
+    "caption": { "type": "string", "default": "" },
+    "hotspots": { "type": "array", "default": [] }
+  },
+  "render": "file:./render.php",
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "viewScript": "file:./view.js",
+  "textdomain": "chidemoon-core"
+}

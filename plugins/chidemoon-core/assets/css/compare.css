@@ -1,0 +1,16 @@
+html.has-chidemoon-compare-bar, html:has(.chidemoon-compare-bar:not([hidden])) { scroll-padding-block-end: calc(var(--chidemoon-compare-bar-height, 0px) + 1.5rem + env(safe-area-inset-bottom)); }
+html.has-chidemoon-compare-bar body, body:has(.chidemoon-compare-bar:not([hidden])) { padding-block-end: calc(var(--chidemoon-compare-bar-height, 0px) + 1.5rem + env(safe-area-inset-bottom)); }
+.chidemoon-compare-control { align-items: center; background: transparent; border: 1px solid var(--chidemoon-line, rgba(23,63,53,.2)); color: var(--chidemoon-forest, #173f35); cursor: pointer; display: inline-flex; font: inherit; font-size: .76rem; font-weight: 800; gap: .35rem; justify-content: center; margin-top: .75rem; min-height: 2.75rem; padding: .4rem .75rem; touch-action: manipulation; transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), border-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease); }
+.chidemoon-compare-control svg { fill: none; height: 1rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 1rem; }
+.chidemoon-compare-control:hover, .chidemoon-compare-control[aria-pressed="true"] { background: var(--chidemoon-forest, #173f35); border-color: var(--chidemoon-forest, #173f35); color: #fff; }
+.chidemoon-compare-control:active { transform: scale(.98); }
+.chidemoon-compare-control:focus-visible, .chidemoon-compare-bar :is(button, a):focus-visible { outline: 3px solid var(--chidemoon-clay, #b65d3d); outline-offset: 3px; }
+.chidemoon-compare-bar { align-items: center; background: var(--chidemoon-forest, #173f35); bottom: 1rem; box-shadow: var(--chidemoon-shadow, 0 12px 35px rgba(0,0,0,.2)); color: #fff; display: grid; gap: .75rem; grid-template-columns: auto minmax(0,1fr) auto; inset-inline-start: 50%; max-width: min(56rem, calc(100vw - 2rem)); padding: .85rem 1rem; position: fixed; transform: translateX(-50%); width: 100%; z-index: 1000; }
+.chidemoon-compare-bar__summary { font-size: .85rem; font-weight: 700; }
+.chidemoon-compare-bar__items { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chidemoon-compare-bar__items button, .chidemoon-compare-bar__clear { background: transparent; border: 1px solid rgba(255,255,255,.55); color: #fff; cursor: pointer; font: inherit; font-size: .75rem; min-height: 2.75rem; padding: .35rem .7rem; }
+.chidemoon-compare-bar__actions { display: flex; gap: .5rem; }
+.chidemoon-compare-bar__go { background: #fff; border: 0; color: var(--chidemoon-forest, #173f35); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 800; min-height: 2.75rem; padding: .6rem .8rem; }
+.chidemoon-compare-bar__go:disabled { cursor: not-allowed; opacity: .55; }
+@media (max-width: 640px) { .chidemoon-compare-bar { align-items: stretch; bottom: 0; grid-template-columns: 1fr; inset-inline-start: 0; max-width: none; padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom)); transform: none; } .chidemoon-compare-bar__actions { display: grid; grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: reduce) { .chidemoon-compare-control { transition: none; } .chidemoon-compare-control:active { transform: none; } }
