@@ -6,6 +6,8 @@ html.has-chidemoon-compare-bar body, body:has(.chidemoon-compare-bar:not([hidden
 .chidemoon-compare-control:active { transform: scale(.98); }
 .chidemoon-compare-control:focus-visible, .chidemoon-compare-bar :is(button, a):focus-visible { outline: 3px solid var(--chidemoon-clay, #b65d3d); outline-offset: 3px; }
 .chidemoon-compare-bar { align-items: center; background: var(--chidemoon-forest, #173f35); bottom: 1rem; box-shadow: var(--chidemoon-shadow, 0 12px 35px rgba(0,0,0,.2)); color: #fff; display: grid; gap: .75rem; grid-template-columns: auto minmax(0,1fr) auto; inset-inline-start: 50%; max-width: min(56rem, calc(100vw - 2rem)); padding: .85rem 1rem; position: fixed; transform: translateX(-50%); width: 100%; z-index: 1000; }
+.chidemoon-compare-bar[hidden] { display: none; }
+.ct-woo-card-actions .chidemoon-compare-control { flex: 0 0 auto; margin-top: 0; }
 .chidemoon-compare-bar__summary { font-size: .85rem; font-weight: 700; }
 .chidemoon-compare-bar__items { display: flex; flex-wrap: wrap; gap: .4rem; }
 .chidemoon-compare-bar__items button, .chidemoon-compare-bar__clear { background: transparent; border: 1px solid rgba(255,255,255,.55); color: #fff; cursor: pointer; font: inherit; font-size: .75rem; min-height: 2.75rem; padding: .35rem .7rem; }

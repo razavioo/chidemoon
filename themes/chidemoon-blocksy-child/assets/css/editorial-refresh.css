@@ -1592,6 +1592,7 @@ html {
 	align-items: center;
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
 	color: var(--chidemoon-forest);
 	display: inline-flex;
 	font-size: 0.9rem;
@@ -1628,6 +1629,7 @@ html {
 .chidemoon-look-card {
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
 	box-shadow: var(--chidemoon-shadow-soft);
 	padding: clamp(1rem, 2.5vw, 2rem);
 }
@@ -1777,9 +1779,44 @@ html {
 	margin-top: 0;
 }
 
+/* The WooCommerce loop CTA ("اطلاعات بیشتر") must match the editorial
+ * button language instead of Blocksy's default chrome. */
+.ct-woo-card-actions .button,
+.ct-woo-card-actions .added_to_cart {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: var(--chidemoon-radius-sm, 0.35rem);
+	box-shadow: 4px 4px 0 var(--chidemoon-sage);
+	color: #fffcf7;
+	display: inline-flex;
+	flex: 1 1 auto;
+	font-size: 0.82rem;
+	font-weight: 700;
+	justify-content: center;
+	letter-spacing: 0;
+	line-height: 1.2;
+	min-height: 2.8rem;
+	padding: 0.8rem 1.05rem;
+	text-decoration: none;
+	transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), box-shadow var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+.ct-woo-card-actions .button:hover,
+.ct-woo-card-actions .button:focus-visible,
+.ct-woo-card-actions .added_to_cart:hover,
+.ct-woo-card-actions .added_to_cart:focus-visible {
+	background: var(--chidemoon-forest-deep);
+	box-shadow: 1px 1px 0 var(--chidemoon-sage);
+	color: #fffcf7;
+	text-decoration: none;
+	transform: translate(3px, 3px);
+}
+
 .chidemoon-comparison-search {
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
 	box-shadow: var(--chidemoon-shadow-soft);
 	margin-top: 1.5rem;
 	max-width: 48rem;
@@ -1797,6 +1834,7 @@ html {
 .chidemoon-comparison-search__field {
 	align-items: center;
 	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
 	display: flex;
 	gap: 0.7rem;
 	padding-inline: 0.8rem;

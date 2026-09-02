@@ -106,7 +106,7 @@ final class Chidemoon_Core_Compare {
 		}
 
 		$candidates = ! empty( $requested )
-			? array_filter( array_map( 'wc_get_product', $requested ), static fn( $product ): bool => $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) )
+			? array_filter( array_map( 'wc_get_product', $requested ), static fn( $product ): bool => $product instanceof WC_Product && 'publish' === get_post_status( $product ) )
 			: self::eligible_products( self::SEARCH_LIMIT, $browse ? '' : $term );
 		$results = array();
 		foreach ( $candidates as $product ) {
@@ -142,7 +142,7 @@ final class Chidemoon_Core_Compare {
 			$args['offset'] = $offset;
 			$page            = wc_get_products( $args );
 			foreach ( $page as $product ) {
-				if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+				if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product ) ) {
 					continue;
 				}
 				$products[] = $product;
@@ -181,7 +181,7 @@ final class Chidemoon_Core_Compare {
 	}
 
 	public static function control( WC_Product $product ): string {
-		if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+		if ( 'publish' !== get_post_status( $product ) ) {
 			return '';
 		}
 		self::enqueue_assets();
@@ -215,7 +215,7 @@ final class Chidemoon_Core_Compare {
 		$products  = array();
 		foreach ( self::product_ids( $requested ) as $id ) {
 			$product = wc_get_product( $id );
-			if ( $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+			if ( $product instanceof WC_Product && 'publish' === get_post_status( $product ) ) {
 				$products[] = $product;
 			}
 		}
