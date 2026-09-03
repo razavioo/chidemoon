@@ -1348,7 +1348,13 @@ function cm_seed_related_product_markup( array $product_slugs ): string {
 		$image = $product->get_image( 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) );
 		$cards[] = sprintf(
 			'<article class="chidemoon-article-product">' .
-				'<a class="chidemoon-article-product__image" href="%1$s" tabindex="-1" aria-hidden="true">%2$s</a>' .
+				// The media wrapper keeps the anchor out of wpautop's inline
+				// run: an inline <a> directly after <article> makes wpautop
+				// emit a phantom </p>, which parses as an empty node and
+				// breaks the card's two-column mobile grid.
+				'<div class="chidemoon-article-product__media">' .
+					'<a class="chidemoon-article-product__image" href="%1$s" tabindex="-1" aria-hidden="true">%2$s</a>' .
+				'</div>' .
 				'<div class="chidemoon-article-product__body">' .
 					'<h3 class="chidemoon-article-product__title"><a href="%1$s">%3$s</a></h3>' .
 					'<p class="chidemoon-article-product__excerpt">%4$s</p>' .

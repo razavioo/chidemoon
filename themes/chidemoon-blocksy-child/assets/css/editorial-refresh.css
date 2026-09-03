@@ -2421,10 +2421,6 @@ html {
 		grid-area: body;
 	}
 
-	.entry-content .chidemoon-article-product > p:empty {
-		display: none;
-	}
-
 	.entry-content .chidemoon-article-product__image {
 		aspect-ratio: auto;
 		min-height: 100%;
