@@ -949,6 +949,56 @@ function chidemoon_blocksy_render_navigation_card( $adjacent, bool $previous ): 
 }
 
 /**
+ * Catalogue sorting as a visible chip row inside the archive masthead. Each
+ * option is a plain link WooCommerce already understands, so ordering works
+ * without JavaScript and the active choice is part of the page's address.
+ */
+function chidemoon_blocksy_render_catalogue_sort(): void {
+	$options = array(
+		'menu_order' => __( 'پیشنهاد تحریریه', 'chidemoon-blocksy-child' ),
+		'popularity' => __( 'محبوب‌ترین', 'chidemoon-blocksy-child' ),
+		'rating'     => __( 'بهترین امتیاز', 'chidemoon-blocksy-child' ),
+		'date'       => __( 'جدیدترین', 'chidemoon-blocksy-child' ),
+		'price'      => __( 'ارزان‌ترین', 'chidemoon-blocksy-child' ),
+		'price-desc' => __( 'گران‌ترین', 'chidemoon-blocksy-child' ),
+	);
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$orderby = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : 'menu_order';
+	if ( ! array_key_exists( $orderby, $options ) ) {
+		$orderby = 'menu_order';
+	}
+
+	$current_term = is_product_taxonomy() ? get_queried_object() : null;
+	if ( $current_term instanceof WP_Term ) {
+		$base = get_term_link( $current_term );
+	} else {
+		$base = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '';
+	}
+	if ( ! is_string( $base ) || '' === $base || is_wp_error( $base ) ) {
+		return;
+	}
+	?>
+	<div class="chidemoon-shop-archive__sort">
+		<p class="chidemoon-shop-archive__sort-label"><?php esc_html_e( 'مرتب‌سازی بر اساس', 'chidemoon-blocksy-child' ); ?></p>
+		<div class="chidemoon-shop-archive__sort-options">
+			<?php foreach ( $options as $key => $label ) : ?>
+				<?php
+				$href = 'menu_order' === $key ? remove_query_arg( 'orderby', $base ) : add_query_arg( 'orderby', $key, $base );
+				printf(
+					'<a href="%1$s"%2$s>%3$s</a>',
+					esc_url( $href ),
+					$key === $orderby ? ' class="is-active" aria-current="page"' : '',
+					esc_html( $label )
+				);
+				?>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * Render product tiles from WooCommerce's public catalogue only. The Core
  * plugin remains responsible for whether a product can make an affiliate CTA.
  *

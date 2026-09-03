@@ -15,6 +15,11 @@ get_header( 'shop' );
 // The template renders its own semantic archive heading and description.
 remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 
+// Sorting is an editorial chip row inside the archive masthead (see
+// chidemoon_blocksy_render_catalogue_sort), so the detached <select>
+// toolbar never renders above the loop.
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+
 $current_term      = is_product_taxonomy() ? get_queried_object() : null;
 $term_thumbnail_id = $current_term instanceof WP_Term ? chidemoon_term_thumbnail_id( $current_term ) : 0;
 $term_art          = $current_term instanceof WP_Term && is_product_category()
@@ -31,6 +36,9 @@ $hero_product      = $current_term instanceof WP_Term && is_product_category()
 			<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب محصول', 'chidemoon-blocksy-child' ); ?></p>
 			<h1><?php woocommerce_page_title(); ?></h1>
 			<?php do_action( 'woocommerce_archive_description' ); ?>
+			<?php if ( woocommerce_product_loop() ) : ?>
+				<?php chidemoon_blocksy_render_catalogue_sort(); ?>
+			<?php endif; ?>
 		</div>
 		<?php if ( $hero_product instanceof WC_Product ) : ?>
 			<figure class="chidemoon-shop-archive__intro-media chidemoon-shop-archive__intro-media--product">

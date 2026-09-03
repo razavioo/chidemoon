@@ -1342,18 +1342,65 @@ html {
 	padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
-.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper + :where(.woocommerce-result-count, .woocommerce-ordering),
-.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper + :where(.woocommerce-result-count),
+.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 	margin-bottom: 1.5rem;
 }
 
-.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
+/* Catalogue sorting lives inside the masthead as a chip row, so the choice is
+ * part of the hero's editorial composition instead of a detached toolbar. */
+.chidemoon-shop-archive__sort {
+	border-top: 1px solid color-mix(in srgb, var(--chidemoon-forest) 14%, transparent);
+	margin-top: 1.4rem;
+	padding-top: 1.1rem;
+}
+
+.chidemoon-shop-archive__sort-label {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.78rem;
+	font-weight: 700;
+	margin: 0 0 0.65rem;
+}
+
+.chidemoon-shop-archive__sort-options {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.chidemoon-shop-archive__sort-options a {
+	align-items: center;
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: var(--chidemoon-radius-sm);
-	min-height: 2.9rem;
-	padding-inline: 0.85rem;
+	border-radius: 999px;
+	color: var(--chidemoon-ink);
+	display: inline-flex;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.82rem;
+	font-weight: 700;
+	line-height: 1;
+	min-height: 2.55rem;
+	padding: 0.45rem 0.95rem;
+	text-decoration: none;
+	transition:
+		background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		border-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		box-shadow var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+.chidemoon-shop-archive__sort-options a:is(:hover, :focus-visible) {
+	border-color: var(--chidemoon-forest);
+	color: var(--chidemoon-forest);
+	text-decoration: none;
+}
+
+.chidemoon-shop-archive__sort-options a.is-active {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	box-shadow: var(--chidemoon-shadow-soft);
+	color: #fffcf7;
 }
 
 .woocommerce ul.products {
@@ -1774,8 +1821,7 @@ html {
 
 	/* Keep the catalogue toolbar readable while the product grid reflows. */
 	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper,
-	.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+	.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 		margin-block-end: 1rem;
 	}
 }
@@ -1863,8 +1909,7 @@ html {
 
 	/* Keep the shop controls in one readable column on narrow screens. */
 	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper,
-	.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+	.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 		clear: both;
 		float: none;
 		max-width: 100%;
@@ -1879,15 +1924,20 @@ html {
 		margin-block: 0 0.7rem;
 	}
 
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
-		margin-block: 0 1.25rem;
+	/* Sorting stays inside the masthead: the chip row fills the available
+	 * width in balanced lines instead of drifting as a detached toolbar. */
+	.chidemoon-shop-archive__sort {
+		margin-top: 1.15rem;
+		padding-top: 1rem;
 	}
 
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
-		box-sizing: border-box;
-		max-width: 100%;
-		min-height: 2.75rem;
-		width: 100%;
+	.chidemoon-shop-archive__sort-options a {
+		flex: 1 1 auto;
+		justify-content: center;
+		min-height: 2.9rem;
+		padding-inline: 0.8rem;
+		text-align: center;
+		white-space: nowrap;
 	}
 
 	.chidemoon-product-card,
@@ -1971,7 +2021,10 @@ html {
 	}
 
 	.woocommerce ul.products li.product .ct-woo-card-actions {
-		display: block;
+		align-items: stretch;
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 0.55rem;
 		margin-inline: 0 !important;
 		margin-top: auto;
 		padding: 0 1rem 1rem;
@@ -1987,6 +2040,21 @@ html {
 		padding-inline: 0.9rem;
 		white-space: normal;
 		width: 100%;
+	}
+
+	/* "مشاهده" and "مقایسه" share one action row: the primary CTA takes the
+	 * remaining width and the compare toggle keeps its label on one line. */
+	.woocommerce ul.products li.product .ct-woo-card-actions :where(.button, .added_to_cart) {
+		flex: 1 1 auto;
+		min-width: 0;
+		width: auto;
+	}
+
+	.woocommerce ul.products li.product .ct-woo-card-actions .chidemoon-compare-control {
+		flex: 0 0 auto;
+		margin-top: 0;
+		min-height: 3rem;
+		white-space: nowrap;
 	}
 
 	.chidemoon-product-card .chidemoon-card__body {
@@ -2516,13 +2584,17 @@ html {
 }
 
 /* Mobile: the compact story card lays media and body side by side.
- * The collection-feed first-child aspect-ratio override is stronger
- * than the compact rules and squeezes the body under the media, so
- * reset it here and clip the media cell defensively. */
+ * The first-child and collection-feed aspect-ratio overrides are stronger
+ * than the compact rules; their ratio then transfers the row height into
+ * the media width, which overflows the media track and paints over the
+ * body text. Reset them here, cap the cell to its track, and clip it
+ * defensively. */
 @media (max-width: 640px) {
 	.chidemoon-story-card--compact .chidemoon-card__media,
+	.chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media,
 	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
 		aspect-ratio: auto;
+		max-width: 100%;
 		min-width: 0;
 		overflow: hidden;
 	}
