@@ -214,15 +214,22 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 	#offcanvas {
 		--side-panel-width: min(88vw, 24rem);
-		background: rgba(16, 45, 38, 0.42);
+		background: rgba(9, 26, 22, 0.55);
 		direction: rtl;
+	}
+
+	#offcanvas[data-behaviour*="side"] {
+		-webkit-backdrop-filter: blur(8px) saturate(115%);
+		backdrop-filter: blur(8px) saturate(115%);
 	}
 
 	#offcanvas[data-behaviour*="side"] .ct-panel-inner {
 		align-self: auto;
-		background: var(--chidemoon-forest-deep);
-		border-inline-start: 1px solid rgba(255, 252, 247, 0.14);
-		box-shadow: -24px 0 65px rgba(16, 45, 38, 0.28);
+		background:
+			linear-gradient(180deg, rgba(255, 252, 247, 0.07), rgba(255, 252, 247, 0) 30%),
+			var(--chidemoon-forest-deep);
+		border-inline-start: 1px solid rgba(255, 252, 247, 0.1);
+		box-shadow: -32px 0 80px rgba(9, 26, 22, 0.45);
 		left: auto;
 		margin: 0;
 		right: 0;
@@ -237,72 +244,209 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		transform: translate3d(100%, 0, 0) !important;
 	}
 
+	#offcanvas .site-title a {
+		color: #fffcf7;
+	}
+
 	#offcanvas .ct-panel-actions {
+		border-block-end: 1px solid rgba(255, 252, 247, 0.09);
 		direction: rtl;
 		justify-content: flex-start;
-		padding: 1rem clamp(1rem, 5vw, 1.5rem);
+		padding: 0.95rem clamp(1rem, 5vw, 1.5rem);
 	}
 
 	#offcanvas .ct-toggle-close {
-		border: 1px solid rgba(255, 252, 247, 0.28);
+		--theme-icon-color: currentColor;
+		border: 1px solid rgba(255, 252, 247, 0.26);
 		border-radius: var(--chidemoon-radius-sm);
-		color: #fffcf7;
-		height: 2.65rem;
-		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
-		width: 2.65rem;
+		color: rgba(255, 252, 247, 0.85);
+		height: 2.5rem;
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+		width: 2.5rem;
 	}
 
 	#offcanvas .ct-toggle-close:hover,
 	#offcanvas .ct-toggle-close:focus-visible {
-		background: rgba(255, 252, 247, 0.12);
-		border-color: rgba(255, 252, 247, 0.45);
+		background: rgba(255, 252, 247, 0.1);
+		border-color: rgba(255, 252, 247, 0.42);
+		color: #fffcf7;
 	}
 
 	#offcanvas :where(a, button):focus-visible {
-		outline-color: var(--chidemoon-clay-soft);
+		outline: 2px solid var(--chidemoon-clay-soft);
+		outline-offset: 2px;
 	}
 
 	#offcanvas .ct-panel-content-inner {
+		--margin: 0;
 		align-items: stretch;
-		padding: 0 clamp(1rem, 6vw, 1.75rem) 2rem;
+		gap: 1.5rem;
+		overscroll-behavior: contain;
+		padding: 1.15rem clamp(1rem, 6vw, 1.75rem) calc(2.25rem + env(safe-area-inset-bottom, 0px));
+		scrollbar-color: rgba(255, 252, 247, 0.2) transparent;
+		scrollbar-width: thin;
 	}
 
 	#offcanvas .mobile-menu {
+		--mobile-menu-divider: 1px solid rgba(255, 252, 247, 0.09);
+		--theme-icon-hover-color: var(--chidemoon-clay-soft);
+		--theme-link-hover-color: var(--chidemoon-clay-soft);
+		--theme-link-initial-color: rgba(255, 252, 247, 0.9);
 		text-align: right;
 		width: 100%;
-	}
-
-	#offcanvas .mobile-menu > ul {
-		border-top: 1px solid rgba(255, 252, 247, 0.16);
-		width: 100%;
-	}
-
-	#offcanvas .mobile-menu li {
-		border-bottom: 1px solid rgba(255, 252, 247, 0.12);
 	}
 
 	#offcanvas .mobile-menu .ct-menu-link {
 		--theme-font-family: var(--chidemoon-font-ui);
-		--theme-font-size: clamp(1.1rem, 4.6vw, 1.35rem);
+		--theme-font-size: clamp(1.02rem, 4vw, 1.18rem);
 		--theme-font-weight: 600;
 		--theme-letter-spacing: 0;
-		--theme-line-height: 1.5;
+		--theme-line-height: 1.55;
 		--theme-text-transform: none;
 		align-items: center;
-		color: #fffcf7;
+		border-radius: 0.7rem;
+		color: rgba(255, 252, 247, 0.9);
 		display: flex;
 		font-family: var(--chidemoon-font-ui);
+		font-size: clamp(1.02rem, 4vw, 1.18rem);
+		font-weight: 600;
+		gap: 0.7rem;
 		justify-content: flex-start;
 		letter-spacing: 0;
-		min-height: 4rem;
-		padding: 0.8rem 0.25rem;
+		min-height: 3.5rem;
+		padding: 0.55rem 0.7rem;
 		text-align: right;
+		text-decoration: none;
 		text-transform: none;
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 	}
 
-	#offcanvas .mobile-menu .current-menu-item > .ct-menu-link,
-	#offcanvas .mobile-menu .ct-menu-link:hover {
+	#offcanvas .mobile-menu > ul > li > .ct-menu-link,
+	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent > .ct-menu-link {
+		margin-inline: -0.4rem;
+		padding-inline: 0.75rem;
+	}
+
+	#offcanvas .mobile-menu > ul > li > .ct-menu-link::before,
+	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent > .ct-menu-link::before {
+		background: var(--chidemoon-clay);
+		border-radius: 999px;
+		content: "";
+		flex: none;
+		height: 0.32rem;
+		opacity: 0;
+		transition: opacity var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+		width: 0.32rem;
+	}
+
+	#offcanvas .mobile-menu > ul > li[class*="current-menu-"] > .ct-menu-link::before,
+	#offcanvas .mobile-menu > ul > li[class*="current-menu-"] > .ct-sub-menu-parent > .ct-menu-link::before {
+		opacity: 1;
+	}
+
+	#offcanvas .mobile-menu .ct-menu-link:hover,
+	#offcanvas .mobile-menu .ct-menu-link:focus-visible {
+		background: rgba(255, 252, 247, 0.06);
+		color: #fffcf7;
+	}
+
+	#offcanvas .mobile-menu li[class*="current-menu-"] > .ct-menu-link,
+	#offcanvas .mobile-menu li[class*="current-menu-"] > .ct-sub-menu-parent > .ct-menu-link {
 		color: var(--chidemoon-clay-soft);
+	}
+
+	#offcanvas .mobile-menu .ct-sub-menu-parent {
+		column-gap: 0.6rem;
+	}
+
+	#offcanvas .mobile-menu .ct-toggle-dropdown-mobile {
+		--toggle-button-border-color: rgba(255, 252, 247, 0.18);
+		--toggle-button-border-width: 1px;
+		--toggle-button-margin-end: 0;
+		--toggle-button-radius: 999px;
+		--toggle-button-size: 2.3rem;
+		color: rgba(255, 252, 247, 0.62);
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	}
+
+	#offcanvas .mobile-menu .ct-toggle-dropdown-mobile:hover {
+		background: rgba(255, 252, 247, 0.08);
+		border-color: rgba(255, 252, 247, 0.34);
+		color: #fffcf7;
+	}
+
+	#offcanvas .mobile-menu li.dropdown-active > .ct-sub-menu-parent .ct-toggle-dropdown-mobile {
+		background: rgba(255, 252, 247, 0.1);
+		border-color: rgba(255, 252, 247, 0.36);
+		color: var(--chidemoon-clay-soft);
+	}
+
+	#offcanvas .mobile-menu .sub-menu {
+		background: rgba(9, 26, 22, 0.42);
+		border-radius: 0.9rem;
+		margin-block: 0.55rem 0.7rem;
+		padding-block: 0.35rem;
+	}
+
+	#offcanvas .mobile-menu .sub-menu li {
+		border-block-end: 0;
+	}
+
+	#offcanvas .mobile-menu .sub-menu .ct-menu-link {
+		border-radius: 0.6rem;
+		color: rgba(255, 252, 247, 0.72);
+		font-size: clamp(0.95rem, 3.6vw, 1.05rem);
+		min-height: 3.1rem;
+	}
+
+	#offcanvas .mobile-menu .sub-menu .ct-menu-link:hover,
+	#offcanvas .mobile-menu .sub-menu .ct-menu-link:focus-visible {
+		background: rgba(255, 252, 247, 0.06);
+		color: #fffcf7;
+	}
+
+	#offcanvas .mobile-menu .sub-menu .current-menu-item > .ct-menu-link {
+		color: var(--chidemoon-clay-soft);
+	}
+
+	#offcanvas .mobile-menu .sub-menu .sub-menu {
+		margin-inline-start: 0.7rem;
+	}
+
+	#offcanvas.active .mobile-menu > ul > li {
+		animation: chidemoon-menu-enter 0.44s var(--chidemoon-ease-out) both;
+	}
+
+	#offcanvas.active .mobile-menu > ul > li:nth-child(1) { animation-delay: 30ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(2) { animation-delay: 70ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(3) { animation-delay: 110ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(4) { animation-delay: 150ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(5) { animation-delay: 190ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(6) { animation-delay: 230ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(7) { animation-delay: 270ms; }
+	#offcanvas.active .mobile-menu > ul > li:nth-child(n + 8) { animation-delay: 310ms; }
+
+	@keyframes chidemoon-menu-enter {
+		from {
+			opacity: 0;
+			transform: translate3d(0, 0.6rem, 0);
+		}
+
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#offcanvas.active .mobile-menu > ul > li {
+			animation: none;
+		}
+
+		#offcanvas .mobile-menu .ct-menu-link,
+		#offcanvas .mobile-menu .ct-toggle-dropdown-mobile {
+			transition: none;
+		}
 	}
 }
 

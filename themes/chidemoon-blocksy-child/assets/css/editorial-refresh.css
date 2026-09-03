@@ -3685,11 +3685,8 @@ body #search-modal .ct-toggle-close:focus-visible {
 	color: #fffcf7;
 }
 
-/* Off-canvas search entry: the field reads on the deep forest panel. */
-.chidemoon-offcanvas-search {
-	margin-block-end: 1.35rem;
-}
-
+/* Off-canvas search entry: the field reads on the deep forest panel; the
+ * panel's content gap handles the spacing, so no margin is needed here. */
 #offcanvas .chidemoon-search-form {
 	max-width: none;
 }
