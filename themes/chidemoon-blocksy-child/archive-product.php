@@ -20,11 +20,14 @@ $term_thumbnail_id = $current_term instanceof WP_Term ? chidemoon_term_thumbnail
 $term_art          = $current_term instanceof WP_Term && is_product_category()
 	? chidemoon_category_art( $current_term )
 	: '';
+$hero_product      = $current_term instanceof WP_Term && is_product_category()
+	? chidemoon_category_hero_product( $current_term )
+	: null;
 $catalogue_count   = chidemoon_archive_record_count();
 ?>
 
 <div class="chidemoon-shop-archive">
-	<section class="chidemoon-shop-archive__intro chidemoon-section-shell<?php echo $term_thumbnail_id > 0 || '' !== $term_art ? ' has-media' : ''; ?>">
+	<section class="chidemoon-shop-archive__intro chidemoon-section-shell<?php echo $term_thumbnail_id > 0 || '' !== $term_art || $hero_product instanceof WC_Product ? ' has-media' : ''; ?>">
 		<div class="chidemoon-shop-archive__intro-copy">
 			<?php if ( '' !== $term_art ) : ?>
 				<div class="chidemoon-shop-archive__kicker">
@@ -42,7 +45,20 @@ $catalogue_count   = chidemoon_archive_record_count();
 				</p>
 			<?php endif; ?>
 		</div>
-		<?php if ( $term_thumbnail_id > 0 ) : ?>
+		<?php if ( $hero_product instanceof WC_Product ) : ?>
+			<figure class="chidemoon-shop-archive__intro-media chidemoon-shop-archive__intro-media--product">
+				<a class="chidemoon-shop-archive__media-frame" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>" aria-label="<?php echo esc_attr( $hero_product->get_name() ); ?>">
+					<?php echo wp_get_attachment_image( (int) $hero_product->get_image_id(), 'large', false, array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</a>
+				<?php if ( '' !== $term_art ) : ?>
+					<span class="chidemoon-shop-archive__media-seal" aria-hidden="true"><?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+				<?php endif; ?>
+				<figcaption class="chidemoon-shop-archive__media-caption">
+					<span><?php esc_html_e( 'نمونه از کالاهای این دسته:', 'chidemoon-blocksy-child' ); ?></span>
+					<a href="<?php echo esc_url( $hero_product->get_permalink() ); ?>"><?php echo esc_html( $hero_product->get_name() ); ?></a>
+				</figcaption>
+			</figure>
+		<?php elseif ( $term_thumbnail_id > 0 ) : ?>
 			<figure class="chidemoon-shop-archive__intro-media">
 				<?php echo wp_get_attachment_image( $term_thumbnail_id, 'large', false, array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</figure>
