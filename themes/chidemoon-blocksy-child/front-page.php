@@ -69,7 +69,7 @@ $shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 
 <section class="chidemoon-home__top chidemoon-section-shell" aria-label="برجسته‌ترین مطالب">
 <?php
 $featured_id         = (int) $featured_story->ID;
-$featured_categories = get_the_category( $featured_id );
+$featured_category   = chidemoon_blocksy_primary_category( $featured_id );
 ?>
 <article class="chidemoon-featured">
 <a class="chidemoon-featured__media" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $featured_story ) ); ?>">
@@ -80,8 +80,8 @@ $featured_categories = get_the_category( $featured_id );
 <?php endif; ?>
 </a>
 <div class="chidemoon-featured__body">
-<?php if ( ! empty( $featured_categories ) ) : ?>
-<a class="chidemoon-card__badge chidemoon-card__badge--inline" href="<?php echo esc_url( get_category_link( $featured_categories[0]->term_id ) ); ?>"><?php echo esc_html( $featured_categories[0]->name ); ?></a>
+<?php if ( $featured_category instanceof WP_Term ) : ?>
+<a class="chidemoon-card__badge chidemoon-card__badge--inline" href="<?php echo esc_url( get_category_link( $featured_category->term_id ) ); ?>"><?php echo esc_html( $featured_category->name ); ?></a>
 <?php endif; ?>
 <h1 class="chidemoon-featured__title"><a href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>"><?php echo esc_html( get_the_title( $featured_story ) ); ?></a></h1>
 <p class="chidemoon-featured__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $featured_story ), 32 ) ); ?></p>
