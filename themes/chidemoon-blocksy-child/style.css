@@ -459,7 +459,7 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 .chidemoon-text-link {
 	align-items: center;
-	color: var(--chidemoon-forest);
+	color: var(--chidemoon-clay);
 	display: inline-flex;
 	font-size: 0.82rem;
 	font-weight: 700;
@@ -469,7 +469,6 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 }
 
 .chidemoon-text-link span {
-	color: var(--chidemoon-clay);
 	font-size: 1.12em;
 	transition: transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
 }
@@ -943,7 +942,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	width: auto;
 }
 
-.woocommerce ul.products li.product > :not(a.woocommerce-LoopProduct-link, .button, .added_to_cart) {
+.woocommerce ul.products li.product > :not(a.woocommerce-LoopProduct-link, .button, .added_to_cart, figure) {
 	margin-inline: 1.1rem;
 }
 
@@ -953,7 +952,7 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .woocommerce ul.products li.product a img {
-	aspect-ratio: 0.9 / 1;
+	aspect-ratio: 4 / 3;
 	margin: 0;
 	object-fit: cover;
 	width: 100%;
@@ -973,7 +972,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	letter-spacing: 0;
 	line-height: 1.5;
 	margin-bottom: 0.65rem;
-	min-height: 3.35em;
 	padding: 0;
 	text-transform: none;
 }
@@ -994,9 +992,9 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	font: inherit;
 }
 
-.woocommerce ul.products li.product .button {
-	align-self: flex-start;
-	margin: 1rem 1.1rem 1.25rem;
+.woocommerce ul.products li.product .ct-woo-card-actions .button {
+	align-self: stretch;
+	margin: 0;
 }
 
 .woocommerce div.product {

@@ -365,6 +365,37 @@ add_filter(
 );
 
 /**
+ * The loop CTA carries a screen-reader label that WooCommerce builds as
+ * `بیشتر بخوانید درباره "…"`. Persian product titles already quote their
+ * name with «», so the outer pair collapses into «…"…"» noise. Re-quote
+ * the inner title with «» only when it does not quote itself.
+ */
+add_filter(
+	'woocommerce_loop_add_to_cart_args',
+	static function ( array $args ): array {
+		$label = $args['attributes']['aria-label'] ?? ( $args['aria-label'] ?? '' );
+		if ( ! is_string( $label ) || '' === $label ) {
+			return $args;
+		}
+
+		$label = str_replace( array( '&ldquo;', '&rdquo;' ), array( '“', '”' ), $label );
+
+		if ( preg_match( '/^(.*?)“(.*?)”(.*)$/s', $label, $matches ) ) {
+			$title  = $matches[2];
+			$label  = $matches[1] . ( str_contains( $title, '«' ) ? $title : '«' . $title . '»' ) . $matches[3];
+		}
+
+		if ( isset( $args['attributes'] ) && is_array( $args['attributes'] ) && array_key_exists( 'aria-label', $args['attributes'] ) ) {
+			$args['attributes']['aria-label'] = $label;
+		} else {
+			$args['aria-label'] = $label;
+		}
+
+		return $args;
+	}
+);
+
+/**
  * Copyright is intentionally omitted from the public site.
  */
 add_filter(
