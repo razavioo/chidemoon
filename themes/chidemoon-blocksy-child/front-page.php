@@ -75,7 +75,7 @@ $hero_stats = chidemoon_home_hero_stats();
 		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی کالاهای خانه است. هر مطلب از تحریریه می‌گذرد و هر کالا پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
 		<div class="chidemoon-home__actions">
 			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'گشت در کالاهای منتخب', 'chidemoon-blocksy-child' ); ?></a>
-			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'مطالعه‌ی مجله', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
+			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'مطالعه‌ی مجله', 'chidemoon-blocksy-child' ); ?></a>
 		</div>
 		<?php if ( ! empty( $hero_stats ) ) : ?>
 		<dl class="chidemoon-home__hero-meta">
@@ -117,7 +117,7 @@ $featured_category   = chidemoon_blocksy_primary_category( $featured_id );
 <p class="chidemoon-featured__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $featured_story ), 32 ) ); ?></p>
 <div class="chidemoon-featured__meta">
 <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $featured_story ) ); ?>"><?php echo esc_html( get_the_date( '', $featured_story ) ); ?></time>
-<a class="chidemoon-text-link" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">خواندن راهنما<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">خواندن راهنما</a>
 </div>
 </div>
 </article>
@@ -145,7 +145,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 </div>
 </article>
 <?php endforeach; ?>
-<a class="chidemoon-side-story__all" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">همه مطالب مجله<span aria-hidden="true">←</span></a>
+<a class="chidemoon-side-story__all" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">همه مطالب مجله</a>
 </div>
 </section>
 <?php endif; ?>
@@ -155,7 +155,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <div>
 <h2 id="chidemoon-latest-heading">آخرین مطالب</h2>
 </div>
-<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله</a>
 </div>
 <div class="chidemoon-card-grid chidemoon-card-grid--stories">
 <?php foreach ( $grid_stories as $grid_index => $grid_id ) : ?>
@@ -170,7 +170,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <div>
 <h2 id="chidemoon-products-heading">کالاهای برگزیده</h2>
 </div>
-<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه کالاها<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه کالاها</a>
 </div>
 
 <?php if ( ! empty( $products ) ) : ?>
@@ -209,13 +209,11 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <span class="chidemoon-eyebrow">دو تا چهار کالا</span>
 <strong>مقایسه‌های شفاف</strong>
 <span>شواهد بررسی‌شده، مبادلات روشن، بدون توصیه‌ی خودکار.</span>
-<i aria-hidden="true">←</i>
 </a>
 <a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
 <span class="chidemoon-eyebrow">یک اتاق را بچین</span>
 <strong>از تصویر بخر</strong>
 <span>ترکیب‌های ادیتوریال متصل به پیشنهاد مستقیم فروشنده.</span>
-<i aria-hidden="true">←</i>
 </a>
 </section>
 </main>
