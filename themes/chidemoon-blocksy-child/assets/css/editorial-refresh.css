@@ -1829,7 +1829,9 @@ html {
 
 	.chidemoon-story-card--compact {
 		display: grid;
-		grid-template-columns: 7.5rem minmax(0, 1fr);
+		/* The media cell must shrink with the card: a fixed track here is what
+		 * pushed the badge over the body text on narrow screens. */
+		grid-template-columns: clamp(6rem, 34vw, 7.5rem) minmax(0, 1fr);
 	}
 
 	.chidemoon-story-card--compact .chidemoon-card__media {
@@ -2535,6 +2537,11 @@ html {
 	.chidemoon-story-card--compact .chidemoon-card__media {
 		min-height: 6.5rem;
 		position: relative;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__badge {
+		max-width: calc(100% - 1rem);
+		overflow-wrap: anywhere;
 	}
 }
 
