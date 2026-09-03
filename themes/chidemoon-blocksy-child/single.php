@@ -17,8 +17,8 @@ $primary_category = chidemoon_blocksy_primary_category( (int) get_queried_object
 	<?php while ( have_posts() ) : ?>
 		<?php the_post(); ?>
 		<header class="chidemoon-article__hero chidemoon-section-shell">
-			<?php if ( ! empty( $categories ) ) : ?>
-				<a class="chidemoon-eyebrow chidemoon-article__badge" href="<?php echo esc_url( get_category_link( $categories[0]->term_id ) ); ?>"><?php echo esc_html( $categories[0]->name ); ?></a>
+			<?php if ( $primary_category instanceof WP_Term ) : ?>
+				<a class="chidemoon-eyebrow chidemoon-article__badge" href="<?php echo esc_url( get_category_link( $primary_category->term_id ) ); ?>"><?php echo esc_html( $primary_category->name ); ?></a>
 			<?php else : ?>
 				<p class="chidemoon-eyebrow"><?php esc_html_e( 'مجله چیدمون', 'chidemoon-blocksy-child' ); ?></p>
 			<?php endif; ?>
