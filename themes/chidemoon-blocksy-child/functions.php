@@ -328,6 +328,43 @@ add_filter(
 );
 
 /**
+ * Product review form: drop the "required fields" boilerplate line, rebuild
+ * the empty-state heading in proper Persian (the outer quotes WooCommerce
+ * adds collide with «» already used inside product titles), and translate
+ * the Name/Email labels WooCommerce leaves in English on fa_IR sites.
+ */
+add_filter(
+	'woocommerce_product_review_comment_form_args',
+	static function ( array $args ): array {
+		$args['comment_notes_before'] = '';
+
+		$is_first_review = str_contains( $args['title_reply'], '&ldquo;' )
+			|| str_contains( $args['title_reply'], '“' );
+
+		if ( $is_first_review ) {
+			$product_title = get_the_title();
+			$quoted        = str_contains( $product_title, '«' )
+				? $product_title
+				: '«' . $product_title . '»';
+
+			$args['title_reply'] = 'اولین کسی باشید که دیدگاهی دربارهٔ ' . $quoted . ' ثبت می‌کند';
+		}
+
+		foreach ( array( 'author', 'email' ) as $field_key ) {
+			if ( ! empty( $args['fields'][ $field_key ] ) ) {
+				$args['fields'][ $field_key ] = str_replace(
+					array( '>Name', '>Email' ),
+					array( '>نام', '>ایمیل' ),
+					$args['fields'][ $field_key ]
+				);
+			}
+		}
+
+		return $args;
+	}
+);
+
+/**
  * Copyright is intentionally omitted from the public site.
  */
 add_filter(
@@ -441,6 +478,68 @@ function chidemoon_blocksy_primary_category( int $post_id ): ?WP_Term {
 }
 
 /**
+ * Estimate the reading time of a post in minutes for the article meta row.
+ * Persian prose is measured at roughly 180 words per minute.
+ */
+function chidemoon_reading_time( int $post_id ): int {
+	$content = get_post_field( 'post_content', $post_id );
+	$words   = preg_split( '/\s+/u', wp_strip_all_tags( $content ), -1, PREG_SPLIT_NO_EMPTY );
+
+	return max( 1, (int) ceil( ( is_array( $words ) ? count( $words ) : 0 ) / 180 ) );
+}
+
+/**
+ * Number of records in the current archive query, safe outside the loop.
+ */
+function chidemoon_archive_record_count(): int {
+	return isset( $GLOBALS['wp_query']->found_posts ) ? (int) $GLOBALS['wp_query']->found_posts : 0;
+}
+
+/**
+ * Honest launch counts for the home hero. Zero rows are omitted by the
+ * caller so an unprepared site never advertises numbers it cannot back.
+ *
+ * @return array<string, int> label => count.
+ */
+function chidemoon_home_hero_stats(): array {
+	$stats = array();
+
+	$story_count = wp_count_posts( 'post' );
+	if ( $story_count instanceof stdClass && (int) $story_count->publish > 0 ) {
+		$stats['راهنمای منتشرشده'] = (int) $story_count->publish;
+	}
+
+	if ( taxonomy_exists( 'product_cat' ) ) {
+		$category_count = wp_count_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true ) );
+		if ( is_numeric( $category_count ) && (int) $category_count > 0 ) {
+			$stats['دسته‌بندی فعال'] = (int) $category_count;
+		}
+	}
+
+	if ( post_type_exists( 'product' ) ) {
+		$product_count = wp_count_posts( 'product' );
+		if ( $product_count instanceof stdClass && (int) $product_count->publish > 0 ) {
+			$stats['کالای بررسی‌شده'] = (int) $product_count->publish;
+		}
+	}
+
+	return $stats;
+}
+
+/**
+ * WooCommerce stores an optional category banner as the term thumbnail.
+ */
+function chidemoon_term_thumbnail_id( ?WP_Term $term ): int {
+	if ( ! $term instanceof WP_Term || ! taxonomy_exists( $term->taxonomy ) ) {
+		return 0;
+	}
+
+	$thumbnail_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
+
+	return is_numeric( $thumbnail_id ) ? (int) $thumbnail_id : 0;
+}
+
+/**
  * The presentation layer deliberately reads only public WordPress fields. It
  * does not infer product claims, merchant links, review state, or affiliate data.
  *
@@ -532,7 +631,7 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
 						<a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product_id ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-blocksy-child' ); ?></a>
 						<?php echo Chidemoon_Core_Compare::control( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php else : ?>
-						<a class="chidemoon-button" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'مشاهدهٔ جزئیات', 'chidemoon-blocksy-child' ); ?></a>
+						<a class="chidemoon-button" href="<?php echo esc_url( $permalink ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-blocksy-child' ); ?></a>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -545,13 +644,16 @@ function chidemoon_blocksy_render_product_cards( array $products ): void {
  * A deliberate empty state avoids visual placeholder content before the
  * editorial team has reviewed real items for publication.
  */
-function chidemoon_blocksy_render_empty_state( string $title, string $description ): void {
+function chidemoon_blocksy_render_empty_state( string $title, string $description, string $action_url = '', string $action_label = '' ): void {
 	?>
 	<div class="chidemoon-empty-state">
-		<span class="chidemoon-empty-state__index" aria-hidden="true">01</span>
+		<span class="chidemoon-empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M3 9.5h18"/></svg></span>
 		<div>
 			<h3><?php echo esc_html( $title ); ?></h3>
 			<p><?php echo esc_html( $description ); ?></p>
+			<?php if ( '' !== $action_url && '' !== $action_label ) : ?>
+				<a class="chidemoon-button" href="<?php echo esc_url( $action_url ); ?>"><?php echo esc_html( $action_label ); ?></a>
+			<?php endif; ?>
 		</div>
 	</div>
 	<?php

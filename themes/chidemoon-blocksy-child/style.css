@@ -265,8 +265,7 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 .chidemoon-eyebrow,
 .chidemoon-card__meta,
 .chidemoon-category-link__index,
-.chidemoon-category-link__count,
-.chidemoon-empty-state__index {
+.chidemoon-category-link__count {
 	color: var(--chidemoon-muted);
 	font-family: var(--chidemoon-font-ui);
 	font-size: 0.72rem;
@@ -747,7 +746,14 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-home__journal .chidemoon-empty-state {
+	background: rgba(255, 252, 247, 0.06);
 	border-color: rgba(255, 252, 247, 0.25);
+}
+
+.chidemoon-home__journal .chidemoon-empty-state__icon {
+	background: transparent;
+	border-color: rgba(255, 252, 247, 0.35);
+	color: var(--chidemoon-clay-soft, var(--chidemoon-clay));
 }
 
 .chidemoon-home__journal .chidemoon-empty-state :where(h3, p) {
@@ -810,17 +816,38 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-empty-state {
-	align-items: start;
-	background: transparent;
-	border-block: 1px solid var(--chidemoon-line);
+	align-items: center;
+	background: color-mix(in srgb, var(--chidemoon-sage) 28%, var(--chidemoon-surface));
+	border: 1px dashed var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-lg);
 	display: grid;
-	gap: 1rem;
+	gap: clamp(1rem, 2.6vw, 1.6rem);
 	grid-template-columns: auto minmax(0, 1fr);
-	padding: clamp(1.25rem, 4vw, 2.35rem) 0;
+	padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-.chidemoon-empty-state__index {
+.chidemoon-empty-state__icon {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 999px;
+	box-shadow: var(--chidemoon-shadow-soft);
 	color: var(--chidemoon-clay);
+	display: flex;
+	flex: 0 0 auto;
+	height: clamp(3.2rem, 6vw, 4.2rem);
+	justify-content: center;
+	width: clamp(3.2rem, 6vw, 4.2rem);
+}
+
+.chidemoon-empty-state__icon svg {
+	fill: none;
+	height: 45%;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.6;
+	width: 45%;
 }
 
 .chidemoon-empty-state h3 {
@@ -837,6 +864,10 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	line-height: 1.8;
 	margin: 0.55rem 0 0;
 	max-width: 46rem;
+}
+
+.chidemoon-empty-state .chidemoon-button {
+	margin-top: 1.1rem;
 }
 
 .chidemoon-archive,

@@ -77,7 +77,8 @@
 
 	function comparisonUrl(items) {
 		var ids = items.map(function (item) { return item.id; }).join(',');
-		return config.compareUrl + (config.compareUrl.indexOf('?') === -1 ? '?' : '&') + 'products=' + encodeURIComponent(ids);
+		var url = config.compareUrl + (config.compareUrl.indexOf('?') === -1 ? '?' : '&') + 'products=' + encodeURIComponent(ids);
+		return url + '#chidemoon-comparison-table';
 	}
 
 	function syncPageSelection() {
@@ -138,6 +139,11 @@
 						announce(config.labels.needMore);
 						return;
 					}
+					var tableSection = document.getElementById('chidemoon-comparison-table');
+					if (tableSection && document.querySelector('.chidemoon-comparison-table')) {
+						tableSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						return;
+					}
 					window.location.assign(comparisonUrl(selectedItems));
 				}
 			});
@@ -162,10 +168,26 @@
 		setBarOffset(bar);
 	}
 
+	function syncStatus(items) {
+		var strip = document.querySelector('[data-comparison-status]');
+		if (!strip) return;
+		strip.hidden = items.length === 0;
+		if (!items.length) return;
+		var count = strip.querySelector('[data-comparison-status-count]');
+		if (count) count.textContent = items.length + ' ' + config.labels.count + (items.length < 2 ? ' — ' + config.labels.needMore : '');
+		var chips = strip.querySelector('[data-comparison-status-chips]');
+		if (chips) {
+			chips.innerHTML = items.map(function (item) {
+				return '<span class="chidemoon-comparison-status__chip">' + escapeHtml(item.name || ('#' + item.id)) + '</span>';
+			}).join('');
+		}
+	}
+
 	function refresh() {
 		var items = read();
 		syncControls(items);
 		renderBar(items);
+		syncStatus(items);
 		if (persistenceFailed && !persistenceNoticeShown) {
 			persistenceNoticeShown = true;
 			announce(config.labels.sessionOnly);
@@ -216,13 +238,22 @@
 	}
 
 	function bind() {
+		var statusCta = document.querySelector('[data-comparison-status] .chidemoon-comparison-status__cta');
+		if (statusCta) {
+			statusCta.addEventListener('click', function (event) {
+				var table = document.getElementById('chidemoon-comparison-table');
+				if (!table || !document.querySelector('.chidemoon-comparison-table')) return;
+				event.preventDefault();
+				table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		}
 		document.addEventListener('click', function (event) {
 			var tableRemove = event.target.closest('.chidemoon-comparison-table__remove');
 			if (tableRemove) {
 				event.preventDefault();
 				write(read().filter(function (item) { return Number(item.id) !== Number(tableRemove.dataset.compareProduct); }));
 				var remaining = read();
-				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl);
+				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl + '#chidemoon-comparison-table');
 				return;
 			}
 			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-comparison-search__result');

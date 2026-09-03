@@ -24,9 +24,12 @@ $primary_category = chidemoon_blocksy_primary_category( (int) get_queried_object
 			<?php endif; ?>
 			<h1><?php the_title(); ?></h1>
 			<div class="chidemoon-article__meta">
+				<?php echo get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), array( 'extra_attr' => 'loading="lazy"' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<span class="chidemoon-article__author"><?php the_author(); ?></span>
+				<span aria-hidden="true">·</span>
 				<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 				<span aria-hidden="true">·</span>
-				<span><?php the_author(); ?></span>
+				<span class="chidemoon-article__reading-time"><?php echo esc_html( sprintf( '%s دقیقه مطالعه', chidemoon_fa_digits( chidemoon_reading_time( (int) get_queried_object_id() ) ) ) ); ?></span>
 			</div>
 			<?php if ( has_excerpt() ) : ?>
 				<p class="chidemoon-article__lede"><?php echo esc_html( get_the_excerpt() ); ?></p>

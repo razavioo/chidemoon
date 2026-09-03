@@ -101,6 +101,14 @@ html {
 	font-size: clamp(1.55rem, 2.4vw, 2.25rem);
 }
 
+/* Blocksy's own heading rules otherwise out-rank the zero-specificity
+ * :where() defaults in typography.css and swap the display face. */
+.chidemoon-section-heading :is(h2, h3) {
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+	letter-spacing: 0;
+}
+
 .chidemoon-card,
 .chidemoon-featured,
 .chidemoon-side-story {
@@ -258,8 +266,100 @@ html {
 	padding: 0.8rem;
 }
 
+/* Product card: eyebrow category, clamped title, and a hero price so the
+ * commerce signal outweighs editorial chrome. */
+.chidemoon-product-card .chidemoon-card__body {
+	gap: 0.5rem;
+}
+
+.chidemoon-product-card .chidemoon-card__meta {
+	margin: 0;
+}
+
+.chidemoon-product-card .chidemoon-card__meta span {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-card .chidemoon-card__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+	line-height: 1.7;
+	overflow: hidden;
+}
+
 .chidemoon-product-card__price {
-	font-size: 0.86rem;
+	align-items: baseline;
+	color: var(--chidemoon-ink);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.04rem;
+	font-weight: 800;
+	gap: 0.35rem;
+	line-height: 1.5;
+	margin: 0;
+}
+
+.chidemoon-product-card__price .woocommerce-Price-currencySymbol {
+	color: var(--chidemoon-muted);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-card__price del {
+	color: var(--chidemoon-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.chidemoon-product-card__price ins {
+	text-decoration: none;
+}
+
+.chidemoon-product-card__pending {
+	color: var(--chidemoon-muted);
+	font-size: 0.85rem;
+	margin: 0;
+}
+
+/* Related products on the single product page render WooCommerce's own loop
+ * markup, so the mature price treatment is mirrored onto it. */
+.chidemoon-product-page ul.products li.product .price {
+	align-items: baseline;
+	color: var(--chidemoon-ink);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.04rem;
+	font-weight: 800;
+	gap: 0.35rem;
+	line-height: 1.5;
+}
+
+.chidemoon-product-page ul.products li.product .price del {
+	color: var(--chidemoon-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.chidemoon-product-page ul.products li.product .price .woocommerce-Price-currencySymbol {
+	color: var(--chidemoon-muted);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-page ul.products li.product .price ins {
+	text-decoration: none;
+}
+
+.chidemoon-product-page ul.products li.product .woocommerce-loop-product__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
 }
 
 .chidemoon-category-grid {
@@ -865,14 +965,17 @@ html {
  * treatment as the catalogue, instead of raw WooCommerce defaults. */
 .chidemoon-product-page #reviews {
 	font-family: var(--chidemoon-font-body);
+	text-align: start;
 }
 
 .chidemoon-product-page #reviews h2,
 .chidemoon-product-page #reviews .comment-reply-title {
+	display: block;
 	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.25rem, 2vw, 1.6rem);
 	font-weight: 700;
 	margin-block: 0 1.25rem;
+	text-align: start;
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs {
@@ -900,6 +1003,7 @@ html {
 .woocommerce div.product .woocommerce-tabs ul.tabs li a {
 	border-block-end: 2px solid transparent;
 	color: var(--chidemoon-muted);
+	font-size: 1.05rem;
 	font-weight: 600;
 	padding: 0.35rem 0.15rem 0.65rem;
 	text-decoration: none;
@@ -924,9 +1028,10 @@ html {
 	border: 1px dashed var(--chidemoon-line-strong);
 	border-radius: var(--chidemoon-radius);
 	color: var(--chidemoon-muted);
+	font-size: 1rem;
 	margin: 0 0 2rem;
 	padding: 1.5rem 1.25rem;
-	text-align: center;
+	text-align: start;
 }
 
 .chidemoon-product-page #reviews .commentlist {
@@ -963,8 +1068,17 @@ html {
 
 .chidemoon-product-page #reviews .comment-text .meta {
 	color: var(--chidemoon-muted);
-	font-size: 0.92rem;
+	font-size: 0.95rem;
 	margin-block: 0.15rem 0.6rem;
+}
+
+.chidemoon-product-page #reviews .comment-text .meta strong {
+	color: var(--chidemoon-ink);
+}
+
+.chidemoon-product-page #reviews .comment-text .description {
+	font-size: 1rem;
+	line-height: 1.9;
 }
 
 .chidemoon-product-page #reviews .comment-text .meta strong {
@@ -1014,7 +1128,8 @@ html {
 	border: 1px solid var(--chidemoon-line);
 	border-radius: var(--chidemoon-radius-sm);
 	font-family: var(--chidemoon-font-body);
-	padding: 0.65rem 0.8rem;
+	font-size: 1rem;
+	padding: 0.7rem 0.9rem;
 	width: 100%;
 }
 
@@ -1025,32 +1140,95 @@ html {
 
 .chidemoon-product-page #review_form label {
 	color: var(--chidemoon-ink);
+	font-size: 1rem;
 	font-weight: 600;
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent {
+	margin-block: 1.1rem 0;
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent label {
+	align-items: center;
+	display: inline-flex;
+	font-size: 0.95rem;
+	font-weight: 500;
+	gap: 0.55rem;
+}
+
+/* Blocksy paints this checkbox with appearance:none and a :before tick;
+ * keep that structure but re-color it to the editorial palette so the
+ * checked state is clean instead of the theme's off-brand accent. */
+.chidemoon-product-page #review_form input[type="checkbox"] {
+	--top: 0;
+	border-color: var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	height: 1.15rem;
+	width: 1.15rem;
+}
+
+.chidemoon-product-page #review_form input[type="checkbox"]:checked {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+}
+
+.chidemoon-product-page #review_form input[type="checkbox"]:focus-visible {
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 40%, transparent);
+	outline-offset: 2px;
+}
+
+.chidemoon-product-page #review_form .comment-form-rating label {
+	display: block;
+	margin-block-end: 0.5rem;
+}
+
+.chidemoon-product-page #review_form .comment-form-rating {
+	margin-block: 1.25rem;
+}
+
+.chidemoon-product-page #review_form .comment-form-rating label {
+	display: block;
+	margin-block: 0 0.6rem;
+}
+
+.chidemoon-product-page #review_form .stars {
+	direction: ltr;
+	display: inline-flex;
+	font-size: 1.6rem;
+	gap: 0.35rem;
+}
+
+.chidemoon-product-page #review_form .stars a {
+	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-product-page #review_form .stars a.active,
+.chidemoon-product-page #review_form .stars a:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .stars a:hover ~ a {
+	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+}
+
+.chidemoon-product-page #review_form .required {
+	color: var(--chidemoon-clay);
 }
 
 .chidemoon-product-page #review_form .comment-form-cookies-consent {
 	align-items: center;
 	display: flex;
-	gap: 0.5rem;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	margin-block: 1.1rem 0.25rem;
 }
 
-.chidemoon-product-page #review_form input[type="checkbox"] {
-	accent-color: var(--chidemoon-forest);
-}
-
-.chidemoon-product-page #review_form .stars {
-	display: inline-block;
-	font-size: 1.3rem;
-}
-
-.chidemoon-product-page #review_form .stars a,
-.chidemoon-product-page #review_form .stars a::before {
-	color: var(--chidemoon-clay);
-}
-
-.chidemoon-product-page #review_form .stars a:hover ~ a,
-.chidemoon-product-page #review_form .stars a:hover ~ a::before {
-	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+.chidemoon-product-page #review_form .comment-form-cookies-consent label {
+	font-size: 0.95rem;
+	font-weight: 500;
+	margin: 0;
 }
 
 .chidemoon-product-page #review_form .form-submit input[type="submit"] {
@@ -1060,8 +1238,9 @@ html {
 	color: #fffcf7;
 	cursor: pointer;
 	font-family: var(--chidemoon-font-body);
+	font-size: 1rem;
 	font-weight: 700;
-	padding: 0.8rem 1.6rem;
+	padding: 0.8rem 1.75rem;
 	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
@@ -1391,16 +1570,6 @@ html {
 	.woocommerce div.product div.images img {
 		max-height: 28rem;
 		object-fit: contain;
-	}
-
-	.woocommerce div.product .woocommerce-tabs ul.tabs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 1rem;
-	}
-
-	.woocommerce div.product .woocommerce-tabs ul.tabs li {
-		margin: 0;
 	}
 
 	.woocommerce div.product .single_add_to_cart_button {
@@ -1872,6 +2041,53 @@ html {
 .chidemoon-comparison-picker,
 .chidemoon-comparison-table-section {
 	padding-block: clamp(2rem, 5vw, 4rem);
+	scroll-margin-block-start: 6.5rem;
+}
+
+/* "Your selections" strip: tells the visitor where their comparison lives
+ * and offers a one-click jump to the evidence table below. */
+.chidemoon-comparison-status {
+	align-items: center;
+	background: color-mix(in srgb, var(--chidemoon-sage) 45%, var(--chidemoon-surface));
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.9rem 1.4rem;
+	margin-top: clamp(1.25rem, 3vw, 2rem);
+	padding: clamp(1rem, 2.4vw, 1.4rem) clamp(1rem, 2.6vw, 1.6rem);
+}
+
+.chidemoon-comparison-status[hidden] {
+	display: none;
+}
+
+.chidemoon-comparison-status__count {
+	color: var(--chidemoon-forest);
+	font-weight: 800;
+	margin: 0;
+}
+
+.chidemoon-comparison-status__chips {
+	display: flex;
+	flex: 1 1 14rem;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.chidemoon-comparison-status__chip {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-forest-deep, var(--chidemoon-forest));
+	font-size: 0.82rem;
+	font-weight: 700;
+	padding: 0.35rem 0.8rem;
+}
+
+.chidemoon-comparison-status__cta {
+	margin-inline-start: auto;
 }
 
 .chidemoon-comparison-picker > p {
@@ -1958,11 +2174,12 @@ html {
 }
 
 .chidemoon-product-card__actions {
+	border-top: 1px solid var(--chidemoon-line);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.6rem;
 	margin-top: auto;
-	padding-top: 1rem;
+	padding-top: 0.9rem;
 }
 
 .chidemoon-product-card__actions .chidemoon-button {
@@ -1971,7 +2188,9 @@ html {
 }
 
 .chidemoon-product-card__actions .chidemoon-compare-control {
+	flex: 0 0 auto;
 	margin-top: 0;
+	min-height: 2.8rem;
 }
 
 /* The WooCommerce loop CTA ("اطلاعات بیشتر") must match the editorial

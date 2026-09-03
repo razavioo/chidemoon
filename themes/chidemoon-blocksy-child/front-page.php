@@ -63,13 +63,37 @@ if ( ! is_wp_error( $product_categories ) ) {
 	);
 }
 $shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' );
+$hero_stats = chidemoon_home_hero_stats();
 ?>
 
 <main id="primary" class="site-main chidemoon-home">
 
-<?php if ( ! $featured_story instanceof WP_Post ) : ?>
-<h1 class="chidemoon-sr-only"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
-<?php endif; ?>
+<section class="chidemoon-home__hero chidemoon-section-shell" aria-label="معرفی چیدمون">
+	<div class="chidemoon-home__hero-copy">
+		<p class="chidemoon-eyebrow"><?php echo esc_html( get_bloginfo( 'name' ) ); ?> · <?php esc_html_e( 'مجله و فروشگاه چیدمان خانه', 'chidemoon-blocksy-child' ); ?></p>
+		<h1><?php esc_html_e( 'خانه را با شواهد بچین، نه با تبلیغ', 'chidemoon-blocksy-child' ); ?></h1>
+		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی کالاهای خانه است. هر مطلب از تحریریه می‌گذرد و هر کالا پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
+		<div class="chidemoon-home__actions">
+			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'گشت در کالاهای منتخب', 'chidemoon-blocksy-child' ); ?></a>
+			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'مطالعه‌ی مجله', 'chidemoon-blocksy-child' ); ?><span aria-hidden="true">←</span></a>
+		</div>
+		<?php if ( ! empty( $hero_stats ) ) : ?>
+		<dl class="chidemoon-home__hero-meta">
+			<?php foreach ( $hero_stats as $stat_label => $stat_count ) : ?>
+			<div>
+				<dd><?php echo esc_html( chidemoon_fa_digits( $stat_count ) ); ?></dd>
+				<dt><?php echo esc_html( $stat_label ); ?></dt>
+			</div>
+			<?php endforeach; ?>
+		</dl>
+		<?php endif; ?>
+	</div>
+	<div class="chidemoon-home__hero-mark" aria-hidden="true">
+		<span><?php echo esc_html( mb_substr( get_bloginfo( 'name' ), 0, 1 ) ); ?></span>
+		<i></i>
+		<b></b>
+	</div>
+</section>
 
 <?php if ( $featured_story instanceof WP_Post ) : ?>
 <section class="chidemoon-home__top chidemoon-section-shell" aria-label="برجسته‌ترین مطالب">

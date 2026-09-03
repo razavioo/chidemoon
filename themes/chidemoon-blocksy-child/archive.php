@@ -11,6 +11,7 @@ get_header();
 ?>
 
 <main id="primary" class="site-main chidemoon-archive">
+	<?php $archive_count = chidemoon_archive_record_count(); ?>
 	<header class="chidemoon-archive__hero chidemoon-section-shell">
 		<p class="chidemoon-eyebrow"><?php esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
 		<h1><?php the_archive_title(); ?></h1>
@@ -18,6 +19,11 @@ get_header();
 			<div class="chidemoon-archive__description"><?php the_archive_description(); ?></div>
 		<?php else : ?>
 			<p><?php esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
+		<?php endif; ?>
+		<?php if ( $archive_count > 0 ) : ?>
+			<p class="chidemoon-hero-facts">
+				<span class="chidemoon-hero-facts__item"><strong><?php echo esc_html( chidemoon_fa_digits( $archive_count ) ); ?></strong><?php esc_html_e( 'مطلب منتشرشده', 'chidemoon-blocksy-child' ); ?></span>
+			</p>
 		<?php endif; ?>
 	</header>
 
