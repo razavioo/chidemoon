@@ -2607,21 +2607,9 @@ html {
 	box-shadow: 0 6px 16px rgba(18, 63, 52, 0.3);
 }
 
-.chidemoon-comparison-steps__num {
-	align-items: center;
-	background: var(--chidemoon-surface);
-	border-radius: 999px;
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--chidemoon-surface) 55%, transparent);
-	color: var(--chidemoon-forest);
-	display: grid;
-	font-size: 0.72rem;
-	font-weight: 800;
-	height: 1.2rem;
-	inset-block-start: -0.45rem;
-	inset-inline-end: -0.45rem;
-	place-items: center;
-	position: absolute;
-	width: 1.2rem;
+.chidemoon-comparison-steps__count {
+	color: var(--chidemoon-clay);
+	margin-inline-end: 0.1rem;
 }
 
 .chidemoon-comparison-steps li:hover .chidemoon-comparison-steps__badge {
