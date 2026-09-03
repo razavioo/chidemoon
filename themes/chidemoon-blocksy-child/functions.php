@@ -922,10 +922,10 @@ function chidemoon_blocksy_navigation_image_id( int $post_id ): int {
  * leads with the sibling post's imagery so the journal feels continuous
  * instead of ending in text-only links.
  *
- * @param WP_Post|null $adjacent Adjacent post, or null when the journal ends here.
+ * @param WP_Post|string|null $adjacent Adjacent post; WP core may also return an empty string when the journal ends here.
  * @param bool         $previous True for the previous card, false for next.
  */
-function chidemoon_blocksy_render_navigation_card( ?WP_Post $adjacent, bool $previous ): void {
+function chidemoon_blocksy_render_navigation_card( $adjacent, bool $previous ): void {
 	if ( ! $adjacent instanceof WP_Post || 'publish' !== get_post_status( $adjacent ) ) {
 		return;
 	}
