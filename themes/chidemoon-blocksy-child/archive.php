@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main chidemoon-archive">
+<main id="primary" class="site-main chidemoon-archive<?php echo is_search() ? ' chidemoon-archive--search' : ''; ?>">
 	<?php
 	$archive_count = chidemoon_archive_record_count();
 
@@ -18,37 +18,42 @@ get_header();
 	// present it as a prompt to search instead of a fake result set.
 	$is_blank_search = is_search() && '' === trim( (string) get_query_var( 's' ) );
 	?>
-	<header class="chidemoon-archive__hero chidemoon-section-shell">
-		<p class="chidemoon-eyebrow"><?php is_search() ? esc_html_e( 'نتایج جستجو', 'chidemoon-blocksy-child' ) : esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
-		<h1>
-			<?php if ( $is_blank_search ) : ?>
-				<?php esc_html_e( 'جستجو در چیدمون', 'chidemoon-blocksy-child' ); ?>
-			<?php elseif ( is_search() ) : ?>
-				<?php printf( esc_html__( 'نتایج برای «%s»', 'chidemoon-blocksy-child' ), esc_html( get_search_query() ) ); ?>
-			<?php else : ?>
-				<?php the_archive_title(); ?>
-			<?php endif; ?>
-		</h1>
-		<?php if ( get_the_archive_description() ) : ?>
-			<div class="chidemoon-archive__description"><?php the_archive_description(); ?></div>
-		<?php elseif ( is_search() ) : ?>
-			<p><?php esc_html_e( 'نتایج از سراسر چیدمون: مجله، راهنماها و محصولات منتخب. عبارت کوتاه‌تر معمولاً نتیجه‌ی دقیق‌تری می‌دهد.', 'chidemoon-blocksy-child' ); ?></p>
-		<?php else : ?>
-			<p><?php esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
-		<?php endif; ?>
-		<?php if ( $archive_count > 0 && ! $is_blank_search ) : ?>
-			<p class="chidemoon-hero-facts">
-				<span class="chidemoon-hero-facts__item"><strong><?php echo esc_html( chidemoon_fa_digits( $archive_count ) ); ?></strong><?php is_search() ? esc_html_e( 'نتیجه پیدا شد', 'chidemoon-blocksy-child' ) : esc_html_e( 'مطلب منتشرشده', 'chidemoon-blocksy-child' ); ?></span>
-			</p>
-		<?php endif; ?>
-	</header>
 
-	<section class="chidemoon-section-shell">
-		<?php if ( is_search() ) : ?>
-			<div class="chidemoon-search-refine">
+	<?php if ( is_search() ) : ?>
+		<header class="chidemoon-archive__hero chidemoon-archive__hero--search chidemoon-section-shell">
+			<?php if ( ! $is_blank_search ) : ?>
+				<div class="chidemoon-archive__hero-meta">
+					<p class="chidemoon-eyebrow"><?php esc_html_e( 'نتایج جستجو', 'chidemoon-blocksy-child' ); ?></p>
+					<?php if ( $archive_count > 0 ) : ?>
+						<span class="chidemoon-archive__hero-count"><strong><?php echo esc_html( chidemoon_fa_digits( $archive_count ) ); ?></strong><?php esc_html_e( 'نتیجه', 'chidemoon-blocksy-child' ); ?></span>
+					<?php endif; ?>
+				</div>
+				<h1><?php printf( esc_html__( 'نتایج برای «%s»', 'chidemoon-blocksy-child' ), esc_html( get_search_query() ) ); ?></h1>
+			<?php else : ?>
+				<h1><?php esc_html_e( 'جستجو در چیدمون', 'chidemoon-blocksy-child' ); ?></h1>
+			<?php endif; ?>
+			<div class="chidemoon-archive__hero-search">
 				<?php get_search_form(); ?>
 			</div>
-		<?php endif; ?>
+		</header>
+	<?php else : ?>
+		<header class="chidemoon-archive__hero chidemoon-section-shell">
+			<p class="chidemoon-eyebrow"><?php esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
+			<h1><?php the_archive_title(); ?></h1>
+			<?php if ( get_the_archive_description() ) : ?>
+				<div class="chidemoon-archive__description"><?php the_archive_description(); ?></div>
+			<?php else : ?>
+				<p><?php esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
+			<?php endif; ?>
+			<?php if ( $archive_count > 0 ) : ?>
+				<p class="chidemoon-hero-facts">
+					<span class="chidemoon-hero-facts__item"><strong><?php echo esc_html( chidemoon_fa_digits( $archive_count ) ); ?></strong><?php esc_html_e( 'مطلب منتشرشده', 'chidemoon-blocksy-child' ); ?></span>
+				</p>
+			<?php endif; ?>
+		</header>
+	<?php endif; ?>
+
+	<section class="chidemoon-section-shell">
 		<?php if ( $is_blank_search ) : ?>
 			<div class="chidemoon-empty-state">
 				<span class="chidemoon-empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span>

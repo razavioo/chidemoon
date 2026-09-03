@@ -2220,6 +2220,16 @@ html {
 	transform: translateY(-2px);
 }
 
+.entry-content .chidemoon-article-product__media {
+	display: block;
+	margin: 0;
+	min-width: 0;
+}
+
+.entry-content .chidemoon-article-product__media .chidemoon-article-product__image {
+	height: 100%;
+}
+
 .entry-content .chidemoon-article-product__image {
 	background: var(--chidemoon-surface-muted);
 	display: block;
@@ -2245,6 +2255,14 @@ html {
 	flex-direction: column;
 	gap: 0.55rem;
 	padding: 1.1rem 1.15rem 1.15rem;
+}
+
+/* wpautop closes a phantom <p> right after the media link of inline
+ * card markup; the browser parses it as an empty node that would add
+ * stray margins between the media and the body. Hide it at every width;
+ * real content never lives in a direct paragraph child of the card. */
+.entry-content .chidemoon-article-product > p:empty {
+	display: none;
 }
 
 .entry-content .chidemoon-article-product__title {
@@ -2383,9 +2401,28 @@ html {
 		grid-template-columns: 1fr;
 	}
 
+	/* Fixed grid areas pin the media and body cells in place. wpautop
+	 * closes a phantom <p> right after the media link of inline card
+	 * markup, and that empty node used to shuffle the two-column grid
+	 * into image-top/body-squeezed fragments; unknown children now fall
+	 * into an implicit row instead of displacing the real cells. */
 	.entry-content .chidemoon-article-product {
 		display: grid;
-		grid-template-columns: minmax(7rem, 34%) 1fr;
+		grid-template-areas: "media body";
+		grid-template-columns: minmax(7.5rem, 36%) 1fr;
+	}
+
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__media,
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__image {
+		grid-area: media;
+	}
+
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__body {
+		grid-area: body;
+	}
+
+	.entry-content .chidemoon-article-product > p:empty {
+		display: none;
 	}
 
 	.entry-content .chidemoon-article-product__image {
@@ -2398,12 +2435,20 @@ html {
 	}
 
 	.entry-content .chidemoon-article-product__excerpt {
-		-webkit-line-clamp: 3;
+		-webkit-line-clamp: 2;
 	}
 
+	.entry-content .chidemoon-article-product__footer {
+		gap: 0.7rem 0.9rem;
+	}
+
+	/* Stack the CTA under the price: the narrow body column cannot fit
+	 * both on one row, so let the button own its full-width tap target. */
 	.entry-content .chidemoon-article-product__cta {
+		flex: 1 1 100%;
 		min-height: 2.6rem;
 		padding: 0.45rem 0.9rem;
+		width: 100%;
 	}
 
 	.ct-footer .ct-container {
@@ -3612,14 +3657,73 @@ html {
 	color: #fffcf7;
 }
 
-/* Search-archive refine box: sits between the hero and the feed. */
-.chidemoon-search-refine {
-	margin-block: 0 clamp(1.75rem, 4vw, 2.75rem);
+/* Search results: a utility header, not a masthead. The query field is the
+ * hero centerpiece; eyebrow, count, and title compress around it so results
+ * start within the first viewport. The field stays reachable without the
+ * separate refine box this replaces. */
+.chidemoon-archive__hero--search {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 16%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	gap: clamp(0.8rem, 1.8vw, 1.15rem);
+	padding-block: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.chidemoon-archive__hero--search h1 {
+	font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+	line-height: 1.5;
+	margin-block: 0;
+	max-width: none;
+}
+
+.chidemoon-archive__hero-meta {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem 0.9rem;
+}
+
+.chidemoon-archive__hero-meta .chidemoon-eyebrow {
+	margin: 0;
+}
+
+.chidemoon-archive__hero-count {
+	align-items: baseline;
+	background: color-mix(in srgb, var(--chidemoon-forest) 9%, var(--chidemoon-surface));
+	border: 1px solid color-mix(in srgb, var(--chidemoon-forest) 24%, transparent);
+	border-radius: 999px;
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	font-size: 0.78rem;
+	font-weight: 700;
+	gap: 0.3rem;
+	line-height: 1.6;
+	padding: 0.18rem 0.8rem;
+}
+
+.chidemoon-archive__hero-count strong {
+	font-family: var(--chidemoon-font-display);
+	font-size: 0.95rem;
+	font-weight: 800;
+}
+
+.chidemoon-archive__hero--search .chidemoon-search-form {
+	margin-inline: 0;
 	max-width: 34rem;
 }
 
-.chidemoon-search-refine .chidemoon-search-form {
-	margin-inline: 0;
+/* The field is the hero centerpiece: a touch more presence than the shared
+ * form, but short of the header-modal scale. */
+.chidemoon-archive__hero--search .chidemoon-search-form__field {
+	padding: 0.5rem;
+	padding-inline-start: 1.1rem;
+}
+
+.chidemoon-archive__hero--search .chidemoon-search-form__field input[type="search"] {
+	min-height: 2.75rem;
+}
+
+/* The refine box is gone, so the feed follows the compact hero directly. */
+.chidemoon-archive--search > .chidemoon-section-shell {
+	padding-top: clamp(1.4rem, 3vw, 2.25rem);
 }
 
 /* Header search modal: a calm paper takeover instead of the near-black
