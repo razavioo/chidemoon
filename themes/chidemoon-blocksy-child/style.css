@@ -417,122 +417,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	padding-block: clamp(1rem, 2.5vw, 2rem) clamp(2.5rem, 5vw, 4rem);
 }
 
-.chidemoon-home__hero {
-	background: var(--chidemoon-surface);
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: var(--chidemoon-radius-lg);
-	display: grid;
-	grid-template-columns: minmax(0, 1.12fr) minmax(16rem, 0.88fr);
-	min-height: min(39rem, 72vh);
-	overflow: hidden;
-	padding-block: clamp(2rem, 7vw, 6.5rem);
-	position: relative;
-}
-
-.chidemoon-home__hero::before {
-	background-image: linear-gradient(var(--chidemoon-line) 1px, transparent 1px), linear-gradient(90deg, var(--chidemoon-line) 1px, transparent 1px);
-	background-size: 3.2rem 3.2rem;
-	content: "";
-	inset: 0;
-	opacity: 0.45;
-	pointer-events: none;
-	position: absolute;
-}
-
-.chidemoon-home__hero-copy {
-	align-self: center;
-	max-width: 43rem;
-	padding: clamp(1rem, 3vw, 3.5rem);
-	position: relative;
-	z-index: 1;
-}
-
-.chidemoon-home__hero h1 {
-	font-size: clamp(3.1rem, 7vw, 6.55rem);
-	hyphens: none;
-	margin: 0.75rem 0 1.4rem;
-	max-width: 13ch;
-	overflow-wrap: normal;
-	word-break: normal;
-}
-
-.chidemoon-home__lede {
-	color: var(--chidemoon-muted);
-	font-size: clamp(1rem, 1.8vw, 1.25rem);
-	line-height: 1.9;
-	margin: 0;
-	max-width: 35rem;
-}
-
-.chidemoon-home__actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
-	margin-top: 2.2rem;
-}
-
-.chidemoon-home__hero-mark {
-	align-items: center;
-	display: flex;
-	justify-content: center;
-	min-height: 20rem;
-	position: relative;
-	z-index: 1;
-}
-
-.chidemoon-home__hero-mark::before,
-.chidemoon-home__hero-mark::after {
-	border: 1px solid var(--chidemoon-forest);
-	border-radius: 50%;
-	content: "";
-	position: absolute;
-}
-
-.chidemoon-home__hero-mark::before {
-	background: var(--chidemoon-sage);
-	height: min(23vw, 17rem);
-	width: min(23vw, 17rem);
-}
-
-.chidemoon-home__hero-mark::after {
-	border-radius: 0;
-	height: min(29vw, 21rem);
-	transform: rotate(16deg);
-	width: min(16vw, 12rem);
-}
-
-.chidemoon-home__hero-mark span {
-	color: var(--chidemoon-forest-deep);
-	font-family: var(--chidemoon-font-display);
-	font-size: clamp(4.5rem, 11vw, 8.5rem);
-	font-weight: 600;
-	letter-spacing: -0.12em;
-	margin-inline-start: -0.15em;
-	position: relative;
-	z-index: 1;
-}
-
-.chidemoon-home__hero-mark i,
-.chidemoon-home__hero-mark b {
-	background: var(--chidemoon-clay);
-	display: block;
-	position: absolute;
-}
-
-.chidemoon-home__hero-mark i {
-	height: 0.75rem;
-	left: 17%;
-	top: 17%;
-	width: 0.75rem;
-}
-
-.chidemoon-home__hero-mark b {
-	bottom: 18%;
-	height: 2.6rem;
-	right: 12%;
-	width: 0.5rem;
-}
-
 .chidemoon-home__section {
 	padding-block: clamp(1.75rem, 3.5vw, 3rem);
 }
@@ -1237,10 +1121,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 @media (max-width: 1024px) {
-	.chidemoon-home__hero {
-		grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.7fr);
-	}
-
 	.chidemoon-card-grid--products,
 	.woocommerce ul.products {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1248,25 +1128,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 @media (max-width: 780px) {
-	.chidemoon-home__hero {
-		grid-template-columns: 1fr;
-		min-height: 0;
-	}
-
-	.chidemoon-home__hero-mark {
-		min-height: 14rem;
-	}
-
-	.chidemoon-home__hero-mark::before {
-		height: 11rem;
-		width: 11rem;
-	}
-
-	.chidemoon-home__hero-mark::after {
-		height: 14rem;
-		width: 8rem;
-	}
-
 	.chidemoon-card-grid--stories,
 	.chidemoon-card-grid--archive,
 	.chidemoon-card-grid--products,
@@ -1308,15 +1169,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		padding-inline: 1rem;
 	}
 
-	.chidemoon-home__hero {
-		margin-inline: 0;
-	}
-
-	.chidemoon-home__hero-copy {
-		padding: 1.2rem;
-	}
-
-	.chidemoon-home__hero h1,
 	.chidemoon-archive__hero h1,
 	.chidemoon-collection-page__hero h1,
 	.chidemoon-shop-archive__intro h1 {
@@ -1329,7 +1181,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		line-height: 1.3;
 	}
 
-	.chidemoon-home__actions,
 	.chidemoon-section-heading {
 		align-items: flex-start;
 		flex-direction: column;
@@ -1374,43 +1225,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
 	}
-}
-
-/* Home hero with a real editorial image */
-.chidemoon-home__hero-mark--image {
-	overflow: hidden;
-}
-
-.chidemoon-home__hero-mark--image::before,
-.chidemoon-home__hero-mark--image::after,
-.chidemoon-home__hero-mark--image i,
-.chidemoon-home__hero-mark--image b {
-	display: none;
-}
-
-.chidemoon-home__hero-mark--image img {
-	filter: saturate(0.92);
-	height: 100%;
-	inset: 0;
-	left: 0;
-	object-fit: cover;
-	position: absolute;
-	width: 100%;
-}
-
-.chidemoon-home__hero-mark--image::after {
-	display: block;
-}
-
-.chidemoon-home__hero-mark--image {
-	position: relative;
-}
-
-.chidemoon-home__hero-mark--image::after {
-	background: linear-gradient(180deg, transparent 55%, rgba(16, 45, 38, 0.32));
-	content: "";
-	inset: 0;
-	position: absolute;
 }
 
 /* Editorial single article */
@@ -1624,21 +1438,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 		position: static;
 	}
 }
-
-.chidemoon-collection-page__image {
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: var(--chidemoon-radius-lg);
-	box-shadow: var(--chidemoon-shadow);
-	margin-block: clamp(1.25rem, 3vw, 2.5rem);
-	overflow: hidden;
-}
-
-.chidemoon-collection-page__image img {
-	display: block;
-	height: auto;
-	width: 100%;
-}
-
 
 /* Magazine top: featured story + side rail */
 .chidemoon-home__top {

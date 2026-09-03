@@ -81,8 +81,8 @@ $hero_stats = chidemoon_home_hero_stats();
 		<dl class="chidemoon-home__hero-meta">
 			<?php foreach ( $hero_stats as $stat_label => $stat_count ) : ?>
 			<div>
-				<dd><?php echo esc_html( chidemoon_fa_digits( $stat_count ) ); ?></dd>
 				<dt><?php echo esc_html( $stat_label ); ?></dt>
+				<dd><?php echo esc_html( chidemoon_fa_digits( $stat_count ) ); ?></dd>
 			</div>
 			<?php endforeach; ?>
 		</dl>

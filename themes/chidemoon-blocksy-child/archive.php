@@ -13,12 +13,12 @@ get_header();
 <main id="primary" class="site-main chidemoon-archive">
 	<?php $archive_count = chidemoon_archive_record_count(); ?>
 	<header class="chidemoon-archive__hero chidemoon-section-shell">
-		<p class="chidemoon-eyebrow"><?php esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
-		<h1><?php the_archive_title(); ?></h1>
+		<p class="chidemoon-eyebrow"><?php is_search() ? esc_html_e( 'نتایج جست‌وجو', 'chidemoon-blocksy-child' ) : esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
+		<h1><?php is_search() ? printf( esc_html__( 'نتایج برای «%s»', 'chidemoon-blocksy-child' ), esc_html( get_search_query() ) ) : the_archive_title(); ?></h1>
 		<?php if ( get_the_archive_description() ) : ?>
 			<div class="chidemoon-archive__description"><?php the_archive_description(); ?></div>
 		<?php else : ?>
-			<p><?php esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
+			<p><?php is_search() ? esc_html_e( 'فقط مطالب منتشرشده‌ی مجله جست‌وجو می‌شوند. عبارت دیگری را امتحان کنید یا از بخش‌های اصلی ادامه دهید.', 'chidemoon-blocksy-child' ) : esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
 		<?php endif; ?>
 		<?php if ( $archive_count > 0 ) : ?>
 			<p class="chidemoon-hero-facts">
