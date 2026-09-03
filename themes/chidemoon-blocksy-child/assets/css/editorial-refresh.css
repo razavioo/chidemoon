@@ -193,7 +193,7 @@ html {
 }
 
 .chidemoon-featured__title {
-	font-size: clamp(1.65rem, 3vw, 2.65rem);
+	font-size: clamp(1.5rem, 2.7vw, 2.3rem);
 	line-height: 1.35;
 }
 
@@ -375,7 +375,7 @@ html {
 }
 
 .chidemoon-route-card strong {
-	font-size: clamp(2rem, 3.5vw, 3.6rem);
+	font-size: clamp(1.8rem, 3vw, 3rem);
 }
 
 /* Archive and collection mastheads are informative, not empty billboards. */
@@ -401,7 +401,7 @@ html {
 .chidemoon-archive__hero h1,
 .chidemoon-collection-page__hero h1,
 .chidemoon-shop-archive__intro h1 {
-	font-size: clamp(2.4rem, 5.5vw, 5rem);
+	font-size: clamp(2.15rem, 4.6vw, 4.1rem);
 	line-height: 1.35;
 	margin-block: 0.5rem 0.8rem;
 	max-width: 18ch;
@@ -416,7 +416,7 @@ html {
 }
 
 .chidemoon-shop-archive__intro h1 {
-	font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+	font-size: clamp(2rem, 4vw, 3.2rem);
 	margin-block: 0.4rem 0.5rem;
 }
 
@@ -657,7 +657,7 @@ html {
 }
 
 .chidemoon-home__hero h1 {
-	font-size: clamp(2.6rem, 5.6vw, 5rem);
+	font-size: clamp(2.35rem, 4.7vw, 4.1rem);
 	line-height: 1.32;
 	margin-block: 0.55rem 1rem;
 	max-width: 16ch;
@@ -953,7 +953,7 @@ html {
 	--theme-line-height: 1.35;
 	--theme-text-transform: none;
 	font-family: var(--chidemoon-font-display);
-	font-size: clamp(2.3rem, 5.2vw, 4.6rem);
+	font-size: clamp(2.05rem, 4.5vw, 3.8rem);
 	font-synthesis: none;
 	font-weight: 700;
 	letter-spacing: 0;
@@ -1407,7 +1407,7 @@ html {
 }
 
 .woocommerce div.product .product_title {
-	font-size: clamp(2rem, 4vw, 3.7rem);
+	font-size: clamp(1.8rem, 3.6vw, 3.1rem);
 	line-height: 1.25;
 }
 
@@ -2012,7 +2012,7 @@ html {
 	.chidemoon-collection-page__hero h1,
 	.chidemoon-shop-archive__intro h1,
 	.chidemoon-article__hero h1 {
-		font-size: clamp(2.1rem, 11vw, 3.1rem);
+		font-size: clamp(1.95rem, 9.5vw, 2.7rem);
 		line-height: 1.35;
 	}
 
@@ -2679,7 +2679,7 @@ html {
 .chidemoon-look-card__header h3 {
 	color: var(--chidemoon-forest);
 	font-family: var(--chidemoon-font-display);
-	font-size: clamp(1.5rem, 3vw, 2.4rem);
+	font-size: clamp(1.4rem, 2.7vw, 2.05rem);
 	line-height: 1.4;
 	margin: 0;
 }
@@ -3263,7 +3263,7 @@ html {
 }
 
 .woocommerce div.product .product_title {
-	font-size: clamp(1.9rem, 3.4vw, 3rem);
+	font-size: clamp(1.75rem, 3vw, 2.6rem);
 	line-height: 1.3;
 }
 
@@ -3451,7 +3451,7 @@ html {
 .chidemoon-error-404__panel h1 {
 	color: var(--chidemoon-forest);
 	font-family: var(--chidemoon-font-display);
-	font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+	font-size: clamp(1.55rem, 3.2vw, 2.4rem);
 	font-weight: 800;
 	letter-spacing: 0;
 	margin: 0.9rem 0 0.8rem;
@@ -3551,6 +3551,12 @@ html {
 
 .chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:hover {
 	background: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:disabled {
+	background: var(--chidemoon-surface-muted);
+	color: var(--chidemoon-muted);
+	cursor: not-allowed;
 }
 
 .chidemoon-search-form__hint {

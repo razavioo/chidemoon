@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 // the only context that earns the hint row and section shortcuts.
 $is_modal  = isset( $args['search_placeholder'] );
 $unique_id = wp_unique_id( 'chidemoon-search-field-' );
+
+// An empty query must never reach the archive as "results": the submit
+// control starts disabled and assets/js/search-form.js keeps it in sync
+// with the field, so only a real phrase can be submitted.
+$has_query = '' !== trim( (string) get_query_var( 's' ) );
 ?>
 <form role="search" method="get" class="chidemoon-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 	<label class="chidemoon-sr-only" for="<?php echo esc_attr( $unique_id ); ?>"><?php esc_html_e( 'جست‌وجو در چیدمون', 'chidemoon-blocksy-child' ); ?></label>
@@ -27,7 +32,7 @@ $unique_id = wp_unique_id( 'chidemoon-search-field-' );
 			placeholder="<?php esc_attr_e( 'مثلاً: چراغ مطالعه', 'chidemoon-blocksy-child' ); ?>"
 			value="<?php echo esc_attr( get_search_query() ); ?>"
 		>
-		<button type="submit"><?php esc_html_e( 'جست‌وجو', 'chidemoon-blocksy-child' ); ?></button>
+		<button type="submit" <?php disabled( ! $has_query ); ?>><?php esc_html_e( 'جست‌وجو', 'chidemoon-blocksy-child' ); ?></button>
 	</div>
 	<?php if ( $is_modal ) : ?>
 		<p class="chidemoon-search-form__hint">

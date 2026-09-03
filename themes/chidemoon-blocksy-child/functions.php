@@ -53,6 +53,25 @@ function chidemoon_blocksy_enqueue_styles(): void {
 add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_styles', 20 );
 
 /**
+ * Search forms render their submit control disabled until the visitor types
+ * a phrase; this tiny companion script keeps the control in sync with the
+ * field and blocks empty submissions (including Enter) as a hard stop.
+ */
+function chidemoon_blocksy_enqueue_scripts(): void {
+	$relative = 'assets/js/search-form.js';
+	$mtime    = @filemtime( get_stylesheet_directory() . '/' . $relative );
+
+	wp_enqueue_script(
+		'chidemoon-search-form',
+		get_stylesheet_directory_uri() . '/' . $relative,
+		array(),
+		(string) wp_get_theme()->get( 'Version' ) . ( $mtime ? '.' . $mtime : '' ),
+		array( 'strategy' => 'defer' )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_scripts', 20 );
+
+/**
  * Curated header fallback. WordPress and Blocksy fall back to listing every
  * published page when no nav menu is assigned, which would surface cart,
  * checkout, account, and showcase pages in the public header. Only the
