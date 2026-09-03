@@ -68,6 +68,12 @@
 				control.setAttribute('aria-pressed', active ? 'true' : 'false');
 				var label = control.querySelector('span');
 				if (label) label.textContent = active ? config.labels.removed : config.labels.added;
+			} else if (control.classList.contains('chidemoon-compare-single')) {
+				control.setAttribute('aria-pressed', active ? 'true' : 'false');
+				var singleLabel = control.querySelector('.chidemoon-compare-single__label');
+				var singleHint = control.querySelector('.chidemoon-compare-single__hint');
+				if (singleLabel) singleLabel.textContent = active ? config.labels.singleIn : config.labels.singleAdd;
+				if (singleHint) singleHint.textContent = active ? config.labels.singleRemoveHint : config.labels.singleHint;
 			} else if (control.classList.contains('chidemoon-comparison-search__result')) {
 				var action = control.querySelector('small');
 				if (action) action.textContent = active ? config.labels.removed : config.labels.added;
@@ -297,7 +303,7 @@
 				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl + '#chidemoon-comparison-table');
 				return;
 			}
-			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-comparison-search__result');
+			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-comparison-search__result');
 			if (!control) return;
 			event.preventDefault();
 			var id = Number(control.dataset.compareProduct);

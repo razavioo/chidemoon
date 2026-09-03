@@ -7,8 +7,25 @@ html.has-chidemoon-compare-bar body, body:has(.chidemoon-compare-bar:not([hidden
 .chidemoon-compare-control svg { fill: none; height: 1rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 1rem; }
 .chidemoon-compare-control:hover, .chidemoon-compare-control[aria-pressed="true"] { background: var(--chidemoon-forest, #123f34); border-color: var(--chidemoon-forest, #123f34); color: #fffdfa; }
 .chidemoon-compare-control:active { transform: scale(0.98); }
-.chidemoon-compare-control:focus-visible, .chidemoon-compare-bar :is(button, a):focus-visible { outline: 3px solid var(--chidemoon-clay, #b95d3e); outline-offset: 3px; }
+.chidemoon-compare-control:focus-visible, .chidemoon-compare-bar :is(button, a):focus-visible, .chidemoon-compare-single:focus-visible { outline: 3px solid var(--chidemoon-clay, #b95d3e); outline-offset: 3px; }
 .ct-woo-card-actions .chidemoon-compare-control { flex: 0 0 auto; margin-top: 0; }
+
+/* Single-product compare selection: calm two-line control, forest state when in list. */
+.chidemoon-compare-single { align-items: center; appearance: none; background: var(--chidemoon-surface, #fffdfa); border: 1px solid var(--chidemoon-line-strong, rgba(18, 63, 52, 0.25)); border-radius: var(--chidemoon-radius, 0.5rem); box-shadow: var(--chidemoon-shadow-soft, 0 8px 26px rgba(13, 43, 35, 0.07)); color: var(--chidemoon-forest, #123f34); cursor: pointer; display: flex; font: inherit; gap: 0.8rem; margin-block: 0.6rem; max-width: 26rem; padding: 0.6rem 0.9rem; text-align: start; touch-action: manipulation; transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), border-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), box-shadow var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease); width: 100%; }
+.chidemoon-compare-single:hover { border-color: var(--chidemoon-forest, #123f34); transform: translateY(-1px); }
+.chidemoon-compare-single:active { transform: scale(0.99); }
+.chidemoon-compare-single__icon { align-items: center; background: color-mix(in srgb, var(--chidemoon-forest, #123f34) 8%, var(--chidemoon-surface, #fffdfa)); border-radius: 999px; display: inline-flex; flex: 0 0 auto; height: 2.5rem; justify-content: center; position: relative; transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease); width: 2.5rem; }
+.chidemoon-compare-single__icon svg { fill: none; height: 1.15rem; inset: 0; margin: auto; position: absolute; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; transition: opacity var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease); width: 1.15rem; }
+.chidemoon-compare-single__icon-check { opacity: 0; transform: scale(0.55) rotate(-8deg); }
+.chidemoon-compare-single__text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.chidemoon-compare-single__label { font-size: 0.9rem; font-weight: 800; line-height: 1.35; }
+.chidemoon-compare-single__hint { color: var(--chidemoon-muted, #607069); font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
+.chidemoon-compare-single.is-selected { background: linear-gradient(135deg, var(--chidemoon-forest, #123f34), var(--chidemoon-forest-deep, #092c25)); border-color: var(--chidemoon-forest-deep, #092c25); box-shadow: 0 10px 24px rgba(18, 63, 52, 0.24); color: #fffdfa; }
+.chidemoon-compare-single.is-selected:hover { transform: none; }
+.chidemoon-compare-single.is-selected .chidemoon-compare-single__icon { background: rgba(255, 253, 250, 0.14); }
+.chidemoon-compare-single.is-selected .chidemoon-compare-single__icon-add { opacity: 0; transform: scale(0.55) rotate(8deg); }
+.chidemoon-compare-single.is-selected .chidemoon-compare-single__icon-check { opacity: 1; transform: scale(1) rotate(0deg); }
+.chidemoon-compare-single.is-selected .chidemoon-compare-single__hint { color: rgba(255, 253, 250, 0.72); }
 
 /* Fixed selection tray. */
 .chidemoon-compare-bar { align-items: center; animation: chidemoon-compare-bar-in 320ms var(--chidemoon-ease-out, ease) both; backdrop-filter: blur(14px) saturate(1.25); -webkit-backdrop-filter: blur(14px) saturate(1.25); background: color-mix(in srgb, var(--chidemoon-surface, #fffdfa) 88%, transparent); border: 1px solid var(--chidemoon-line, rgba(18, 63, 52, 0.12)); border-radius: var(--chidemoon-radius-lg, 0.7rem); bottom: 1.1rem; box-shadow: 0 22px 55px rgba(13, 43, 35, 0.18), 0 2px 8px rgba(13, 43, 35, 0.08); color: var(--chidemoon-ink, #17241f); display: grid; gap: 0.7rem 1rem; grid-template-columns: auto minmax(0, 1fr) auto; inset-inline: 1rem; margin-inline: auto; max-width: 58rem; padding: 0.7rem 1rem; position: fixed; z-index: 1000; }
@@ -54,4 +71,4 @@ html.has-chidemoon-compare-bar body, body:has(.chidemoon-compare-bar:not([hidden
 }
 @keyframes chidemoon-compare-bar-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-@media (prefers-reduced-motion: reduce) { .chidemoon-compare-bar, .chidemoon-compare-control, .chidemoon-compare-bar__chip, .chidemoon-compare-bar__clear, .chidemoon-compare-bar__go { animation: none; transition: none; } .chidemoon-compare-control:active, .chidemoon-compare-bar__chip:hover, .chidemoon-compare-bar__go:hover:not(:disabled) { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .chidemoon-compare-bar, .chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-compare-bar__chip, .chidemoon-compare-bar__clear, .chidemoon-compare-bar__go { animation: none; transition: none; } .chidemoon-compare-control:active, .chidemoon-compare-single:hover, .chidemoon-compare-single:active, .chidemoon-compare-bar__chip:hover, .chidemoon-compare-bar__go:hover:not(:disabled) { transform: none; } }
