@@ -333,7 +333,6 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 .chidemoon-eyebrow,
 .chidemoon-card__meta,
-.chidemoon-category-link__index,
 .chidemoon-category-link__count {
 	color: var(--chidemoon-muted);
 	font-family: var(--chidemoon-font-ui);
@@ -625,46 +624,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 .chidemoon-product-card__pending {
 	color: var(--chidemoon-muted);
 	font-size: 0.79rem;
-	letter-spacing: 0;
-}
-
-.chidemoon-category-grid {
-	border-bottom: 1px solid var(--chidemoon-line);
-	border-top: 1px solid var(--chidemoon-line);
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.chidemoon-category-link {
-	align-items: center;
-	border-inline-end: 1px solid var(--chidemoon-line);
-	color: var(--chidemoon-forest);
-	display: grid;
-	gap: 0.55rem;
-	grid-template-columns: auto 1fr auto;
-	min-height: 8rem;
-	padding: 1.25rem;
-	text-decoration: none;
-	transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
-}
-
-.chidemoon-category-link:nth-child(3n) {
-	border-inline-end: 0;
-}
-
-.chidemoon-category-link:hover {
-	background: var(--chidemoon-forest);
-	color: #fffcf7;
-}
-
-.chidemoon-category-link:hover :where(.chidemoon-category-link__index, .chidemoon-category-link__count) {
-	color: var(--chidemoon-clay-soft);
-}
-
-.chidemoon-category-link__title {
-	font-family: var(--chidemoon-font-display);
-	font-size: clamp(1.25rem, 2vw, 1.7rem);
-	font-weight: 600;
 	letter-spacing: 0;
 }
 
@@ -1198,17 +1157,8 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	.chidemoon-card-grid--stories,
 	.chidemoon-card-grid--archive,
 	.chidemoon-card-grid--products,
-	.woocommerce ul.products,
-	.chidemoon-category-grid {
+	.woocommerce ul.products {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-
-	.chidemoon-category-link:nth-child(3n) {
-		border-inline-end: 1px solid var(--chidemoon-line);
-	}
-
-	.chidemoon-category-link:nth-child(2n) {
-		border-inline-end: 0;
 	}
 
 	.chidemoon-collection-page__content {
@@ -1257,19 +1207,8 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	.chidemoon-card-grid--archive,
 	.chidemoon-card-grid--products,
 	.woocommerce ul.products,
-	.chidemoon-category-grid,
 	.chidemoon-home__routes {
 		grid-template-columns: 1fr;
-	}
-
-	.chidemoon-category-link,
-	.chidemoon-category-link:nth-child(2n) {
-		border-bottom: 1px solid var(--chidemoon-line);
-		border-inline-end: 0;
-	}
-
-	.chidemoon-category-link:last-child {
-		border-bottom: 0;
 	}
 
 	.woocommerce div.product {

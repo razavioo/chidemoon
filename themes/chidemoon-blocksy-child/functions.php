@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require get_stylesheet_directory() . '/includes/category-art.php';
+
 add_action(
 	'after_setup_theme',
 	static function (): void {

@@ -362,18 +362,6 @@ html {
 	overflow: hidden;
 }
 
-.chidemoon-category-grid {
-	background: var(--chidemoon-surface);
-	border: 0;
-	border-radius: var(--chidemoon-radius);
-	box-shadow: 0 0 0 1px var(--chidemoon-line);
-	overflow: hidden;
-}
-
-.chidemoon-category-link {
-	min-height: 6.5rem;
-}
-
 .chidemoon-home__routes {
 	gap: clamp(1rem, 2vw, 1.5rem);
 	padding-top: clamp(2rem, 4vw, 3.5rem);
@@ -509,6 +497,52 @@ html {
 	height: 100%;
 	object-fit: cover;
 	width: 100%;
+}
+
+/* Category identity mark: the term's own SVG art rides beside the eyebrow,
+ * so every category page carries its drawing even when a photo fills the
+ * hero media slot. */
+.chidemoon-shop-archive__kicker {
+	align-items: center;
+	display: flex;
+	gap: 0.7rem;
+}
+
+.chidemoon-shop-archive__kicker .chidemoon-eyebrow {
+	margin: 0;
+}
+
+.chidemoon-shop-archive__mark {
+	background: color-mix(in srgb, var(--chidemoon-sage) 30%, var(--chidemoon-surface));
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	flex: none;
+	height: 2.8rem;
+	padding: 0.32rem;
+	width: 2.8rem;
+}
+
+.chidemoon-shop-archive__mark .chidemoon-cat-art,
+.chidemoon-category-link__art .chidemoon-cat-art,
+.chidemoon-category-link__go .chidemoon-cat-art {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+/* The art plate replaces the hero photo when a category has no term
+ * thumbnail, reusing the exact media frame for one hero language. */
+.chidemoon-shop-archive__intro-media--art {
+	align-items: center;
+	aspect-ratio: 16 / 10;
+	display: flex;
+	justify-content: center;
+}
+
+.chidemoon-shop-archive__intro-media--art .chidemoon-cat-art {
+	height: 76%;
+	max-width: 84%;
+	width: auto;
 }
 
 /* Home masthead: brand statement with the abstract editorial mark. */
@@ -1897,7 +1931,8 @@ html {
 		.chidemoon-featured__media img,
 		.chidemoon-route-card,
 		.chidemoon-article__navigation .nav-previous,
-		.chidemoon-article__navigation .nav-next
+		.chidemoon-article__navigation .nav-next,
+		.chidemoon-category-link__go
 	) {
 		transform: none !important;
 	}
@@ -1973,7 +2008,7 @@ html {
 .chidemoon-article-products__grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
+	gap: clamp(1rem, 2vw, 1.4rem);
 	margin-block-start: 1.5rem;
 }
 
@@ -2494,17 +2529,17 @@ html {
  * catalogue grid into a scannable flow banner. */
 .chidemoon-comparison-steps {
 	background:
-		radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--chidemoon-clay-soft) 30%, transparent), transparent 42%),
-		radial-gradient(circle at 8% 95%, color-mix(in srgb, var(--chidemoon-sage) 55%, transparent), transparent 40%),
-		color-mix(in srgb, var(--chidemoon-sage) 28%, var(--chidemoon-surface));
+		radial-gradient(circle at 88% 10%, color-mix(in srgb, var(--chidemoon-clay-soft) 45%, transparent), transparent 40%),
+		radial-gradient(circle at 6% 100%, color-mix(in srgb, var(--chidemoon-sage) 65%, transparent), transparent 42%),
+		color-mix(in srgb, var(--chidemoon-sage) 32%, var(--chidemoon-surface));
 	border: 1px solid var(--chidemoon-line);
-	border-radius: var(--chidemoon-radius-lg);
+	border-radius: calc(var(--chidemoon-radius-lg) + 0.55rem);
 	box-shadow: var(--chidemoon-shadow-soft);
 	display: grid;
-	gap: 1.25rem 1.6rem;
+	gap: 1.1rem 1.9rem;
 	list-style: none;
 	margin-block: clamp(1.4rem, 3vw, 2.2rem);
-	padding: clamp(1.3rem, 3vw, 1.9rem) clamp(1.2rem, 3vw, 2rem);
+	padding: clamp(1.2rem, 2.6vw, 1.7rem);
 }
 
 @media (min-width: 48rem) {
@@ -2512,14 +2547,15 @@ html {
 		grid-template-columns: repeat(3, 1fr);
 	}
 
-	/* Flow arrow between the steps; SVG points along the RTL reading flow. */
+	/* Flow arrow between the step cards; SVG points along the RTL reading flow. */
 	.chidemoon-comparison-steps li:not(:last-child)::after {
 		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='10' viewBox='0 0 22 10'%3E%3Cpath d='M20 5H3M7 1 3 5l4 4' fill='none' stroke='%23b95d3e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
 		content: "";
 		height: 0.625rem;
-		inset-inline-end: -1.45rem;
+		inset-inline-end: -1.55rem;
 		position: absolute;
-		top: 1.2rem;
+		top: 50%;
+		translate: 0 -50%;
 		width: 1.375rem;
 	}
 }
@@ -2530,10 +2566,22 @@ html {
 
 .chidemoon-comparison-steps li {
 	align-items: flex-start;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow-soft);
 	display: flex;
 	gap: 0.9rem;
 	margin: 0;
+	padding: 0.95rem 1.05rem;
 	position: relative;
+	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
+}
+
+.chidemoon-comparison-steps li:hover {
+	border-color: var(--chidemoon-line-strong);
+	box-shadow: var(--chidemoon-shadow);
+	transform: translateY(-3px);
 }
 
 .chidemoon-comparison-steps__badge {
@@ -2546,7 +2594,6 @@ html {
 	height: 3rem;
 	place-items: center;
 	position: relative;
-	transition: transform 0.2s ease;
 	width: 3rem;
 }
 
@@ -2560,6 +2607,23 @@ html {
 	box-shadow: 0 6px 16px rgba(18, 63, 52, 0.3);
 }
 
+.chidemoon-comparison-steps__num {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: 999px;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--chidemoon-surface) 55%, transparent);
+	color: var(--chidemoon-forest);
+	display: grid;
+	font-size: 0.72rem;
+	font-weight: 800;
+	height: 1.2rem;
+	inset-block-start: -0.45rem;
+	inset-inline-end: -0.45rem;
+	place-items: center;
+	position: absolute;
+	width: 1.2rem;
+}
+
 .chidemoon-comparison-steps li:hover .chidemoon-comparison-steps__badge {
 	transform: translateY(-2px);
 }
@@ -2569,9 +2633,22 @@ html {
 	width: 1.35rem;
 }
 
+.chidemoon-comparison-steps__copy {
+	display: grid;
+	gap: 0.2rem;
+	min-width: 0;
+}
+
 .chidemoon-comparison-steps__title {
 	color: var(--chidemoon-forest);
 	font-weight: 800;
+	margin: 0;
+}
+
+.chidemoon-comparison-steps__desc {
+	color: var(--chidemoon-muted);
+	font-size: 0.85rem;
+	line-height: 1.7;
 	margin: 0;
 }
 
@@ -2974,24 +3051,123 @@ html {
 	line-height: 1.3;
 }
 
-/* Home "shop categories": replace per-cell border logic (which left stray
- * underlines on ragged last rows) with hairlines drawn by the grid gap. */
+/* ------------------------------------------------------------------ */
+/* Category art. The SVGs carry geometry only; every color resolves    */
+/* through these classes so illustrations always follow the palette.   */
+/* ------------------------------------------------------------------ */
+.chidemoon-cat-art .catart-ink {
+	stroke: var(--chidemoon-forest);
+}
+
+.chidemoon-cat-art .catart-accent {
+	stroke: var(--chidemoon-clay);
+}
+
+.chidemoon-cat-art .catart-fill-ink {
+	fill: var(--chidemoon-forest);
+}
+
+.chidemoon-cat-art .catart-fill-accent {
+	fill: color-mix(in srgb, var(--chidemoon-clay) 58%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-sage {
+	fill: color-mix(in srgb, var(--chidemoon-sage) 50%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-warm {
+	fill: color-mix(in srgb, var(--chidemoon-clay) 20%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-cream {
+	fill: var(--chidemoon-surface);
+}
+
+/* Home "shop categories": art-led cards. One hairline outline per card,
+ * a soft art tile, and an arrow that leans forward on hover. */
 .chidemoon-category-grid {
-	background: var(--chidemoon-line);
-	gap: 1px;
-	overflow: hidden;
+	display: grid;
+	gap: clamp(0.8rem, 1.5vw, 1.1rem);
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.chidemoon-category-grid .chidemoon-category-link,
-.chidemoon-category-grid .chidemoon-category-link:nth-child(2n),
-.chidemoon-category-grid .chidemoon-category-link:nth-child(3n),
-.chidemoon-category-grid .chidemoon-category-link:nth-child(2n + 1),
-.chidemoon-category-grid .chidemoon-category-link:last-child {
-	border: 0;
+.chidemoon-category-link {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
+	color: var(--chidemoon-ink);
+	display: flex;
+	gap: 0.9rem;
+	min-height: 7rem;
+	padding: 1rem 1.05rem;
+	text-decoration: none;
+	transition: box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.chidemoon-category-grid .chidemoon-category-link:focus-visible {
-	outline-offset: -3px;
+.chidemoon-category-link:is(:hover, :focus-visible) {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+}
+
+.chidemoon-category-link__art {
+	background: color-mix(in srgb, var(--chidemoon-sage) 26%, var(--chidemoon-surface-muted));
+	border-radius: var(--chidemoon-radius-sm);
+	flex: none;
+	height: 4.4rem;
+	padding: 0.4rem;
+	width: 4.4rem;
+}
+
+.chidemoon-category-link__body {
+	display: grid;
+	gap: 0.1rem;
+	min-width: 0;
+}
+
+.chidemoon-category-link__title {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+	font-weight: 700;
+	line-height: 1.5;
+}
+
+.chidemoon-category-link__count {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1.6;
+}
+
+.chidemoon-category-link__go {
+	color: var(--chidemoon-muted);
+	flex: none;
+	height: 1.15rem;
+	margin-inline-start: auto;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	width: 1.15rem;
+}
+
+.chidemoon-category-link:is(:hover, :focus-visible) .chidemoon-category-link__go {
+	color: var(--chidemoon-clay);
+	transform: translateX(-3px);
+}
+
+.chidemoon-category-link:is(:hover, :focus-visible) .chidemoon-category-link__go .catart-ink {
+	stroke: var(--chidemoon-clay);
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-category-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 520px) {
+	.chidemoon-category-grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 /* Article: collapse the empty aside column so the reading measure stays

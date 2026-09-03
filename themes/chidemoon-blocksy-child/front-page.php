@@ -190,13 +190,16 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 </div>
 </div>
 <div class="chidemoon-category-grid">
-<?php foreach ( $product_categories as $index => $category ) : ?>
+<?php foreach ( $product_categories as $category ) : ?>
 <?php $category_link = get_term_link( $category ); ?>
 <?php if ( ! is_wp_error( $category_link ) ) : ?>
 <a class="chidemoon-category-link" href="<?php echo esc_url( $category_link ); ?>">
-<span class="chidemoon-category-link__index"><?php echo esc_html( chidemoon_fa_digits( '0' . ( $index + 1 ) ) ); ?></span>
+<span class="chidemoon-category-link__art" aria-hidden="true"><?php echo chidemoon_category_art( $category ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+<span class="chidemoon-category-link__body">
 <span class="chidemoon-category-link__title"><?php echo esc_html( $category->name ); ?></span>
 <span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> کالا</span>
+</span>
+<span class="chidemoon-category-link__go" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" class="chidemoon-cat-art" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path class="catart-ink" d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 </a>
 <?php endif; ?>
 <?php endforeach; ?>

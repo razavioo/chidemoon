@@ -17,13 +17,23 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 
 $current_term      = is_product_taxonomy() ? get_queried_object() : null;
 $term_thumbnail_id = $current_term instanceof WP_Term ? chidemoon_term_thumbnail_id( $current_term ) : 0;
+$term_art          = $current_term instanceof WP_Term && is_product_category()
+	? chidemoon_category_art( $current_term )
+	: '';
 $catalogue_count   = chidemoon_archive_record_count();
 ?>
 
 <div class="chidemoon-shop-archive">
-	<section class="chidemoon-shop-archive__intro chidemoon-section-shell<?php echo $term_thumbnail_id > 0 ? ' has-media' : ''; ?>">
+	<section class="chidemoon-shop-archive__intro chidemoon-section-shell<?php echo $term_thumbnail_id > 0 || '' !== $term_art ? ' has-media' : ''; ?>">
 		<div class="chidemoon-shop-archive__intro-copy">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
+			<?php if ( '' !== $term_art ) : ?>
+				<div class="chidemoon-shop-archive__kicker">
+					<span class="chidemoon-shop-archive__mark" aria-hidden="true"><?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+					<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
+				</div>
+			<?php else : ?>
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
+			<?php endif; ?>
 			<h1><?php woocommerce_page_title(); ?></h1>
 			<?php do_action( 'woocommerce_archive_description' ); ?>
 			<?php if ( $catalogue_count > 0 ) : ?>
@@ -35,6 +45,10 @@ $catalogue_count   = chidemoon_archive_record_count();
 		<?php if ( $term_thumbnail_id > 0 ) : ?>
 			<figure class="chidemoon-shop-archive__intro-media">
 				<?php echo wp_get_attachment_image( $term_thumbnail_id, 'large', false, array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</figure>
+		<?php elseif ( '' !== $term_art ) : ?>
+			<figure class="chidemoon-shop-archive__intro-media chidemoon-shop-archive__intro-media--art" aria-hidden="true">
+				<?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</figure>
 		<?php endif; ?>
 	</section>
