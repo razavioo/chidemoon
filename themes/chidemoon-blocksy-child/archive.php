@@ -19,10 +19,10 @@ get_header();
 	$is_blank_search = is_search() && '' === trim( (string) get_query_var( 's' ) );
 	?>
 	<header class="chidemoon-archive__hero chidemoon-section-shell">
-		<p class="chidemoon-eyebrow"><?php is_search() ? esc_html_e( 'نتایج جست‌وجو', 'chidemoon-blocksy-child' ) : esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
+		<p class="chidemoon-eyebrow"><?php is_search() ? esc_html_e( 'نتایج جستجو', 'chidemoon-blocksy-child' ) : esc_html_e( 'آرشیو مجله', 'chidemoon-blocksy-child' ); ?></p>
 		<h1>
 			<?php if ( $is_blank_search ) : ?>
-				<?php esc_html_e( 'جست‌وجو در چیدمون', 'chidemoon-blocksy-child' ); ?>
+				<?php esc_html_e( 'جستجو در چیدمون', 'chidemoon-blocksy-child' ); ?>
 			<?php elseif ( is_search() ) : ?>
 				<?php printf( esc_html__( 'نتایج برای «%s»', 'chidemoon-blocksy-child' ), esc_html( get_search_query() ) ); ?>
 			<?php else : ?>
@@ -53,7 +53,7 @@ get_header();
 			<div class="chidemoon-empty-state">
 				<span class="chidemoon-empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span>
 				<div>
-					<h3><?php esc_html_e( 'هنوز چیزی جست‌وجو نشده است.', 'chidemoon-blocksy-child' ); ?></h3>
+					<h3><?php esc_html_e( 'هنوز چیزی جستجو نشده است.', 'chidemoon-blocksy-child' ); ?></h3>
 					<p><?php esc_html_e( 'برای دیدن نتایج، عبارتی را در کادر بالا بنویسید؛ یا مستقیم از این‌جا ادامه دهید.', 'chidemoon-blocksy-child' ); ?></p>
 					<?php chidemoon_search_quick_links(); ?>
 				</div>

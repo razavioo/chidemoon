@@ -15,7 +15,7 @@ get_header();
 		<p class="chidemoon-error-404__code" aria-hidden="true"><?php echo esc_html( chidemoon_fa_digits( '404' ) ); ?></p>
 		<h1><?php esc_html_e( 'این صفحه پیدا نشد', 'chidemoon-blocksy-child' ); ?></h1>
 		<p class="chidemoon-error-404__description">
-			<?php esc_html_e( 'نشانی‌ای که باز کرده‌اید وجود ندارد یا جابه‌جا شده است. از جست‌وجو استفاده کنید یا از یکی از بخش‌های اصلی ادامه دهید.', 'chidemoon-blocksy-child' ); ?>
+			<?php esc_html_e( 'نشانی‌ای که باز کرده‌اید وجود ندارد یا جابه‌جا شده است. از جستجو استفاده کنید یا از یکی از بخش‌های اصلی ادامه دهید.', 'chidemoon-blocksy-child' ); ?>
 		</p>
 		<div class="chidemoon-error-404__search">
 			<?php

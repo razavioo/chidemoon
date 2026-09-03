@@ -288,12 +288,21 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	}
 
 	#offcanvas .mobile-menu {
-		--mobile-menu-divider: 1px solid rgba(255, 252, 247, 0.09);
+		--mobile-menu-divider: none;
 		--theme-icon-hover-color: var(--chidemoon-clay-soft);
 		--theme-link-hover-color: var(--chidemoon-clay-soft);
 		--theme-link-initial-color: rgba(255, 252, 247, 0.9);
 		text-align: right;
 		width: 100%;
+	}
+
+	#offcanvas .mobile-menu > ul {
+		border-block-start: 0;
+	}
+
+	#offcanvas .mobile-menu li,
+	#offcanvas .mobile-menu li.dropdown-active > .ct-sub-menu-parent {
+		border: 0;
 	}
 
 	#offcanvas .mobile-menu .ct-menu-link {
@@ -304,7 +313,6 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		--theme-line-height: 1.55;
 		--theme-text-transform: none;
 		align-items: center;
-		border-radius: 0.7rem;
 		color: rgba(255, 252, 247, 0.9);
 		display: flex;
 		font-family: var(--chidemoon-font-ui);
@@ -313,18 +321,27 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		gap: 0.7rem;
 		justify-content: flex-start;
 		letter-spacing: 0;
-		min-height: 3.5rem;
-		padding: 0.55rem 0.7rem;
 		text-align: right;
 		text-decoration: none;
 		text-transform: none;
 		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 	}
 
+	/* Row shells: every row is a pill spanning exactly the content column so
+	 * hover state lines up with the search box above the menu. Parent rows
+	 * wrap the link and the dropdown toggle in one shared pill. */
 	#offcanvas .mobile-menu > ul > li > .ct-menu-link,
+	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent {
+		border-radius: 0.65rem;
+		min-height: 3.4rem;
+		padding: 0.5rem 0.75rem;
+		width: 100%;
+	}
+
 	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent > .ct-menu-link {
-		margin-inline: -0.4rem;
-		padding-inline: 0.75rem;
+		flex: 1 1 auto;
+		min-height: 0;
+		min-width: 0;
 	}
 
 	#offcanvas .mobile-menu > ul > li > .ct-menu-link::before,
@@ -344,9 +361,15 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		opacity: 1;
 	}
 
+	#offcanvas .mobile-menu > ul > li > .ct-menu-link:hover,
+	#offcanvas .mobile-menu > ul > li > .ct-menu-link:focus-visible,
+	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent:hover,
+	#offcanvas .mobile-menu > ul > li > .ct-sub-menu-parent:focus-within {
+		background: rgba(255, 252, 247, 0.07);
+	}
+
 	#offcanvas .mobile-menu .ct-menu-link:hover,
 	#offcanvas .mobile-menu .ct-menu-link:focus-visible {
-		background: rgba(255, 252, 247, 0.06);
 		color: #fffcf7;
 	}
 
@@ -375,7 +398,7 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		color: #fffcf7;
 	}
 
-	#offcanvas .mobile-menu li.dropdown-active > .ct-sub-menu-parent .ct-toggle-dropdown-mobile {
+	#offcanvas .mobile-menu li.dropdown-active > .ct-sub-menu-parent > .ct-toggle-dropdown-mobile {
 		background: rgba(255, 252, 247, 0.1);
 		border-color: rgba(255, 252, 247, 0.36);
 		color: var(--chidemoon-clay-soft);
@@ -383,34 +406,53 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 	#offcanvas .mobile-menu .sub-menu {
 		background: rgba(9, 26, 22, 0.42);
-		border-radius: 0.9rem;
-		margin-block: 0.55rem 0.7rem;
-		padding-block: 0.35rem;
+		border-radius: 0.85rem;
+		margin-block: 0.5rem 0.65rem;
+		padding: 0.3rem 0.4rem;
 	}
 
 	#offcanvas .mobile-menu .sub-menu li {
 		border-block-end: 0;
 	}
 
+	#offcanvas .mobile-menu .sub-menu li > .ct-menu-link,
+	#offcanvas .mobile-menu .sub-menu li > .ct-sub-menu-parent {
+		border-radius: 0.55rem;
+		min-height: 3.05rem;
+		padding: 0.4rem 0.6rem;
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	}
+
+	#offcanvas .mobile-menu .sub-menu li > .ct-sub-menu-parent > .ct-menu-link {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+
 	#offcanvas .mobile-menu .sub-menu .ct-menu-link {
-		border-radius: 0.6rem;
+		--theme-font-size: clamp(0.95rem, 3.6vw, 1.05rem);
 		color: rgba(255, 252, 247, 0.72);
 		font-size: clamp(0.95rem, 3.6vw, 1.05rem);
-		min-height: 3.1rem;
+	}
+
+	#offcanvas .mobile-menu .sub-menu li > .ct-menu-link:hover,
+	#offcanvas .mobile-menu .sub-menu li > .ct-menu-link:focus-visible,
+	#offcanvas .mobile-menu .sub-menu li > .ct-sub-menu-parent:hover,
+	#offcanvas .mobile-menu .sub-menu li > .ct-sub-menu-parent:focus-within {
+		background: rgba(255, 252, 247, 0.06);
 	}
 
 	#offcanvas .mobile-menu .sub-menu .ct-menu-link:hover,
 	#offcanvas .mobile-menu .sub-menu .ct-menu-link:focus-visible {
-		background: rgba(255, 252, 247, 0.06);
 		color: #fffcf7;
 	}
 
-	#offcanvas .mobile-menu .sub-menu .current-menu-item > .ct-menu-link {
+	#offcanvas .mobile-menu .sub-menu li[class*="current-menu-"] > .ct-menu-link,
+	#offcanvas .mobile-menu .sub-menu li[class*="current-menu-"] > .ct-sub-menu-parent > .ct-menu-link {
 		color: var(--chidemoon-clay-soft);
 	}
 
 	#offcanvas .mobile-menu .sub-menu .sub-menu {
-		margin-inline-start: 0.7rem;
+		margin-inline-start: 0.55rem;
 	}
 
 	#offcanvas.active .mobile-menu > ul > li {

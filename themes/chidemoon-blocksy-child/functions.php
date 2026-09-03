@@ -592,10 +592,10 @@ function chidemoon_blocksy_english_overrides(): array {
 
 	$map = array(
 		'Skip to content'          => 'رفتن به محتوای اصلی',
-		'Search modal'             => 'جست‌وجو',
-		'Search'                   => 'جست‌وجو',
-		'Close search modal'       => 'بستن جست‌وجو',
-		'Search for...'            => 'جست‌وجو…',
+		'Search modal'             => 'جستجو',
+		'Search'                   => 'جستجو',
+		'Close search modal'       => 'بستن جستجو',
+		'Search for...'            => 'جستجو…',
 		'Show more'                => 'نمایش بیشتر',
 		'More'                     => 'بیشتر',
 		'In stock'                 => 'موجود',
@@ -678,9 +678,9 @@ add_filter(
 	static function ( array $data ): array {
 		$data['show_more_text']             = 'نمایش بیشتر';
 		$data['more_text']                  = 'بیشتر';
-		$data['search_live_results']        = 'نتایج جست‌وجو';
+		$data['search_live_results']        = 'نتایج جستجو';
 		$data['search_live_no_results']     = 'نتیجه‌ای پیدا نشد';
-		$data['search_live_results_closed'] = 'نتایج جست‌وجو بسته شد.';
+		$data['search_live_results_closed'] = 'نتایج جستجو بسته شد.';
 		$data['search_live_no_result']      = 'نتیجه‌ای پیدا نشد';
 		$data['search_live_one_result']     = 'یک نتیجه پیدا شد. برای انتخاب، کلید Tab را بزنید.';
 		$data['search_live_many_results']   = '%s نتیجه پیدا شد. برای انتخاب، کلید Tab را بزنید.';

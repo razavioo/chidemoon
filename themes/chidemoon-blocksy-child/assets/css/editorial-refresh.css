@@ -3219,11 +3219,15 @@ html {
 	.chidemoon-footer__inner {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
+
+	.chidemoon-footer__brand,
+	.chidemoon-footer__note {
+		grid-column: 1 / -1;
+	}
 }
 
 @media (max-width: 640px) {
 	.chidemoon-footer__inner {
-		grid-template-columns: 1fr;
 		gap: 1.75rem;
 	}
 }
