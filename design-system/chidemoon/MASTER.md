@@ -55,6 +55,8 @@ Use a 4/8px rhythm and fluid clamps between breakpoints.
 - Card/section internal: 20–32px
 - Section separation: 40–76px
 - Radius small/default/large: `0.35rem` / `0.5rem` / `0.7rem`; deliberately restrained for the current editorial system
+- Radius mapping is fixed: controls (buttons, inputs, chips, tags, pagination, room filters) use the small token; cards, panels, and tables use the default token; large media frames, hero panels, and boxed article bodies use the large token
+- Fully-round shapes (`999px` / `50%`) are reserved for pills, badges, dots, and avatars; an interactive or boxed element must never render with a `0` radius
 - Shadows communicate elevation only; use the shared soft/default shadow tokens
 
 ## Components

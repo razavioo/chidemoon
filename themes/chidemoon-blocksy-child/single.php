@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-$categories = get_the_category();
+$primary_category = chidemoon_blocksy_primary_category( (int) get_queried_object_id() );
 
 ?>
 <main id="primary" class="site-main chidemoon-article">

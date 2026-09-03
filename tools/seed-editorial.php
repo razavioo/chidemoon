@@ -1462,19 +1462,78 @@ cm_seed_attach_related_products();
 
 WP_CLI::log( 'Seeding curated pages…' );
 cm_seed_page(
-array(
-'slug'     => 'home',
-'title'    => 'چیدمون',
-'excerpt'  => 'راهنمای خرید، مقایسه‌ی کالاها و پیشنهادهای کاربردی برای انتخاب و چیدمان وسایل خانه.',
-'content'  => '<p>چیدمون یک مجله‌ی خرید برای خانه است، نه یک فروشگاه. ما کالا را نمی‌فروشیم؛ بررسی می‌کنیم، مقایسه می‌کنیم و شما را مستقیم به فروشنده می‌رسانیم. هر راهنما با معیارهای روشن نوشته می‌شود و هر مقایسه، مبادلات نامعلوم را پنهان نمی‌کند.</p><ul><li><strong>راهنمای خرید:</strong> معیارهای واقعی برای انتخاب مبل، نور و منسوجات</li><li><strong>مقایسه:</strong> روبه‌رو کردن گزینه‌ها با شواهد و بدون توصیه‌ی خودکار</li><li><strong>از تصویر بخر:</strong> ترکیب‌های ادیتوریال که هر کالایش مقصد مستقل دارد</li></ul>',
-'image'    => array( '#173f35', '#b65d3d' ),
-)
+	array(
+		'slug'     => 'home',
+		'title'    => 'چیدمون',
+		'excerpt'  => 'راهنمای خرید، مقایسه‌ی کالاها و پیشنهادهای کاربردی برای انتخاب و چیدمان وسایل خانه.',
+		'content'  => '<p>چیدمون یک مجله‌ی خرید برای خانه است، نه یک فروشگاه. ما کالا را نمی‌فروشیم؛ بررسی می‌کنیم، مقایسه می‌کنیم و شما را مستقیم به فروشنده می‌رسانیم. هر راهنما با معیارهای روشن نوشته می‌شود و هر مقایسه، مبادلات نامعلوم را پنهان نمی‌کند.</p><ul><li><strong>راهنمای خرید:</strong> معیارهای واقعی برای انتخاب مبل، نور و منسوجات</li><li><strong>مقایسه:</strong> روبه‌رو کردن گزینه‌ها با شواهد و بدون توصیه‌ی خودکار</li><li><strong>از تصویر بخر:</strong> ترکیب‌های ادیتوریال که هر کالایش مقصد مستقل دارد</li></ul>',
+		'image'    => array( '#173f35', '#b65d3d' ),
+	)
 );
 cm_seed_page( array( 'slug' => 'guides', 'title' => 'راهنمای خرید', 'excerpt' => 'نکته‌های کاربردی برای انتخاب مبل، روشنایی، منسوجات و وسایل خانه.', 'image' => array( '#173f35', '#9eab92' ) ) );
 cm_seed_page( array( 'slug' => 'comparisons', 'title' => 'مقایسه‌ها', 'excerpt' => 'مقایسه‌هایی که شواهدشان را نشان می‌دهند و مبادلات را پنهان نمی‌کنند.', 'image' => array( '#102d26', '#b65d3d' ) ) );
 cm_seed_page( array( 'slug' => 'shop-the-look', 'title' => 'از تصویر بخر', 'excerpt' => 'اتاق‌ها را ببینید و هر کالا را مستقیم از فروشنده‌ی آن بخرید.', 'image' => array( '#b65d3d', '#e2b19d' ) ) );
 
+WP_CLI::log( 'Seeding primary navigation…' );
+cm_seed_nav_menu();
+
 WP_CLI::success( 'Chidemoon seed finished. Journal, catalogue, and curated pages are ready.' );
+}
+
+/**
+ * Create the primary nav menu from the public editorial pages and assign it
+ * to the theme locations, so the header never falls back to a raw page list
+ * with cart, checkout, account, and showcase links.
+ */
+function cm_seed_nav_menu(): void {
+$menu_name = 'اصلی';
+$existing  = wp_get_nav_menu_object( $menu_name );
+$menu_id   = $existing ? (int) $existing->term_id : (int) wp_create_nav_menu( $menu_name );
+
+if ( 0 === $menu_id ) {
+WP_CLI::warning( 'Could not create the primary nav menu.' );
+return;
+}
+
+$existing_items = wp_get_nav_menu_items( $menu_id ) ?: array();
+$linked_ids     = array();
+foreach ( $existing_items as $item ) {
+$linked_ids[] = (int) $item->object_id;
+}
+
+foreach ( array( 'shop', 'magazine', 'guides', 'comparisons', 'shop-the-look' ) as $slug ) {
+$page = get_page_by_path( $slug );
+if ( ! $page instanceof WP_Post || 'publish' !== $page->post_status ) {
+continue;
+}
+if ( in_array( (int) $page->ID, $linked_ids, true ) ) {
+continue;
+}
+wp_update_nav_menu_item(
+$menu_id,
+0,
+array(
+'menu-item-title'     => $page->post_title,
+'menu-item-object'    => 'page',
+'menu-item-object-id' => (int) $page->ID,
+'menu-item-type'      => 'post_type',
+'menu-item-status'    => 'publish',
+)
+);
+}
+
+$locations          = (array) get_theme_mod( 'nav_menu_locations', array() );
+$locations_modified = false;
+foreach ( array( 'menu_1', 'menu_mobile' ) as $location ) {
+if ( ( $locations[ $location ] ?? 0 ) !== $menu_id ) {
+$locations[ $location ] = $menu_id;
+$locations_modified     = true;
+}
+}
+if ( $locations_modified ) {
+set_theme_mod( 'nav_menu_locations', $locations );
+WP_CLI::log( 'Nav menu assigned to header and mobile locations.' );
+}
 }
 
 cm_seed_run();

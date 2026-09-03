@@ -24,7 +24,7 @@ function chidemoon_blocksy_enqueue_styles(): void {
 
 	// Static assets change between sealed releases while the theme header
 	// version may not; bust edge/browser caches with the file's own mtime.
-	$asset_version = static function ( string $relative ): string {
+	$asset_version = static function ( string $relative ) use ( $version ): string {
 		$mtime = @filemtime( get_stylesheet_directory() . '/' . $relative );
 		return $mtime ? $version . '.' . $mtime : $version;
 	};
@@ -49,6 +49,83 @@ function chidemoon_blocksy_enqueue_styles(): void {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'chidemoon_blocksy_enqueue_styles', 20 );
+
+/**
+ * Curated header fallback. WordPress and Blocksy fall back to listing every
+ * published page when no nav menu is assigned, which would surface cart,
+ * checkout, account, and showcase pages in the public header. Only the
+ * editorial entry points belong there.
+ *
+ * @return int[]
+ */
+function chidemoon_header_page_ids(): array {
+	$ids = array();
+	foreach ( array( 'shop', 'magazine', 'guides', 'comparisons', 'shop-the-look' ) as $slug ) {
+		$page = get_page_by_path( $slug );
+		if ( $page instanceof WP_Post && 'publish' === $page->post_status ) {
+			$ids[] = (int) $page->ID;
+		}
+	}
+	return $ids;
+}
+
+/**
+ * Wrap the theme's page-list fallback so unassigned menu locations only
+ * surface the curated Chidemoon entry points.
+ *
+ * @param array $args wp_nav_menu arguments.
+ */
+function chidemoon_nav_menu_fallback( array $args = array() ): void {
+	$keep = chidemoon_header_page_ids();
+	if ( empty( $keep ) ) {
+		return;
+	}
+
+	$all_pages = get_posts(
+		array(
+			'post_type'   => 'page',
+			'post_status' => 'publish',
+			'numberposts' => -1,
+			'fields'      => 'ids',
+		)
+	);
+	$hide      = array_values( array_diff( $all_pages, $keep ) );
+
+	add_filter(
+		'wp_list_pages_excludes',
+		static function ( array $excludes ) use ( $hide ): array {
+			return array_values( array_unique( array_merge( $excludes, $hide ) ) );
+		}
+	);
+
+	$original = $args['chidemoon_original_fallback'] ?? '';
+	if ( is_callable( $original ) ) {
+		call_user_func( $original, $args );
+		return;
+	}
+
+	wp_page_menu( array( 'echo' => true ) );
+}
+
+add_filter(
+	'wp_nav_menu_args',
+	static function ( array $args ): array {
+		$has_menu = ! empty( $args['menu'] ) && (bool) wp_get_nav_menu_object( $args['menu'] );
+
+		if ( ! $has_menu && ! empty( $args['theme_location'] ) && has_nav_menu( $args['theme_location'] ) ) {
+			$has_menu = true;
+		}
+
+		if ( $has_menu ) {
+			return $args;
+		}
+
+		$args['chidemoon_original_fallback'] = $args['fallback_cb'] ?? '';
+		$args['fallback_cb']                 = 'chidemoon_nav_menu_fallback';
+
+		return $args;
+	}
+);
 
 /**
  * Keep keyboard users out of the Blocksy navigation chrome when they want the
@@ -131,6 +208,19 @@ function chidemoon_fa_digits( $text ): string {
 	);
 }
 
+/**
+ * Convert Persian digits only in visible text nodes of generated markup so
+ * href attributes (for example /page/2/) stay intact.
+ */
+function chidemoon_fa_digits_in_markup( string $markup ): string {
+	return (string) preg_replace_callback(
+		'/>([^<>]+)</',
+		static fn( array $matches ): string => '>' . chidemoon_fa_digits( $matches[1] ) . '<',
+		$markup
+	);
+}
+add_filter( 'paginate_links', 'chidemoon_fa_digits_in_markup', 20 );
+
 add_filter( 'get_the_time', 'chidemoon_fa_digits' );
 add_filter( 'wc_price', 'chidemoon_fa_digits' );
 
@@ -139,8 +229,7 @@ add_filter( 'wc_price', 'chidemoon_fa_digits' );
  * text (never an HTML entity) keeps the Persian-digit price filter from
  * corrupting numeric character references such as &#36;.
  */
-add_filter(
-	'woocommerce_currency_symbol',
+add_filter( 'woocommerce_currency_symbol',
 	static function ( $symbol, $currency ) {
 		if ( 'IRT' === $currency ) {
 			return 'تومان';
@@ -149,6 +238,28 @@ add_filter(
 	},
 	10,
 	2
+);
+
+/**
+ * Persian reading order: the amount comes first and the currency word
+ * follows it with a clear gap instead of the glued "تومان۷۸۰٬۰۰۰".
+ */
+add_filter(
+	'woocommerce_price_format',
+	static fn(): string => '%2$s %1$s'
+);
+
+/**
+ * Persian shopping UI expects grouped thousands (۷۸۰٬۰۰۰) regardless of the
+ * stored WooCommerce options.
+ */
+add_filter(
+	'wc_get_price_thousand_separator',
+	static fn(): string => ','
+);
+add_filter(
+	'wc_get_price_decimal_separator',
+	static fn(): string => '٫'
 );
 
 /**
@@ -229,6 +340,76 @@ add_filter(
 );
 
 /**
+ * Blocksy's configured footer only ships an empty copyright row, which renders
+ * as a blank strip on every page. The editorial footer below carries the real
+ * navigation, disclosure, and brand closure instead.
+ */
+function chidemoon_blocksy_render_footer(): void {
+	$sections = array(
+		array(
+			'title' => 'بخش‌های چیدمون',
+			'links' => array(
+				'خانه'           => home_url( '/' ),
+				'مجله'           => chidemoon_blocksy_page_url( 'magazine' ),
+				'راهنمای خرید'   => chidemoon_blocksy_page_url( 'guides' ),
+				'مقایسه‌ها'      => chidemoon_blocksy_page_url( 'comparisons' ),
+				'از تصویر بخر'   => chidemoon_blocksy_page_url( 'shop-the-look' ),
+			),
+		),
+		array(
+			'title' => 'فروشگاه',
+			'links' => array(
+				'همه کالاها' => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' ),
+			),
+		),
+	);
+	$categories = taxonomy_exists( 'product_cat' )
+		? get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'number' => 5, 'orderby' => 'count', 'order' => 'DESC' ) )
+		: array();
+	if ( ! is_wp_error( $categories ) ) {
+		foreach ( $categories as $category ) {
+			if ( $category instanceof WP_Term && 'uncategorized' !== $category->slug ) {
+				$sections[1]['links'][ $category->name ] = get_term_link( $category );
+			}
+		}
+	}
+	?>
+	<footer class="chidemoon-footer" itemscope itemtype="https://schema.org/WPFooter">
+		<div class="chidemoon-footer__inner">
+			<div class="chidemoon-footer__brand">
+				<p class="chidemoon-footer__logo" itemprop="name"><?php bloginfo( 'name' ); ?></p>
+				<p class="chidemoon-footer__tagline">
+					<?php esc_html_e( 'مجله‌ی خرید برای خانه؛ راهنماهای آزموده، مقایسه‌های شفاف و کالاهای منتخب برای چیدمان هر گوشه از خانه.', 'chidemoon-blocksy-child' ); ?>
+				</p>
+				<p class="chidemoon-footer__disclosure">
+					<?php esc_html_e( 'شفافیت: برخی لینک‌ها همکاری در فروش دارند؛ انتخاب کالا فقط بر پایه‌ی بررسی تحریریه است و قیمت و موجودی را در فروشنده ببینید.', 'chidemoon-blocksy-child' ); ?>
+				</p>
+			</div>
+			<?php foreach ( $sections as $section ) : ?>
+				<nav class="chidemoon-footer__nav" aria-label="<?php echo esc_attr( $section['title'] ); ?>">
+					<h2 class="chidemoon-footer__title"><?php echo esc_html( $section['title'] ); ?></h2>
+					<ul>
+						<?php foreach ( $section['links'] as $label => $url ) : ?>
+							<?php if ( is_string( $url ) && '' !== $url && ! is_wp_error( $url ) ) : ?>
+								<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( (string) $label ); ?></a></li>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					</ul>
+				</nav>
+			<?php endforeach; ?>
+			<div class="chidemoon-footer__note">
+				<h2 class="chidemoon-footer__title"><?php esc_html_e( 'استناد محتوایی', 'chidemoon-blocksy-child' ); ?></h2>
+				<p>
+					<?php esc_html_e( 'چیدمون یک رسانه‌ی مستقل است؛ هیچ فروشنده‌ای در نتیجه‌ی بررسی‌ها و رتبه‌بندی‌ها نفوذ ندارد.', 'chidemoon-blocksy-child' ); ?>
+				</p>
+			</div>
+		</div>
+	</footer>
+	<?php
+}
+add_action( 'blocksy:footer:before', 'chidemoon_blocksy_render_footer', 5 );
+
+/**
  * Return a stable public URL when a curated landing page has not been created
  * yet. Navigation can therefore be styled before editorial setup is complete.
  */
@@ -242,6 +423,21 @@ function chidemoon_blocksy_page_url( string $slug ): string {
 	}
 
 	return home_url( '/' . trim( $slug, '/' ) . '/' );
+}
+
+/**
+ * Persian-first presentation must never surface the English "Uncategorized"
+ * term as a badge. Prefer the first real category and fall back to none.
+ */
+function chidemoon_blocksy_primary_category( int $post_id ): ?WP_Term {
+	$categories = get_the_category( $post_id );
+	foreach ( $categories as $category ) {
+		if ( 'uncategorized' !== $category->slug ) {
+			return $category;
+		}
+	}
+
+	return null;
 }
 
 /**
@@ -261,8 +457,7 @@ function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '',
 	$permalink  = get_permalink( $post );
 	$title      = get_the_title( $post );
 	$excerpt    = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 24 );
-	$categories = get_the_category( $post_id );
-	$category       = ! empty( $categories ) ? $categories[0] : null;
+	$category   = chidemoon_blocksy_primary_category( $post_id );
 	$valid_variants = array( 'lead', 'compact' );
 	$variant_class  = in_array( $variant, $valid_variants, true ) ? ' chidemoon-story-card--' . $variant : '';
 	$heading_level  = in_array( $heading_level, array( 2, 3 ), true ) ? $heading_level : 3;
