@@ -53,7 +53,7 @@ final class Chidemoon_Core_Compare {
 					'compareUrl'=> self::comparison_url(),
 					'restUrl'   => esc_url_raw( rest_url( 'chidemoon-core/v1/compare-products' ) ),
 					'labels'    => array(
-						'added'          => __( 'افزودن به مقایسه', 'chidemoon-core' ),
+						'added'          => __( 'مقایسه', 'chidemoon-core' ),
 						'removed'        => __( 'انتخاب شده', 'chidemoon-core' ),
 						'full'           => __( 'حداکثر چهار محصول را می‌توانید مقایسه کنید.', 'chidemoon-core' ),
 						'compare'        => __( 'مقایسه محصولات', 'chidemoon-core' ),

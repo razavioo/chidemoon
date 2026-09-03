@@ -72,9 +72,9 @@ $hero_stats = chidemoon_home_hero_stats();
 	<div class="chidemoon-home__hero-copy">
 		<p class="chidemoon-eyebrow"><?php echo esc_html( get_bloginfo( 'name' ) ); ?> · <?php esc_html_e( 'مجله و فروشگاه چیدمان خانه', 'chidemoon-blocksy-child' ); ?></p>
 		<h1><?php esc_html_e( 'خانه را با شواهد بچین، نه با تبلیغ', 'chidemoon-blocksy-child' ); ?></h1>
-		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی کالاهای خانه است. هر مطلب از تحریریه می‌گذرد و هر کالا پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
+		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی محصولات خانه است. هر مطلب از تحریریه می‌گذرد و هر محصول پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
 		<div class="chidemoon-home__actions">
-			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'گشت در کالاهای منتخب', 'chidemoon-blocksy-child' ); ?></a>
+			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'گشت در محصولات منتخب', 'chidemoon-blocksy-child' ); ?></a>
 			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'مطالعه‌ی مجله', 'chidemoon-blocksy-child' ); ?></a>
 		</div>
 		<?php if ( ! empty( $hero_stats ) ) : ?>
@@ -168,9 +168,9 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-products-heading">
 <div class="chidemoon-section-heading">
 <div>
-<h2 id="chidemoon-products-heading">کالاهای برگزیده</h2>
+<h2 id="chidemoon-products-heading">محصولات برگزیده</h2>
 </div>
-<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه کالاها</a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه محصولات</a>
 </div>
 
 <?php if ( ! empty( $products ) ) : ?>
@@ -178,7 +178,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <?php chidemoon_blocksy_render_product_cards( $products ); ?>
 </div>
 <?php else : ?>
-<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'کالاها فقط پس از تأیید دسته‌بندی، تصویر و مقصد فروشنده منتشر می‌شوند.' ); ?>
+<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'محصولات فقط پس از تأیید دسته‌بندی، تصویر و مقصد فروشنده منتشر می‌شوند.' ); ?>
 <?php endif; ?>
 </section>
 
@@ -197,7 +197,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <span class="chidemoon-category-link__art" aria-hidden="true"><?php echo chidemoon_category_art( $category ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 <span class="chidemoon-category-link__body">
 <span class="chidemoon-category-link__title"><?php echo esc_html( $category->name ); ?></span>
-<span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> کالا</span>
+<span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> محصول</span>
 </span>
 <span class="chidemoon-category-link__go" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" class="chidemoon-cat-art" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path class="catart-ink" d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 </a>
@@ -209,7 +209,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 
 <section class="chidemoon-home__routes chidemoon-section-shell" aria-label="فرمت‌های چیدمون">
 <a class="chidemoon-route-card" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'comparisons' ) ); ?>">
-<span class="chidemoon-eyebrow">دو تا چهار کالا</span>
+<span class="chidemoon-eyebrow">دو تا چهار محصول</span>
 <strong>مقایسه‌های شفاف</strong>
 <span>شواهد بررسی‌شده، مبادلات روشن، بدون توصیه‌ی خودکار.</span>
 </a>

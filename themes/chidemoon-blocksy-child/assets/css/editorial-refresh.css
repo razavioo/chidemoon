@@ -407,6 +407,31 @@ html {
 	max-width: 18ch;
 }
 
+/* Category pages stay quieter than mastheads: no decorative blob competing
+ * with the photo, a tighter frame, a smaller display title, and no stat rows.
+ * The catalogue grid is the content. */
+.chidemoon-shop-archive__intro {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 22%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	padding-block: clamp(1.5rem, 3.2vw, 2.6rem);
+}
+
+.chidemoon-shop-archive__intro h1 {
+	font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+	margin-block: 0.4rem 0.5rem;
+}
+
+.chidemoon-shop-archive__intro-copy {
+	max-width: 36rem;
+}
+
+.chidemoon-shop-archive__intro .term-description {
+	color: var(--chidemoon-muted);
+	font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+	line-height: 2;
+	margin: 0;
+	max-width: 34rem;
+}
+
 .chidemoon-archive > .chidemoon-section-shell,
 .chidemoon-collection-page__feed {
 	padding-top: clamp(2rem, 4vw, 3.5rem);
@@ -499,35 +524,16 @@ html {
 	width: 100%;
 }
 
-/* Category identity mark: the term's own SVG art rides beside the eyebrow,
- * so every category page carries its drawing even when a photo fills the
- * hero media slot. */
-.chidemoon-shop-archive__kicker {
-	align-items: center;
-	display: flex;
-	gap: 0.7rem;
-}
-
-.chidemoon-shop-archive__kicker .chidemoon-eyebrow {
-	margin: 0;
-}
-
-.chidemoon-shop-archive__mark {
-	background: color-mix(in srgb, var(--chidemoon-sage) 30%, var(--chidemoon-surface));
-	border-radius: var(--chidemoon-radius-sm);
-	box-shadow: 0 0 0 1px var(--chidemoon-line);
-	flex: none;
-	height: 2.8rem;
-	padding: 0.32rem;
-	width: 2.8rem;
-}
-
-.chidemoon-shop-archive__mark .chidemoon-cat-art,
 .chidemoon-category-link__art .chidemoon-cat-art,
 .chidemoon-category-link__go .chidemoon-cat-art {
 	display: block;
 	height: 100%;
 	width: 100%;
+}
+
+/* Category hero speaks once: a tighter grid gap keeps the quieter frame. */
+.chidemoon-shop-archive__intro {
+	gap: clamp(1.1rem, 2.4vw, 1.9rem);
 }
 
 /* The art plate replaces the hero photo when a category has no term
@@ -543,6 +549,92 @@ html {
 	height: 76%;
 	max-width: 84%;
 	width: auto;
+}
+
+/* Product-led category hero: a real catalogue image fills the frame and the
+ * category art rides on the corner as a seal. Shadow and radius move to the
+ * inner frame so the caption below stays outside the framed box. */
+.chidemoon-shop-archive__intro-media--product {
+	background: transparent;
+	box-shadow: none;
+	overflow: visible;
+	position: relative;
+}
+
+.chidemoon-shop-archive__intro-media--product .chidemoon-shop-archive__media-frame {
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: -0.65rem 0.65rem 0 color-mix(in srgb, var(--chidemoon-clay) 28%, transparent), var(--chidemoon-shadow);
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+.chidemoon-shop-archive__media-frame:focus-visible {
+	outline-offset: 4px;
+}
+
+/* The category art is stamped onto the photograph itself: anchored inside
+ * the frame, it reads as a brand seal instead of a floating sticker. */
+.chidemoon-shop-archive__media-seal {
+	background: color-mix(in srgb, var(--chidemoon-surface) 94%, transparent);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	height: 4.75rem;
+	inset-block-end: 0.9rem;
+	inset-inline-start: 0.9rem;
+	padding: 0.42rem;
+	position: absolute;
+	width: 4.75rem;
+}
+
+.chidemoon-shop-archive__media-seal .chidemoon-cat-art {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.chidemoon-shop-archive__media-caption {
+	align-items: baseline;
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.1rem 0.6rem;
+	margin: 0.85rem 0.2rem 0;
+}
+
+.chidemoon-shop-archive__media-caption__label {
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.72rem;
+	font-weight: 700;
+	line-height: 1.8;
+}
+
+.chidemoon-shop-archive__media-caption__label::before {
+	color: var(--chidemoon-clay);
+	content: "·";
+	margin-inline-end: 0.6rem;
+}
+
+.chidemoon-shop-archive__media-caption__product {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.02rem;
+	font-weight: 700;
+	line-height: 1.8;
+	text-decoration-color: var(--chidemoon-line-strong);
+	text-underline-offset: 4px;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-shop-archive__media-caption__product:is(:hover, :focus-visible) {
+	color: var(--chidemoon-clay);
+}
+
+@media (max-width: 520px) {
+	.chidemoon-shop-archive__media-seal {
+		height: 3.9rem;
+		width: 3.9rem;
+	}
 }
 
 /* Home masthead: brand statement with the abstract editorial mark. */
@@ -2002,40 +2094,58 @@ html {
 	display: none !important;
 }
 
+/* The article "products in this look" shelf. CTA and title colors are
+ * re-declared under the section class because Blocksy's generic
+ * .entry-content link palette outranks bare element rules and was
+ * painting light text onto light hover backgrounds. */
 .chidemoon-article-products {
-	margin-block: clamp(2rem, 6vw, 4rem);
-	padding-block-start: clamp(1.5rem, 4vw, 2.5rem);
-	border-block-start: 1px solid var(--chidemoon-line);
+	border-block: 1px solid var(--chidemoon-line);
+	margin-block: clamp(2.5rem, 7vw, 4.5rem);
+	padding-block: clamp(1.75rem, 4vw, 2.75rem);
 }
 
-.chidemoon-article-products > p {
-	max-width: 46rem;
+.chidemoon-article-products h2,
+.chidemoon-article-products__title {
+	font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+	font-weight: 800;
+	line-height: 1.55;
+	margin: 0;
+}
+
+.chidemoon-article-products > p,
+.chidemoon-article-products__note {
 	color: var(--chidemoon-muted);
+	font-size: 0.92rem;
+	line-height: 1.95;
+	margin: 0.55rem 0 0;
+	max-width: 46rem;
 }
 
 .chidemoon-article-products__grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: clamp(1rem, 2vw, 1.4rem);
-	margin-block-start: 1.5rem;
+	margin-block-start: 1.75rem;
 }
 
 .chidemoon-article-product {
+	align-items: stretch;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: var(--chidemoon-shadow-soft);
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
 	overflow: hidden;
-	border: 1px solid var(--chidemoon-line);
-	border-radius: var(--chidemoon-radius);
-	background: var(--chidemoon-surface);
-	box-shadow: var(--chidemoon-shadow-soft);
-	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
+	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
 }
 
-.chidemoon-article-product:hover,
-.chidemoon-article-product:focus-within {
+.chidemoon-article-products .chidemoon-article-product:hover,
+.chidemoon-article-products .chidemoon-article-product:focus-within {
 	border-color: var(--chidemoon-line-strong);
 	box-shadow: var(--chidemoon-shadow);
+	transform: translateY(-2px);
 }
 
 .chidemoon-article-product__image {
@@ -2084,8 +2194,8 @@ html {
 	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.chidemoon-article-product__title a:hover,
-.chidemoon-article-product__title a:focus-visible {
+.chidemoon-article-products .chidemoon-article-product__title a:hover,
+.chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
 	color: var(--chidemoon-clay);
 }
 
@@ -2137,30 +2247,35 @@ html {
 	font-weight: 700;
 }
 
-.chidemoon-article-product__cta {
+.chidemoon-article-products .chidemoon-article-product__cta {
 	align-items: center;
-	border: 1px solid var(--chidemoon-line-strong);
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
 	border-radius: var(--chidemoon-radius-sm);
-	color: var(--chidemoon-forest);
+	box-shadow: var(--chidemoon-shadow-soft);
+	color: #fffcf7;
 	display: inline-flex;
 	font-family: var(--chidemoon-font-ui);
 	font-size: 0.78rem;
 	font-weight: 700;
-	min-height: 2.3rem;
-	padding: 0.4rem 0.95rem;
+	min-height: 2.4rem;
+	padding: 0.45rem 1rem;
 	text-decoration: none;
-	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out), transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 	white-space: nowrap;
 }
 
-.chidemoon-article-product__cta:hover {
-	background: var(--chidemoon-forest);
-	border-color: var(--chidemoon-forest);
+.chidemoon-article-products .chidemoon-article-product__cta:hover,
+.chidemoon-article-products .chidemoon-article-product__cta:focus-visible {
+	background: var(--chidemoon-forest-deep);
+	border-color: var(--chidemoon-forest-deep);
+	box-shadow: var(--chidemoon-shadow);
 	color: #fffcf7;
+	transform: translateY(-1px);
 }
 
-.chidemoon-article-product__cta:focus-visible,
-.chidemoon-article-product__title a:focus-visible {
+.chidemoon-article-products .chidemoon-article-product__cta:focus-visible,
+.chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
 	outline: 2px solid var(--chidemoon-clay);
 	outline-offset: 2px;
 }
@@ -2196,6 +2311,18 @@ html {
 @media (prefers-reduced-motion: reduce) {
 	.ct-footer :where(a, .ct-menu-link) {
 		transition: none;
+	}
+
+	.chidemoon-article-products .chidemoon-article-product,
+	.chidemoon-article-products .chidemoon-article-product__cta {
+		transition: none;
+	}
+
+	.chidemoon-article-products .chidemoon-article-product:hover,
+	.chidemoon-article-products .chidemoon-article-product:focus-within,
+	.chidemoon-article-products .chidemoon-article-product__cta:hover,
+	.chidemoon-article-products .chidemoon-article-product__cta:focus-visible {
+		transform: none;
 	}
 }
 
@@ -2746,7 +2873,7 @@ html {
 	min-height: 2.8rem;
 }
 
-/* The WooCommerce loop CTA ("اطلاعات بیشتر") must match the editorial
+/* The WooCommerce loop CTA ("مشاهده") must match the editorial
  * button language instead of Blocksy's default chrome. */
 .ct-woo-card-actions .button,
 .ct-woo-card-actions .added_to_cart {

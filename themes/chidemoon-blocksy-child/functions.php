@@ -512,7 +512,7 @@ function chidemoon_blocksy_render_footer(): void {
 		array(
 			'title' => 'فروشگاه',
 			'links' => array(
-				'همه کالاها' => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' ),
+				'همه محصولات' => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' ),
 			),
 		),
 	);
@@ -532,10 +532,10 @@ function chidemoon_blocksy_render_footer(): void {
 			<div class="chidemoon-footer__brand">
 				<p class="chidemoon-footer__logo" itemprop="name"><?php bloginfo( 'name' ); ?></p>
 				<p class="chidemoon-footer__tagline">
-					<?php esc_html_e( 'مجله‌ی خرید برای خانه؛ راهنماهای آزموده، مقایسه‌های شفاف و کالاهای منتخب برای چیدمان هر گوشه از خانه.', 'chidemoon-blocksy-child' ); ?>
+					<?php esc_html_e( 'مجله‌ی خرید برای خانه؛ راهنماهای آزموده، مقایسه‌های شفاف و محصولات منتخب برای چیدمان هر گوشه از خانه.', 'chidemoon-blocksy-child' ); ?>
 				</p>
 				<p class="chidemoon-footer__disclosure">
-					<?php esc_html_e( 'شفافیت: برخی لینک‌ها همکاری در فروش دارند؛ انتخاب کالا فقط بر پایه‌ی بررسی تحریریه است و قیمت و موجودی را در فروشنده ببینید.', 'chidemoon-blocksy-child' ); ?>
+					<?php esc_html_e( 'شفافیت: برخی لینک‌ها همکاری در فروش دارند؛ انتخاب محصول فقط بر پایه‌ی بررسی تحریریه است و قیمت و موجودی را در فروشنده ببینید.', 'chidemoon-blocksy-child' ); ?>
 				</p>
 			</div>
 			<?php foreach ( $sections as $section ) : ?>
@@ -599,15 +599,38 @@ function chidemoon_blocksy_english_overrides(): array {
 	return $map;
 }
 
+/**
+ * WooCommerce's Persian pack renders the non-purchasable product CTA as
+ * "اطلاعات بیشتر". The editorial CTA for such products is "مشاهده" — the
+ * same word the product cards use — so the shipped translation is remapped.
+ */
+function chidemoon_woocommerce_english_overrides(): array {
+	static $map = null;
+	if ( is_array( $map ) ) {
+		return $map;
+	}
+
+	$map = array(
+		'Read more' => 'مشاهده',
+	);
+
+	return $map;
+}
+
 add_filter(
 	'gettext',
 	static function ( string $translation, string $text, string $domain ): string {
-		if ( 'blocksy' !== $domain ) {
-			return $translation;
+		if ( 'blocksy' === $domain ) {
+			$map = chidemoon_blocksy_english_overrides();
+			return $map[ $text ] ?? $translation;
 		}
 
-		$map = chidemoon_blocksy_english_overrides();
-		return $map[ $text ] ?? $translation;
+		if ( 'woocommerce' === $domain ) {
+			$map = chidemoon_woocommerce_english_overrides();
+			return $map[ $text ] ?? $translation;
+		}
+
+		return $translation;
 	},
 	999,
 	3
@@ -741,7 +764,7 @@ function chidemoon_home_hero_stats(): array {
 	if ( post_type_exists( 'product' ) ) {
 		$product_count = wp_count_posts( 'product' );
 		if ( $product_count instanceof stdClass && (int) $product_count->publish > 0 ) {
-			$stats['کالای بررسی‌شده'] = (int) $product_count->publish;
+			$stats['محصول بررسی‌شده'] = (int) $product_count->publish;
 		}
 	}
 

@@ -6,7 +6,7 @@
   "title": "از تصویر بخر",
   "category": "chidemoon-commerce",
   "icon": "camera",
-  "description": "تصویر چیدمان با نقاط قابل کلیک برای نمایش کالاها.",
+  "description": "تصویر چیدمان با نقاط قابل کلیک برای نمایش محصولات.",
   "keywords": ["shop", "look", "hotspot", "image", "اتاق", "تصویر"],
   "supports": { "html": false, "anchor": true, "align": ["wide", "full"], "spacing": { "margin": true }, "shadow": true },
   "attributes": {

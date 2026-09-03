@@ -102,7 +102,7 @@
 
 		if (!attributes.imageId) {
 			return el('div', blockProps,
-				el('p', null, __('یک تصویر چیدمان انتخاب کنید، سپس روی کالاهای آن کلیک کنید.', 'chidemoon-core')),
+				el('p', null, __('یک تصویر چیدمان انتخاب کنید، سپس روی محصولات آن کلیک کنید.', 'chidemoon-core')),
 				el(MediaUploadCheck, null, el(MediaUpload, {
 					onSelect: selectImage,
 					allowedTypes: ['image'],
@@ -126,7 +126,7 @@
 					el(TextControl, { label: __('توضیح تصویر', 'chidemoon-core'), value: attributes.caption, onChange: function (value) { setAttributes({ caption: value }); } })
 				),
 				el(PanelBody, { title: __('نقاط محصولات', 'chidemoon-core'), initialOpen: true },
-					el(TextControl, { label: __('جست‌وجوی محصول', 'chidemoon-core'), value: productQuery, onChange: setProductQuery, help: loadingProducts ? __('در حال جست‌وجو…', 'chidemoon-core') : __('فقط کالاهای قابل‌خرید نمایش داده می‌شوند.', 'chidemoon-core') }),
+					el(TextControl, { label: __('جست‌وجوی محصول', 'chidemoon-core'), value: productQuery, onChange: setProductQuery, help: loadingProducts ? __('در حال جست‌وجو…', 'chidemoon-core') : __('فقط محصولات قابل‌خرید نمایش داده می‌شوند.', 'chidemoon-core') }),
 					hotspots.length ? hotspots.map(function (spot, index) {
 						return el('div', { key: index, className: 'chidemoon-shop-the-look-editor__item' },
 							el('strong', null, '#' + (index + 1)),

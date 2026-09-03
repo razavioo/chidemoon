@@ -23,39 +23,26 @@ $term_art          = $current_term instanceof WP_Term && is_product_category()
 $hero_product      = $current_term instanceof WP_Term && is_product_category()
 	? chidemoon_category_hero_product( $current_term )
 	: null;
-$catalogue_count   = chidemoon_archive_record_count();
 ?>
 
 <div class="chidemoon-shop-archive">
 	<section class="chidemoon-shop-archive__intro chidemoon-section-shell<?php echo $term_thumbnail_id > 0 || '' !== $term_art || $hero_product instanceof WC_Product ? ' has-media' : ''; ?>">
 		<div class="chidemoon-shop-archive__intro-copy">
-			<?php if ( '' !== $term_art ) : ?>
-				<div class="chidemoon-shop-archive__kicker">
-					<span class="chidemoon-shop-archive__mark" aria-hidden="true"><?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-					<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
-				</div>
-			<?php else : ?>
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب کالا', 'chidemoon-blocksy-child' ); ?></p>
-			<?php endif; ?>
+			<p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب محصول', 'chidemoon-blocksy-child' ); ?></p>
 			<h1><?php woocommerce_page_title(); ?></h1>
 			<?php do_action( 'woocommerce_archive_description' ); ?>
-			<?php if ( $catalogue_count > 0 ) : ?>
-				<p class="chidemoon-hero-facts">
-					<span class="chidemoon-hero-facts__item"><strong><?php echo esc_html( chidemoon_fa_digits( $catalogue_count ) ); ?></strong><?php esc_html_e( 'کالای منتشرشده', 'chidemoon-blocksy-child' ); ?></span>
-				</p>
-			<?php endif; ?>
 		</div>
 		<?php if ( $hero_product instanceof WC_Product ) : ?>
 			<figure class="chidemoon-shop-archive__intro-media chidemoon-shop-archive__intro-media--product">
 				<a class="chidemoon-shop-archive__media-frame" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>" aria-label="<?php echo esc_attr( $hero_product->get_name() ); ?>">
 					<?php echo wp_get_attachment_image( (int) $hero_product->get_image_id(), 'large', false, array( 'loading' => 'eager' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php if ( '' !== $term_art ) : ?>
+						<span class="chidemoon-shop-archive__media-seal" aria-hidden="true"><?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+					<?php endif; ?>
 				</a>
-				<?php if ( '' !== $term_art ) : ?>
-					<span class="chidemoon-shop-archive__media-seal" aria-hidden="true"><?php echo $term_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-				<?php endif; ?>
 				<figcaption class="chidemoon-shop-archive__media-caption">
-					<span><?php esc_html_e( 'نمونه از کالاهای این دسته:', 'chidemoon-blocksy-child' ); ?></span>
-					<a href="<?php echo esc_url( $hero_product->get_permalink() ); ?>"><?php echo esc_html( $hero_product->get_name() ); ?></a>
+					<a class="chidemoon-shop-archive__media-caption__product" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>"><?php echo esc_html( $hero_product->get_name() ); ?></a>
+					<span class="chidemoon-shop-archive__media-caption__label"><?php esc_html_e( 'نمونه از محصولات این دسته', 'chidemoon-blocksy-child' ); ?></span>
 				</figcaption>
 			</figure>
 		<?php elseif ( $term_thumbnail_id > 0 ) : ?>
@@ -84,7 +71,7 @@ $catalogue_count   = chidemoon_archive_record_count();
 
 			<?php do_action( 'woocommerce_after_shop_loop' ); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( 'انتخاب کالا در حال آماده‌سازی است.', 'کالاها فقط وقتی نمایش داده می‌شوند که مقصد فروشنده، دسته‌بندی، تصویر و وضعیت بررسی‌شان آماده استفاده عمومی باشد.' ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'انتخاب محصول در حال آماده‌سازی است.', 'محصولات فقط وقتی نمایش داده می‌شوند که مقصد فروشنده، دسته‌بندی، تصویر و وضعیت بررسی‌شان آماده استفاده عمومی باشد.' ); ?>
 		<?php endif; ?>
 	</section>
 

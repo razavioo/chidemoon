@@ -72,7 +72,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'chidemoon-shop-the-l
 	</div>
 	<?php if ( $caption ) : ?><figcaption><?php echo esc_html( $caption ); ?></figcaption><?php endif; ?>
 	<?php if ( ! empty( $products ) ) : ?>
-		<ol class="chidemoon-shop-the-look__fallback" aria-label="<?php esc_attr_e( 'کالاهای این تصویر', 'chidemoon-core' ); ?>">
+		<ol class="chidemoon-shop-the-look__fallback" aria-label="<?php esc_attr_e( 'محصولات این تصویر', 'chidemoon-core' ); ?>">
 		<?php foreach ( $products as $product ) : ?><li><span><?php echo esc_html( $product['title'] ); ?></span><span><?php echo wp_kses_post( $product['price'] ); ?></span><a href="<?php echo esc_url( $product['url'] ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a></li><?php endforeach; ?>
 		</ol>
 	<?php endif; ?>

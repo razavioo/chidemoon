@@ -18,7 +18,7 @@ get_header();
 		<?php if ( get_the_archive_description() ) : ?>
 			<div class="chidemoon-archive__description"><?php the_archive_description(); ?></div>
 		<?php elseif ( is_search() ) : ?>
-			<p><?php esc_html_e( 'نتایج از سراسر چیدمون: مجله، راهنماها و کالاهای منتخب. عبارت کوتاه‌تر معمولاً نتیجه‌ی دقیق‌تری می‌دهد.', 'chidemoon-blocksy-child' ); ?></p>
+			<p><?php esc_html_e( 'نتایج از سراسر چیدمون: مجله، راهنماها و محصولات منتخب. عبارت کوتاه‌تر معمولاً نتیجه‌ی دقیق‌تری می‌دهد.', 'chidemoon-blocksy-child' ); ?></p>
 		<?php else : ?>
 			<p><?php esc_html_e( 'مطالب بررسی‌شده و ایده‌های کاربردی از مجله چیدمون.', 'chidemoon-blocksy-child' ); ?></p>
 		<?php endif; ?>
