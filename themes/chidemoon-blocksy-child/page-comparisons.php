@@ -52,13 +52,12 @@ $comparison_posts = new WP_Query(
 		<?php Chidemoon_Core_Compare::enqueue_assets(); ?>
 		<section id="chidemoon-comparison-picker" class="chidemoon-comparison-picker chidemoon-section-shell" aria-labelledby="chidemoon-picker-title">
 			<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php esc_html_e( 'انتخاب محصول', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-picker-title"><?php esc_html_e( 'تا چهار محصول را انتخاب کنید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
-			<p><?php esc_html_e( 'از هر کارت «مقایسه» را بزنید. انتخاب‌های شما در نوار پایین صفحه و همین‌جا دیده می‌شوند و جدول مقایسه، پایین‌تر از این بخش، همان لحظه ساخته می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
-			<div class="chidemoon-comparison-search" data-comparison-search>
-				<label for="chidemoon-product-search"><?php esc_html_e( 'جست‌وجوی محصول برای مقایسه', 'chidemoon-blocksy-child' ); ?></label>
-				<div class="chidemoon-comparison-search__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg><input id="chidemoon-product-search" type="search" placeholder="<?php esc_attr_e( 'نام محصول را بنویسید…', 'chidemoon-blocksy-child' ); ?>" autocomplete="off" data-comparison-search-input></div>
-				<p class="chidemoon-comparison-search__hint"><?php esc_html_e( 'برای شروع، نام محصول موردنظر را جست‌وجو و آن را به مقایسه اضافه کنید.', 'chidemoon-blocksy-child' ); ?></p>
-				<div class="chidemoon-comparison-search__results" data-comparison-search-results aria-live="polite" aria-atomic="true" hidden></div>
-			</div>
+			<p><?php esc_html_e( 'کافی است روی هر کارت «مقایسه» بزنید؛ جدول مقایسه پایین‌تر همان لحظه ساخته می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
+			<ol class="chidemoon-comparison-steps">
+				<li><div class="chidemoon-comparison-steps__badge chidemoon-comparison-steps__badge--sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12H7.2L6 8Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></div><div><p class="chidemoon-comparison-steps__title"><?php esc_html_e( '۱. محصول را بردارید', 'chidemoon-blocksy-child' ); ?></p><p class="chidemoon-comparison-steps__text"><?php esc_html_e( 'از محصولات پیشنهادی زیر یا هر کالای دیگری از فروشگاه.', 'chidemoon-blocksy-child' ); ?></p></div></li>
+				<li><div class="chidemoon-comparison-steps__badge chidemoon-comparison-steps__badge--forest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 3 6.5 16 2.3-6.2L20 10.5 5 3Z"></path><path d="m12.5 15.5 4.5 4.5"></path></svg></div><div><p class="chidemoon-comparison-steps__title"><?php esc_html_e( '۲. دکمهٔ «مقایسه» را بزنید', 'chidemoon-blocksy-child' ); ?></p><p class="chidemoon-comparison-steps__text"><?php esc_html_e( 'تا چهار محصول؛ انتخاب‌ها در نوار پایین صفحه جمع می‌شوند.', 'chidemoon-blocksy-child' ); ?></p></div></li>
+				<li><div class="chidemoon-comparison-steps__badge chidemoon-comparison-steps__badge--clay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M9 10v10"></path><path d="M15 10v10"></path></svg></div><div><p class="chidemoon-comparison-steps__title"><?php esc_html_e( '۳. جدول را ببینید', 'chidemoon-blocksy-child' ); ?></p><p class="chidemoon-comparison-steps__text"><?php esc_html_e( 'جدول مقایسه پایین‌تر، همان لحظه ساخته می‌شود.', 'chidemoon-blocksy-child' ); ?></p></div></li>
+			</ol>
 			<?php if ( ! empty( $catalogue ) ) : ?>
 				<div class="chidemoon-section-heading chidemoon-comparison-picker__catalogue-heading"><div><p class="chidemoon-eyebrow"><?php esc_html_e( 'محصولات پیشنهادی', 'chidemoon-blocksy-child' ); ?></p><h3><?php esc_html_e( 'از اینجا شروع کنید', 'chidemoon-blocksy-child' ); ?></h3></div></div>
 				<div class="chidemoon-card-grid chidemoon-card-grid--products" data-comparison-catalogue><?php chidemoon_blocksy_render_product_cards( $catalogue ); ?></div>
@@ -68,7 +67,7 @@ $comparison_posts = new WP_Query(
 		<section id="chidemoon-comparison-table" class="chidemoon-comparison-table-section chidemoon-section-shell" aria-labelledby="chidemoon-table-title">
 			<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php esc_html_e( 'جدول مقایسه', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-table-title"><?php esc_html_e( 'تفاوت‌ها را کنار هم ببینید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
 			<?php if ( count( $products ) < 2 ) : ?>
-				<?php chidemoon_blocksy_render_empty_state( 'جدول مقایسه اینجا ساخته می‌شود.', count( $products ) === 1 ? 'یک محصول انتخاب کرده‌اید؛ یکی دیگر را از کارت‌های بالا یا جست‌وجو اضافه کنید.' : 'از کارت‌های «محصولات پیشنهادی» یا جست‌وجوی بالا، گزینهٔ «مقایسه» را بزنید؛ نوار پایین صفحه انتخاب‌های شما را نگه می‌دارد.', '#chidemoon-comparison-picker', 'انتخاب محصول' ); ?>
+				<?php chidemoon_blocksy_render_empty_state( 'جدول مقایسه اینجا ساخته می‌شود.', count( $products ) === 1 ? 'یک محصول انتخاب کرده‌اید؛ یکی دیگر را از کارت‌های بالا اضافه کنید.' : 'از کارت‌های «محصولات پیشنهادی» گزینهٔ «مقایسه» را بزنید؛ نوار پایین صفحه انتخاب‌های شما را نگه می‌دارد.', '#chidemoon-comparison-picker', 'انتخاب محصول' ); ?>
 			<?php else : ?>
 				<div class="chidemoon-comparison-table-wrap" tabindex="0" aria-label="<?php esc_attr_e( 'جدول مقایسه محصولات', 'chidemoon-blocksy-child' ); ?>">
 					<table class="chidemoon-comparison-table">
