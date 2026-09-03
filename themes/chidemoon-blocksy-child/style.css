@@ -84,30 +84,19 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	color: var(--chidemoon-forest-deep);
 }
 
-/* A clay full-stop closes the wordmark; empty content stays silent for
- * assistive technology. */
-.ct-header .site-title a::after,
-#offcanvas .site-title a::after {
-	background: var(--chidemoon-clay);
-	border-radius: 999px;
-	content: "";
-	display: inline-block;
-	height: 0.42rem;
-	margin-inline-start: 0.3rem;
-	width: 0.42rem;
-}
-
 /* Editorial link language: constant weight, state carried by color and a
  * clay underline, so hover and current never reflow the row. */
 .ct-header [data-id="menu"] .ct-menu-link {
 	--theme-font-family: var(--chidemoon-font-ui);
-	--theme-font-size: 0.86rem;
+	--theme-font-size: 0.95rem;
 	--theme-font-weight: 600;
 	--theme-letter-spacing: 0;
 	--theme-line-height: 1.6;
 	--theme-text-transform: none;
 	color: var(--chidemoon-ink);
 	font-family: var(--chidemoon-font-ui);
+	font-size: 0.95rem;
+	font-weight: 600;
 	letter-spacing: 0;
 	text-decoration: underline;
 	text-decoration-color: transparent;
@@ -138,6 +127,7 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 /* A stuck row gains a calm paper veil instead of floating unlabeled. */
 .ct-header [data-row][data-sticky*="yes"] {
+	background: var(--chidemoon-surface);
 	background: color-mix(in srgb, var(--chidemoon-surface) 88%, transparent);
 	backdrop-filter: blur(8px);
 	box-shadow: 0 12px 32px rgba(13, 43, 35, 0.08);
