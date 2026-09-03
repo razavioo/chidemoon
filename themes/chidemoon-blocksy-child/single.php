@@ -67,12 +67,12 @@ $primary_category = chidemoon_blocksy_primary_category( (int) get_queried_object
 		</div>
 
 		<nav class="chidemoon-article__navigation chidemoon-section-shell" aria-label="<?php esc_attr_e( 'ادامه مجله', 'chidemoon-blocksy-child' ); ?>">
-			<?php the_post_navigation(
-				array(
-					'prev_text' => '<span class="chidemoon-eyebrow">' . esc_html__( 'مطلب قبلی', 'chidemoon-blocksy-child' ) . '</span><span class="chidemoon-article__nav-title">%title</span>',
-					'next_text' => '<span class="chidemoon-eyebrow">' . esc_html__( 'مطلب بعدی', 'chidemoon-blocksy-child' ) . '</span><span class="chidemoon-article__nav-title">%title</span>',
-				)
-			); ?>
+			<div class="nav-links">
+				<?php
+				chidemoon_blocksy_render_navigation_card( get_previous_post(), true );
+				chidemoon_blocksy_render_navigation_card( get_next_post(), false );
+				?>
+			</div>
 		</nav>
 	<?php endwhile; ?>
 </main>

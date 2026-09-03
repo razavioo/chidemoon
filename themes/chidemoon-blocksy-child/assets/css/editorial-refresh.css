@@ -1293,6 +1293,50 @@ html {
 	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
 }
 
+/* Post navigation: each card is anchored by the sibling post's imagery —
+ * featured image first, decorative placeholder otherwise — so the journal
+ * reads as continuous. A flex row keeps media and title locked together at
+ * every width; RTL flows the media to the inline-start edge. */
+.chidemoon-article__navigation :where(.nav-previous, .nav-next) > a {
+	align-items: center;
+	display: flex;
+	gap: 0.9rem;
+}
+
+.chidemoon-article__nav-body {
+	display: grid;
+	flex: 1;
+	gap: 0.35rem;
+	min-width: 0;
+	overflow-wrap: break-word;
+}
+
+.chidemoon-article__nav-media {
+	aspect-ratio: 1.28 / 1;
+	background: var(--chidemoon-surface-muted);
+	border-radius: calc(var(--chidemoon-radius) * 0.6);
+	display: block;
+	flex-shrink: 0;
+	overflow: hidden;
+	width: clamp(4.5rem, 12vw, 6.5rem);
+}
+
+.chidemoon-article__nav-media img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--chidemoon-motion-image, 280ms) var(--chidemoon-ease-out, ease);
+	width: 100%;
+}
+
+.chidemoon-article__navigation :where(.nav-previous, .nav-next):hover .chidemoon-article__nav-media img {
+	transform: scale(1.045);
+}
+
+.chidemoon-article__nav-media .chidemoon-card__media-empty {
+	height: 100%;
+}
+
 /* WooCommerce catalogue and product detail. */
 .chidemoon-shop-archive__catalogue {
 	padding-top: clamp(2rem, 4vw, 3.5rem);
@@ -1702,6 +1746,12 @@ html {
 		grid-template-columns: minmax(0, 1fr);
 	}
 
+	/* Stacked navigation cards: two-up cards crush long Persian titles on
+	 * tablets, so the nav mirrors the article's single-column reflow. */
+	.chidemoon-article__navigation .nav-links {
+		grid-template-columns: 1fr;
+	}
+
 	.chidemoon-article__aside,
 	.chidemoon-collection-page__note {
 		position: static;
@@ -1976,6 +2026,20 @@ html {
 		padding: 1.25rem 1rem;
 	}
 
+	/* Navigation cards: tighter rhythm so the media and title stay a single
+	 * compact unit on narrow screens. */
+	.chidemoon-article__navigation :where(.nav-previous, .nav-next) {
+		padding: 1rem 1.05rem;
+	}
+
+	.chidemoon-article__navigation :where(.nav-previous, .nav-next) > a {
+		gap: 0.75rem;
+	}
+
+	.chidemoon-article__nav-media {
+		width: 4.25rem;
+	}
+
 	.woocommerce div.product {
 		border-radius: var(--chidemoon-radius);
 		margin-inline: 0;
@@ -2029,6 +2093,7 @@ html {
 	:where(
 		.chidemoon-card__media img,
 		.chidemoon-featured__media img,
+		.chidemoon-article__nav-media img,
 		.chidemoon-route-card,
 		.chidemoon-article__navigation .nav-previous,
 		.chidemoon-article__navigation .nav-next,
@@ -2094,41 +2159,47 @@ html {
 	display: none !important;
 }
 
-/* The article "products in this look" shelf. CTA and title colors are
- * re-declared under the section class because Blocksy's generic
- * .entry-content link palette outranks bare element rules and was
- * painting light text onto light hover backgrounds. */
-.chidemoon-article-products {
+/* The article "products in this look" shelf. Every rule is scoped under
+ * .entry-content AND the section class: Blocksy's generic article
+ * typography (.entry-content h2/h3/p/a, content spacing) otherwise
+ * outranks or out-orders the bare card classes and inflated titles,
+ * recoloured links, and repainted the CTA text on light backgrounds. */
+.entry-content .chidemoon-article-products {
 	border-block: 1px solid var(--chidemoon-line);
 	margin-block: clamp(2.5rem, 7vw, 4.5rem);
 	padding-block: clamp(1.75rem, 4vw, 2.75rem);
 }
 
-.chidemoon-article-products h2,
-.chidemoon-article-products__title {
-	font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+.entry-content .chidemoon-article-products h2,
+.entry-content .chidemoon-article-products__title {
+	color: var(--chidemoon-ink);
+	font-family: var(--chidemoon-font-body);
+	font-size: clamp(1.4rem, 2.3vw, 1.8rem);
 	font-weight: 800;
+	letter-spacing: 0;
 	line-height: 1.55;
 	margin: 0;
 }
 
-.chidemoon-article-products > p,
-.chidemoon-article-products__note {
+.entry-content .chidemoon-article-products > p,
+.entry-content .chidemoon-article-products__note {
 	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-body);
 	font-size: 0.92rem;
+	letter-spacing: 0;
 	line-height: 1.95;
-	margin: 0.55rem 0 0;
-	max-width: 46rem;
+	margin: 0.6rem 0 0;
+	max-width: 44rem;
 }
 
-.chidemoon-article-products__grid {
+.entry-content .chidemoon-article-products__grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: clamp(1rem, 2vw, 1.4rem);
-	margin-block-start: 1.75rem;
+	margin-block: 1.75rem 0;
 }
 
-.chidemoon-article-product {
+.entry-content .chidemoon-article-product {
 	align-items: stretch;
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
@@ -2136,38 +2207,39 @@ html {
 	box-shadow: var(--chidemoon-shadow-soft);
 	display: flex;
 	flex-direction: column;
+	margin: 0;
 	min-width: 0;
 	overflow: hidden;
 	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
 }
 
-.chidemoon-article-products .chidemoon-article-product:hover,
-.chidemoon-article-products .chidemoon-article-product:focus-within {
+.entry-content .chidemoon-article-products .chidemoon-article-product:hover,
+.entry-content .chidemoon-article-products .chidemoon-article-product:focus-within {
 	border-color: var(--chidemoon-line-strong);
 	box-shadow: var(--chidemoon-shadow);
 	transform: translateY(-2px);
 }
 
-.chidemoon-article-product__image {
-	display: block;
-	aspect-ratio: 4 / 3;
-	overflow: hidden;
+.entry-content .chidemoon-article-product__image {
 	background: var(--chidemoon-surface-muted);
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
 }
 
-.chidemoon-article-product__image img {
-	width: 100%;
+.entry-content .chidemoon-article-product__image img {
 	height: 100%;
 	object-fit: cover;
 	transition: transform var(--chidemoon-motion-image) var(--chidemoon-ease-out);
+	width: 100%;
 }
 
-.chidemoon-article-product:hover .chidemoon-article-product__image img,
-.chidemoon-article-product:focus-within .chidemoon-article-product__image img {
+.entry-content .chidemoon-article-product:hover .chidemoon-article-product__image img,
+.entry-content .chidemoon-article-product:focus-within .chidemoon-article-product__image img {
 	transform: scale(1.04);
 }
 
-.chidemoon-article-product__body {
+.entry-content .chidemoon-article-product__body {
 	display: flex;
 	flex: 1;
 	flex-direction: column;
@@ -2175,41 +2247,45 @@ html {
 	padding: 1.1rem 1.15rem 1.15rem;
 }
 
-.chidemoon-article-product__body :where(h3, p) {
-	margin: 0;
-}
-
-.chidemoon-article-product__title {
-	display: -webkit-box;
+.entry-content .chidemoon-article-product__title {
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
-	font-size: 1.02rem;
-	line-height: 1.65;
+	color: var(--chidemoon-ink);
+	display: -webkit-box;
+	font-family: var(--chidemoon-font-body);
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.7;
+	margin: 0;
 	overflow: hidden;
 }
 
-.chidemoon-article-product__title a {
+.entry-content .chidemoon-article-product__title a {
 	color: var(--chidemoon-ink);
 	text-decoration: none;
 	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.chidemoon-article-products .chidemoon-article-product__title a:hover,
-.chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
+.entry-content .chidemoon-article-products .chidemoon-article-product__title a:hover,
+.entry-content .chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
 	color: var(--chidemoon-clay);
+	text-decoration: none;
 }
 
-.chidemoon-article-product__excerpt {
-	display: -webkit-box;
+.entry-content .chidemoon-article-product__excerpt {
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
 	color: var(--chidemoon-muted);
+	display: -webkit-box;
 	font-size: 0.86rem;
+	letter-spacing: 0;
 	line-height: 1.85;
+	margin: 0;
 	overflow: hidden;
 }
 
-.chidemoon-article-product__footer {
+.entry-content .chidemoon-article-product__footer {
 	align-items: center;
 	border-block-start: 1px solid var(--chidemoon-line);
 	display: flex;
@@ -2220,34 +2296,37 @@ html {
 	padding-block-start: 0.9rem;
 }
 
-.chidemoon-article-product__price {
+.entry-content .chidemoon-article-product__price {
 	align-items: baseline;
 	color: var(--chidemoon-ink);
 	display: flex;
 	flex-wrap: wrap;
-	font-size: 1rem;
+	font-size: 0.95rem;
 	font-weight: 800;
 	gap: 0.35rem;
 	line-height: 1.5;
+	margin: 0;
 }
 
-.chidemoon-article-product__price del {
+.entry-content .chidemoon-article-product__price del {
 	color: var(--chidemoon-muted);
 	font-size: 0.78rem;
 	font-weight: 600;
 }
 
-.chidemoon-article-product__price ins {
+.entry-content .chidemoon-article-product__price ins {
 	text-decoration: none;
 }
 
-.chidemoon-article-product__price .woocommerce-Price-currencySymbol {
+.entry-content .chidemoon-article-product__price .woocommerce-Price-currencySymbol {
 	color: var(--chidemoon-muted);
 	font-size: 0.75rem;
 	font-weight: 700;
 }
 
-.chidemoon-article-products .chidemoon-article-product__cta {
+/* Same face and metrics as .chidemoon-button so the shelf reads as part
+ * of the design system, not a bolted-on link. */
+.entry-content .chidemoon-article-product__cta {
 	align-items: center;
 	background: var(--chidemoon-forest);
 	border: 1px solid var(--chidemoon-forest);
@@ -2256,51 +2335,71 @@ html {
 	color: #fffcf7;
 	display: inline-flex;
 	font-family: var(--chidemoon-font-ui);
-	font-size: 0.78rem;
+	font-size: 0.82rem;
 	font-weight: 700;
-	min-height: 2.4rem;
-	padding: 0.45rem 1rem;
+	gap: 0.5rem;
+	justify-content: center;
+	letter-spacing: 0;
+	line-height: 1.2;
+	min-height: 2.8rem;
+	padding: 0.55rem 1.05rem;
 	text-decoration: none;
 	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out), transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
-	white-space: nowrap;
 }
 
-.chidemoon-article-products .chidemoon-article-product__cta:hover,
-.chidemoon-article-products .chidemoon-article-product__cta:focus-visible {
+.entry-content .chidemoon-article-product__cta:hover,
+.entry-content .chidemoon-article-product__cta:focus-visible {
 	background: var(--chidemoon-forest-deep);
 	border-color: var(--chidemoon-forest-deep);
 	box-shadow: var(--chidemoon-shadow);
 	color: #fffcf7;
+	text-decoration: none;
 	transform: translateY(-1px);
 }
 
-.chidemoon-article-products .chidemoon-article-product__cta:focus-visible,
-.chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
+.entry-content .chidemoon-article-product__cta span {
+	font-size: 1.05em;
+	line-height: 1;
+	transition: transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content .chidemoon-article-product__cta:hover span,
+.entry-content .chidemoon-article-product__cta:focus-visible span {
+	transform: translateX(-0.18rem);
+}
+
+.entry-content .chidemoon-article-product__cta:focus-visible,
+.entry-content .chidemoon-article-product__title a:focus-visible {
 	outline: 2px solid var(--chidemoon-clay);
 	outline-offset: 2px;
 }
 
 @media (max-width: 780px) {
-	.chidemoon-article-products__grid {
+	.entry-content .chidemoon-article-products__grid {
 		grid-template-columns: 1fr;
 	}
 
-	.chidemoon-article-product {
+	.entry-content .chidemoon-article-product {
 		display: grid;
 		grid-template-columns: minmax(7rem, 34%) 1fr;
 	}
 
-	.chidemoon-article-product__image {
+	.entry-content .chidemoon-article-product__image {
 		aspect-ratio: auto;
 		min-height: 100%;
 	}
 
-	.chidemoon-article-product__body {
+	.entry-content .chidemoon-article-product__body {
 		padding: 0.9rem 1rem;
 	}
 
-	.chidemoon-article-product__excerpt {
+	.entry-content .chidemoon-article-product__excerpt {
 		-webkit-line-clamp: 3;
+	}
+
+	.entry-content .chidemoon-article-product__cta {
+		min-height: 2.6rem;
+		padding: 0.45rem 0.9rem;
 	}
 
 	.ct-footer .ct-container {
@@ -2313,15 +2412,18 @@ html {
 		transition: none;
 	}
 
-	.chidemoon-article-products .chidemoon-article-product,
-	.chidemoon-article-products .chidemoon-article-product__cta {
+	.entry-content .chidemoon-article-product,
+	.entry-content .chidemoon-article-product__cta,
+	.entry-content .chidemoon-article-product__cta span {
 		transition: none;
 	}
 
-	.chidemoon-article-products .chidemoon-article-product:hover,
-	.chidemoon-article-products .chidemoon-article-product:focus-within,
-	.chidemoon-article-products .chidemoon-article-product__cta:hover,
-	.chidemoon-article-products .chidemoon-article-product__cta:focus-visible {
+	.entry-content .chidemoon-article-product:hover,
+	.entry-content .chidemoon-article-product:focus-within,
+	.entry-content .chidemoon-article-product__cta:hover,
+	.entry-content .chidemoon-article-product__cta:focus-visible,
+	.entry-content .chidemoon-article-product__cta:hover span,
+	.entry-content .chidemoon-article-product__cta:focus-visible span {
 		transform: none;
 	}
 }
@@ -2358,8 +2460,8 @@ html {
 }
 
 .chidemoon-article-product h3 {
-	font-size: 1.02rem;
-	line-height: 1.65;
+	font-size: 1rem;
+	line-height: 1.7;
 }
 
 .chidemoon-article-product__body p {
@@ -2995,19 +3097,6 @@ html {
 	font-size: 0.76rem;
 }
 
-.chidemoon-article-product__actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.6rem;
-	margin-top: auto;
-	padding-top: 0.5rem;
-}
-
-.chidemoon-article-product__actions .chidemoon-button,
-.chidemoon-article-product__actions .chidemoon-compare-control {
-	margin-top: 0;
-}
-
 /* Images must always fill their media box: figures with a cropped
  * aspect ratio and cover-block backgrounds otherwise letterbox inside
  * the frame when the source photo's shape differs. */
@@ -3308,6 +3397,10 @@ html {
  * grid with an empty cell. */
 .chidemoon-article__navigation .nav-links:has(> :only-child) {
 	grid-template-columns: 1fr;
+}
+
+.chidemoon-article__navigation .nav-links:not(:has(*)) {
+	display: none;
 }
 
 /* Public forms: reachable touch targets and consistent field height. */

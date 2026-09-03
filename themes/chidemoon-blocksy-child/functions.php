@@ -865,6 +865,74 @@ function chidemoon_blocksy_render_post_card( int $post_id, string $variant = '',
 }
 
 /**
+ * Resolves the imagery for an adjacent-post navigation card: the featured
+ * image wins, then the first image attached to the post, then the first
+ * media-library image used inside the content. Posts with none of these fall
+ * back to the shared decorative placeholder, so the navigation never reads as
+ * a bare text link.
+ *
+ * @param int $post_id Published post ID.
+ */
+function chidemoon_blocksy_navigation_image_id( int $post_id ): int {
+	$thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+	if ( $thumbnail_id > 0 ) {
+		return $thumbnail_id;
+	}
+
+	$attachments = get_attached_media( 'image', $post_id );
+	if ( ! empty( $attachments ) ) {
+		$attachment = reset( $attachments );
+		if ( $attachment instanceof WP_Post ) {
+			return (int) $attachment->ID;
+		}
+	}
+
+	$post = get_post( $post_id );
+	if ( $post instanceof WP_Post && 1 === preg_match( '/wp-image-(\d+)/', (string) $post->post_content, $matches ) ) {
+		$attachment_id = (int) $matches[1];
+		if ( $attachment_id > 0 && wp_attachment_is_image( $attachment_id ) ) {
+			return $attachment_id;
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * Renders one adjacent-post card for the article footer navigation. The card
+ * leads with the sibling post's imagery so the journal feels continuous
+ * instead of ending in text-only links.
+ *
+ * @param WP_Post|null $adjacent Adjacent post, or null when the journal ends here.
+ * @param bool         $previous True for the previous card, false for next.
+ */
+function chidemoon_blocksy_render_navigation_card( ?WP_Post $adjacent, bool $previous ): void {
+	if ( ! $adjacent instanceof WP_Post || 'publish' !== get_post_status( $adjacent ) ) {
+		return;
+	}
+
+	$permalink = get_permalink( $adjacent );
+	$image_id  = chidemoon_blocksy_navigation_image_id( (int) $adjacent->ID );
+	?>
+	<div class="nav-<?php echo $previous ? 'previous' : 'next'; ?>">
+		<a href="<?php echo esc_url( $permalink ); ?>" rel="<?php echo $previous ? 'prev' : 'next'; ?>">
+			<span class="chidemoon-article__nav-media" aria-hidden="true">
+				<?php if ( $image_id > 0 ) : ?>
+					<?php echo wp_get_attachment_image( $image_id, 'medium', false, array( 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php else : ?>
+					<span class="chidemoon-card__media-empty" aria-hidden="true"></span>
+				<?php endif; ?>
+			</span>
+			<span class="chidemoon-article__nav-body">
+				<span class="chidemoon-eyebrow"><?php echo esc_html( $previous ? __( 'مطلب قبلی', 'chidemoon-blocksy-child' ) : __( 'مطلب بعدی', 'chidemoon-blocksy-child' ) ); ?></span>
+				<span class="chidemoon-article__nav-title"><?php echo esc_html( get_the_title( $adjacent ) ); ?></span>
+			</span>
+		</a>
+	</div>
+	<?php
+}
+
+/**
  * Render product tiles from WooCommerce's public catalogue only. The Core
  * plugin remains responsible for whether a product can make an affiliate CTA.
  *
