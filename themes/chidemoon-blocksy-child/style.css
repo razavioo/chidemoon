@@ -1009,9 +1009,9 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 /* Pagination: one editorial language for plain (journal/archive) and list
- * (Shop the Look) markup. Numbers sit in bordered surface pills, the current
- * page holds the forest fill, and prev/next stay quiet with directional
- * chevrons drawn via CSS mask so they are invisible to assistive tech. */
+ * (Shop the Look) markup. Numbers and prev/next sit in bordered surface
+ * pills, the current page holds the forest fill, and directional chevrons
+ * are drawn via CSS mask so they are invisible to assistive tech. */
 .chidemoon-pagination {
 	border-top: 1px solid var(--chidemoon-line);
 	margin-top: 3.25rem;
@@ -1089,8 +1089,6 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 
 .chidemoon-pagination .prev,
 .chidemoon-pagination .next {
-	background: transparent;
-	border-color: transparent;
 	font-weight: 700;
 }
 
