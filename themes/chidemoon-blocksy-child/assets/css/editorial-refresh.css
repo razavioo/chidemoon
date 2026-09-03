@@ -3177,15 +3177,6 @@ html {
 	max-width: 30rem;
 }
 
-.chidemoon-footer__disclosure {
-	border-block-start: 1px solid rgba(255, 252, 247, 0.16);
-	color: rgba(255, 252, 247, 0.62) !important;
-	font-size: 0.8rem;
-	line-height: 1.9;
-	margin: 1.25rem 0 0 !important;
-	padding-block-start: 1rem;
-}
-
 .chidemoon-footer__title {
 	color: var(--chidemoon-clay-soft);
 	font-family: var(--chidemoon-font-display);

@@ -525,7 +525,7 @@ function chidemoon_blocksy_render_footer(): void {
 				'مجله'           => chidemoon_blocksy_page_url( 'magazine' ),
 				'راهنمای خرید'   => chidemoon_blocksy_page_url( 'guides' ),
 				'مقایسه‌ها'      => chidemoon_blocksy_page_url( 'comparisons' ),
-				'از تصویر بخر'   => chidemoon_blocksy_page_url( 'shop-the-look' ),
+				'ببین و بخر'     => chidemoon_blocksy_page_url( 'shop-the-look' ),
 			),
 		),
 		array(
@@ -551,10 +551,7 @@ function chidemoon_blocksy_render_footer(): void {
 			<div class="chidemoon-footer__brand">
 				<p class="chidemoon-footer__logo" itemprop="name"><?php bloginfo( 'name' ); ?></p>
 				<p class="chidemoon-footer__tagline">
-					<?php esc_html_e( 'مجله‌ی خرید برای خانه؛ راهنماهای آزموده، مقایسه‌های شفاف و محصولات منتخب برای چیدمان هر گوشه از خانه.', 'chidemoon-blocksy-child' ); ?>
-				</p>
-				<p class="chidemoon-footer__disclosure">
-					<?php esc_html_e( 'شفافیت: برخی لینک‌ها همکاری در فروش دارند؛ انتخاب محصول فقط بر پایه‌ی بررسی تحریریه است و قیمت و موجودی را در فروشنده ببینید.', 'chidemoon-blocksy-child' ); ?>
+					<?php esc_html_e( 'مجله‌ی خرید برای خانه؛ راهنماهای امتحان‌پس‌داده، مقایسه‌ی بی‌طرفانه و پیشنهادهایی برای چیدمان هر گوشه‌ی خانه.', 'chidemoon-blocksy-child' ); ?>
 				</p>
 			</div>
 			<?php foreach ( $sections as $section ) : ?>
@@ -570,9 +567,9 @@ function chidemoon_blocksy_render_footer(): void {
 				</nav>
 			<?php endforeach; ?>
 			<div class="chidemoon-footer__note">
-				<h2 class="chidemoon-footer__title"><?php esc_html_e( 'استناد محتوایی', 'chidemoon-blocksy-child' ); ?></h2>
+				<h2 class="chidemoon-footer__title"><?php esc_html_e( 'استقلال تحریریه', 'chidemoon-blocksy-child' ); ?></h2>
 				<p>
-					<?php esc_html_e( 'چیدمون یک رسانه‌ی مستقل است؛ هیچ فروشنده‌ای در نتیجه‌ی بررسی‌ها و رتبه‌بندی‌ها نفوذ ندارد.', 'chidemoon-blocksy-child' ); ?>
+					<?php esc_html_e( 'چیدمون یک بلاگ تخصصی مستقل است؛ هیچ فروشنده‌ای در نتیجه‌ی بررسی‌ها و رتبه‌بندی‌ها نفوذ ندارد.', 'chidemoon-blocksy-child' ); ?>
 				</p>
 			</div>
 		</div>
