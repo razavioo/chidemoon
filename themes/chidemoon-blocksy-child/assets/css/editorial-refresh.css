@@ -3245,45 +3245,263 @@ html {
 	max-width: 30rem;
 }
 
+/* ------------------------------------------------------------------ */
+/* Search. One field composition serves the header modal, the mobile   */
+/* off-canvas, the search-archive refine box, and the 404 page. The    */
+/* raw-element rules intentionally out-rank Blocksy's late-printed     */
+/* form styles, which would otherwise strip the field surface.         */
+/* ------------------------------------------------------------------ */
 .chidemoon-search-form {
-	display: flex;
-	gap: 0.6rem;
+	margin-inline: auto;
+	max-width: 34rem;
+	width: 100%;
 }
 
-.chidemoon-search-form input {
-	background: var(--chidemoon-surface);
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: var(--chidemoon-radius-sm);
-	flex: 1;
-	font-family: var(--chidemoon-font-ui);
-	min-height: 2.9rem;
-	padding: 0.6rem 0.9rem;
-}
-
-.chidemoon-search-form input:focus {
-	border-color: var(--chidemoon-forest);
-	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
-}
-
-.chidemoon-search-form button {
+.chidemoon-search-form__field {
 	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: 0.9rem;
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+	display: flex;
+	gap: 0.65rem;
+	padding: 0.45rem;
+	padding-inline-start: 1.05rem;
+	transition: box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__field:focus-within {
+	box-shadow: 0 0 0 2px var(--chidemoon-forest), var(--chidemoon-shadow-soft);
+}
+
+.chidemoon-search-form__icon {
+	color: var(--chidemoon-muted);
+	flex: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__field:focus-within .chidemoon-search-form__icon {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-search-form .chidemoon-search-form__field input[type="search"] {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: var(--chidemoon-ink);
+	flex: 1 1 auto;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 1rem;
+	height: auto;
+	min-height: 2.6rem;
+	min-width: 0;
+	padding: 0.35rem 0.15rem;
+	width: 100%;
+}
+
+.chidemoon-search-form .chidemoon-search-form__field input[type="search"]:focus {
+	border: 0;
+	box-shadow: none;
+	outline: none;
+}
+
+.chidemoon-search-form input[type="search"]::placeholder {
+	color: var(--chidemoon-muted);
+	opacity: 1;
+}
+
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"] {
 	background: var(--chidemoon-forest);
-	border: 1px solid var(--chidemoon-forest);
-	border-radius: var(--chidemoon-radius-sm);
+	border: 0;
+	border-radius: 0.55rem;
 	color: #fffcf7;
 	cursor: pointer;
-	display: inline-flex;
+	flex: none;
 	font-family: var(--chidemoon-font-ui);
-	font-size: 0.86rem;
+	font-size: 0.88rem;
 	font-weight: 700;
-	justify-content: center;
 	min-height: 2.9rem;
-	padding: 0.6rem 1.1rem;
+	padding: 0.45rem 1.1rem;
 	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.chidemoon-search-form button:hover {
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:hover {
 	background: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-search-form__hint {
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.8rem;
+	font-weight: 600;
+	gap: 0.4rem 1.4rem;
+	justify-content: center;
+	margin: 1.15rem 0 0;
+}
+
+.chidemoon-search-form__hint kbd {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 0.35rem;
+	box-shadow: inset 0 -1.5px 0 var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	direction: ltr;
+	font-family: var(--chidemoon-font-mono);
+	font-size: 0.72rem;
+	padding: 0.14rem 0.45rem;
+}
+
+.chidemoon-search-form__links {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.55rem;
+	justify-content: center;
+	margin-top: 1.5rem;
+}
+
+.chidemoon-search-form__links-label {
+	color: var(--chidemoon-muted);
+	font-size: 0.78rem;
+	font-weight: 700;
+	width: 100%;
+}
+
+.chidemoon-search-form__links a {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-forest);
+	font-size: 0.84rem;
+	font-weight: 700;
+	min-height: 2.5rem;
+	padding: 0.4rem 1.05rem;
+	text-decoration: none;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__links a:hover,
+.chidemoon-search-form__links a:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+/* Search-archive refine box: sits between the hero and the feed. */
+.chidemoon-search-refine {
+	margin-block: 0 clamp(1.75rem, 4vw, 2.75rem);
+	max-width: 34rem;
+}
+
+.chidemoon-search-refine .chidemoon-search-form {
+	margin-inline: 0;
+}
+
+/* Header search modal: a calm paper takeover instead of the near-black
+ * panel. The two-selector prefix out-ranks Blocksy's dynamic customizer
+ * CSS, which prints after this stylesheet at equal specificity. */
+body #search-modal.ct-panel[data-behaviour="modal"] {
+	background:
+		radial-gradient(circle at 12% 8%, rgba(230, 178, 158, 0.32) 0 16rem, transparent 16.2rem),
+		radial-gradient(circle at 88% 94%, rgba(169, 182, 158, 0.38) 0 18rem, transparent 18.2rem),
+		color-mix(in srgb, var(--chidemoon-paper) 96%, transparent);
+	backdrop-filter: blur(18px);
+}
+
+body #search-modal .ct-panel-content {
+	justify-content: center;
+	padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+body #search-modal .chidemoon-search-form {
+	max-width: 40rem;
+}
+
+body #search-modal .chidemoon-search-form__field {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
+	gap: 0.8rem;
+	padding: 0.55rem;
+	padding-inline-start: 1.2rem;
+}
+
+body #search-modal .chidemoon-search-form__field input[type="search"] {
+	font-size: 1.1rem;
+	min-height: 3rem;
+}
+
+body #search-modal .chidemoon-search-form__field button[type="submit"] {
+	font-size: 0.95rem;
+	min-height: 3.1rem;
+	padding: 0.55rem 1.45rem;
+}
+
+body #search-modal .chidemoon-search-form__icon {
+	color: var(--chidemoon-forest);
+}
+
+body #search-modal .chidemoon-search-form__hint {
+	font-size: 0.84rem;
+	margin-top: 1.4rem;
+}
+
+body #search-modal .ct-toggle-close {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	height: 2.75rem;
+	justify-content: center;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	width: 2.75rem;
+}
+
+body #search-modal .ct-toggle-close:hover,
+body #search-modal .ct-toggle-close:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+/* Off-canvas search entry: the field reads on the deep forest panel. */
+.chidemoon-offcanvas-search {
+	margin-block-end: 1.35rem;
+}
+
+#offcanvas .chidemoon-search-form {
+	max-width: none;
+}
+
+#offcanvas .chidemoon-search-form__field {
+	background: rgba(255, 252, 247, 0.07);
+	box-shadow: 0 0 0 1px rgba(255, 252, 247, 0.26);
+}
+
+#offcanvas .chidemoon-search-form__field:focus-within {
+	box-shadow: 0 0 0 2px var(--chidemoon-clay-soft);
+}
+
+#offcanvas .chidemoon-search-form__icon {
+	color: var(--chidemoon-clay-soft);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field input[type="search"] {
+	color: #fffcf7;
+}
+
+#offcanvas .chidemoon-search-form input[type="search"]::placeholder {
+	color: rgba(255, 252, 247, 0.62);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field button[type="submit"] {
+	background: #fffcf7;
+	color: var(--chidemoon-forest-deep);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:hover {
+	background: var(--chidemoon-clay-soft);
+	color: var(--chidemoon-forest-deep);
 }
 
 .chidemoon-error-404__links {

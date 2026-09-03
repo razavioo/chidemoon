@@ -148,6 +148,41 @@ function chidemoon_blocksy_setup(): void {
 add_action( 'after_setup_theme', 'chidemoon_blocksy_setup' );
 
 /**
+ * Section shortcuts shown under the search field in the header modal and on
+ * empty search results, so a stalled query always has a next step.
+ */
+function chidemoon_search_quick_links(): void {
+	$links = array(
+		'فروشگاه'       => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' ),
+		'مجله'          => chidemoon_blocksy_page_url( 'magazine' ),
+		'راهنمای خرید'  => chidemoon_blocksy_page_url( 'guides' ),
+		'مقایسه‌ها'     => chidemoon_blocksy_page_url( 'comparisons' ),
+	);
+
+	echo '<nav class="chidemoon-search-form__links" aria-label="' . esc_attr__( 'بخش‌های پیشنهادی', 'chidemoon-blocksy-child' ) . '">';
+	echo '<span class="chidemoon-search-form__links-label">' . esc_html__( 'می‌توانید از اینجا شروع کنید:', 'chidemoon-blocksy-child' ) . '</span>';
+	foreach ( $links as $label => $url ) {
+		if ( is_string( $url ) && '' !== $url ) {
+			printf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( $label ) );
+		}
+	}
+	echo '</nav>';
+}
+
+/**
+ * The header builder keeps the search element on the desktop row, so mobile
+ * visitors get their search entry at the top of the off-canvas menu.
+ */
+add_action(
+	'blocksy:header:offcanvas:mobile:top',
+	static function (): void {
+		echo '<div class="chidemoon-offcanvas-search">';
+		get_search_form();
+		echo '</div>';
+	}
+);
+
+/**
  * WooCommerce's gallery links contain only an image. Give the zoom destination
  * a useful accessible name without altering WooCommerce gallery behavior.
  */
@@ -510,6 +545,7 @@ function chidemoon_blocksy_english_overrides(): array {
 	$map = array(
 		'Skip to content'          => 'رفتن به محتوای اصلی',
 		'Search modal'             => 'جست‌وجو',
+		'Search'                   => 'جست‌وجو',
 		'Close search modal'       => 'بستن جست‌وجو',
 		'Search for...'            => 'جست‌وجو…',
 		'Show more'                => 'نمایش بیشتر',
@@ -691,6 +727,38 @@ function chidemoon_term_thumbnail_id( ?WP_Term $term ): int {
 	$thumbnail_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 
 	return is_numeric( $thumbnail_id ) ? (int) $thumbnail_id : 0;
+}
+
+/**
+ * The newest published product with a real image in a category, used as the
+ * honest hero visual for the category archive. Returns null when the category
+ * has no image-bearing product yet, so the template can fall back to curated
+ * or drawn media instead of fabricating anything.
+ *
+ * @param WP_Term $term Product category term.
+ */
+function chidemoon_category_hero_product( WP_Term $term ): ?WC_Product {
+	if ( ! function_exists( 'wc_get_products' ) ) {
+		return null;
+	}
+
+	$products = wc_get_products(
+		array(
+			'status'   => 'publish',
+			'limit'    => 6,
+			'orderby'  => 'date',
+			'order'    => 'DESC',
+			'category' => array( $term->slug ),
+		)
+	);
+
+	foreach ( $products as $product ) {
+		if ( $product instanceof WC_Product && (int) $product->get_image_id() > 0 ) {
+			return $product;
+		}
+	}
+
+	return null;
 }
 
 /**
