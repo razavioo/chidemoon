@@ -262,6 +262,38 @@ add_filter( 'get_the_time', 'chidemoon_fa_digits' );
 add_filter( 'wc_price', 'chidemoon_fa_digits' );
 
 /**
+ * Shared pagination language: Persian labels and a compact window so the
+ * journal, archive, and Shop-the-Look surfaces stay visually identical.
+ *
+ * @return array<string, mixed>
+ */
+function chidemoon_pagination_args( array $args = array() ): array {
+	return array_merge(
+		array(
+			'mid_size'  => 1,
+			'prev_text' => esc_html__( 'قبلی', 'chidemoon-blocksy-child' ),
+			'next_text' => esc_html__( 'بعدی', 'chidemoon-blocksy-child' ),
+		),
+		$args
+	);
+}
+
+/**
+ * Render posts pagination with the same Persian-digit pass used by the
+ * generated paginate_links output, so public page numbers never fall back
+ * to Latin digits.
+ */
+function chidemoon_the_posts_pagination( array $args = array() ): void {
+	$markup = get_the_posts_pagination( chidemoon_pagination_args( $args ) );
+
+	if ( '' === $markup ) {
+		return;
+	}
+
+	echo chidemoon_fa_digits_in_markup( $markup ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-generated markup plus trusted theme labels; only text nodes are digit-mapped.
+}
+
+/**
  * WooCommerce has no built-in symbol for the Iranian toman. Returning plain
  * text (never an HTML entity) keeps the Persian-digit price filter from
  * corrupting numeric character references such as &#36;.

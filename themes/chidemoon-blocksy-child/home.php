@@ -31,7 +31,7 @@ get_header();
 					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact', 2 ); ?>
 				<?php endwhile; ?>
 			</div>
-			<?php the_posts_pagination( array( 'class' => 'chidemoon-pagination', 'mid_size' => 1 ) ); ?>
+			<?php chidemoon_the_posts_pagination( array( 'class' => 'chidemoon-pagination' ) ); ?>
 		<?php else : ?>
 			<?php chidemoon_blocksy_render_empty_state( 'مجله در حال آماده‌سازی است.', 'هنوز مقاله‌ای از بررسی تحریریه گذشته است. منتظر اولین راهنما باشید.' ); ?>
 		<?php endif; ?>

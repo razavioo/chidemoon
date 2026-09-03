@@ -42,7 +42,7 @@ get_header();
 					<?php chidemoon_blocksy_render_post_card( get_the_ID(), 'compact', 2 ); ?>
 				<?php endwhile; ?>
 			</div>
-			<?php the_posts_pagination( array( 'class' => 'chidemoon-pagination', 'mid_size' => 1 ) ); ?>
+			<?php chidemoon_the_posts_pagination( array( 'class' => 'chidemoon-pagination' ) ); ?>
 		<?php elseif ( is_search() ) : ?>
 			<div class="chidemoon-empty-state">
 				<span class="chidemoon-empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span>

@@ -4,7 +4,7 @@ Theme URI: https://chidemoon.com
 Description: Persian-first editorial affiliate presentation for Chidemoon.
 Author: Chidemoon
 Template: blocksy
-Version: 1.4.7
+Version: 1.4.8
 Requires at least: 6.5
 Requires PHP: 8.1
 Text Domain: chidemoon-blocksy-child
@@ -819,32 +819,132 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 	padding-top: clamp(2rem, 5vw, 4.5rem);
 }
 
+/* Pagination: one editorial language for plain (journal/archive) and list
+ * (Shop the Look) markup. Numbers sit in bordered surface pills, the current
+ * page holds the forest fill, and prev/next stay quiet with directional
+ * chevrons drawn via CSS mask so they are invisible to assistive tech. */
 .chidemoon-pagination {
 	border-top: 1px solid var(--chidemoon-line);
-	display: flex;
-	gap: 0.45rem;
 	margin-top: 3.25rem;
 	padding-top: 1.25rem;
 }
 
-.chidemoon-pagination :where(a, .current) {
+.chidemoon-pagination :where(.nav-links, ul.page-numbers) {
 	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+}
+
+.chidemoon-pagination ul.page-numbers {
+	list-style: none;
+}
+
+.chidemoon-pagination ul.page-numbers li {
+	display: flex;
+	margin: 0;
+}
+
+.chidemoon-pagination :where(a, span).page-numbers {
+	align-items: center;
+	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
 	border-radius: var(--chidemoon-radius-sm);
 	color: var(--chidemoon-forest);
 	display: inline-flex;
-	height: 2.4rem;
+	font-size: 0.9rem;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	gap: 0.4rem;
 	justify-content: center;
+	min-height: 2.4rem;
 	min-width: 2.4rem;
-	padding-inline: 0.55rem;
+	padding-inline: 0.65rem;
 	text-decoration: none;
+	transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), border-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
 }
 
-.chidemoon-pagination .current,
-.chidemoon-pagination a:hover {
+.chidemoon-pagination a.page-numbers:hover {
 	background: var(--chidemoon-forest);
 	border-color: var(--chidemoon-forest);
 	color: #fffcf7;
+}
+
+.chidemoon-pagination a.page-numbers:active {
+	background: var(--chidemoon-forest-deep);
+	border-color: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-pagination :where(a, span).page-numbers:focus-visible {
+	outline: 2px solid var(--chidemoon-clay);
+	outline-offset: 2px;
+}
+
+.chidemoon-pagination .current {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+	font-weight: 800;
+}
+
+.chidemoon-pagination .dots {
+	background: none;
+	border-color: transparent;
+	color: var(--chidemoon-muted);
+	min-width: 1.4rem;
+	padding-inline: 0.25rem;
+}
+
+.chidemoon-pagination .prev,
+.chidemoon-pagination .next {
+	background: transparent;
+	border-color: transparent;
+	font-weight: 700;
+}
+
+.chidemoon-pagination .prev::before,
+.chidemoon-pagination .next::before {
+	background-color: currentcolor;
+	block-size: 0.9rem;
+	content: "";
+	flex: 0 0 auto;
+	inline-size: 0.9rem;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 5 7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 5 7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+	transition: transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+/* RTL reading: previous points right, next points left. */
+.chidemoon-pagination .next::before {
+	transform: scaleX(-1);
+}
+
+.chidemoon-pagination .prev:hover::before {
+	transform: translateX(0.15rem);
+}
+
+.chidemoon-pagination .next:hover::before {
+	transform: scaleX(-1) translateX(0.15rem);
+}
+
+@media (pointer: coarse) {
+	.chidemoon-pagination :where(a, span).page-numbers {
+		min-height: 2.75rem;
+		min-width: 2.75rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.chidemoon-pagination .prev:hover::before {
+		transform: none;
+	}
+
+	.chidemoon-pagination .next:hover::before {
+		transform: scaleX(-1);
+	}
 }
 
 .chidemoon-collection-page__content {

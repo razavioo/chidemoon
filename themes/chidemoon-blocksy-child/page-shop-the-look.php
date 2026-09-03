@@ -67,7 +67,7 @@ foreach ( $rooms as $room ) {
 			</div>
 			<?php if ( $look_posts->max_num_pages > 1 ) : ?>
 				<nav class="chidemoon-pagination" aria-label="<?php esc_attr_e( 'صفحه‌بندی چیدمان‌ها', 'chidemoon-blocksy-child' ); ?>">
-					<?php echo wp_kses_post( paginate_links( array( 'current' => $current_page, 'total' => $look_posts->max_num_pages, 'type' => 'list', 'mid_size' => 1, 'add_args' => '' !== $room_slug ? array( 'room' => $room_slug ) : false ) ) ); ?>
+					<?php echo wp_kses_post( chidemoon_fa_digits_in_markup( (string) paginate_links( chidemoon_pagination_args( array( 'current' => $current_page, 'total' => $look_posts->max_num_pages, 'type' => 'list', 'add_args' => '' !== $room_slug ? array( 'room' => $room_slug ) : false ) ) ) ) ); ?>
 				</nav>
 			<?php endif; ?>
 			<?php wp_reset_postdata(); ?>
