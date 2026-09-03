@@ -47,15 +47,21 @@ array(
 : array();
 $product_categories = taxonomy_exists( 'product_cat' )
 ? get_terms(
-array(
-'taxonomy'   => 'product_cat',
-'hide_empty' => true,
-'number'     => 6,
-'orderby'    => 'count',
-'order'      => 'DESC',
-)
+	array(
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => true,
+		'number'     => 6,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+	)
 )
 : array();
+if ( ! is_wp_error( $product_categories ) ) {
+	$product_categories = array_filter(
+		$product_categories,
+		static fn( $category ): bool => $category instanceof WP_Term && 'uncategorized' !== $category->slug
+	);
+}
 $shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' );
 ?>
 
@@ -95,8 +101,8 @@ $featured_category   = chidemoon_blocksy_primary_category( $featured_id );
 <div class="chidemoon-side-stories">
 <?php foreach ( $side_stories as $side_id ) : ?>
 <?php
-$side_post       = get_post( $side_id );
-$side_categories = get_the_category( $side_id );
+$side_post        = get_post( $side_id );
+$side_category    = chidemoon_blocksy_primary_category( $side_id );
 ?>
 <article class="chidemoon-side-story">
 <a class="chidemoon-side-story__media" href="<?php echo esc_url( get_permalink( $side_post ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $side_post ) ); ?>">
@@ -107,8 +113,8 @@ $side_categories = get_the_category( $side_id );
 <?php endif; ?>
 </a>
 <div class="chidemoon-side-story__body">
-<?php if ( ! empty( $side_categories ) ) : ?>
-<span class="chidemoon-side-story__category"><?php echo esc_html( $side_categories[0]->name ); ?></span>
+<?php if ( $side_category instanceof WP_Term ) : ?>
+<span class="chidemoon-side-story__category"><?php echo esc_html( $side_category->name ); ?></span>
 <?php endif; ?>
 <h2 class="chidemoon-side-story__title"><a href="<?php echo esc_url( get_permalink( $side_post ) ); ?>"><?php echo esc_html( get_the_title( $side_post ) ); ?></a></h2>
 <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $side_post ) ); ?>"><?php echo esc_html( get_the_date( '', $side_post ) ); ?></time>

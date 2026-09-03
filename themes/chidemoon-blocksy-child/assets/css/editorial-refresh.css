@@ -310,19 +310,6 @@ html {
 	position: relative;
 }
 
-.chidemoon-archive__hero::after,
-.chidemoon-collection-page__hero::after,
-.chidemoon-shop-archive__intro::after {
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: 50%;
-	content: "";
-	height: clamp(3rem, 8vw, 6rem);
-	inset-block-end: 1.5rem;
-	inset-inline-start: clamp(1.5rem, 4vw, 4rem);
-	position: absolute;
-	width: clamp(3rem, 8vw, 6rem);
-}
-
 .chidemoon-archive__hero h1,
 .chidemoon-collection-page__hero h1,
 .chidemoon-shop-archive__intro h1 {
@@ -872,6 +859,214 @@ html {
 	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.5rem, 2.4vw, 2rem);
 	margin-bottom: 1.25rem;
+}
+
+/* Product reviews tab: the discussion surface gets the same editorial
+ * treatment as the catalogue, instead of raw WooCommerce defaults. */
+.chidemoon-product-page #reviews {
+	font-family: var(--chidemoon-font-body);
+}
+
+.chidemoon-product-page #reviews h2,
+.chidemoon-product-page #reviews .comment-reply-title {
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.25rem, 2vw, 1.6rem);
+	font-weight: 700;
+	margin-block: 0 1.25rem;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs {
+	border-block-end: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.4rem;
+	margin: 0 0 1.5rem;
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li {
+	background: none;
+	border: 0;
+	border-radius: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li::before,
+.woocommerce div.product .woocommerce-tabs ul.tabs li::after {
+	display: none;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	border-block-end: 2px solid transparent;
+	color: var(--chidemoon-muted);
+	font-weight: 600;
+	padding: 0.35rem 0.15rem 0.65rem;
+	text-decoration: none;
+	transition:
+		color var(--chidemoon-motion-fast) var(--chidemoon-ease-out),
+		border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover,
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:focus {
+	color: var(--chidemoon-forest);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+	border-block-end-color: var(--chidemoon-forest);
+	color: var(--chidemoon-ink);
+}
+
+/* No reviews yet: keep the empty state quiet, not error-like. */
+.chidemoon-product-page #reviews .woocommerce-noreviews {
+	background: color-mix(in srgb, var(--chidemoon-surface-muted) 40%, transparent);
+	border: 1px dashed var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius);
+	color: var(--chidemoon-muted);
+	margin: 0 0 2rem;
+	padding: 1.5rem 1.25rem;
+	text-align: center;
+}
+
+.chidemoon-product-page #reviews .commentlist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chidemoon-product-page #reviews .commentlist li {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flow-root;
+	margin: 0 0 1rem;
+	padding: 1.1rem 1.25rem;
+}
+
+.chidemoon-product-page #reviews .comment_container .avatar {
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 50%;
+	float: inline-start;
+	height: 3rem;
+	margin-inline-end: 0.9rem;
+	width: 3rem;
+}
+
+.chidemoon-product-page #reviews .comment-text {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	width: auto;
+}
+
+.chidemoon-product-page #reviews .comment-text .meta {
+	color: var(--chidemoon-muted);
+	font-size: 0.92rem;
+	margin-block: 0.15rem 0.6rem;
+}
+
+.chidemoon-product-page #reviews .comment-text .meta strong {
+	color: var(--chidemoon-ink);
+}
+
+.chidemoon-product-page #reviews .woocommerce-review__verified {
+	background: color-mix(in srgb, var(--chidemoon-sage) 25%, transparent);
+	border-radius: var(--chidemoon-radius-sm);
+	color: var(--chidemoon-forest);
+	display: inline-block;
+	font-size: 0.78rem;
+	font-weight: 600;
+	margin-inline-start: 0.45rem;
+	padding: 0.1rem 0.5rem;
+}
+
+/* Star glyphs are percentage-width fills, so they must stay LTR; the
+ * surrounding text keeps its RTL direction. */
+.chidemoon-product-page #reviews .star-rating,
+.chidemoon-product-page #review_form .comment-form-rating .stars {
+	direction: ltr;
+}
+
+.chidemoon-product-page #reviews .star-rating {
+	--wc-star-color: var(--chidemoon-clay);
+	--wc-star-empty-color: color-mix(in srgb, var(--chidemoon-clay) 20%, transparent);
+	color: var(--chidemoon-clay);
+	float: none;
+	margin: 0 0 0.35rem;
+}
+
+.chidemoon-product-page #reviews .star-rating span::before {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .comment-respond {
+	background: color-mix(in srgb, var(--chidemoon-surface-muted) 45%, transparent);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	margin-block-start: 1.75rem;
+	padding: clamp(1.1rem, 2.5vw, 1.75rem);
+}
+
+.chidemoon-product-page #review_form :where(input:not([type="checkbox"]), textarea) {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
+	font-family: var(--chidemoon-font-body);
+	padding: 0.65rem 0.8rem;
+	width: 100%;
+}
+
+.chidemoon-product-page #review_form :where(input:not([type="checkbox"]), textarea):focus {
+	border-color: var(--chidemoon-forest);
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
+}
+
+.chidemoon-product-page #review_form label {
+	color: var(--chidemoon-ink);
+	font-weight: 600;
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.chidemoon-product-page #review_form input[type="checkbox"] {
+	accent-color: var(--chidemoon-forest);
+}
+
+.chidemoon-product-page #review_form .stars {
+	display: inline-block;
+	font-size: 1.3rem;
+}
+
+.chidemoon-product-page #review_form .stars a,
+.chidemoon-product-page #review_form .stars a::before {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .stars a:hover ~ a,
+.chidemoon-product-page #review_form .stars a:hover ~ a::before {
+	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+}
+
+.chidemoon-product-page #review_form .form-submit input[type="submit"] {
+	background: var(--chidemoon-forest);
+	border: 0;
+	border-radius: var(--chidemoon-radius-sm);
+	color: #fffcf7;
+	cursor: pointer;
+	font-family: var(--chidemoon-font-body);
+	font-weight: 700;
+	padding: 0.8rem 1.6rem;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-product-page #review_form .form-submit input[type="submit"]:hover {
+	background: var(--chidemoon-forest-deep);
 }
 
 .chidemoon-affiliate-disclosure,
@@ -1787,7 +1982,7 @@ html {
 	background: var(--chidemoon-forest);
 	border: 1px solid var(--chidemoon-forest);
 	border-radius: var(--chidemoon-radius-sm, 0.35rem);
-	box-shadow: 4px 4px 0 var(--chidemoon-sage);
+	box-shadow: var(--chidemoon-shadow-soft);
 	color: #fffcf7;
 	display: inline-flex;
 	flex: 1 1 auto;
@@ -1807,10 +2002,11 @@ html {
 .ct-woo-card-actions .added_to_cart:hover,
 .ct-woo-card-actions .added_to_cart:focus-visible {
 	background: var(--chidemoon-forest-deep);
-	box-shadow: 1px 1px 0 var(--chidemoon-sage);
+	border-color: var(--chidemoon-forest-deep);
+	box-shadow: var(--chidemoon-shadow);
 	color: #fffcf7;
 	text-decoration: none;
-	transform: translate(3px, 3px);
+	transform: translateY(-1px);
 }
 
 .chidemoon-comparison-search {
@@ -1928,4 +2124,320 @@ html {
 	object-fit: cover;
 	position: absolute;
 	width: 100%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Visual review fixes                                                 */
+/* ------------------------------------------------------------------ */
+
+/* Blocksy's configured footer is an empty copyright-only row that renders
+ * as a blank strip; the real editorial footer is printed by the theme just
+ * before it, so the empty shell is removed. */
+.ct-footer {
+	display: none;
+}
+
+/* Editorial footer */
+.chidemoon-footer {
+	background: var(--chidemoon-forest-deep);
+	color: #fffcf7;
+	font-family: var(--chidemoon-font-ui);
+	margin-top: clamp(3rem, 7vw, 6rem);
+	position: relative;
+}
+
+.chidemoon-footer::before {
+	background: var(--chidemoon-clay);
+	content: "";
+	height: 0.35rem;
+	inset-block-start: 0;
+	inset-inline: 0;
+	position: absolute;
+}
+
+.chidemoon-footer__inner {
+	display: grid;
+	gap: clamp(2rem, 4vw, 3rem);
+	grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 0.9fr)) minmax(0, 1.1fr);
+	margin-inline: auto;
+	max-width: 1320px;
+	padding: clamp(2.75rem, 6vw, 5rem) clamp(1rem, 3.4vw, 3rem) clamp(2rem, 4vw, 3rem);
+}
+
+.chidemoon-footer__logo {
+	color: #fffcf7;
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.5rem, 2.4vw, 2rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0 0 0.9rem;
+}
+
+.chidemoon-footer__tagline,
+.chidemoon-footer__note p {
+	color: rgba(255, 252, 247, 0.78);
+	font-size: 0.92rem;
+	line-height: 1.95;
+	margin: 0;
+}
+
+.chidemoon-footer__tagline {
+	max-width: 30rem;
+}
+
+.chidemoon-footer__disclosure {
+	border-block-start: 1px solid rgba(255, 252, 247, 0.16);
+	color: rgba(255, 252, 247, 0.62) !important;
+	font-size: 0.8rem;
+	line-height: 1.9;
+	margin: 1.25rem 0 0 !important;
+	padding-block-start: 1rem;
+}
+
+.chidemoon-footer__title {
+	color: var(--chidemoon-clay-soft);
+	font-family: var(--chidemoon-font-display);
+	font-size: 0.95rem;
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0 0 0.9rem;
+}
+
+.chidemoon-footer__nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chidemoon-footer__nav li + li {
+	margin-block-start: 0.55rem;
+}
+
+.chidemoon-footer__nav a {
+	color: rgba(255, 252, 247, 0.85);
+	font-size: 0.92rem;
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-footer__nav a:hover,
+.chidemoon-footer__nav a:focus-visible {
+	color: var(--chidemoon-clay-soft);
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+.chidemoon-footer__nav a:focus-visible {
+	outline: 3px solid var(--chidemoon-clay-soft);
+	outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-footer__inner {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.chidemoon-footer__inner {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+	}
+}
+
+/* Affiliate CTA links inside article bodies: the generic
+ * `.entry-content a` colour beat the CTA's own white text, leaving
+ * forest-on-forest (invisible) labels. */
+.entry-content a.chidemoon-affiliate-cta {
+	color: #fffcf7;
+	display: inline-flex;
+	margin-block: 0.5rem;
+}
+
+.entry-content a.chidemoon-affiliate-cta:hover {
+	color: #fffcf7;
+	text-decoration: none;
+}
+
+/* WooCommerce single product: Blocksy prints two decorative divider spans
+ * around an empty add-to-cart wrapper; together with the meta border they
+ * render as stray lines. */
+.woocommerce div.product .ct-product-divider {
+	display: none;
+}
+
+.woocommerce div.product .ct-product-add-to-cart:empty {
+	display: none;
+}
+
+.woocommerce div.product .product_title {
+	font-size: clamp(1.9rem, 3.4vw, 3rem);
+	line-height: 1.3;
+}
+
+/* Home "shop categories": replace per-cell border logic (which left stray
+ * underlines on ragged last rows) with hairlines drawn by the grid gap. */
+.chidemoon-category-grid {
+	background: var(--chidemoon-line);
+	gap: 1px;
+	overflow: hidden;
+}
+
+.chidemoon-category-grid .chidemoon-category-link,
+.chidemoon-category-grid .chidemoon-category-link:nth-child(2n),
+.chidemoon-category-grid .chidemoon-category-link:nth-child(3n),
+.chidemoon-category-grid .chidemoon-category-link:nth-child(2n + 1),
+.chidemoon-category-grid .chidemoon-category-link:last-child {
+	border: 0;
+}
+
+.chidemoon-category-grid .chidemoon-category-link:focus-visible {
+	outline-offset: -3px;
+}
+
+/* Article: collapse the empty aside column so the reading measure stays
+ * balanced when a post has no tags. */
+.chidemoon-article__layout:has(> .chidemoon-article__aside:not(:has(*))) {
+	grid-template-columns: minmax(0, 1fr);
+	max-width: 55rem;
+}
+
+.chidemoon-article__layout:has(> .chidemoon-article__aside:not(:has(*))) .chidemoon-article__aside {
+	display: none;
+}
+
+/* Post navigation: a lone prev/next card must not share a two-column
+ * grid with an empty cell. */
+.chidemoon-article__navigation .nav-links:has(> :only-child) {
+	grid-template-columns: 1fr;
+}
+
+/* Public forms: reachable touch targets and consistent field height. */
+.chidemoon-public-form :where(input:not([type="checkbox"]), textarea) {
+	min-height: 2.9rem;
+}
+
+.chidemoon-public-form label {
+	line-height: 2;
+}
+
+.chidemoon-public-form button {
+	min-height: 2.9rem;
+}
+
+/* Price: keep a clear gap between the amount and the currency word in
+ * every surface that inherits WooCommerce's price markup. */
+:where(.price, .chidemoon-product-card__price) :where(.woocommerce-Price-currencySymbol) {
+	margin-inline-start: 0.3rem;
+}
+
+/* Persian 404 */
+.chidemoon-error-404 {
+	padding-block: clamp(2rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem);
+}
+
+.chidemoon-error-404__panel {
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	padding: clamp(2rem, 6vw, 4.5rem);
+	text-align: center;
+}
+
+.chidemoon-error-404__code {
+	color: var(--chidemoon-clay);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(2.6rem, 6vw, 4.5rem);
+	font-weight: 800;
+	line-height: 1;
+	margin: 0;
+}
+
+.chidemoon-error-404__panel h1 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0.9rem 0 0.8rem;
+}
+
+.chidemoon-error-404__description {
+	color: var(--chidemoon-muted);
+	line-height: 2;
+	margin: 0 auto;
+	max-width: 38rem;
+}
+
+.chidemoon-error-404__search {
+	margin: 1.75rem auto 0;
+	max-width: 30rem;
+}
+
+.chidemoon-search-form {
+	display: flex;
+	gap: 0.6rem;
+}
+
+.chidemoon-search-form input {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	flex: 1;
+	font-family: var(--chidemoon-font-ui);
+	min-height: 2.9rem;
+	padding: 0.6rem 0.9rem;
+}
+
+.chidemoon-search-form input:focus {
+	border-color: var(--chidemoon-forest);
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
+}
+
+.chidemoon-search-form button {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: var(--chidemoon-radius-sm);
+	color: #fffcf7;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.86rem;
+	font-weight: 700;
+	justify-content: center;
+	min-height: 2.9rem;
+	padding: 0.6rem 1.1rem;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form button:hover {
+	background: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-error-404__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.65rem;
+	justify-content: center;
+	margin-top: 1.75rem;
+}
+
+.chidemoon-error-404__links a {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	color: var(--chidemoon-forest);
+	font-size: 0.88rem;
+	font-weight: 700;
+	min-height: 2.75rem;
+	padding: 0.55rem 1.1rem;
+	text-decoration: none;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-error-404__links a:hover,
+.chidemoon-error-404__links a:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
 }

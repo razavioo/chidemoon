@@ -346,7 +346,7 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	background: var(--chidemoon-forest);
 	border: 1px solid var(--chidemoon-forest);
 	border-radius: var(--chidemoon-radius-sm);
-	box-shadow: 4px 4px 0 var(--chidemoon-sage);
+	box-shadow: var(--chidemoon-shadow-soft);
 	color: #fffcf7;
 	display: inline-flex;
 	font-family: var(--chidemoon-font-ui);
@@ -370,9 +370,10 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 .chidemoon-button:hover,
 .chidemoon-affiliate-cta:hover {
 	background: var(--chidemoon-forest-deep);
-	box-shadow: 1px 1px 0 var(--chidemoon-sage);
+	border-color: var(--chidemoon-forest-deep);
+	box-shadow: var(--chidemoon-shadow);
 	color: #fffcf7;
-	transform: translate(3px, 3px);
+	transform: translateY(-1px);
 }
 
 .chidemoon-button--quiet {

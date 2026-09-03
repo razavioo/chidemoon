@@ -186,7 +186,7 @@ final class Chidemoon_Core_Compare {
 		}
 		self::enqueue_assets();
 		return sprintf(
-			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M19 4v16M9 8h6M9 16h6"/></svg><span>%3$s</span></button>',
+			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
 			$product->get_id(),
 			esc_attr( $product->get_name() ),
 			esc_html__( 'مقایسه', 'chidemoon-core' )

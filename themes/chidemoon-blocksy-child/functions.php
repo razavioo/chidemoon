@@ -255,7 +255,7 @@ add_filter(
  */
 add_filter(
 	'wc_get_price_thousand_separator',
-	static fn(): string => ','
+	static fn(): string => '٬'
 );
 add_filter(
 	'wc_get_price_decimal_separator',
