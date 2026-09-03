@@ -396,7 +396,10 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	font-weight: 500;
 }
 
-.entry-content a:not(.wp-element-button) {
+/* Editorial buttons and shelf CTAs carry their own forest-on-cream face;
+ * excluding them here stops the article link palette from painting dark
+ * text onto their dark backgrounds (the invisible-button bug). */
+.entry-content a:not(.wp-element-button, .chidemoon-button, .chidemoon-affiliate-cta, .chidemoon-article-product__cta) {
 	color: var(--chidemoon-forest);
 	text-decoration-color: color-mix(in srgb, var(--chidemoon-clay) 70%, transparent);
 	text-underline-offset: 0.2em;

@@ -1354,7 +1354,7 @@ function cm_seed_related_product_markup( array $product_slugs ): string {
 					'<p class="chidemoon-article-product__excerpt">%4$s</p>' .
 					'<footer class="chidemoon-article-product__footer">' .
 						'<strong class="chidemoon-article-product__price">%5$s</strong>' .
-						'<a class="chidemoon-article-product__cta" href="%1$s">%6$s</a>' .
+						'<a class="chidemoon-article-product__cta" href="%1$s">%6$s<span aria-hidden="true">&#8592;</span></a>' .
 					'</footer>' .
 				'</div>' .
 			'</article>',
@@ -1371,7 +1371,7 @@ function cm_seed_related_product_markup( array $product_slugs ): string {
 		return '';
 	}
 
-	return '<section class="chidemoon-article-products"><h2>محصولات این ترکیب</h2><p>این پیشنهادها فقط برای ارزیابی محلی‌اند؛ قیمت و مقصد فروشنده پیش از انتشار عمومی باید دوباره بررسی شوند.</p><div class="chidemoon-article-products__grid">' . implode( '', $cards ) . '</div></section>';
+	return '<section class="chidemoon-article-products"><h2 class="chidemoon-article-products__title">محصولات این ترکیب</h2><p class="chidemoon-article-products__note">هر پیشنهاد مستقیم به فروشنده وصل می‌شود؛ قیمت و موجودی را در فروشنده ببینید.</p><div class="chidemoon-article-products__grid">' . implode( '', $cards ) . '</div></section>';
 }
 
 /**
