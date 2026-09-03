@@ -1290,6 +1290,14 @@ html {
 	padding-top: 1.4rem;
 }
 
+/* A lone product tab renders without tab chrome (tabs.php), so the
+ * information section keeps the same separator and spacing treatment. */
+.woocommerce div.product .chidemoon-product-info {
+	border-top: 1px solid var(--chidemoon-line);
+	clear: both;
+	padding-top: 1.4rem;
+}
+
 .woocommerce .related.products {
 	clear: both;
 	padding-top: clamp(2rem, 4vw, 3.5rem);

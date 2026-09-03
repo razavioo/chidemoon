@@ -330,6 +330,22 @@ add_filter(
 );
 
 /**
+ * Reviews stay out of sight for now. The reviews tab carries the whole
+ * discussion surface, so dropping the tab hides the list and the form in one
+ * move; the priority must outrun WooCommerce's default tabs (10) and its
+ * tab sorter (99). Remove this filter to bring the discussion back.
+ */
+add_filter(
+	'woocommerce_product_tabs',
+	static function ( array $tabs ): array {
+		unset( $tabs['reviews'] );
+
+		return $tabs;
+	},
+	100
+);
+
+/**
  * Product review form: drop the "required fields" boilerplate line, rebuild
  * the empty-state heading in proper Persian (the outer quotes WooCommerce
  * adds collide with «» already used inside product titles), and translate
