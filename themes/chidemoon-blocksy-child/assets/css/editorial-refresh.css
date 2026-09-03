@@ -2572,12 +2572,6 @@ html {
 .chidemoon-comparison-steps__title {
 	color: var(--chidemoon-forest);
 	font-weight: 800;
-	margin: 0 0 0.25rem;
-}
-
-.chidemoon-comparison-steps__text {
-	color: var(--chidemoon-muted);
-	font-size: 0.85rem;
 	margin: 0;
 }
 
