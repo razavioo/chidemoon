@@ -56,7 +56,12 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 	text-wrap: pretty;
 }
 
-/* Blocksy owns the shell markup, so brand, navigation, and copyright roles are explicit. */
+/* Blocksy owns the shell markup; the child theme gives it the editorial
+ * identity: a calm brand, a no-shift link language, and sticky polish. */
+.ct-header {
+	border-block-end: 1px solid var(--chidemoon-line);
+}
+
 .ct-header .site-title,
 #offcanvas .site-title {
 	font-family: var(--chidemoon-font-display);
@@ -68,24 +73,82 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 .ct-header .site-title a,
 #offcanvas .site-title a {
+	color: var(--chidemoon-forest);
 	font: inherit;
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.ct-header [data-id="menu"] > ul > li > a {
+.ct-header .site-title a:hover,
+.ct-header .site-title a:focus-visible {
+	color: var(--chidemoon-forest-deep);
+}
+
+/* A clay full-stop closes the wordmark; empty content stays silent for
+ * assistive technology. */
+.ct-header .site-title a::after,
+#offcanvas .site-title a::after {
+	background: var(--chidemoon-clay);
+	border-radius: 999px;
+	content: "";
+	display: inline-block;
+	height: 0.42rem;
+	margin-inline-start: 0.3rem;
+	width: 0.42rem;
+}
+
+/* Editorial link language: constant weight, state carried by color and a
+ * clay underline, so hover and current never reflow the row. */
+.ct-header [data-id="menu"] .ct-menu-link {
 	--theme-font-family: var(--chidemoon-font-ui);
 	--theme-font-size: 0.86rem;
 	--theme-font-weight: 600;
 	--theme-letter-spacing: 0;
 	--theme-line-height: 1.6;
 	--theme-text-transform: none;
+	color: var(--chidemoon-ink);
 	font-family: var(--chidemoon-font-ui);
 	letter-spacing: 0;
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-decoration-thickness: 1.5px;
+	text-underline-offset: 0.5em;
 	text-transform: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), text-decoration-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-.ct-header [data-id="menu"] > ul > li.current-menu-item > a,
-.ct-header [data-id="menu"] > ul > li > a:hover {
-	font-weight: 700;
+.ct-header [data-id="menu"] .ct-menu-link:hover,
+.ct-header [data-id="menu"] .ct-menu-link:focus-visible,
+.ct-header [data-id="menu"] .current-menu-item > .ct-menu-link,
+.ct-header [data-id="menu"] .current-menu-ancestor > .ct-menu-link {
+	color: var(--chidemoon-forest);
+	text-decoration-color: var(--chidemoon-clay);
+}
+
+/* Header icon controls read as quiet controls, not links. */
+.ct-header .ct-header-search {
+	color: var(--chidemoon-forest);
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.ct-header .ct-header-search:hover,
+.ct-header .ct-header-search:focus-visible {
+	color: var(--chidemoon-clay);
+}
+
+/* A stuck row gains a calm paper veil instead of floating unlabeled. */
+.ct-header [data-row][data-sticky*="yes"] {
+	background: color-mix(in srgb, var(--chidemoon-surface) 88%, transparent);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 12px 32px rgba(13, 43, 35, 0.08);
+}
+
+@media (pointer: coarse) {
+	.ct-header [data-id="menu"] .ct-menu-link,
+	.ct-header .ct-header-search {
+		align-items: center;
+		min-height: 2.75rem;
+	}
 }
 
 @media (max-width: 999.98px) {
@@ -137,15 +200,19 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 		align-items: center;
 		background: transparent;
 		border: 1px solid var(--chidemoon-line-strong);
+		border-radius: var(--chidemoon-radius-sm);
 		box-shadow: none;
 		color: var(--chidemoon-forest);
 		display: inline-flex;
 		height: 2.75rem;
 		justify-content: center;
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 		width: 2.75rem;
 	}
 
-	.ct-header [data-id="trigger"]:hover {
+	.ct-header [data-id="trigger"]:hover,
+	.ct-header [data-id="trigger"]:focus-visible,
+	.ct-header [data-id="trigger"][aria-expanded="true"] {
 		background: var(--chidemoon-forest);
 		border-color: var(--chidemoon-forest);
 		color: #fffcf7;
@@ -188,9 +255,21 @@ body.chidemoon-persian :where(p, li, blockquote, figcaption) {
 
 	#offcanvas .ct-toggle-close {
 		border: 1px solid rgba(255, 252, 247, 0.28);
+		border-radius: var(--chidemoon-radius-sm);
 		color: #fffcf7;
 		height: 2.65rem;
+		transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 		width: 2.65rem;
+	}
+
+	#offcanvas .ct-toggle-close:hover,
+	#offcanvas .ct-toggle-close:focus-visible {
+		background: rgba(255, 252, 247, 0.12);
+		border-color: rgba(255, 252, 247, 0.45);
+	}
+
+	#offcanvas :where(a, button):focus-visible {
+		outline-color: var(--chidemoon-clay-soft);
 	}
 
 	#offcanvas .ct-panel-content-inner {
