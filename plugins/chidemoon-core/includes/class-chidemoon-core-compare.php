@@ -60,6 +60,7 @@ final class Chidemoon_Core_Compare {
 						'clear'          => __( 'پاک کردن همه', 'chidemoon-core' ),
 						'needMore'       => __( 'برای مقایسه حداقل دو محصول انتخاب کنید.', 'chidemoon-core' ),
 						'count'          => __( 'محصول برای مقایسه', 'chidemoon-core' ),
+						'removeItem'     => __( 'حذف از مقایسه', 'chidemoon-core' ),
 						'loading'        => __( 'در حال جست‌وجوی محصولات…', 'chidemoon-core' ),
 						'noResults'      => __( 'محصولی پیدا نشد.', 'chidemoon-core' ),
 						'searchError'    => __( 'جست‌وجو در حال حاضر در دسترس نیست. دوباره تلاش کنید.', 'chidemoon-core' ),
@@ -113,6 +114,7 @@ final class Chidemoon_Core_Compare {
 			$results[] = array(
 				'id'    => $product->get_id(),
 				'title' => wp_strip_all_tags( $product->get_name() ),
+				'image' => (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ),
 			);
 		}
 
@@ -186,10 +188,11 @@ final class Chidemoon_Core_Compare {
 		}
 		self::enqueue_assets();
 		return sprintf(
-			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
+			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%4$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
 			$product->get_id(),
 			esc_attr( $product->get_name() ),
-			esc_html__( 'مقایسه', 'chidemoon-core' )
+			esc_html__( 'مقایسه', 'chidemoon-core' ),
+			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) )
 		);
 	}
 

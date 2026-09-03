@@ -47,6 +47,19 @@
 		return node.innerHTML;
 	}
 
+	function faDigits(value) {
+		var text = String(value);
+		return /^[0-9]+$/.test(text) ? text.replace(/[0-9]/g, function (digit) { return '۰۱۲۳۴۵۶۷۸۹'.charAt(digit); }) : text;
+	}
+
+	function thumbHtml(item, className) {
+		var name = (item.name || '').trim();
+		if (item.image) {
+			return '<img class="' + className + '" src="' + escapeHtml(item.image) + '" alt="" loading="lazy" width="40" height="40">';
+		}
+		return '<span class="' + className + ' ' + className + '--empty" aria-hidden="true">' + escapeHtml(name.charAt(0) || '#') + '</span>';
+	}
+
 	function syncControls(items) {
 		document.querySelectorAll('[data-compare-product]').forEach(function (control) {
 			var active = selected(control.dataset.compareProduct, items);
@@ -94,8 +107,10 @@
 				current = current.filter(function (item) { return allowed.indexOf(Number(item.id)) === -1 || validIds.indexOf(Number(item.id)) !== -1; });
 				eligible.forEach(function (product) {
 					var existing = current.filter(function (item) { return Number(item.id) === Number(product.id); })[0];
-					if (existing) existing.name = product.title || existing.name;
-					else current.push({ id: product.id, name: product.title || '' });
+					if (existing) {
+						existing.name = product.title || existing.name;
+						existing.image = product.image || existing.image || '';
+					} else current.push({ id: product.id, name: product.title || '', image: product.image || '' });
 				});
 				if (invalidPersisted.length) announce(config.labels.staleSelection);
 				write(current);
@@ -157,9 +172,9 @@
 			setBarOffset(bar);
 			return;
 		}
-		bar.querySelector('.chidemoon-compare-bar__summary').textContent = items.length + ' ' + config.labels.count;
+		bar.querySelector('.chidemoon-compare-bar__summary').innerHTML = '<strong class="chidemoon-compare-bar__badge">' + faDigits(items.length) + '</strong>' + escapeHtml(config.labels.count);
 		bar.querySelector('.chidemoon-compare-bar__items').innerHTML = items.map(function (item) {
-			return '<button type="button" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + config.labels.removed) + '">' + escapeHtml(item.name || ('#' + item.id)) + ' ×</button>';
+			return '<button type="button" class="chidemoon-compare-bar__chip" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + (config.labels.removeItem || config.labels.removed)) + '">' + thumbHtml(item, 'chidemoon-compare-bar__thumb') + '<span class="chidemoon-compare-bar__chip-name">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span class="chidemoon-compare-bar__chip-x" aria-hidden="true">×</span></button>';
 		}).join('');
 		bar.querySelector('.chidemoon-compare-bar__clear').textContent = config.labels.clear;
 		var go = bar.querySelector('.chidemoon-compare-bar__go');
@@ -174,11 +189,11 @@
 		strip.hidden = items.length === 0;
 		if (!items.length) return;
 		var count = strip.querySelector('[data-comparison-status-count]');
-		if (count) count.textContent = items.length + ' ' + config.labels.count + (items.length < 2 ? ' — ' + config.labels.needMore : '');
+		if (count) count.textContent = faDigits(items.length) + ' ' + config.labels.count + (items.length < 2 ? ' — ' + config.labels.needMore : '');
 		var chips = strip.querySelector('[data-comparison-status-chips]');
 		if (chips) {
 			chips.innerHTML = items.map(function (item) {
-				return '<span class="chidemoon-comparison-status__chip">' + escapeHtml(item.name || ('#' + item.id)) + '</span>';
+				return '<span class="chidemoon-comparison-status__chip">' + thumbHtml(item, 'chidemoon-comparison-status__chip-thumb') + escapeHtml(item.name || ('#' + item.id)) + '</span>';
 			}).join('');
 		}
 	}
@@ -226,7 +241,8 @@
 						results.hidden = false;
 						results.innerHTML = products.map(function (product) {
 							var active = selected(product.id);
-								return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '"><span>' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
+							var thumb = product.image ? '<img class="chidemoon-comparison-search__thumb" src="' + escapeHtml(product.image) + '" alt="" loading="lazy" width="40" height="40">' : '';
+							return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '" data-compare-image="' + escapeHtml(product.image || '') + '">' + thumb + '<span>' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
 						}).join('');
 					})
 					.catch(function (error) {
@@ -235,6 +251,31 @@
 					});
 			}, 220);
 		});
+	}
+
+	function backfillImages() {
+		if (!config.restUrl) return;
+		var pending = read().filter(function (item) { return !item.image; });
+		if (!pending.length) return;
+		fetch(config.restUrl + '?ids=' + encodeURIComponent(pending.map(function (item) { return item.id; }).join(',')))
+			.then(function (response) { if (!response.ok) throw new Error('images'); return response.json(); })
+			.then(function (products) {
+				var current = read();
+				var changed = false;
+				products.forEach(function (product) {
+					current.forEach(function (item) {
+						if (Number(item.id) === Number(product.id) && !item.image && product.image) {
+							item.image = product.image;
+							changed = true;
+						}
+					});
+				});
+				if (changed) {
+					write(current);
+					refresh();
+				}
+			})
+			.catch(function () {});
 	}
 
 	function bind() {
@@ -264,7 +305,7 @@
 			if (selected(id, items)) {
 				write(items.filter(function (item) { return Number(item.id) !== id; }));
 			} else if (items.length < config.maximum) {
-				items.push({ id: id, name: control.dataset.compareName || '' });
+				items.push({ id: id, name: control.dataset.compareName || '', image: control.dataset.compareImage || '' });
 				write(items);
 			} else {
 				announce(config.labels.full);
@@ -275,6 +316,7 @@
 		syncPageSelection();
 		bindSearch();
 		refresh();
+		backfillImages();
 	}
 
 	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
