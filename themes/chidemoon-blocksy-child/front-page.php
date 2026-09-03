@@ -71,11 +71,11 @@ $hero_stats = chidemoon_home_hero_stats();
 <section class="chidemoon-home__hero chidemoon-section-shell" aria-label="معرفی چیدمون">
 	<div class="chidemoon-home__hero-copy">
 		<p class="chidemoon-eyebrow"><?php echo esc_html( get_bloginfo( 'name' ) ); ?> · <?php esc_html_e( 'مجله و فروشگاه چیدمان خانه', 'chidemoon-blocksy-child' ); ?></p>
-		<h1><?php esc_html_e( 'خانه را با شواهد بچین، نه با تبلیغ', 'chidemoon-blocksy-child' ); ?></h1>
+		<h1><?php esc_html_e( 'خانه را با شناخت بچین، نه با تبلیغ', 'chidemoon-blocksy-child' ); ?></h1>
 		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی محصولات خانه است. هر مطلب از تحریریه می‌گذرد و هر محصول پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
 		<div class="chidemoon-home__actions">
-			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'گشت در محصولات منتخب', 'chidemoon-blocksy-child' ); ?></a>
-			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'مطالعه‌ی مجله', 'chidemoon-blocksy-child' ); ?></a>
+			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'دیدن محصولات منتخب', 'chidemoon-blocksy-child' ); ?></a>
+			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'سر بزنید به مجله', 'chidemoon-blocksy-child' ); ?></a>
 		</div>
 		<?php if ( ! empty( $hero_stats ) ) : ?>
 		<dl class="chidemoon-home__hero-meta">
@@ -178,7 +178,7 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <?php chidemoon_blocksy_render_product_cards( $products ); ?>
 </div>
 <?php else : ?>
-<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'محصولات فقط پس از تأیید دسته‌بندی، تصویر و مقصد فروشنده منتشر می‌شوند.' ); ?>
+<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'محصولات فقط وقتی منتشر می‌شوند که دسته‌بندی، تصویر و فروشنده‌ی مقصدشان تأیید شده باشد.' ); ?>
 <?php endif; ?>
 </section>
 
@@ -210,13 +210,13 @@ $side_category    = chidemoon_blocksy_primary_category( $side_id );
 <section class="chidemoon-home__routes chidemoon-section-shell" aria-label="فرمت‌های چیدمون">
 <a class="chidemoon-route-card" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'comparisons' ) ); ?>">
 <span class="chidemoon-eyebrow">دو تا چهار محصول</span>
-<strong>مقایسه‌های شفاف</strong>
-<span>شواهد بررسی‌شده، مبادلات روشن، بدون توصیه‌ی خودکار.</span>
+<strong>مقایسه‌ی بی‌طرفانه</strong>
+<span>محصولات با معیارهای روشن سنجیده می‌شوند؛ نقطه‌ی قوت و ضعف همه پیدا است و انتخاب با شماست.</span>
 </a>
 <a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
 <span class="chidemoon-eyebrow">یک اتاق را بچین</span>
-<strong>از تصویر بخر</strong>
-<span>ترکیب‌های ادیتوریال متصل به پیشنهاد مستقیم فروشنده.</span>
+<strong>ببین و بخر</strong>
+<span>چیدمان‌های هماهنگی که تک‌تک وسایلشان را می‌توانید از همان فروشنده بخرید.</span>
 </a>
 </section>
 </main>

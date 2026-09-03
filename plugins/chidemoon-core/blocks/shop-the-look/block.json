@@ -3,11 +3,11 @@
   "apiVersion": 3,
   "name": "chidemoon/shop-the-look",
   "version": "1.0.0",
-  "title": "از تصویر بخر",
+  "title": "ببین و بخر",
   "category": "chidemoon-commerce",
   "icon": "camera",
   "description": "تصویر چیدمان با نقاط قابل کلیک برای نمایش محصولات.",
-  "keywords": ["shop", "look", "hotspot", "image", "اتاق", "تصویر"],
+  "keywords": ["shop", "look", "hotspot", "image", "اتاق", "خرید"],
   "supports": { "html": false, "anchor": true, "align": ["wide", "full"], "spacing": { "margin": true }, "shadow": true },
   "attributes": {
     "imageId": { "type": "integer", "default": 0 },

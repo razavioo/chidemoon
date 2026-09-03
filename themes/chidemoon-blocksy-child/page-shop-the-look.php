@@ -38,7 +38,7 @@ foreach ( $rooms as $room ) {
 	<?php while ( have_posts() ) : the_post(); ?>
 		<header class="chidemoon-collection-page__hero chidemoon-section-shell<?php echo has_post_thumbnail() ? ' has-media' : ''; ?>">
 			<div class="chidemoon-collection-page__hero-copy">
-				<p class="chidemoon-eyebrow"><?php esc_html_e( 'یک اتاق، با دقت', 'chidemoon-blocksy-child' ); ?></p>
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'از عکس تا خرید', 'chidemoon-blocksy-child' ); ?></p>
 				<h1><?php the_title(); ?></h1>
 				<?php if ( has_excerpt() ) : ?><p><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
 			</div>
@@ -55,7 +55,7 @@ foreach ( $rooms as $room ) {
 		<?php endif; ?>
 	<?php endwhile; ?>
 	<section class="chidemoon-section-shell chidemoon-collection-page__feed" aria-labelledby="chidemoon-looks-feed">
-		<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php echo $current_room instanceof WP_Term ? esc_html( $current_room->name ) : esc_html__( 'نکته‌های اتاق', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-looks-feed"><?php esc_html_e( 'چیدمان‌های قابل خرید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
+		<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php echo $current_room instanceof WP_Term ? esc_html( $current_room->name ) : esc_html__( 'نکته‌های اتاق', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-looks-feed"><?php esc_html_e( 'چیدمان‌هایی که می‌شود خرید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
 		<?php if ( $look_posts->have_posts() ) : ?>
 			<div class="chidemoon-look-list">
 				<?php while ( $look_posts->have_posts() ) : $look_posts->the_post(); ?>

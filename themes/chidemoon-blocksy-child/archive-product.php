@@ -42,7 +42,7 @@ $hero_product      = $current_term instanceof WP_Term && is_product_category()
 				</a>
 				<figcaption class="chidemoon-shop-archive__media-caption">
 					<a class="chidemoon-shop-archive__media-caption__product" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>"><?php echo esc_html( $hero_product->get_name() ); ?></a>
-					<span class="chidemoon-shop-archive__media-caption__label"><?php esc_html_e( 'نمونه از محصولات این دسته', 'chidemoon-blocksy-child' ); ?></span>
+					<span class="chidemoon-shop-archive__media-caption__label"><?php esc_html_e( 'نمونه‌ای از این دسته', 'chidemoon-blocksy-child' ); ?></span>
 				</figcaption>
 			</figure>
 		<?php elseif ( $term_thumbnail_id > 0 ) : ?>
@@ -71,7 +71,7 @@ $hero_product      = $current_term instanceof WP_Term && is_product_category()
 
 			<?php do_action( 'woocommerce_after_shop_loop' ); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( 'انتخاب محصول در حال آماده‌سازی است.', 'محصولات فقط وقتی نمایش داده می‌شوند که مقصد فروشنده، دسته‌بندی، تصویر و وضعیت بررسی‌شان آماده استفاده عمومی باشد.' ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'انتخاب محصول در حال آماده‌سازی است.', 'محصولات فقط وقتی نمایش داده می‌شوند که بررسی‌شان کامل شده باشد؛ تصویر، دسته‌بندی و فروشنده‌ی مقصد همه تأیید شده باشند.' ); ?>
 		<?php endif; ?>
 	</section>
 
