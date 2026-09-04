@@ -112,6 +112,15 @@ class Chidemoon_AI_REST_Controller {
 		);
 		register_rest_route(
 			self::NAMESPACE,
+			'/jobs/(?P<id>\d+)/retry',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'retry_job' ),
+				'permission_callback' => array( __CLASS__, 'can_retry_job' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
 			'/assistant',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -486,6 +495,81 @@ class Chidemoon_AI_REST_Controller {
 	}
 
 	/**
+	 * Re-queues a failed job with a fresh idempotency key. The original job
+	 * stays failed for audit; the new job carries retried_from provenance.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function retry_job( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$job = Chidemoon_AI_Repository::find( absint( $request['id'] ) );
+		if ( ! $job ) {
+			return self::error( 'chidemoon_ai_job_not_found', __( 'The AI job was not found.', 'chidemoon-ai' ), 404 );
+		}
+		if ( Chidemoon_AI_State_Machine::FAILED !== (string) $job['state'] ) {
+			return self::error( 'chidemoon_ai_retry_state', __( 'Only failed jobs can be retried.', 'chidemoon-ai' ), 409 );
+		}
+		$provider = Chidemoon_AI_Provider_Factory::create();
+		if ( is_wp_error( $provider ) ) {
+			return $provider;
+		}
+		$moderation = Chidemoon_AI_Moderation::validate_configuration();
+		if ( is_wp_error( $moderation ) ) {
+			return $moderation;
+		}
+
+		$payload = is_array( $job['request_payload'] ?? null ) ? $job['request_payload'] : array();
+		$job_type = (string) $job['job_type'];
+		$target_post_id = absint( $job['target_post_id'] ?? 0 );
+		$evidence_ids   = is_array( $payload['evidence_ids'] ?? null ) ? array_map( 'absint', $payload['evidence_ids'] ) : array();
+
+		$new_job = Chidemoon_AI_Repository::create(
+			array(
+				'idempotency_key' => get_current_user_id() . ':' . $job_type . ':retry-' . (int) $job['id'] . '-' . wp_generate_uuid4(),
+				'job_type'        => $job_type,
+				'target_post_id'  => $target_post_id,
+				'requested_by'    => get_current_user_id(),
+				'request_hash'    => (string) ( $job['request_hash'] ?? '' ),
+				'request_payload' => $payload,
+				'provenance'      => array( 'request_version' => '1', 'review_required' => true, 'retried_from' => (int) $job['id'] ),
+			)
+		);
+		if ( is_wp_error( $new_job ) ) {
+			return $new_job;
+		}
+
+		if ( in_array( $job_type, array( 'text', 'comparison', 'enrich', 'look' ), true ) ) {
+			$relax = in_array( $job_type, array( 'enrich', 'look' ), true );
+			$captured = Chidemoon_AI_Evidence::capture_posts( (int) $new_job['id'], $evidence_ids, ! $relax );
+			if ( is_wp_error( $captured ) ) {
+				Chidemoon_AI_Repository::mark_failed( (int) $new_job['id'], Chidemoon_AI_State_Machine::QUEUED, $captured->get_error_code(), $captured->get_error_message() );
+				return $captured;
+			}
+		}
+
+		if ( 'enrich' === $job_type && class_exists( 'Chidemoon_AI_Web' ) && class_exists( 'Chidemoon_AI_Enrich' ) ) {
+			$local = Chidemoon_AI_Enrich::local_context( $target_post_id );
+			if ( ! is_wp_error( $local ) ) {
+				Chidemoon_AI_Web::collect_for_product(
+					(int) $new_job['id'],
+					(string) ( $local['title'] ?? '' ),
+					(string) ( $local['merchant'] ?? '' ),
+					! empty( $payload['use_source_url'] ) ? (string) ( $local['source_url'] ?? '' ) : '',
+					! empty( $payload['use_web'] )
+				);
+			}
+		}
+
+		$reserved = Chidemoon_AI_Usage::reserve( (int) $new_job['id'], get_current_user_id(), $job_type );
+		if ( is_wp_error( $reserved ) ) {
+			Chidemoon_AI_Repository::mark_failed( (int) $new_job['id'], Chidemoon_AI_State_Machine::QUEUED, $reserved->get_error_code(), $reserved->get_error_message() );
+			return $reserved;
+		}
+
+		Chidemoon_AI_Runner::enqueue( (int) $new_job['id'] );
+		return new WP_REST_Response( array( 'job' => self::job_response( Chidemoon_AI_Repository::find( (int) $new_job['id'] ) ?: $new_job ) ), 202 );
+	}
+
+	/**
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function assistant( WP_REST_Request $request ): WP_REST_Response|WP_Error {
@@ -588,6 +672,17 @@ class Chidemoon_AI_REST_Controller {
 	/**
 	 * @return true|WP_Error
 	 */
+	public static function can_retry_job( WP_REST_Request $request ): true|WP_Error {
+		if ( ! current_user_can( Chidemoon_AI_Capabilities::GENERATE ) ) {
+			return self::forbidden();
+		}
+
+		return self::can_view_job( $request );
+	}
+
+	/**
+	 * @return true|WP_Error
+	 */
 	public static function can_view_job( WP_REST_Request $request ): true|WP_Error {
 		$job = Chidemoon_AI_Repository::find( absint( $request['id'] ) );
 		if ( ! $job ) {
@@ -664,8 +759,13 @@ class Chidemoon_AI_REST_Controller {
 			return $job;
 		}
 
+		// Enrichment and look jobs target products precisely because they are
+		// old or incomplete, so the freshness gate would reject exactly the
+		// products that need them. The recorded freshness_at still lets the
+		// reviewer see the age of every source.
+		$relax_freshness = in_array( $job_type, array( 'enrich', 'look' ), true );
 		if ( in_array( $job_type, array( 'text', 'comparison', 'enrich', 'look' ), true ) ) {
-			$captured = Chidemoon_AI_Evidence::capture_posts( (int) $job['id'], $evidence_post_ids );
+			$captured = Chidemoon_AI_Evidence::capture_posts( (int) $job['id'], $evidence_post_ids, ! $relax_freshness );
 			if ( is_wp_error( $captured ) ) {
 				Chidemoon_AI_Repository::mark_failed( (int) $job['id'], Chidemoon_AI_State_Machine::QUEUED, $captured->get_error_code(), $captured->get_error_message() );
 				return $captured;

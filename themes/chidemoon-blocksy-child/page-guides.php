@@ -68,6 +68,12 @@ $guide_posts = new WP_Query(
 			<?php chidemoon_blocksy_render_empty_state( 'اولین راهنما در حال آماده‌سازی است.', 'اینجا فقط راهنماهایی منتشر می‌شوند که از تجربه‌ی واقعی نوشته شده باشند.' ); ?>
 		<?php endif; ?>
 	</section>
+
+	<?php if ( shortcode_exists( 'chidemoon_ai_assistant' ) ) : ?>
+	<section class="chidemoon-section-shell chidemoon-collection-page__assistant" aria-labelledby="chidemoon-guides-assistant">
+		<?php echo do_shortcode( '[chidemoon_ai_assistant title="از راهنماها بپرسید"]' ); ?>
+	</section>
+	<?php endif; ?>
 </main>
 
 <?php

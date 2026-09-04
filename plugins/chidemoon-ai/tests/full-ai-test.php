@@ -106,6 +106,23 @@ if ( ! function_exists( 'get_option' ) ) {
 		return $default;
 	}
 }
+if ( ! function_exists( 'get_role' ) ) {
+	class Chidemoon_AI_Test_Role {
+		/** @var array<string, bool> */
+		public array $caps = array();
+		public function add_cap( string $cap ): void {
+			$this->caps[ $cap ] = true;
+		}
+	}
+	function get_role( string $name ): ?Chidemoon_AI_Test_Role {
+		static $roles = array();
+		if ( ! isset( $roles[ $name ] ) ) {
+			$roles[ $name ] = new Chidemoon_AI_Test_Role();
+		}
+
+		return $roles[ $name ];
+	}
+}
 if ( ! function_exists( 'getenv' ) ) {
 	// Native getenv always exists; stub never used.
 }
@@ -117,8 +134,18 @@ function check( bool $condition, string $message ): void {
 }
 
 require_once dirname( __DIR__ ) . '/includes/class-chidemoon-ai-settings.php';
+require_once dirname( __DIR__ ) . '/includes/class-chidemoon-ai-capabilities.php';
 require_once dirname( __DIR__ ) . '/includes/class-chidemoon-ai-look.php';
 require_once dirname( __DIR__ ) . '/includes/class-chidemoon-ai-enrich.php';
+
+// Capabilities: shop managers operate products, so they get generate/review
+// but never manage (provider/budget policy stays administrator-only).
+Chidemoon_AI_Capabilities::add();
+$shop_manager = get_role( 'shop_manager' );
+check( isset( $shop_manager->caps[ Chidemoon_AI_Capabilities::GENERATE ] ), 'Shop managers must be able to generate AI jobs.' );
+check( isset( $shop_manager->caps[ Chidemoon_AI_Capabilities::REVIEW ] ), 'Shop managers must be able to review AI jobs.' );
+check( ! isset( $shop_manager->caps[ Chidemoon_AI_Capabilities::MANAGE ] ), 'Shop managers must not manage AI provider settings.' );
+check( ! isset( $shop_manager->caps[ Chidemoon_AI_Capabilities::VIEW_AUDIT ] ), 'Shop managers must not view AI audit data.' );
 
 // Settings: unknown keys sanitize to null, known sizes validate.
 check( null === Chidemoon_AI_Settings::sanitize( 'nope', 'x' ), 'Unknown settings key must sanitize to null.' );

@@ -116,6 +116,9 @@ final class Chidemoon_Core_Compare {
 			: self::eligible_products( self::SEARCH_LIMIT, $browse ? '' : $term );
 		$results = array();
 		foreach ( $candidates as $product ) {
+			if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+				continue;
+			}
 			$results[] = array(
 				'id'    => $product->get_id(),
 				'title' => wp_strip_all_tags( $product->get_name() ),
@@ -150,6 +153,9 @@ final class Chidemoon_Core_Compare {
 			$page            = wc_get_products( $args );
 			foreach ( $page as $product ) {
 				if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product ) ) {
+					continue;
+				}
+				if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
 					continue;
 				}
 				$products[] = $product;

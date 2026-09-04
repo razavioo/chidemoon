@@ -129,7 +129,8 @@ class Chidemoon_AI_Admin {
 			<form class="chidemoon-ai-job-form" data-chidemoon-ai-job="enrich">
 				<p><label for="chidemoon-ai-enrich-product"><?php esc_html_e( 'Product ID', 'chidemoon-ai' ); ?></label><br>
 				<input id="chidemoon-ai-enrich-product" name="product_id" type="number" min="1" step="1" required>
-				<button type="button" class="button" data-chidemoon-ai-picker="product_id"><?php esc_html_e( 'Search products', 'chidemoon-ai' ); ?></button></p>
+				<button type="button" class="button" data-chidemoon-ai-picker="product_id"><?php esc_html_e( 'Search products', 'chidemoon-ai' ); ?></button><br>
+				<span class="description"><?php esc_html_e( 'Search lists reviewed products only; any editable product ID (including drafts) can be typed directly.', 'chidemoon-ai' ); ?></span></p>
 				<p><label><input name="use_source_url" type="checkbox" value="1" checked> <?php esc_html_e( 'Fetch the saved evidence source URL', 'chidemoon-ai' ); ?></label><br>
 				<label><input name="use_web" type="checkbox" value="1" checked> <?php esc_html_e( 'Free web search (DuckDuckGo, cached)', 'chidemoon-ai' ); ?></label></p>
 				<p><label for="chidemoon-ai-enrich-instructions"><?php esc_html_e( 'Editor request', 'chidemoon-ai' ); ?></label><br>
@@ -147,6 +148,7 @@ class Chidemoon_AI_Admin {
 			Chidemoon_AI_Repository::list( Chidemoon_AI_State_Machine::REVIEW_REQUIRED, 100 ),
 			Chidemoon_AI_Repository::list( Chidemoon_AI_State_Machine::APPROVED, 100 )
 		);
+		$failed = Chidemoon_AI_Repository::list( Chidemoon_AI_State_Machine::FAILED, 20 );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AI Review Queue', 'chidemoon-ai' ); ?></h1>
@@ -177,6 +179,25 @@ class Chidemoon_AI_Admin {
 				<?php endif; ?>
 				</tbody>
 			</table>
+			<h2><?php esc_html_e( 'Failed jobs', 'chidemoon-ai' ); ?></h2>
+			<?php if ( empty( $failed ) ) : ?>
+				<p><?php esc_html_e( 'No failed jobs. Retried jobs keep the original failed record for audit.', 'chidemoon-ai' ); ?></p>
+			<?php else : ?>
+			<table class="widefat striped">
+				<thead><tr><th><?php esc_html_e( 'Job', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Type', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Error', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Created', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Actions', 'chidemoon-ai' ); ?></th></tr></thead>
+				<tbody>
+					<?php foreach ( $failed as $job ) : ?>
+						<tr>
+							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
+							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
+							<td><?php echo esc_html( (string) ( $job['error_message'] ?: $job['error_code'] ) ); ?></td>
+							<td><?php echo esc_html( (string) $job['created_at'] ); ?></td>
+							<td><button type="button" class="button" data-chidemoon-ai-review="retry" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Retry', 'chidemoon-ai' ); ?></button></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

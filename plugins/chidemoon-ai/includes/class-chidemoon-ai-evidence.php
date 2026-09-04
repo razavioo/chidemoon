@@ -14,7 +14,7 @@ class Chidemoon_AI_Evidence {
 	 * @param array<int, int> $post_ids
 	 * @return array<int, array<string, mixed>>|WP_Error
 	 */
-	public static function capture_posts( int $job_id, array $post_ids ): array|WP_Error {
+	public static function capture_posts( int $job_id, array $post_ids, bool $enforce_freshness = true ): array|WP_Error {
 		$post_ids = array_values( array_unique( array_filter( array_map( 'absint', $post_ids ) ) ) );
 		if ( empty( $post_ids ) ) {
 			return new WP_Error( 'chidemoon_ai_evidence_empty', __( 'Select at least one current WordPress source before requesting AI output.', 'chidemoon-ai' ), array( 'status' => 400 ) );
@@ -27,7 +27,7 @@ class Chidemoon_AI_Evidence {
 				return new WP_Error( 'chidemoon_ai_evidence_invalid', __( 'One of the selected AI sources is unavailable.', 'chidemoon-ai' ), array( 'status' => 400 ) );
 			}
 
-			if ( ! self::is_fresh( $post ) ) {
+			if ( $enforce_freshness && ! self::is_fresh( $post ) ) {
 				return new WP_Error( 'chidemoon_ai_evidence_stale', __( 'One of the selected AI sources is stale and must be reviewed first.', 'chidemoon-ai' ), array( 'status' => 409 ) );
 			}
 
