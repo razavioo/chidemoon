@@ -125,7 +125,18 @@ class Chidemoon_AI_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'assistant' ),
+				// Public keyword search over published content only (no provider
+				// call). Throttled + cached inside the handler.
 				'permission_callback' => '__return_true',
+				'args'                => array(
+					'question' => array(
+						'required'          => true,
+						'type'              => 'string',
+						'minLength'         => 3,
+						'maxLength'         => 500,
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
 			)
 		);
 	}

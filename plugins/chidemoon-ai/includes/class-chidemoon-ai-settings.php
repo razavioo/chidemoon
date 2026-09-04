@@ -51,7 +51,7 @@ class Chidemoon_AI_Settings {
 				'sanitize'  => 'int_10_120',
 			),
 			'daily_limit'        => array(
-				'default'   => 20,
+				'default'   => 25,
 				'maxlength' => 0,
 				'sanitize'  => 'int_1_1000',
 			),
@@ -61,7 +61,7 @@ class Chidemoon_AI_Settings {
 				'sanitize'  => 'int_1_100000',
 			),
 			'monthly_budget'     => array(
-				'default'   => 50.0,
+				'default'   => 25.0,
 				'maxlength' => 0,
 				'sanitize'  => 'float',
 			),
@@ -71,12 +71,12 @@ class Chidemoon_AI_Settings {
 				'sanitize'  => 'float',
 			),
 			'comparison_cost'    => array(
-				'default'   => 0.03,
+				'default'   => 0.04,
 				'maxlength' => 0,
 				'sanitize'  => 'float',
 			),
 			'image_cost'         => array(
-				'default'   => 0.10,
+				'default'   => 0.06,
 				'maxlength' => 0,
 				'sanitize'  => 'float',
 			),

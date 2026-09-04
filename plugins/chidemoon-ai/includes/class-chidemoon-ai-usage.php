@@ -8,12 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Chidemoon_AI_Usage {
-	private const DEFAULT_DAILY_LIMIT       = 20;
+	// Single source of truth mirrored in .env.example, compose.yml and
+	// Chidemoon_AI_Settings::fields(). Costs are pre-authorization estimates
+	// (not metered provider billing); they only bound queue reservations.
+	private const DEFAULT_DAILY_LIMIT       = 25;
 	private const DEFAULT_MONTHLY_LIMIT     = 500;
-	private const DEFAULT_MONTHLY_BUDGET    = 50.0;
+	private const DEFAULT_MONTHLY_BUDGET    = 25.0;
 	private const DEFAULT_TEXT_COST         = 0.02;
-	private const DEFAULT_COMPARISON_COST   = 0.03;
-	private const DEFAULT_IMAGE_COST        = 0.10;
+	private const DEFAULT_COMPARISON_COST   = 0.04;
+	private const DEFAULT_IMAGE_COST        = 0.06;
 
 	/**
 	 * Reserves capacity before a background action is enqueued. A queued action

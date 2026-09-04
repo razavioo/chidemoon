@@ -194,7 +194,9 @@ function normalizePriceCandidate(price) {
 
 function normalizeReviewState(status) {
 	const state = cleanText(status, 64).toLowerCase().replace(/[^a-z0-9_-]/g, '');
-	if (['reviewed', 'verified', 'publish', 'published'].includes(state)) {
+	// Strict parity with Chidemoon_Core_Importer::normalize_review_state():
+	// only an explicit "reviewed" promotes; legacy aliases stay draft.
+	if ('reviewed' === state) {
 		return 'reviewed';
 	}
 	if ('quarantine' === state) {

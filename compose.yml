@@ -77,7 +77,9 @@ services:
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
     healthcheck:
-      test: ["CMD-SHELL", "php -r 'exit(@file_get_contents(\"http://localhost/wp-login.php\") === false ? 1 : 0);'"]
+      # Homepage (not wp-login.php, which can redirect/brand differently per
+      # setup). Accept any 2xx/3xx as healthy; fail on 4xx/5xx or connection error.
+      test: ["CMD-SHELL", "php -r '$c=@file_get_contents(\"http://localhost/\"); exit($c === false ? 1 : 0);'"]
       interval: 15s
       timeout: 5s
       retries: 12
@@ -86,7 +88,9 @@ services:
   wpcli:
     image: wordpress:cli-2.10.0-php8.2
     profiles: ["tools"]
-    user: "0:0"
+    # Run as www-data (33) like the wordpress service, not root: root-owned
+    # files in shared volumes break subsequent web writes and audits.
+    user: "33:33"
     depends_on:
       database:
         condition: service_healthy
@@ -99,15 +103,13 @@ services:
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
-      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
       - ./tools:/tools:ro
-      - ./vendor:/packages:ro
       - ./vendor:/packages:ro
 
   scheduler:
     image: wordpress:cli-2.10.0-php8.2
     profiles: ["tools"]
-    user: "0:0"
+    user: "33:33"
     depends_on:
       database:
         condition: service_healthy
@@ -142,7 +144,8 @@ services:
   restore:
     image: mariadb:11.4
     profiles: ["tools"]
-    user: "0:0"
+    # mysql client needs no root here; default (999) is enough for /backups I/O.
+    user: "999:999"
     depends_on:
       database:
         condition: service_healthy

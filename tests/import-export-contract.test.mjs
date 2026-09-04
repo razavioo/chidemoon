@@ -56,7 +56,7 @@ const VALID_RECORD = {
 	},
 	category: { label: 'آشپزخانه', slug: 'kitchen' },
 	imageUrl: 'https://cdn.example.com/img/x200.webp',
-	status: 'published',
+	status: 'reviewed',
 	specs: [
 		['توان', '2000W'],
 	],
@@ -186,7 +186,11 @@ describe('normalization helpers mirroring the importer', () => {
 	});
 
 	it('maps legacy review states onto reviewed/draft/quarantine', () => {
-		assert.equal(validateRecord({ ...VALID_RECORD, status: 'verified' }).reviewState, 'reviewed');
+		// Strict: only an explicit "reviewed" promotes. Legacy aliases that
+		// previously auto-published now stay draft for human review.
+		assert.equal(validateRecord({ ...VALID_RECORD, status: 'reviewed' }).reviewState, 'reviewed');
+		assert.equal(validateRecord({ ...VALID_RECORD, status: 'verified' }).reviewState, 'draft');
+		assert.equal(validateRecord({ ...VALID_RECORD, status: 'published' }).reviewState, 'draft');
 		assert.equal(validateRecord({ ...VALID_RECORD, status: 'weird-state' }).reviewState, 'draft');
 	});
 

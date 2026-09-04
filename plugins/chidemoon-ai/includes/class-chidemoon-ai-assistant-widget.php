@@ -1,6 +1,11 @@
 <?php
 /**
- * Safe front-end shell for the published-content-only assistant endpoint.
+ * Safe front-end shell for the published-content-only search endpoint.
+ *
+ * Kept under the historic "assistant" shortcode/route names for backwards
+ * compatibility, but the UI copy deliberately calls it a published-sources
+ * search: it runs a local keyword lookup only and never calls a generative
+ * AI provider.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +23,7 @@ class Chidemoon_AI_Assistant_Widget {
 	public static function render( array $attributes = array() ): string {
 		$attributes = shortcode_atts(
 			array(
-				'title' => __( 'Ask Chidemoon', 'chidemoon-ai' ),
+				'title' => __( 'Search published sources', 'chidemoon-ai' ),
 			),
 			$attributes,
 			'chidemoon_ai_assistant'
@@ -30,7 +35,7 @@ class Chidemoon_AI_Assistant_Widget {
 		?>
 		<section id="<?php echo esc_attr( $instance_id ); ?>" class="chidemoon-ai-assistant" data-chidemoon-ai-assistant>
 			<h2><?php echo esc_html( (string) $attributes['title'] ); ?></h2>
-			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'This assistant searches only published Chidemoon articles, pages, and products. It does not provide live prices, shopping actions, or unreviewed claims.', 'chidemoon-ai' ); ?></p>
+			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'Keyword search over published Chidemoon articles, pages, and products only. No generative AI, live prices, shopping actions, or unreviewed claims.', 'chidemoon-ai' ); ?></p>
 			<form class="chidemoon-ai-assistant__form">
 				<label for="<?php echo esc_attr( $instance_id ); ?>-question"><?php esc_html_e( 'Your question', 'chidemoon-ai' ); ?></label>
 				<textarea id="<?php echo esc_attr( $instance_id ); ?>-question" name="question" maxlength="500" required></textarea>

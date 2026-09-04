@@ -4,6 +4,7 @@ backups/*
 !backups/.gitkeep
 vendor/*
 !vendor/.gitkeep
+!vendor/README.md
 !vendor/blocksy.zip
 !vendor/blocksy.sha256
 !vendor/woocommerce.zip
@@ -11,4 +12,4 @@ vendor/*
 .DS_Store
 __pycache__/
 *.py[cod]
-.local-dev
+.local-dev/

@@ -411,7 +411,11 @@ final class Chidemoon_Core_Affiliate {
 
 	private static function redirect_to_affiliate_offer( int $product_id ): void {
 		$product = wc_get_product( $product_id );
-		if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product_id ) || ! $product->is_type( 'external' ) ) {
+		// The public CTA, shortcode, compare table and purchasability gate all
+		// require is_publicly_eligible() (publish + external + reviewed + valid
+		// URL). The redirect must enforce the same gate, otherwise an
+		// unreviewed / quarantined product stays reachable via a direct /go/ ID.
+		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
 			self::render_not_found();
 			return;
 		}
@@ -424,6 +428,9 @@ final class Chidemoon_Core_Affiliate {
 
 		self::log_click( $product_id, $url );
 		nocache_headers();
+		// External merchant destination validated by is_allowed_affiliate_url()
+		// inside get_affiliate_url(). wp_safe_redirect() would reject every
+		// off-site merchant host, so wp_redirect() is intentional here.
 		wp_redirect( $url, 302, 'Chidemoon Core' );
 		exit;
 	}

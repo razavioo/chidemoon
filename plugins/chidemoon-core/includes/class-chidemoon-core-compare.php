@@ -86,15 +86,22 @@ final class Chidemoon_Core_Compare {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'search_products' ),
+				// Public catalogue search over reviewed products only. Throttled
+				// per-IP inside the callback to avoid unauthenticated scraping.
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'search' => array(
+						'type'              => 'string',
+						'maxLength'         => 120,
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'browse' => array(
-						'sanitize_callback' => 'absint',
+						'type'              => 'boolean',
+						'sanitize_callback' => 'rest_sanitize_boolean',
 					),
 					'ids' => array(
+						'type'              => 'string',
+						'maxLength'         => 64,
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
@@ -102,8 +109,13 @@ final class Chidemoon_Core_Compare {
 		);
 	}
 
-	/** @return WP_REST_Response */
-	public static function search_products( WP_REST_Request $request ): WP_REST_Response {
+	/** @return WP_REST_Response|WP_Error */
+	public static function search_products( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$throttled = self::throttle_public_search();
+		if ( is_wp_error( $throttled ) ) {
+			return $throttled;
+		}
+
 		$term       = trim( (string) $request->get_param( 'search' ) );
 		$browse     = (bool) $request->get_param( 'browse' );
 		$requested  = self::product_ids( (string) $request->get_param( 'ids' ) );
@@ -320,5 +332,31 @@ final class Chidemoon_Core_Compare {
 
 	private static function string_length( string $value ): int {
 		return function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
+	}
+
+	/**
+	 * @return true|WP_Error
+	 */
+	private static function throttle_public_search() {
+		$ip = self::client_ip();
+		$key = 'chidemoon_compare_' . substr( hash_hmac( 'sha256', $ip, wp_salt( 'nonce' ) ), 0, 36 );
+		$count = (int) get_transient( $key );
+		if ( $count >= 60 ) {
+			return new WP_Error( 'rate_limited', __( 'Too many requests. Please try again later.', 'chidemoon-core' ), array( 'status' => 429 ) );
+		}
+		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
+		return true;
+	}
+
+	private static function client_ip(): string {
+		$forwarded = (string) ( $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '' );
+		if ( '' !== $forwarded ) {
+			$parts = explode( ',', $forwarded );
+			$first = trim( (string) reset( $parts ) );
+			if ( '' !== $first ) {
+				return sanitize_text_field( $first );
+			}
+		}
+		return sanitize_text_field( (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 	}
 }
