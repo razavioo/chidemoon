@@ -12,6 +12,7 @@ class Chidemoon_AI_Admin {
 		add_action( 'admin_menu', array( __CLASS__, 'register_menu' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'woocommerce_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'enqueue_sidebar' ) );
 	}
 
 	public static function register_menu(): void {
@@ -27,6 +28,8 @@ class Chidemoon_AI_Admin {
 		add_submenu_page( 'chidemoon-ai', __( 'Overview', 'chidemoon-ai' ), __( 'Overview', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai', array( __CLASS__, 'overview' ) );
 		add_submenu_page( 'chidemoon-ai', __( 'Draft Studio', 'chidemoon-ai' ), __( 'Draft Studio', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai-drafts', array( __CLASS__, 'draft_studio' ) );
 		add_submenu_page( 'chidemoon-ai', __( 'Image Studio', 'chidemoon-ai' ), __( 'Image Studio', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai-images', array( __CLASS__, 'image_studio' ) );
+		add_submenu_page( 'chidemoon-ai', __( 'Look Studio', 'chidemoon-ai' ), __( 'Look Studio', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai-looks', array( __CLASS__, 'look_studio' ) );
+		add_submenu_page( 'chidemoon-ai', __( 'Enrich Product', 'chidemoon-ai' ), __( 'Enrich Product', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai-enrich', array( __CLASS__, 'enrich_studio' ) );
 		add_submenu_page( 'chidemoon-ai', __( 'Comparison Studio', 'chidemoon-ai' ), __( 'Comparison Studio', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::GENERATE, 'chidemoon-ai-comparisons', array( __CLASS__, 'comparison_studio' ) );
 		add_submenu_page( 'chidemoon-ai', __( 'Review Queue', 'chidemoon-ai' ), __( 'Review Queue', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::REVIEW, 'chidemoon-ai-review', array( __CLASS__, 'review_queue' ) );
 		add_submenu_page( 'chidemoon-ai', __( 'Audit & Usage', 'chidemoon-ai' ), __( 'Audit & Usage', 'chidemoon-ai' ), Chidemoon_AI_Capabilities::VIEW_AUDIT, 'chidemoon-ai-audit', array( __CLASS__, 'audit_usage' ) );
@@ -76,6 +79,68 @@ class Chidemoon_AI_Admin {
 		self::studio_page( 'comparison', __( 'Comparison Studio', 'chidemoon-ai' ), __( 'Compare two to four editable WooCommerce products. Unsupported claims are retained as review flags rather than silently becoming product facts.', 'chidemoon-ai' ) );
 	}
 
+	public static function look_studio(): void {
+		self::guard( Chidemoon_AI_Capabilities::GENERATE );
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Look Studio', 'chidemoon-ai' ); ?></h1>
+			<p><?php esc_html_e( 'Generate a full styled room scene from your products. The image is synthesized by AI, hotspots are proposed automatically, and everything waits in the Review Queue. Nothing is published automatically.', 'chidemoon-ai' ); ?></p>
+			<form class="chidemoon-ai-job-form" data-chidemoon-ai-job="look">
+				<p><label for="chidemoon-ai-look-products"><?php esc_html_e( 'Product IDs (1-6, comma-separated)', 'chidemoon-ai' ); ?></label><br>
+				<input id="chidemoon-ai-look-products" name="product_ids" type="text" class="regular-text" required>
+				<button type="button" class="button" data-chidemoon-ai-picker="product_ids"><?php esc_html_e( 'Search products', 'chidemoon-ai' ); ?></button></p>
+				<p><label for="chidemoon-ai-look-room"><?php esc_html_e( 'Room', 'chidemoon-ai' ); ?></label><br>
+				<select id="chidemoon-ai-look-room" name="room">
+					<option value="living-room"><?php esc_html_e( 'Living room', 'chidemoon-ai' ); ?></option>
+					<option value="bedroom"><?php esc_html_e( 'Bedroom', 'chidemoon-ai' ); ?></option>
+					<option value="kitchen"><?php esc_html_e( 'Kitchen', 'chidemoon-ai' ); ?></option>
+					<option value="kids-room"><?php esc_html_e( 'Kids room', 'chidemoon-ai' ); ?></option>
+					<option value="terrace"><?php esc_html_e( 'Terrace', 'chidemoon-ai' ); ?></option>
+					<option value="dining-room"><?php esc_html_e( 'Dining room', 'chidemoon-ai' ); ?></option>
+					<option value="home-office"><?php esc_html_e( 'Home office', 'chidemoon-ai' ); ?></option>
+					<option value="entryway"><?php esc_html_e( 'Entryway', 'chidemoon-ai' ); ?></option>
+					<option value="reading-corner"><?php esc_html_e( 'Reading corner', 'chidemoon-ai' ); ?></option>
+				</select></p>
+				<p><label for="chidemoon-ai-look-style"><?php esc_html_e( 'Style', 'chidemoon-ai' ); ?></label><br>
+				<select id="chidemoon-ai-look-style" name="style">
+					<option value="minimal"><?php esc_html_e( 'Minimal', 'chidemoon-ai' ); ?></option>
+					<option value="scandi"><?php esc_html_e( 'Scandinavian', 'chidemoon-ai' ); ?></option>
+					<option value="warm"><?php esc_html_e( 'Warm', 'chidemoon-ai' ); ?></option>
+					<option value="luxe"><?php esc_html_e( 'Quiet luxury', 'chidemoon-ai' ); ?></option>
+				</select></p>
+				<p><label for="chidemoon-ai-look-refs"><?php esc_html_e( 'Reference Media Library IDs (optional, max 2)', 'chidemoon-ai' ); ?></label><br>
+				<input id="chidemoon-ai-look-refs" name="source_attachment_ids" type="text" class="regular-text"></p>
+				<p><label for="chidemoon-ai-look-instructions"><?php esc_html_e( 'Style request', 'chidemoon-ai' ); ?></label><br>
+				<textarea id="chidemoon-ai-look-instructions" name="instructions" rows="4" class="large-text" required placeholder="<?php esc_attr_e( 'e.g. Bright minimal living room, oak floor, morning light', 'chidemoon-ai' ); ?>"></textarea></p>
+				<p><label><input name="rights_attestation" type="checkbox" value="1" required> <?php esc_html_e( 'I confirm that I have the rights to use every source image and requested image concept.', 'chidemoon-ai' ); ?></label></p>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Generate look', 'chidemoon-ai' ); ?></button></p>
+				<div class="chidemoon-ai-job-form__result" aria-live="polite"></div>
+			</form>
+		</div>
+		<?php
+	}
+
+	public static function enrich_studio(): void {
+		self::guard( Chidemoon_AI_Capabilities::GENERATE );
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Enrich Product', 'chidemoon-ai' ); ?></h1>
+			<p><?php esc_html_e( 'Enrich a WooCommerce product from its saved source URL plus free web search (DuckDuckGo, no key required). The proposal waits in the Review Queue and is applied to a draft only. The affiliate destination is never changed automatically.', 'chidemoon-ai' ); ?></p>
+			<form class="chidemoon-ai-job-form" data-chidemoon-ai-job="enrich">
+				<p><label for="chidemoon-ai-enrich-product"><?php esc_html_e( 'Product ID', 'chidemoon-ai' ); ?></label><br>
+				<input id="chidemoon-ai-enrich-product" name="product_id" type="number" min="1" step="1" required>
+				<button type="button" class="button" data-chidemoon-ai-picker="product_id"><?php esc_html_e( 'Search products', 'chidemoon-ai' ); ?></button></p>
+				<p><label><input name="use_source_url" type="checkbox" value="1" checked> <?php esc_html_e( 'Fetch the saved evidence source URL', 'chidemoon-ai' ); ?></label><br>
+				<label><input name="use_web" type="checkbox" value="1" checked> <?php esc_html_e( 'Free web search (DuckDuckGo, cached)', 'chidemoon-ai' ); ?></label></p>
+				<p><label for="chidemoon-ai-enrich-instructions"><?php esc_html_e( 'Editor request', 'chidemoon-ai' ); ?></label><br>
+				<textarea id="chidemoon-ai-enrich-instructions" name="instructions" rows="4" class="large-text">Enrich this product with accurate, concise Persian copy.</textarea></p>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Queue enrichment', 'chidemoon-ai' ); ?></button></p>
+				<div class="chidemoon-ai-job-form__result" aria-live="polite"></div>
+			</form>
+		</div>
+		<?php
+	}
+
 	public static function review_queue(): void {
 		self::guard( Chidemoon_AI_Capabilities::REVIEW );
 		$jobs = array_merge(
@@ -87,20 +152,21 @@ class Chidemoon_AI_Admin {
 			<h1><?php esc_html_e( 'AI Review Queue', 'chidemoon-ai' ); ?></h1>
 			<p><?php esc_html_e( 'Approval only makes an output eligible for draft application. It never publishes or changes an affiliate destination.', 'chidemoon-ai' ); ?></p>
 			<table class="widefat striped">
-				<thead><tr><th><?php esc_html_e( 'Job', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Type', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Target', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Created', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Actions', 'chidemoon-ai' ); ?></th></tr></thead>
+				<thead><tr><th><?php esc_html_e( 'Job', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Type', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Target', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Preview', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Created', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Actions', 'chidemoon-ai' ); ?></th></tr></thead>
 				<tbody>
 				<?php if ( empty( $jobs ) ) : ?>
-					<tr><td colspan="5"><?php esc_html_e( 'There are no generated outputs awaiting review.', 'chidemoon-ai' ); ?></td></tr>
+					<tr><td colspan="6"><?php esc_html_e( 'There are no generated outputs awaiting review.', 'chidemoon-ai' ); ?></td></tr>
 				<?php else : ?>
 					<?php foreach ( $jobs as $job ) : ?>
 						<tr>
 							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
 							<td><?php echo esc_html( (string) ( $job['target_post_id'] ?: '—' ) ); ?></td>
+							<td style="max-width:420px"><?php echo wp_kses_post( self::job_preview( $job ) ); ?></td>
 							<td><?php echo esc_html( (string) $job['created_at'] ); ?></td>
 							<td>
 								<?php if ( Chidemoon_AI_State_Machine::APPROVED === $job['state'] ) : ?>
-									<button type="button" class="button button-primary" data-chidemoon-ai-review="apply" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Apply to draft', 'chidemoon-ai' ); ?></button>
+									<button type="button" class="button button-primary" data-chidemoon-ai-review="apply" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php echo esc_html( 'look' === $job['job_type'] ? __( 'Create look draft', 'chidemoon-ai' ) : __( 'Apply to draft', 'chidemoon-ai' ) ); ?></button>
 								<?php else : ?>
 									<button type="button" class="button" data-chidemoon-ai-review="approve" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Approve', 'chidemoon-ai' ); ?></button>
 								<?php endif; ?>
@@ -113,6 +179,60 @@ class Chidemoon_AI_Admin {
 			</table>
 		</div>
 		<?php
+	}
+
+	/**
+	 * @param array<string, mixed> $job
+	 */
+	private static function job_preview( array $job ): string {
+		$result = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array();
+		if ( empty( $result ) ) {
+			return '<em>' . esc_html__( 'Queued — no output yet.', 'chidemoon-ai' ) . '</em>';
+		}
+		$type = (string) ( $job['job_type'] ?? '' );
+		if ( in_array( $type, array( 'image', 'look' ), true ) ) {
+			$attachment_id = absint( $result['attachment_id'] ?? 0 );
+			$html = '';
+			if ( $attachment_id ) {
+				$img = wp_get_attachment_image( $attachment_id, 'medium' );
+				if ( $img ) {
+					$html .= $img;
+				}
+			}
+			if ( 'look' === $type ) {
+				$products = is_array( $result['product_ids'] ?? null ) ? array_map( 'absint', $result['product_ids'] ) : array();
+				$hotspots = is_array( $result['hotspots_proposal'] ?? null ) ? $result['hotspots_proposal'] : array();
+				$html .= '<p><strong>' . esc_html__( 'Products:', 'chidemoon-ai' ) . '</strong> ' . esc_html( implode( ', ', array_map( 'strval', $products ) ) ) . '<br>';
+				$html .= '<strong>' . esc_html__( 'Hotspots:', 'chidemoon-ai' ) . '</strong> ' . esc_html( (string) count( $hotspots ) . ' (' . (string) ( $result['hotspot_source'] ?? 'heuristic' ) . ')' ) . '<br>';
+				$html .= '<strong>' . esc_html__( 'Room:', 'chidemoon-ai' ) . '</strong> ' . esc_html( (string) ( $result['room'] ?? '' ) ) . '</p>';
+			} else {
+				$html .= '<p>' . esc_html( (string) ( $result['revised_prompt'] ?? '' ) ) . '</p>';
+			}
+
+			return $html;
+		}
+		if ( 'enrich' === $type ) {
+			$html = '<p><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong></p>';
+			$html .= '<p>' . esc_html( (string) ( $result['short_description'] ?? '' ) ) . '</p>';
+			if ( ! empty( $result['needs_price_check'] ) ) {
+				$html .= '<p><em>' . esc_html__( 'Price needs a manual check at the merchant.', 'chidemoon-ai' ) . '</em></p>';
+			}
+			$facts = is_array( $result['facts'] ?? null ) ? $result['facts'] : array();
+			if ( ! empty( $facts ) ) {
+				$html .= '<ul>';
+				foreach ( array_slice( $facts, 0, 5 ) as $label => $value ) {
+					$html .= '<li><strong>' . esc_html( (string) $label ) . ':</strong> ' . esc_html( (string) $value ) . '</li>';
+				}
+				$html .= '</ul>';
+			}
+
+			return $html;
+		}
+
+		$html = '<p><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong></p>';
+		$html .= '<p>' . esc_html( function_exists( 'mb_substr' ) ? mb_substr( (string) ( $result['excerpt'] ?? '' ), 0, 220 ) : substr( (string) ( $result['excerpt'] ?? '' ), 0, 220 ) ) . '</p>';
+
+		return $html;
 	}
 
 	public static function audit_usage(): void {
@@ -149,12 +269,87 @@ class Chidemoon_AI_Admin {
 	public static function settings(): void {
 		self::guard( Chidemoon_AI_Capabilities::MANAGE );
 		$provider = Chidemoon_AI_Provider_Factory::create();
+		$status   = class_exists( 'Chidemoon_AI_Settings' ) ? Chidemoon_AI_Settings::secret_status() : array();
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Chidemoon AI Settings', 'chidemoon-ai' ); ?></h1>
 			<p><?php esc_html_e( 'Provider secrets are intentionally host-managed. They are never saved in WordPress options or exposed in this panel.', 'chidemoon-ai' ); ?></p>
-			<p><strong><?php esc_html_e( 'Provider status:', 'chidemoon-ai' ); ?></strong> <?php echo esc_html( is_wp_error( $provider ) ? __( 'Not configured', 'chidemoon-ai' ) : __( 'Configured', 'chidemoon-ai' ) ); ?></p>
-			<p><?php esc_html_e( 'Required host environment values: CHIDEMOON_AI_PROVIDER_BASE_URL and CHIDEMOON_AI_API_KEY. Optional non-secret controls include text/image model names, quotas, budget, evidence freshness, and provider timeout.', 'chidemoon-ai' ); ?></p>
+			<table class="widefat striped" style="max-width: 900px">
+				<tbody>
+					<tr><th><?php esc_html_e( 'Provider status', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( is_wp_error( $provider ) ? __( 'Not configured', 'chidemoon-ai' ) : __( 'Configured', 'chidemoon-ai' ) ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Provider host', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( (string) ( $status['base_host'] ?? '' ) ?: '—' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Moderation gate', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( ! empty( $status['moderation_configured'] ) ? __( 'Configured', 'chidemoon-ai' ) : __( 'Missing CHIDEMOON_AI_MODERATION_MODEL', 'chidemoon-ai' ) ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Optional search key', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( ! empty( $status['search_key_present'] ) ? __( 'Present (value hidden)', 'chidemoon-ai' ) : __( 'Not set — free search is used', 'chidemoon-ai' ) ); ?></td></tr>
+					<?php if ( ! is_wp_error( $provider ) ) : ?>
+					<tr><th><?php esc_html_e( 'Text model', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( $provider->text_model() ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Vision model', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( method_exists( $provider, 'vision_model' ) ? $provider->vision_model() : '—' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Image model', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( $provider->image_model() ); ?></td></tr>
+					<?php endif; ?>
+				</tbody>
+			</table>
+			<p>
+				<button type="button" class="button" id="chidemoon-ai-test-connection"><?php esc_html_e( 'Test connection', 'chidemoon-ai' ); ?></button>
+				<span id="chidemoon-ai-test-result" aria-live="polite"></span>
+			</p>
+			<p>
+				<label for="chidemoon-ai-vision-attachment"><?php esc_html_e( 'Vision check attachment ID', 'chidemoon-ai' ); ?></label>
+				<input id="chidemoon-ai-vision-attachment" type="number" min="1" step="1" style="width:120px">
+				<button type="button" class="button" id="chidemoon-ai-test-vision"><?php esc_html_e( 'Check vision', 'chidemoon-ai' ); ?></button>
+				<span id="chidemoon-ai-vision-result" aria-live="polite"></span>
+			</p>
+			<p><?php esc_html_e( 'Required host environment values: CHIDEMOON_AI_PROVIDER_BASE_URL and CHIDEMOON_AI_API_KEY. Optional non-secret controls below are stored locally; host environment values always win.', 'chidemoon-ai' ); ?></p>
+			<?php if ( class_exists( 'Chidemoon_AI_Settings' ) ) : ?>
+			<form action="options.php" method="post">
+				<?php settings_fields( 'chidemoon_ai_settings' ); ?>
+				<h2><?php esc_html_e( 'Models & media', 'chidemoon-ai' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tbody>
+						<?php foreach ( array( 'text_model', 'vision_model', 'image_model', 'image_size', 'image_quality', 'provider_timeout' ) as $key ) : ?>
+						<tr>
+							<th scope="row"><label for="chidemoon-ai-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $key ); ?></label></th>
+							<td><input id="chidemoon-ai-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( Chidemoon_AI_Settings::option_name( $key ) ); ?>" type="text" class="regular-text" value="<?php echo esc_attr( (string) get_option( Chidemoon_AI_Settings::option_name( $key ), '' ) ); ?>">
+							<?php if ( 'vision_model' === $key ) : ?><p class="description"><?php esc_html_e( 'Empty means reuse the text model for vision.', 'chidemoon-ai' ); ?></p><?php endif; ?></td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<h2><?php esc_html_e( 'Quotas, budget & freshness', 'chidemoon-ai' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tbody>
+						<?php foreach ( array( 'daily_limit', 'monthly_limit', 'monthly_budget', 'text_cost', 'comparison_cost', 'image_cost', 'look_cost', 'enrich_cost', 'evidence_max_age', 'moderation_timeout' ) as $key ) : ?>
+						<tr>
+							<th scope="row"><label for="chidemoon-ai-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $key ); ?></label></th>
+							<td><input id="chidemoon-ai-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( Chidemoon_AI_Settings::option_name( $key ) ); ?>" type="text" class="regular-text" value="<?php echo esc_attr( (string) get_option( Chidemoon_AI_Settings::option_name( $key ), '' ) ); ?>"></td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<h2><?php esc_html_e( 'Web search (free first)', 'chidemoon-ai' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tbody>
+						<tr>
+							<th scope="row"><label for="chidemoon-ai-search_mode"><?php esc_html_e( 'search_mode', 'chidemoon-ai' ); ?></label></th>
+							<td>
+								<select id="chidemoon-ai-search_mode" name="<?php echo esc_attr( Chidemoon_AI_Settings::option_name( 'search_mode' ) ); ?>">
+									<?php $current = (string) get_option( Chidemoon_AI_Settings::option_name( 'search_mode' ), 'free_only' ); ?>
+									<?php foreach ( array( 'off', 'free_only', 'free_plus_key', 'model_native' ) as $mode ) : ?>
+									<option value="<?php echo esc_attr( $mode ); ?>" <?php selected( $current, $mode ); ?>><?php echo esc_html( $mode ); ?></option>
+									<?php endforeach; ?>
+								</select>
+								<p class="description"><?php esc_html_e( 'free_only (default): direct fetch + DuckDuckGo, no key. free_plus_key: also use a host search key when present. model_native: also let a capable model browse (fail-open).', 'chidemoon-ai' ); ?></p>
+							</td>
+						</tr>
+						<?php foreach ( array( 'search_cache_hours', 'search_max_results' ) as $key ) : ?>
+						<tr>
+							<th scope="row"><label for="chidemoon-ai-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $key ); ?></label></th>
+							<td><input id="chidemoon-ai-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( Chidemoon_AI_Settings::option_name( $key ) ); ?>" type="number" min="1" step="1" value="<?php echo esc_attr( (string) get_option( Chidemoon_AI_Settings::option_name( $key ), '' ) ); ?>"></td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<?php submit_button( __( 'Save AI settings', 'chidemoon-ai' ) ); ?>
+			</form>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -163,6 +358,24 @@ class Chidemoon_AI_Admin {
 		if ( current_user_can( 'activate_plugins' ) && ! function_exists( 'wc_get_product' ) ) {
 			printf( '<div class="notice notice-warning"><p>%s</p></div>', esc_html__( 'Chidemoon AI can provide published-content retrieval, but WooCommerce must be active before comparison jobs are available.', 'chidemoon-ai' ) );
 		}
+	}
+
+	public static function enqueue_sidebar(): void {
+		if ( ! current_user_can( Chidemoon_AI_Capabilities::GENERATE ) ) {
+			return;
+		}
+		$handle = 'chidemoon-ai-sidebar';
+		wp_enqueue_script( $handle, CHIDEMOON_AI_URL . 'assets/js/sidebar.js', array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n' ), CHIDEMOON_AI_VERSION, true );
+		wp_add_inline_script(
+			$handle,
+			'window.ChidemoonAiAdmin = window.ChidemoonAiAdmin || ' . wp_json_encode(
+				array(
+					'root'  => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
+					'nonce' => wp_create_nonce( 'wp_rest' ),
+				)
+			) . ';',
+			'before'
+		);
 	}
 
 	public static function enqueue_assets( string $hook_suffix ): void {
@@ -176,11 +389,15 @@ class Chidemoon_AI_Admin {
 			$handle,
 			'window.ChidemoonAiAdmin = ' . wp_json_encode(
 				array(
-					'root'       => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
-					'nonce'      => wp_create_nonce( 'wp_rest' ),
-					'queued'     => __( 'AI job queued. The page will refresh shortly.', 'chidemoon-ai' ),
-					'error'      => __( 'The AI request could not be completed.', 'chidemoon-ai' ),
-					'reviewed'   => __( 'The AI review action completed.', 'chidemoon-ai' ),
+					'root'        => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
+					'nonce'       => wp_create_nonce( 'wp_rest' ),
+					'queued'      => __( 'AI job queued. The page will refresh shortly.', 'chidemoon-ai' ),
+					'error'       => __( 'The AI request could not be completed.', 'chidemoon-ai' ),
+					'reviewed'    => __( 'The AI review action completed.', 'chidemoon-ai' ),
+					'pickProduct' => __( 'Enter a product search term (min 2 chars):', 'chidemoon-ai' ),
+					'pickNone'    => __( 'No products found.', 'chidemoon-ai' ),
+					'testing'     => __( 'Testing…', 'chidemoon-ai' ),
+					'testOk'      => __( 'Connection OK.', 'chidemoon-ai' ),
 				)
 			) . ';',
 			'before'
@@ -203,7 +420,27 @@ class Chidemoon_AI_Admin {
 						<option value="faq"><?php esc_html_e( 'FAQ', 'chidemoon-ai' ); ?></option>
 						<option value="buying_guide"><?php esc_html_e( 'Buying guide', 'chidemoon-ai' ); ?></option>
 						<option value="seo_draft"><?php esc_html_e( 'SEO draft', 'chidemoon-ai' ); ?></option>
+						<option value="shop_the_look_caption"><?php esc_html_e( 'Shop the look caption', 'chidemoon-ai' ); ?></option>
 					</select></p>
+					<p>
+						<label for="chidemoon-ai-tone"><?php esc_html_e( 'Tone', 'chidemoon-ai' ); ?></label><br>
+						<select id="chidemoon-ai-tone" name="tone">
+							<option value="formal"><?php esc_html_e( 'Formal', 'chidemoon-ai' ); ?></option>
+							<option value="friendly"><?php esc_html_e( 'Friendly', 'chidemoon-ai' ); ?></option>
+							<option value="expert"><?php esc_html_e( 'Expert', 'chidemoon-ai' ); ?></option>
+						</select>
+						<label for="chidemoon-ai-length" style="margin-left:12px"><?php esc_html_e( 'Length', 'chidemoon-ai' ); ?></label>
+						<select id="chidemoon-ai-length" name="length">
+							<option value="short"><?php esc_html_e( 'Short', 'chidemoon-ai' ); ?></option>
+							<option value="medium" selected><?php esc_html_e( 'Medium', 'chidemoon-ai' ); ?></option>
+							<option value="long"><?php esc_html_e( 'Long', 'chidemoon-ai' ); ?></option>
+						</select>
+						<label for="chidemoon-ai-lang" style="margin-left:12px"><?php esc_html_e( 'Language', 'chidemoon-ai' ); ?></label>
+						<select id="chidemoon-ai-lang" name="lang">
+							<option value="fa" selected><?php esc_html_e( 'Persian', 'chidemoon-ai' ); ?></option>
+							<option value="en"><?php esc_html_e( 'English', 'chidemoon-ai' ); ?></option>
+						</select>
+					</p>
 				<?php endif; ?>
 				<p><label for="chidemoon-ai-target"><?php esc_html_e( 'Target draft ID (optional)', 'chidemoon-ai' ); ?></label><br><input id="chidemoon-ai-target" name="target_post_id" type="number" min="1" step="1"></p>
 				<?php if ( 'comparison' === $type ) : ?>

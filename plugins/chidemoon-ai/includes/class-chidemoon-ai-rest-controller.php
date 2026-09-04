@@ -40,6 +40,42 @@ class Chidemoon_AI_REST_Controller {
 		);
 		register_rest_route(
 			self::NAMESPACE,
+			'/jobs/look',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'create_look_job' ),
+				'permission_callback' => array( __CLASS__, 'can_create_image_job' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/jobs/enrich',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'create_enrich_job' ),
+				'permission_callback' => array( __CLASS__, 'can_create_enrich_job' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/diag/test',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'diag_test' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/diag/vision',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'diag_vision' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
 			'/jobs/(?P<id>\d+)',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -91,7 +127,19 @@ class Chidemoon_AI_REST_Controller {
 	public static function create_text_job( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$data       = self::data( $request );
 		$kind       = sanitize_key( (string) ( $data['kind'] ?? '' ) );
-		$allowed    = array( 'product_description', 'short_description', 'pros_cons', 'faq', 'buying_guide', 'article_outline', 'article_draft', 'seo_draft', 'captions', 'alt_text', 'internal_links', 'shop_the_look' );
+		$allowed    = array( 'product_description', 'short_description', 'pros_cons', 'faq', 'buying_guide', 'article_outline', 'article_draft', 'seo_draft', 'captions', 'alt_text', 'internal_links', 'shop_the_look', 'shop_the_look_caption' );
+		$tone       = sanitize_key( (string) ( $data['tone'] ?? 'formal' ) );
+		$length     = sanitize_key( (string) ( $data['length'] ?? 'medium' ) );
+		$lang       = sanitize_key( (string) ( $data['lang'] ?? 'fa' ) );
+		if ( ! in_array( $tone, array( 'formal', 'friendly', 'expert' ), true ) ) {
+			$tone = 'formal';
+		}
+		if ( ! in_array( $length, array( 'short', 'medium', 'long' ), true ) ) {
+			$length = 'medium';
+		}
+		if ( ! in_array( $lang, array( 'fa', 'en' ), true ) ) {
+			$lang = 'fa';
+		}
 		if ( ! self::valid_optional_id( $data['target_post_id'] ?? null ) ) {
 			return self::error( 'chidemoon_ai_target_invalid', __( 'Choose a valid editable target post.', 'chidemoon-ai' ), 400 );
 		}
@@ -118,6 +166,9 @@ class Chidemoon_AI_REST_Controller {
 			$source_ids,
 			array(
 				'kind'            => $kind,
+				'tone'            => $tone,
+				'length'          => $length,
+				'lang'            => $lang,
 				'instructions'    => self::bounded_text( (string) ( $data['instructions'] ?? '' ), 2000 ),
 				'source_post_ids' => $source_ids,
 			)
@@ -197,6 +248,160 @@ class Chidemoon_AI_REST_Controller {
 				'rights_attestation'    => true,
 			)
 		);
+	}
+
+	/**
+	 * Full look generation: products (+ optional reference images) -> scene.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function create_look_job( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$data = self::data( $request );
+		if ( ! self::valid_id_list( $data['product_ids'] ?? array(), 1, 6 ) ) {
+			return self::error( 'chidemoon_ai_look_products', __( 'A look needs between one and six distinct products.', 'chidemoon-ai' ), 400 );
+		}
+		$product_ids = self::post_ids( $data['product_ids'] ?? array(), 1, 6 );
+		foreach ( $product_ids as $pid ) {
+			if ( 'product' !== get_post_type( $pid ) ) {
+				return self::error( 'chidemoon_ai_look_product_invalid', __( 'A selected look item is not a product.', 'chidemoon-ai' ), 400 );
+			}
+		}
+		$attachments = array();
+		if ( isset( $data['source_attachment_ids'] ) ) {
+			if ( ! self::valid_id_list( $data['source_attachment_ids'] ?? array(), 0, 2 ) ) {
+				return self::error( 'chidemoon_ai_source_image_invalid', __( 'Choose up to two valid reference images.', 'chidemoon-ai' ), 400 );
+			}
+			$attachments = self::post_ids( $data['source_attachment_ids'] ?? array(), 0, 2 );
+		}
+		if ( ! self::rights_attested( $data['rights_attestation'] ?? false ) ) {
+			return self::error( 'chidemoon_ai_rights_attestation_required', __( 'Confirm that you have the rights to use every source image and requested image concept.', 'chidemoon-ai' ), 400 );
+		}
+		$room  = sanitize_key( (string) ( $data['room'] ?? '' ) );
+		$style = sanitize_key( (string) ( $data['style'] ?? 'minimal' ) );
+		if ( ! in_array( $style, array( 'minimal', 'scandi', 'warm', 'luxe' ), true ) ) {
+			$style = 'minimal';
+		}
+		$prompt = '';
+		if ( class_exists( 'Chidemoon_AI_Look' ) ) {
+			$built = Chidemoon_AI_Look::build_prompt( $product_ids, $room, $style, (string) ( $data['instructions'] ?? ( $data['prompt'] ?? '' ) ) );
+			if ( is_wp_error( $built ) ) {
+				return $built;
+			}
+			$prompt = (string) $built['prompt'];
+		} else {
+			$prompt = self::bounded_text( (string) ( $data['instructions'] ?? ( $data['prompt'] ?? '' ) ), 1600 );
+		}
+		if ( '' === $prompt ) {
+			return self::error( 'chidemoon_ai_look_prompt', __( 'Provide an editor request for the look.', 'chidemoon-ai' ), 400 );
+		}
+
+		return self::queue_job(
+			$request,
+			'look',
+			0,
+			$product_ids,
+			array(
+				'mode'                  => 'look_scene',
+				'prompt'                => $prompt,
+				'product_ids'           => $product_ids,
+				'room'                  => $room,
+				'style'                 => $style,
+				'source_attachment_ids' => $attachments,
+				'rights_attestation'    => true,
+			)
+		);
+	}
+
+	/**
+	 * Product enrichment from local + free web evidence.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function create_enrich_job( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$data       = self::data( $request );
+		$product_id = self::input_id( $data['product_id'] ?? ( $data['target_post_id'] ?? null ) );
+		if ( ! $product_id || 'product' !== get_post_type( $product_id ) || ! current_user_can( 'edit_post', $product_id ) ) {
+			return self::error( 'chidemoon_ai_enrich_target', __( 'Choose a product you can edit.', 'chidemoon-ai' ), 400 );
+		}
+		$use_source = ! isset( $data['use_source_url'] ) || ! empty( $data['use_source_url'] );
+		$use_web    = ! empty( $data['use_web'] );
+
+		return self::queue_job(
+			$request,
+			'enrich',
+			$product_id,
+			array( $product_id ),
+			array(
+				'kind'            => 'enrich_product',
+				'product_id'      => $product_id,
+				'use_source_url'  => $use_source,
+				'use_web'         => $use_web,
+				'instructions'    => self::bounded_text( (string) ( $data['instructions'] ?? 'Enrich this product with accurate, concise Persian copy.' ), 2000 ),
+			)
+		);
+	}
+
+	/**
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function diag_test( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		unset( $request );
+		$provider = Chidemoon_AI_Provider_Factory::create();
+		if ( is_wp_error( $provider ) ) {
+			return $provider;
+		}
+		$started = microtime( true );
+		$result  = $provider->generate_text(
+			array( 'request_payload' => array( 'kind' => 'article_outline', 'instructions' => 'Reply with a connectivity check.' ) ),
+			array(
+				array(
+					'source_id'      => 'diag',
+					'source_type'    => 'post',
+					'freshness_at'   => current_time( 'mysql', true ),
+					'source_excerpt' => 'Connectivity check. No factual claims needed.',
+				),
+			)
+		);
+		$latency = (int) round( ( microtime( true ) - $started ) * 1000 );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return new WP_REST_Response(
+			array(
+				'ok'           => true,
+				'provider'     => $provider->name(),
+				'text_model'   => $provider->text_model(),
+				'image_model'  => $provider->image_model(),
+				'vision_model' => method_exists( $provider, 'vision_model' ) ? $provider->vision_model() : '',
+				'latency_ms'   => $latency,
+			),
+			200
+		);
+	}
+
+	/**
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function diag_vision( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$data          = self::data( $request );
+		$attachment_id = self::input_id( $data['attachment_id'] ?? null );
+		if ( ! $attachment_id || 'attachment' !== get_post_type( $attachment_id ) ) {
+			return self::error( 'chidemoon_ai_vision_target', __( 'Choose a Media Library image to test vision.', 'chidemoon-ai' ), 400 );
+		}
+		$provider = Chidemoon_AI_Provider_Factory::create();
+		if ( is_wp_error( $provider ) ) {
+			return $provider;
+		}
+		if ( ! $provider->supports_vision() ) {
+			return self::error( 'chidemoon_ai_vision_unsupported', __( 'Vision is not configured for this provider.', 'chidemoon-ai' ), 400 );
+		}
+		$result = $provider->analyze_image( array( $attachment_id ), array( array( 'id' => 0, 'name' => 'test object' ) ), 'Describe the main object coordinates as hotspots.' );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return new WP_REST_Response( array( 'ok' => true, 'vision_model' => $provider->vision_model() ), 200 );
 	}
 
 	/**
@@ -355,6 +560,34 @@ class Chidemoon_AI_REST_Controller {
 	/**
 	 * @return true|WP_Error
 	 */
+	public static function can_create_enrich_job( WP_REST_Request $request ): true|WP_Error {
+		if ( ! current_user_can( Chidemoon_AI_Capabilities::GENERATE ) ) {
+			return self::forbidden();
+		}
+		$data       = self::data( $request );
+		$product_id = self::input_id( $data['product_id'] ?? ( $data['target_post_id'] ?? null ) );
+		if ( ! $product_id || 'product' !== get_post_type( $product_id ) ) {
+			return self::error( 'chidemoon_ai_enrich_target', __( 'Choose a valid product.', 'chidemoon-ai' ), 400 );
+		}
+
+		return self::can_edit_posts( array( $product_id ), array( 'product' ) );
+	}
+
+	/**
+	 * @return true|WP_Error
+	 */
+	public static function can_manage( WP_REST_Request $request ): true|WP_Error {
+		unset( $request );
+		if ( ! current_user_can( Chidemoon_AI_Capabilities::MANAGE ) ) {
+			return self::forbidden();
+		}
+
+		return true;
+	}
+
+	/**
+	 * @return true|WP_Error
+	 */
 	public static function can_view_job( WP_REST_Request $request ): true|WP_Error {
 		$job = Chidemoon_AI_Repository::find( absint( $request['id'] ) );
 		if ( ! $job ) {
@@ -410,8 +643,11 @@ class Chidemoon_AI_REST_Controller {
 		$payload['evidence_ids']   = array_values( array_unique( array_map( 'absint', $evidence_post_ids ) ) );
 		$request_hash               = hash( 'sha256', wp_json_encode( $payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
 		$initial_provenance = array( 'request_version' => '1', 'review_required' => true );
-		if ( 'image' === $job_type ) {
+		if ( in_array( $job_type, array( 'image', 'look' ), true ) ) {
 			$initial_provenance['rights_attestation'] = ! empty( $payload['rights_attestation'] );
+		}
+		if ( 'enrich' === $job_type ) {
+			$initial_provenance['web_search'] = ! empty( $payload['use_web'] );
 		}
 		$job = Chidemoon_AI_Repository::create(
 			array(
@@ -428,11 +664,24 @@ class Chidemoon_AI_REST_Controller {
 			return $job;
 		}
 
-		if ( in_array( $job_type, array( 'text', 'comparison' ), true ) ) {
+		if ( in_array( $job_type, array( 'text', 'comparison', 'enrich', 'look' ), true ) ) {
 			$captured = Chidemoon_AI_Evidence::capture_posts( (int) $job['id'], $evidence_post_ids );
 			if ( is_wp_error( $captured ) ) {
 				Chidemoon_AI_Repository::mark_failed( (int) $job['id'], Chidemoon_AI_State_Machine::QUEUED, $captured->get_error_code(), $captured->get_error_message() );
 				return $captured;
+			}
+		}
+
+		if ( 'enrich' === $job_type && class_exists( 'Chidemoon_AI_Web' ) && class_exists( 'Chidemoon_AI_Enrich' ) ) {
+			$local = Chidemoon_AI_Enrich::local_context( $target_post_id );
+			if ( ! is_wp_error( $local ) ) {
+				Chidemoon_AI_Web::collect_for_product(
+					(int) $job['id'],
+					(string) ( $local['title'] ?? '' ),
+					(string) ( $local['merchant'] ?? '' ),
+					! empty( $payload['use_source_url'] ) ? (string) ( $local['source_url'] ?? '' ) : '',
+					! empty( $payload['use_web'] )
+				);
 			}
 		}
 

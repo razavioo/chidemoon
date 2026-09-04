@@ -59,6 +59,7 @@ class Chidemoon_AI_Activator {
 			UNIQUE KEY job_key (job_key),
 			UNIQUE KEY idempotency_key (idempotency_key),
 			KEY state_created (state, created_at),
+			KEY job_type_state (job_type, state),
 			KEY target_post_id (target_post_id),
 			KEY requested_by (requested_by)
 		) $charset;";

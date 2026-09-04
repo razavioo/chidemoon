@@ -59,6 +59,30 @@ class Chidemoon_AI_Evidence {
 	}
 
 	/**
+	 * Persists one external (web) evidence item with the same provenance
+	 * contract as local evidence. Source IDs are stable hashes so citations
+	 * stay joinable with prompt_context().
+	 *
+	 * @param array<string, mixed> $item
+	 */
+	public static function persist_external( int $job_id, array $item ): void {
+		$evidence = array(
+			'source_type'    => isset( $item['source_type'] ) ? sanitize_key( (string) $item['source_type'] ) : 'external_url',
+			'source_id'      => isset( $item['source_id'] ) ? sanitize_text_field( (string) $item['source_id'] ) : '',
+			'source_url'     => isset( $item['source_url'] ) ? esc_url_raw( (string) $item['source_url'] ) : '',
+			'source_excerpt' => isset( $item['source_excerpt'] ) ? (string) $item['source_excerpt'] : '',
+			'content_hash'   => isset( $item['content_hash'] ) ? sanitize_text_field( (string) $item['content_hash'] ) : hash( 'sha256', (string) ( $item['source_excerpt'] ?? '' ) ),
+			'freshness_at'   => current_time( 'mysql', true ),
+			'created_at'     => current_time( 'mysql', true ),
+		);
+		if ( '' === $evidence['source_id'] ) {
+			$evidence['source_id'] = 'web-' . substr( $evidence['content_hash'], 0, 12 );
+		}
+
+		self::persist( $job_id, $evidence );
+	}
+
+	/**
 	 * @param array<int, array<string, mixed>> $evidence
 	 */
 	public static function prompt_context( array $evidence ): string {
@@ -82,8 +106,16 @@ class Chidemoon_AI_Evidence {
 			return false;
 		}
 
-		$max_age = max( 1, min( 3650, self::environment_int( 'CHIDEMOON_AI_EVIDENCE_MAX_AGE_DAYS', self::DEFAULT_MAX_AGE_DAYS ) ) );
+		$max_age = self::max_age_days();
 		return $modified >= current_time( 'timestamp', true ) - ( $max_age * DAY_IN_SECONDS );
+	}
+
+	private static function max_age_days(): int {
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			return Chidemoon_AI_Settings::get_int( 'evidence_max_age' );
+		}
+
+		return max( 1, min( 3650, self::environment_int( 'CHIDEMOON_AI_EVIDENCE_MAX_AGE_DAYS', self::DEFAULT_MAX_AGE_DAYS ) ) );
 	}
 
 	/**

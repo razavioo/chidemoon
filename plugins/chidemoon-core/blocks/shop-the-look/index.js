@@ -118,12 +118,53 @@
 			return el('div', blockProps, el('p', null, __('تصویر انتخاب‌شده در دسترس نیست. تصویر دیگری انتخاب کنید.', 'chidemoon-core')), el(MediaUploadCheck, null, el(MediaUpload, { onSelect: selectImage, allowedTypes: ['image'], render: function (open) { return el(Button, { variant: 'secondary', onClick: open.open }, __('تعویض تصویر', 'chidemoon-core')); } })));
 		}
 
+		var aiState = useState('');
+		var aiStatus = aiState[0];
+		var setAiStatus = aiState[1];
+
+		function generateLook() {
+			var ids = hotspots.map(function (spot) { return Number(spot.productId) || 0; }).filter(function (id) { return id > 0; });
+			if (!ids.length && products.length) {
+				ids = products.slice(0, 4).map(function (p) { return Number(p.id); });
+			}
+			if (!ids.length) {
+				setAiStatus(__('اول یک محصول انتخاب کنید.', 'chidemoon-core'));
+				return;
+			}
+			setAiStatus(__('در حال تولید صحنه با هوش مصنوعی…', 'chidemoon-core'));
+			wp.apiFetch({
+				path: '/chidemoon-ai/v1/jobs/look',
+				method: 'POST',
+				data: {
+					product_ids: ids.slice(0, 6),
+					room: '',
+					style: 'minimal',
+					instructions: __('Bright minimal styled room featuring these products', 'chidemoon-core'),
+					rights_attestation: true
+				}
+			}).then(function (response) {
+				var jobId = response && response.job ? response.job.id : 0;
+				if (!jobId) {
+					setAiStatus(__('تولید آغاز نشد.', 'chidemoon-core'));
+					return;
+				}
+				setAiStatus(__('در صف تولید قرار گرفت (#' + jobId + '). بعد از تایید در Review Queue تصویر اینجا قرار می‌گیرد.', 'chidemoon-core'));
+			}).catch(function () {
+				setAiStatus(__('تولید ناموفق بود. از Look Studio تلاش کنید.', 'chidemoon-core'));
+			});
+		}
+
 		return el('div', blockProps,
 			el(InspectorControls, null,
 				el(PanelBody, { title: __('تنظیمات تصویر', 'chidemoon-core'), initialOpen: true },
 					el(MediaUploadCheck, null, el(MediaUpload, { onSelect: selectImage, allowedTypes: ['image'], value: attributes.imageId, render: function (open) { return el(Button, { variant: 'secondary', onClick: open.open }, __('تعویض تصویر', 'chidemoon-core')); } })),
 					el(TextControl, { label: __('متن جایگزین', 'chidemoon-core'), value: attributes.imageAlt, onChange: function (value) { setAttributes({ imageAlt: value }); } }),
 					el(TextControl, { label: __('توضیح تصویر', 'chidemoon-core'), value: attributes.caption, onChange: function (value) { setAttributes({ caption: value }); } })
+				),
+				el(PanelBody, { title: __('تولید با هوش مصنوعی', 'chidemoon-core'), initialOpen: false },
+					el('p', null, __('از محصولات انتخاب‌شده یک صحنه کامل بسازید. نتیجه در Review Queue تایید می‌شود.', 'chidemoon-core')),
+					el(Button, { variant: 'primary', onClick: generateLook }, __('تولید صحنه با AI', 'chidemoon-core')),
+					aiStatus ? el('p', null, aiStatus) : null
 				),
 				el(PanelBody, { title: __('نقاط محصولات', 'chidemoon-core'), initialOpen: true },
 					el(TextControl, { label: __('جستجوی محصول', 'chidemoon-core'), value: productQuery, onChange: setProductQuery, help: loadingProducts ? __('در حال جستجو…', 'chidemoon-core') : __('فقط محصولات قابل‌خرید نمایش داده می‌شوند.', 'chidemoon-core') }),

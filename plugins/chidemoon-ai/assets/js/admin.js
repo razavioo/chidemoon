@@ -71,7 +71,7 @@
 	}
 
 	function payloadFor(form, type) {
-		var target = form.elements.target_post_id.value;
+		var target = form.elements.target_post_id ? form.elements.target_post_id.value : '';
 		var payload = {};
 		if (target) {
 			payload.target_post_id = Number(target);
@@ -80,8 +80,23 @@
 			payload.kind = form.elements.kind.value;
 			payload.source_post_ids = ids(form.elements.source_post_ids.value);
 			payload.instructions = form.elements.instructions.value;
+			if (form.elements.tone) payload.tone = form.elements.tone.value;
+			if (form.elements.length) payload.length = form.elements.length.value;
+			if (form.elements.lang) payload.lang = form.elements.lang.value;
 		} else if (type === 'comparison') {
 			payload.product_ids = ids(form.elements.product_ids.value);
+			payload.instructions = form.elements.instructions.value;
+		} else if (type === 'look') {
+			payload.product_ids = ids(form.elements.product_ids.value);
+			payload.room = form.elements.room ? form.elements.room.value : '';
+			payload.style = form.elements.style ? form.elements.style.value : 'minimal';
+			payload.source_attachment_ids = ids(form.elements.source_attachment_ids.value);
+			payload.instructions = form.elements.instructions.value;
+			payload.rights_attestation = form.elements.rights_attestation.checked;
+		} else if (type === 'enrich') {
+			payload.product_id = form.elements.product_id ? Number(form.elements.product_id.value) : 0;
+			payload.use_source_url = form.elements.use_source_url ? form.elements.use_source_url.checked : true;
+			payload.use_web = form.elements.use_web ? form.elements.use_web.checked : true;
 			payload.instructions = form.elements.instructions.value;
 		} else {
 			payload.mode = form.elements.mode.value;
@@ -139,5 +154,66 @@
 		}
 		document.querySelectorAll('form[data-chidemoon-ai-job]').forEach(initForm);
 		document.querySelectorAll('[data-chidemoon-ai-review]').forEach(initReview);
+		document.querySelectorAll('[data-chidemoon-ai-picker]').forEach(initPicker);
+		initDiag();
 	});
+
+	function initPicker(button) {
+		button.addEventListener('click', function () {
+			var term = window.prompt(window.ChidemoonAiAdmin.pickProduct || 'Search:');
+			if (term === null || term.trim().length < 2) {
+				return;
+			}
+			var config = window.ChidemoonAiAdmin;
+			fetch('/wp-json/chidemoon-core/v1/compare-products?search=' + encodeURIComponent(term.trim()), {
+				credentials: 'same-origin',
+				headers: { 'X-WP-Nonce': config.nonce }
+			}).then(function (response) { return response.json(); }).then(function (body) {
+				var list = Array.isArray(body) ? body : [];
+				if (!list.length) {
+					window.alert(config.pickNone || 'No products found.');
+					return;
+				}
+				var names = list.slice(0, 12).map(function (p) { return '#' + p.id + ' ' + (p.title || ''); }).join('\n');
+				var chosen = window.prompt(names + '\n\nIDs (comma-separated):', String(list[0].id));
+				if (chosen === null) {
+					return;
+				}
+				var form = button.closest('form');
+				var fieldName = button.getAttribute('data-chidemoon-ai-picker');
+				var field = form ? form.elements[fieldName] : null;
+				if (field) {
+					field.value = chosen;
+				}
+			}).catch(function () {});
+		});
+	}
+
+	function initDiag() {
+		var testButton = document.getElementById('chidemoon-ai-test-connection');
+		if (testButton) {
+			testButton.addEventListener('click', function () {
+				var output = document.getElementById('chidemoon-ai-test-result');
+				output.textContent = window.ChidemoonAiAdmin.testing || 'Testing…';
+				request('diag/test', {}).then(function (response) {
+					output.textContent = (window.ChidemoonAiAdmin.testOk || 'OK') + ' ' + (response.text_model || '') + ' / ' + (response.image_model || '') + ' (' + (response.latency_ms || 0) + 'ms)';
+				}).catch(function (error) {
+					output.textContent = text(error.message) || window.ChidemoonAiAdmin.error;
+				});
+			});
+		}
+		var visionButton = document.getElementById('chidemoon-ai-test-vision');
+		if (visionButton) {
+			visionButton.addEventListener('click', function () {
+				var output = document.getElementById('chidemoon-ai-vision-result');
+				var field = document.getElementById('chidemoon-ai-vision-attachment');
+				output.textContent = window.ChidemoonAiAdmin.testing || 'Testing…';
+				request('diag/vision', { attachment_id: field ? Number(field.value) : 0 }).then(function (response) {
+					output.textContent = (window.ChidemoonAiAdmin.testOk || 'OK') + ' ' + (response.vision_model || '');
+				}).catch(function (error) {
+					output.textContent = text(error.message) || window.ChidemoonAiAdmin.error;
+				});
+			});
+		}
+	}
 }());
