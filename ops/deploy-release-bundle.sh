@@ -8,6 +8,8 @@ bundle_path="${1:-}"
 image_bundle_path="${2:-${CHIDEMOON_IMAGE_ARCHIVE:-}}"
 deploy_root="${CHIDEMOON_DEPLOY_ROOT:-/opt/chidemoon}"
 environment_file="${CHIDEMOON_ENV_FILE:-$deploy_root/.env}"
+skip_pre_deploy_backup="${CHIDEMOON_SKIP_PRE_DEPLOY_BACKUP:-}"
+no_backup_confirmation='I_UNDERSTAND_THIS_REMOVES_DATA_RECOVERY'
 
 fail() {
 	printf 'Release deployment failed: %s\n' "$1" >&2
@@ -18,6 +20,9 @@ fail() {
 [[ -n "$image_bundle_path" && -f "$image_bundle_path" ]] || fail 'Pass the matching sealed offline image archive as the second argument, or set CHIDEMOON_IMAGE_ARCHIVE.'
 [[ "$deploy_root" = /* ]] || fail 'CHIDEMOON_DEPLOY_ROOT must be an absolute path.'
 [[ -f "$environment_file" ]] || fail 'Host-managed .env is required and must not be bundled.'
+if [[ -n "$skip_pre_deploy_backup" && "$skip_pre_deploy_backup" != "$no_backup_confirmation" ]]; then
+	fail 'CHIDEMOON_SKIP_PRE_DEPLOY_BACKUP requires the exact data-recovery acknowledgement.'
+fi
 command -v docker >/dev/null 2>&1 || fail 'Docker is required.'
 
 bash "$SCRIPT_DIR/verify-release-bundle.sh" "$bundle_path"
@@ -43,7 +48,11 @@ if [[ -L "$current_link" ]]; then
 	previous_release="$(readlink -f "$current_link")"
 	[[ -f "$previous_release/compose.yml" ]] || fail 'The current release does not contain compose.yml.'
 	# Preserve database and editorial uploads before changing the code mount.
-	docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" run --rm --no-deps --pull never backup
+	if [[ "$skip_pre_deploy_backup" == "$no_backup_confirmation" ]]; then
+		printf 'WARNING: Deploying without a pre-deploy data recovery point.\n' >&2
+	else
+		docker compose --env-file "$environment_file" -f "$previous_release/compose.yml" run --rm --no-deps --pull never backup
+	fi
 fi
 
 staging_dir="$(mktemp -d "$releases_dir/.staging.XXXXXX")"
@@ -80,7 +89,8 @@ if ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml
 	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli core is-installed --allow-root \
 	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli plugin is-active woocommerce --allow-root \
 	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli plugin is-active chidemoon-core --allow-root \
-	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" exec -T wordpress php -r 'exit(@file_get_contents("http://localhost/wp-login.php") === false ? 1 : 0);'; then
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" run --rm --no-deps --pull never wpcli plugin is-active chidemoon-ai --allow-root \
+	|| ! docker compose --env-file "$environment_file" -f "$current_link/compose.yml" exec -T wordpress php -r 'exit(@file_get_contents("http://localhost/") === false ? 1 : 0);'; then
 	rollback
 	fail 'The new release did not pass runtime checks; code was switched back when a previous release existed.'
 fi

@@ -107,6 +107,10 @@ describe('standalone Chidemoon runtime', () => {
     assert.match(verifier, /--no-same-owner/);
     assert.match(verifier, /forbidden path/);
     assert.match(deployer, /run --rm --no-deps --pull never backup/);
+    assert.match(deployer, /CHIDEMOON_SKIP_PRE_DEPLOY_BACKUP/);
+    assert.match(deployer, /I_UNDERSTAND_THIS_REMOVES_DATA_RECOVERY/);
+    assert.match(deployer, /exact data-recovery acknowledgement/);
+    assert.match(deployer, /WARNING: Deploying without a pre-deploy data recovery point/);
     assert.match(deployer, /mv -Tf/);
     assert.match(deployer, /CHIDEMOON_IMAGE_ARCHIVE/);
     assert.match(deployer, /--pull never/);
