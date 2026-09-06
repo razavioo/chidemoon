@@ -11,7 +11,7 @@ fail() {
 	exit 1
 }
 
-for command in git tar sha256sum bash; do
+for command in git tar sha256sum bash tr; do
 	command -v "$command" >/dev/null 2>&1 || fail "Required command is unavailable: $command"
 done
 
@@ -72,6 +72,15 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	plugins \
 	themes \
 	vendor | tar -xf - -C "$release_dir"
+
+# Git for Windows can translate line endings in the archive pipeline. Normalize
+# only release shell scripts so the sealed artifact remains runnable on Linux.
+for script in "$release_dir"/ops/*.sh; do
+	normalized_script="$(mktemp "${script}.XXXXXX")"
+	tr -d '\r' < "$script" > "$normalized_script"
+	cat "$normalized_script" > "$script"
+	rm -f -- "$normalized_script"
+done
 
 cat > "$release_dir/release-manifest.json" <<EOF
 {
