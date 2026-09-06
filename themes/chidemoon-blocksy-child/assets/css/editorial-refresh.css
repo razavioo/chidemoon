@@ -103,6 +103,14 @@ html {
 	font-size: clamp(1.55rem, 2.4vw, 2.25rem);
 }
 
+/* Blocksy's own heading rules otherwise out-rank the zero-specificity
+ * :where() defaults in typography.css and swap the display face. */
+.chidemoon-section-heading :is(h2, h3) {
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+	letter-spacing: 0;
+}
+
 .chidemoon-card,
 .chidemoon-featured,
 .chidemoon-side-story {
@@ -183,8 +191,8 @@ html {
 
 .chidemoon-product-card__price del {
 	font-weight: 600;
-	opacity: .55;
 	margin-inline-end: .45rem;
+	opacity: .55;
 }
 
 .chidemoon-product-card__price ins {
@@ -217,7 +225,7 @@ html {
 }
 
 .chidemoon-featured__title {
-	font-size: clamp(1.65rem, 3vw, 2.65rem);
+	font-size: clamp(1.5rem, 2.7vw, 2.3rem);
 	line-height: 1.35;
 }
 
@@ -290,20 +298,100 @@ html {
 	padding: 0.8rem;
 }
 
-.chidemoon-product-card__price {
-	font-size: 0.86rem;
+/* Product card: eyebrow category, clamped title, and a hero price so the
+ * commerce signal outweighs editorial chrome. */
+.chidemoon-product-card .chidemoon-card__body {
+	gap: 0.5rem;
 }
 
-.chidemoon-category-grid {
-	background: var(--chidemoon-surface);
-	border: 0;
-	border-radius: var(--chidemoon-radius);
-	box-shadow: 0 0 0 1px var(--chidemoon-line);
+.chidemoon-product-card .chidemoon-card__meta {
+	margin: 0;
+}
+
+.chidemoon-product-card .chidemoon-card__meta span {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-card .chidemoon-card__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+	line-height: 1.7;
 	overflow: hidden;
 }
 
-.chidemoon-category-link {
-	min-height: 6.5rem;
+.chidemoon-product-card__price {
+	align-items: baseline;
+	color: var(--chidemoon-ink);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.04rem;
+	font-weight: 800;
+	gap: 0.35rem;
+	line-height: 1.5;
+	margin: 0;
+}
+
+.chidemoon-product-card__price .woocommerce-Price-currencySymbol {
+	color: var(--chidemoon-muted);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-card__price del {
+	color: var(--chidemoon-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.chidemoon-product-card__price ins {
+	text-decoration: none;
+}
+
+.chidemoon-product-card__pending {
+	color: var(--chidemoon-muted);
+	font-size: 0.85rem;
+	margin: 0;
+}
+
+/* Related products on the single product page render WooCommerce's own loop
+ * markup, so the mature price treatment is mirrored onto it. */
+.chidemoon-product-page ul.products li.product .price {
+	align-items: baseline;
+	color: var(--chidemoon-ink);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.04rem;
+	font-weight: 800;
+	gap: 0.35rem;
+	line-height: 1.5;
+}
+
+.chidemoon-product-page ul.products li.product .price del {
+	color: var(--chidemoon-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.chidemoon-product-page ul.products li.product .price .woocommerce-Price-currencySymbol {
+	color: var(--chidemoon-muted);
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.chidemoon-product-page ul.products li.product .price ins {
+	text-decoration: none;
+}
+
+.chidemoon-product-page ul.products li.product .woocommerce-loop-product__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
 }
 
 .chidemoon-home__routes {
@@ -319,7 +407,7 @@ html {
 }
 
 .chidemoon-route-card strong {
-	font-size: clamp(2rem, 3.5vw, 3.6rem);
+	font-size: clamp(1.8rem, 3vw, 3rem);
 }
 
 /* Archive and collection mastheads are informative, not empty billboards. */
@@ -342,25 +430,38 @@ html {
 	position: relative;
 }
 
-.chidemoon-archive__hero::after,
-.chidemoon-collection-page__hero::after,
-.chidemoon-shop-archive__intro::after {
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: 50%;
-	content: "";
-	height: clamp(3rem, 8vw, 6rem);
-	inset-block-end: 1.5rem;
-	inset-inline-start: clamp(1.5rem, 4vw, 4rem);
-	position: absolute;
-	width: clamp(3rem, 8vw, 6rem);
-}
-
 .chidemoon-archive__hero h1,
 .chidemoon-collection-page__hero h1,
 .chidemoon-shop-archive__intro h1 {
-	font-size: clamp(2.4rem, 5.5vw, 5rem);
+	font-size: clamp(2.15rem, 4.6vw, 4.1rem);
+	line-height: 1.35;
 	margin-block: 0.5rem 0.8rem;
-	max-width: 16ch;
+	max-width: 18ch;
+}
+
+/* Category pages stay quieter than mastheads: no decorative blob competing
+ * with the photo, a tighter frame, a smaller display title, and no stat rows.
+ * The catalogue grid is the content. */
+.chidemoon-shop-archive__intro {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 22%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	padding-block: clamp(1.5rem, 3.2vw, 2.6rem);
+}
+
+.chidemoon-shop-archive__intro h1 {
+	font-size: clamp(2rem, 4vw, 3.2rem);
+	margin-block: 0.4rem 0.5rem;
+}
+
+.chidemoon-shop-archive__intro-copy {
+	max-width: 36rem;
+}
+
+.chidemoon-shop-archive__intro .term-description {
+	color: var(--chidemoon-muted);
+	font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+	line-height: 2;
+	margin: 0;
+	max-width: 34rem;
 }
 
 .chidemoon-archive > .chidemoon-section-shell,
@@ -368,7 +469,426 @@ html {
 	padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
-.chidemoon-collection-page__image,
+/* ------------------------------------------------------------------ */
+/* Matured hero system. Every page type shares one hero language:      */
+/* eyebrow, display h1, lede, a facts row, and an optional in-hero     */
+/* media frame. Heroes are grid containers so media variants only      */
+/* change the column template.                                         */
+/* ------------------------------------------------------------------ */
+.chidemoon-home__hero,
+.chidemoon-archive__hero,
+.chidemoon-collection-page__hero,
+.chidemoon-shop-archive__intro {
+	display: grid;
+	gap: clamp(1.4rem, 3.4vw, 2.75rem);
+}
+
+.chidemoon-collection-page__hero.has-media,
+.chidemoon-shop-archive__intro.has-media {
+	align-items: center;
+	grid-template-columns: minmax(0, 1.08fr) minmax(16rem, 0.72fr);
+}
+
+.chidemoon-collection-page__hero-copy,
+.chidemoon-shop-archive__intro-copy {
+	min-width: 0;
+}
+
+.chidemoon-hero-facts {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.75rem;
+	margin: 0;
+}
+
+.chidemoon-hero-facts__item {
+	align-items: baseline;
+	color: var(--chidemoon-muted);
+	display: inline-flex;
+	font-size: 0.88rem;
+	font-weight: 600;
+	gap: 0.35rem;
+	line-height: 1.8;
+}
+
+.chidemoon-hero-facts__item strong {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.15rem;
+	font-weight: 800;
+	line-height: 1.3;
+}
+
+/* The hero copy is now nested, so re-apply the lede voice to it directly. */
+.chidemoon-collection-page__hero-copy > p {
+	color: var(--chidemoon-muted);
+	font-size: clamp(1rem, 1.6vw, 1.18rem);
+	line-height: 1.9;
+	margin: 0;
+	max-width: 47rem;
+}
+
+/* Outrank the archive lede selector that would restyle the facts row. */
+.chidemoon-archive__hero > .chidemoon-hero-facts,
+.chidemoon-collection-page__hero > .chidemoon-hero-facts,
+.chidemoon-shop-archive__intro > .chidemoon-hero-facts {
+	font-size: 0.88rem;
+	line-height: 1.8;
+	max-width: none;
+}
+
+.chidemoon-collection-page__hero-media,
+.chidemoon-shop-archive__intro-media {
+	background: var(--chidemoon-surface-muted);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: -0.65rem 0.65rem 0 color-mix(in srgb, var(--chidemoon-clay) 28%, transparent), var(--chidemoon-shadow);
+	margin: 0;
+	overflow: hidden;
+}
+
+.chidemoon-collection-page__hero-media img,
+.chidemoon-shop-archive__intro-media img {
+	aspect-ratio: 16 / 10;
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.chidemoon-category-link__art .chidemoon-cat-art,
+.chidemoon-category-link__go .chidemoon-cat-art {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+/* Category hero speaks once: a tighter grid gap keeps the quieter frame. */
+.chidemoon-shop-archive__intro {
+	gap: clamp(1.1rem, 2.4vw, 1.9rem);
+}
+
+/* The art plate replaces the hero photo when a category has no term
+ * thumbnail, reusing the exact media frame for one hero language. */
+.chidemoon-shop-archive__intro-media--art {
+	align-items: center;
+	aspect-ratio: 16 / 10;
+	display: flex;
+	justify-content: center;
+}
+
+.chidemoon-shop-archive__intro-media--art .chidemoon-cat-art {
+	height: 76%;
+	max-width: 84%;
+	width: auto;
+}
+
+/* Product-led category hero: a real catalogue image fills the frame and the
+ * category art rides on the corner as a seal. Shadow and radius move to the
+ * inner frame so the caption below stays outside the framed box. */
+.chidemoon-shop-archive__intro-media--product {
+	background: transparent;
+	box-shadow: none;
+	overflow: visible;
+	position: relative;
+}
+
+.chidemoon-shop-archive__intro-media--product .chidemoon-shop-archive__media-frame {
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: -0.65rem 0.65rem 0 color-mix(in srgb, var(--chidemoon-clay) 28%, transparent), var(--chidemoon-shadow);
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+.chidemoon-shop-archive__media-frame:focus-visible {
+	outline-offset: 4px;
+}
+
+/* The category art is stamped onto the photograph itself: anchored inside
+ * the frame, it reads as a brand seal instead of a floating sticker. */
+.chidemoon-shop-archive__media-seal {
+	background: color-mix(in srgb, var(--chidemoon-surface) 94%, transparent);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	height: 4.75rem;
+	inset-block-end: 0.9rem;
+	inset-inline-start: 0.9rem;
+	padding: 0.42rem;
+	position: absolute;
+	width: 4.75rem;
+}
+
+.chidemoon-shop-archive__media-seal .chidemoon-cat-art {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.chidemoon-shop-archive__media-caption {
+	align-items: baseline;
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.1rem 0.6rem;
+	margin: 0.85rem 0.2rem 0;
+}
+
+.chidemoon-shop-archive__media-caption__label {
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.72rem;
+	font-weight: 700;
+	line-height: 1.8;
+}
+
+.chidemoon-shop-archive__media-caption__label::before {
+	color: var(--chidemoon-clay);
+	content: "·";
+	margin-inline-end: 0.6rem;
+}
+
+.chidemoon-shop-archive__media-caption__product {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 1.02rem;
+	font-weight: 700;
+	line-height: 1.8;
+	text-decoration-color: var(--chidemoon-line-strong);
+	text-underline-offset: 4px;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-shop-archive__media-caption__product:is(:hover, :focus-visible) {
+	color: var(--chidemoon-clay);
+}
+
+@media (max-width: 520px) {
+	.chidemoon-shop-archive__media-seal {
+		height: 3.9rem;
+		width: 3.9rem;
+	}
+}
+
+/* Home masthead: brand statement with the abstract editorial mark. */
+.chidemoon-home__hero {
+	background:
+		radial-gradient(circle at 86% 16%, rgba(230, 178, 158, 0.38) 0 9rem, transparent 9.1rem),
+		linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 26%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	align-items: center;
+	grid-template-columns: minmax(0, 1.1fr) minmax(14rem, 0.9fr);
+	margin-block: clamp(1rem, 2.5vw, 2rem) 0;
+	overflow: hidden;
+	padding-block: clamp(2.4rem, 6vw, 5.5rem);
+	position: relative;
+}
+
+.chidemoon-home__hero-copy {
+	min-width: 0;
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero h1 {
+	font-size: clamp(2.35rem, 4.7vw, 4.1rem);
+	line-height: 1.32;
+	margin-block: 0.55rem 1rem;
+	max-width: 16ch;
+	text-wrap: balance;
+}
+
+.chidemoon-home__lede {
+	color: var(--chidemoon-muted);
+	font-size: clamp(1rem, 1.6vw, 1.18rem);
+	line-height: 1.95;
+	margin: 0;
+	max-width: 34rem;
+}
+
+.chidemoon-home__actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-top: 1.8rem;
+}
+
+.chidemoon-home__hero-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 0;
+	margin-block: clamp(1.7rem, 3vw, 2.5rem) 0;
+	padding: 0;
+}
+
+.chidemoon-home__hero-meta > div {
+	border-inline-start: 1px solid var(--chidemoon-line-strong);
+	display: grid;
+	gap: 0.1rem;
+	padding-inline: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.chidemoon-home__hero-meta > div:first-child {
+	border-inline-start: 0;
+	padding-inline-start: 0;
+}
+
+.chidemoon-home__hero-meta dd {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.45rem, 2.4vw, 2rem);
+	font-weight: 800;
+	line-height: 1.3;
+	margin: 0;
+	order: -1;
+}
+
+.chidemoon-home__hero-meta dt {
+	color: var(--chidemoon-muted);
+	font-size: 0.78rem;
+	font-weight: 600;
+	line-height: 1.6;
+}
+
+.chidemoon-home__hero-mark {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: clamp(16rem, 30vw, 24rem);
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero-mark::before {
+	background: color-mix(in srgb, var(--chidemoon-sage) 72%, var(--chidemoon-surface));
+	border-radius: 50%;
+	content: "";
+	height: min(24vw, 19rem);
+	position: absolute;
+	width: min(24vw, 19rem);
+}
+
+.chidemoon-home__hero-mark::after {
+	border: 1.5px solid var(--chidemoon-forest);
+	content: "";
+	height: min(30vw, 23rem);
+	position: absolute;
+	transform: rotate(14deg);
+	width: min(17vw, 13rem);
+}
+
+.chidemoon-home__hero-mark span {
+	color: var(--chidemoon-forest-deep);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(5rem, 12vw, 9.5rem);
+	font-weight: 800;
+	line-height: 1;
+	position: relative;
+	z-index: 1;
+}
+
+.chidemoon-home__hero-mark i {
+	background: var(--chidemoon-clay);
+	display: block;
+	height: 0.8rem;
+	left: 16%;
+	position: absolute;
+	top: 15%;
+	width: 0.8rem;
+}
+
+.chidemoon-home__hero-mark b {
+	background: var(--chidemoon-forest);
+	bottom: 14%;
+	display: block;
+	height: 2.8rem;
+	position: absolute;
+	right: 11%;
+	width: 0.55rem;
+}
+
+/* Article hero meta: author presence plus reading time. */
+.chidemoon-article__meta {
+	gap: 0.75rem;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.chidemoon-article__meta img.avatar {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 50%;
+	height: 2.6rem;
+	width: 2.6rem;
+}
+
+.chidemoon-article__meta .chidemoon-article__author {
+	color: var(--chidemoon-ink);
+	font-weight: 700;
+}
+
+.chidemoon-article__lede {
+	border-inline-start: 3px solid var(--chidemoon-clay);
+	padding-inline-start: 1.1rem;
+}
+
+@media (max-width: 900px) {
+	.chidemoon-home__hero,
+	.chidemoon-collection-page__hero.has-media,
+	.chidemoon-shop-archive__intro.has-media {
+		grid-template-columns: 1fr;
+	}
+
+	.chidemoon-home__hero {
+		padding-block: clamp(2rem, 7vw, 3rem);
+	}
+
+	.chidemoon-home__hero-mark {
+		min-height: 12.5rem;
+	}
+
+	.chidemoon-home__hero-mark::before {
+		height: 9.5rem;
+		width: 9.5rem;
+	}
+
+	.chidemoon-home__hero-mark::after {
+		height: 11.5rem;
+		width: 7.75rem;
+	}
+
+	.chidemoon-home__hero-mark i {
+		height: 0.6rem;
+		width: 0.6rem;
+	}
+
+	.chidemoon-home__hero-mark b {
+		height: 1.9rem;
+		width: 0.4rem;
+	}
+}
+
+@media (max-width: 520px) {
+	.chidemoon-home__actions {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.chidemoon-home__hero-meta {
+		flex-direction: column;
+	}
+
+	.chidemoon-home__hero-meta > div {
+		border-inline-start: 0;
+		border-top: 1px solid var(--chidemoon-line-strong);
+		padding-inline: 0;
+		padding-block: 0.7rem;
+	}
+
+	.chidemoon-home__hero-meta > div:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+}
+
 .chidemoon-article__image {
 	background: var(--chidemoon-surface-muted);
 	border: 0;
@@ -378,7 +898,6 @@ html {
 	position: relative;
 }
 
-.chidemoon-collection-page__image img,
 .chidemoon-article__image img {
 	aspect-ratio: 16 / 7.6;
 	display: block;
@@ -466,7 +985,7 @@ html {
 	--theme-line-height: 1.35;
 	--theme-text-transform: none;
 	font-family: var(--chidemoon-font-display);
-	font-size: clamp(2.3rem, 5.2vw, 4.6rem);
+	font-size: clamp(2.05rem, 4.5vw, 3.8rem);
 	font-synthesis: none;
 	font-weight: 700;
 	letter-spacing: 0;
@@ -806,45 +1325,114 @@ html {
 	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
 }
 
+/* Post navigation: each card is anchored by the sibling post's imagery —
+ * featured image first, decorative placeholder otherwise — so the journal
+ * reads as continuous. A flex row keeps media and title locked together at
+ * every width; RTL flows the media to the inline-start edge. */
+.chidemoon-article__navigation :where(.nav-previous, .nav-next) > a {
+	align-items: center;
+	display: flex;
+	gap: 0.9rem;
+}
+
+.chidemoon-article__nav-body {
+	display: grid;
+	flex: 1;
+	gap: 0.35rem;
+	min-width: 0;
+	overflow-wrap: break-word;
+}
+
+.chidemoon-article__nav-media {
+	aspect-ratio: 1.28 / 1;
+	background: var(--chidemoon-surface-muted);
+	border-radius: calc(var(--chidemoon-radius) * 0.6);
+	display: block;
+	flex-shrink: 0;
+	overflow: hidden;
+	width: clamp(4.5rem, 12vw, 6.5rem);
+}
+
+.chidemoon-article__nav-media img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--chidemoon-motion-image, 280ms) var(--chidemoon-ease-out, ease);
+	width: 100%;
+}
+
+.chidemoon-article__navigation :where(.nav-previous, .nav-next):hover .chidemoon-article__nav-media img {
+	transform: scale(1.045);
+}
+
+.chidemoon-article__nav-media .chidemoon-card__media-empty {
+	height: 100%;
+}
+
 /* WooCommerce catalogue and product detail. */
 .chidemoon-shop-archive__catalogue {
 	padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
-.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper + :where(.woocommerce-result-count, .woocommerce-ordering),
-.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper + :where(.woocommerce-result-count),
+.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 	margin-bottom: 1.5rem;
 }
 
-.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
-	appearance: none;
-	background-color: var(--chidemoon-surface);
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23607069' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-	background-position: right 0.9rem center;
-	background-repeat: no-repeat;
-	border: 1px solid var(--chidemoon-line-strong);
-	border-radius: var(--chidemoon-radius-sm);
-	color: var(--chidemoon-ink);
-	cursor: pointer;
+/* Catalogue sorting lives inside the masthead as a chip row, so the choice is
+ * part of the hero's editorial composition instead of a detached toolbar. */
+.chidemoon-shop-archive__sort {
+	border-top: 1px solid color-mix(in srgb, var(--chidemoon-forest) 14%, transparent);
+	margin-top: 1.4rem;
+	padding-top: 1.1rem;
+}
+
+.chidemoon-shop-archive__sort-label {
+	color: var(--chidemoon-muted);
 	font-family: var(--chidemoon-font-ui);
-	font-size: 0.85rem;
-	font-weight: 600;
-	min-height: 2.9rem;
-	padding-inline: 0.9rem 2.5rem;
-	transition: border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	font-size: 0.78rem;
+	font-weight: 700;
+	margin: 0 0 0.65rem;
 }
 
-.chidemoon-shop-archive__catalogue .woocommerce-ordering select:focus-visible {
+.chidemoon-shop-archive__sort-options {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.chidemoon-shop-archive__sort-options a {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-ink);
+	display: inline-flex;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.82rem;
+	font-weight: 700;
+	line-height: 1;
+	min-height: 2.55rem;
+	padding: 0.45rem 0.95rem;
+	text-decoration: none;
+	transition:
+		background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		border-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		box-shadow var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease),
+		color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+.chidemoon-shop-archive__sort-options a:is(:hover, :focus-visible) {
 	border-color: var(--chidemoon-forest);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--chidemoon-forest) 22%, transparent);
-	outline: none;
+	color: var(--chidemoon-forest);
+	text-decoration: none;
 }
 
-/* Persian-first site: the affordance sits on the inline-end (left) side. */
-body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering select {
-	background-position: left 0.9rem center;
-	padding-inline: 2.5rem 0.9rem;
+.chidemoon-shop-archive__sort-options a.is-active {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	box-shadow: var(--chidemoon-shadow-soft);
+	color: #fffcf7;
 }
 
 .woocommerce ul.products {
@@ -865,17 +1453,17 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .woocommerce ul.products li.product a img {
-	aspect-ratio: 1 / 0.93;
+	aspect-ratio: 4 / 3;
 }
 
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
 	font-size: 1.08rem;
-	min-height: 3em;
-	padding-inline: 1.1rem;
 }
 
-.woocommerce ul.products li.product .price {
-	margin-inline: 1.1rem;
+.woocommerce ul.products li.product .ct-woo-card-actions {
+	align-items: center;
+	padding-block-end: 1.1rem;
+	text-align: start;
 }
 
 .chidemoon-product-page {
@@ -898,7 +1486,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .woocommerce div.product .product_title {
-	font-size: clamp(2rem, 4vw, 3.7rem);
+	font-size: clamp(1.8rem, 3.6vw, 3.1rem);
 	line-height: 1.25;
 }
 
@@ -917,6 +1505,14 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	padding-top: 1.4rem;
 }
 
+/* A lone product tab renders without tab chrome (tabs.php), so the
+ * information section keeps the same separator and spacing treatment. */
+.woocommerce div.product .chidemoon-product-info {
+	border-top: 1px solid var(--chidemoon-line);
+	clear: both;
+	padding-top: 1.4rem;
+}
+
 .woocommerce .related.products {
 	clear: both;
 	padding-top: clamp(2rem, 4vw, 3.5rem);
@@ -926,6 +1522,277 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	font-family: var(--chidemoon-font-display);
 	font-size: clamp(1.5rem, 2.4vw, 2rem);
 	margin-bottom: 1.25rem;
+}
+
+/* Product reviews tab: the discussion surface gets the same editorial
+ * treatment as the catalogue, instead of raw WooCommerce defaults. */
+.chidemoon-product-page #reviews {
+	font-family: var(--chidemoon-font-body);
+	text-align: start;
+}
+
+.chidemoon-product-page #reviews h2,
+.chidemoon-product-page #reviews .comment-reply-title {
+	display: block;
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.25rem, 2vw, 1.6rem);
+	font-weight: 700;
+	margin-block: 0 1.25rem;
+	text-align: start;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs {
+	border-block-end: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.4rem;
+	margin: 0 0 1.5rem;
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li {
+	background: none;
+	border: 0;
+	border-radius: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li::before,
+.woocommerce div.product .woocommerce-tabs ul.tabs li::after {
+	display: none;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	border-block-end: 2px solid transparent;
+	color: var(--chidemoon-muted);
+	font-size: 1.05rem;
+	font-weight: 600;
+	padding: 0.35rem 0.15rem 0.65rem;
+	text-decoration: none;
+	transition:
+		color var(--chidemoon-motion-fast) var(--chidemoon-ease-out),
+		border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover,
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:focus {
+	color: var(--chidemoon-forest);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+	border-block-end-color: var(--chidemoon-forest);
+	color: var(--chidemoon-ink);
+}
+
+/* No reviews yet: keep the empty state quiet, not error-like. */
+.chidemoon-product-page #reviews .woocommerce-noreviews {
+	background: color-mix(in srgb, var(--chidemoon-surface-muted) 40%, transparent);
+	border: 1px dashed var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius);
+	color: var(--chidemoon-muted);
+	font-size: 1rem;
+	margin: 0 0 2rem;
+	padding: 1.5rem 1.25rem;
+	text-align: start;
+}
+
+.chidemoon-product-page #reviews .commentlist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chidemoon-product-page #reviews .commentlist li {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flow-root;
+	margin: 0 0 1rem;
+	padding: 1.1rem 1.25rem;
+}
+
+.chidemoon-product-page #reviews .comment_container .avatar {
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 50%;
+	float: inline-start;
+	height: 3rem;
+	margin-inline-end: 0.9rem;
+	width: 3rem;
+}
+
+.chidemoon-product-page #reviews .comment-text {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	width: auto;
+}
+
+.chidemoon-product-page #reviews .comment-text .meta {
+	color: var(--chidemoon-muted);
+	font-size: 0.95rem;
+	margin-block: 0.15rem 0.6rem;
+}
+
+.chidemoon-product-page #reviews .comment-text .meta strong {
+	color: var(--chidemoon-ink);
+}
+
+.chidemoon-product-page #reviews .comment-text .description {
+	font-size: 1rem;
+	line-height: 1.9;
+}
+
+.chidemoon-product-page #reviews .woocommerce-review__verified {
+	background: color-mix(in srgb, var(--chidemoon-sage) 25%, transparent);
+	border-radius: var(--chidemoon-radius-sm);
+	color: var(--chidemoon-forest);
+	display: inline-block;
+	font-size: 0.78rem;
+	font-weight: 600;
+	margin-inline-start: 0.45rem;
+	padding: 0.1rem 0.5rem;
+}
+
+/* Star glyphs are percentage-width fills, so they must stay LTR; the
+ * surrounding text keeps its RTL direction. */
+.chidemoon-product-page #reviews .star-rating,
+.chidemoon-product-page #review_form .comment-form-rating .stars {
+	direction: ltr;
+}
+
+.chidemoon-product-page #reviews .star-rating {
+	--wc-star-color: var(--chidemoon-clay);
+	--wc-star-empty-color: color-mix(in srgb, var(--chidemoon-clay) 20%, transparent);
+	color: var(--chidemoon-clay);
+	float: none;
+	margin: 0 0 0.35rem;
+}
+
+.chidemoon-product-page #reviews .star-rating span::before {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .comment-respond {
+	background: color-mix(in srgb, var(--chidemoon-surface-muted) 45%, transparent);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	margin-block-start: 1.75rem;
+	padding: clamp(1.1rem, 2.5vw, 1.75rem);
+}
+
+.chidemoon-product-page #review_form :where(input:not([type="checkbox"]), textarea) {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
+	font-family: var(--chidemoon-font-body);
+	font-size: 1rem;
+	padding: 0.7rem 0.9rem;
+	width: 100%;
+}
+
+.chidemoon-product-page #review_form :where(input:not([type="checkbox"]), textarea):focus {
+	border-color: var(--chidemoon-forest);
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 30%, transparent);
+}
+
+.chidemoon-product-page #review_form label {
+	color: var(--chidemoon-ink);
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent {
+	margin-block: 1.1rem 0;
+}
+
+/* Blocksy paints this checkbox with appearance:none and a :before tick;
+ * keep that structure but re-color it to the editorial palette so the
+ * checked state is clean instead of the theme's off-brand accent. */
+.chidemoon-product-page #review_form input[type="checkbox"] {
+	--top: 0;
+	border-color: var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	height: 1.15rem;
+	width: 1.15rem;
+}
+
+.chidemoon-product-page #review_form input[type="checkbox"]:checked {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+}
+
+.chidemoon-product-page #review_form input[type="checkbox"]:focus-visible {
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 40%, transparent);
+	outline-offset: 2px;
+}
+
+.chidemoon-product-page #review_form .comment-form-rating {
+	margin-block: 1.25rem;
+}
+
+.chidemoon-product-page #review_form .comment-form-rating label {
+	display: block;
+	margin-block: 0 0.6rem;
+}
+
+.chidemoon-product-page #review_form .stars {
+	direction: ltr;
+	display: inline-flex;
+	font-size: 1.6rem;
+	gap: 0.35rem;
+}
+
+.chidemoon-product-page #review_form .stars a {
+	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-product-page #review_form .stars a.active,
+.chidemoon-product-page #review_form .stars a:hover {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .stars a:hover ~ a {
+	color: color-mix(in srgb, var(--chidemoon-clay) 30%, transparent);
+}
+
+.chidemoon-product-page #review_form .required {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	margin-block: 1.1rem 0.25rem;
+}
+
+.chidemoon-product-page #review_form .comment-form-cookies-consent label {
+	font-size: 0.95rem;
+	font-weight: 500;
+	margin: 0;
+}
+
+.chidemoon-product-page #review_form .form-submit input[type="submit"],
+.chidemoon-product-page #review_form .form-submit #submit {
+	background: var(--chidemoon-forest);
+	border: 0;
+	border-radius: var(--chidemoon-radius-sm);
+	color: #fffcf7;
+	cursor: pointer;
+	font-family: var(--chidemoon-font-body);
+	font-size: 1rem;
+	font-weight: 700;
+	padding: 0.8rem 1.75rem;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-product-page #review_form .form-submit input[type="submit"]:hover {
+	background: var(--chidemoon-forest-deep);
 }
 
 .chidemoon-affiliate-disclosure,
@@ -958,6 +1825,12 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 		grid-template-columns: minmax(0, 1fr);
 	}
 
+	/* Stacked navigation cards: two-up cards crush long Persian titles on
+	 * tablets, so the nav mirrors the article's single-column reflow. */
+	.chidemoon-article__navigation .nav-links {
+		grid-template-columns: 1fr;
+	}
+
 	.chidemoon-article__aside,
 	.chidemoon-collection-page__note {
 		position: static;
@@ -980,8 +1853,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 
 	/* Keep the catalogue toolbar readable while the product grid reflows. */
 	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper,
-	.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+	.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 		margin-block-end: 1rem;
 	}
 }
@@ -1035,7 +1907,9 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 
 	.chidemoon-story-card--compact {
 		display: grid;
-		grid-template-columns: 7.5rem minmax(0, 1fr);
+		/* The media cell must shrink with the card: a fixed track here is what
+		 * pushed the badge over the body text on narrow screens. */
+		grid-template-columns: clamp(6rem, 34vw, 7.5rem) minmax(0, 1fr);
 	}
 
 	.chidemoon-story-card--compact .chidemoon-card__media {
@@ -1067,8 +1941,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 
 	/* Keep the shop controls in one readable column on narrow screens. */
 	.chidemoon-shop-archive__catalogue .woocommerce-notices-wrapper,
-	.chidemoon-shop-archive__catalogue .woocommerce-result-count,
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
+	.chidemoon-shop-archive__catalogue .woocommerce-result-count {
 		clear: both;
 		float: none;
 		max-width: 100%;
@@ -1083,15 +1956,20 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 		margin-block: 0 0.7rem;
 	}
 
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering {
-		margin-block: 0 1.25rem;
+	/* Sorting stays inside the masthead: the chip row fills the available
+	 * width in balanced lines instead of drifting as a detached toolbar. */
+	.chidemoon-shop-archive__sort {
+		margin-top: 1.15rem;
+		padding-top: 1rem;
 	}
 
-	.chidemoon-shop-archive__catalogue .woocommerce-ordering select {
-		box-sizing: border-box;
-		max-width: 100%;
-		min-height: 2.75rem;
-		width: 100%;
+	.chidemoon-shop-archive__sort-options a {
+		flex: 1 1 auto;
+		justify-content: center;
+		min-height: 2.9rem;
+		padding-inline: 0.8rem;
+		text-align: center;
+		white-space: nowrap;
 	}
 
 	.chidemoon-product-card,
@@ -1175,7 +2053,10 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	}
 
 	.woocommerce ul.products li.product .ct-woo-card-actions {
-		display: block;
+		align-items: stretch;
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 0.55rem;
 		margin-inline: 0 !important;
 		margin-top: auto;
 		padding: 0 1rem 1rem;
@@ -1193,6 +2074,21 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 		width: 100%;
 	}
 
+	/* "مشاهده" and "مقایسه" share one action row: the primary CTA takes the
+	 * remaining width and the compare toggle keeps its label on one line. */
+	.woocommerce ul.products li.product .ct-woo-card-actions :where(.button, .added_to_cart) {
+		flex: 1 1 auto;
+		min-width: 0;
+		width: auto;
+	}
+
+	.woocommerce ul.products li.product .ct-woo-card-actions .chidemoon-compare-control {
+		flex: 0 0 auto;
+		margin-top: 0;
+		min-height: 3rem;
+		white-space: nowrap;
+	}
+
 	.chidemoon-product-card .chidemoon-card__body {
 		box-sizing: border-box;
 		min-width: 0;
@@ -1205,6 +2101,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 		overflow-wrap: anywhere;
 	}
 
+	.chidemoon-home__hero,
 	.chidemoon-archive__hero,
 	.chidemoon-collection-page__hero,
 	.chidemoon-shop-archive__intro,
@@ -1212,21 +2109,37 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 		border-radius: var(--chidemoon-radius);
 	}
 
+	.chidemoon-home__hero h1,
 	.chidemoon-archive__hero h1,
 	.chidemoon-collection-page__hero h1,
 	.chidemoon-shop-archive__intro h1,
 	.chidemoon-article__hero h1 {
-		font-size: clamp(2.1rem, 11vw, 3.1rem);
+		font-size: clamp(1.95rem, 9.5vw, 2.7rem);
 		line-height: 1.35;
 	}
 
-	.chidemoon-collection-page__image img,
+	.chidemoon-collection-page__hero-media img,
+	.chidemoon-shop-archive__intro-media img,
 	.chidemoon-article__image img {
 		aspect-ratio: 4 / 3;
 	}
 
 	.chidemoon-article__body {
 		padding: 1.25rem 1rem;
+	}
+
+	/* Navigation cards: tighter rhythm so the media and title stay a single
+	 * compact unit on narrow screens. */
+	.chidemoon-article__navigation :where(.nav-previous, .nav-next) {
+		padding: 1rem 1.05rem;
+	}
+
+	.chidemoon-article__navigation :where(.nav-previous, .nav-next) > a {
+		gap: 0.75rem;
+	}
+
+	.chidemoon-article__nav-media {
+		width: 4.25rem;
 	}
 
 	.woocommerce div.product {
@@ -1250,16 +2163,6 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	.woocommerce div.product div.images img {
 		max-height: 28rem;
 		object-fit: contain;
-	}
-
-	.woocommerce div.product .woocommerce-tabs ul.tabs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 1rem;
-	}
-
-	.woocommerce div.product .woocommerce-tabs ul.tabs li {
-		margin: 0;
 	}
 
 	.woocommerce div.product .single_add_to_cart_button {
@@ -1292,9 +2195,11 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	:where(
 		.chidemoon-card__media img,
 		.chidemoon-featured__media img,
+		.chidemoon-article__nav-media img,
 		.chidemoon-route-card,
 		.chidemoon-article__navigation .nav-previous,
-		.chidemoon-article__navigation .nav-next
+		.chidemoon-article__navigation .nav-next,
+		.chidemoon-category-link__go
 	) {
 		transform: none !important;
 	}
@@ -1356,87 +2261,292 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	display: none !important;
 }
 
-.chidemoon-article-products {
-	margin-block: clamp(2rem, 6vw, 4rem);
-	padding-block-start: clamp(1.5rem, 4vw, 2.5rem);
-	border-block-start: 1px solid var(--chidemoon-line);
+/* The article "products in this look" shelf. Every rule is scoped under
+ * .entry-content AND the section class: Blocksy's generic article
+ * typography (.entry-content h2/h3/p/a, content spacing) otherwise
+ * outranks or out-orders the bare card classes and inflated titles,
+ * recoloured links, and repainted the CTA text on light backgrounds. */
+.entry-content .chidemoon-article-products {
+	border-block: 1px solid var(--chidemoon-line);
+	margin-block: clamp(2.5rem, 7vw, 4.5rem);
+	padding-block: clamp(1.75rem, 4vw, 2.75rem);
 }
 
-.chidemoon-article-products > p {
-	max-width: 46rem;
-	color: var(--chidemoon-muted);
-}
-
-.chidemoon-article-products__grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-	margin-block-start: 1.5rem;
-}
-
-.chidemoon-article-product {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-	overflow: hidden;
-	border: 1px solid var(--chidemoon-line);
-	border-radius: var(--chidemoon-radius-sm);
-	background: var(--chidemoon-surface);
-}
-
-.chidemoon-article-product__image {
-	display: block;
-	aspect-ratio: 4 / 3;
-	background: var(--chidemoon-surface-muted);
-}
-
-.chidemoon-article-product__image img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.chidemoon-article-product__body {
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.65rem;
-	padding: 1rem;
-}
-
-.chidemoon-article-product__body :where(h3, p) {
+.entry-content .chidemoon-article-products__title,
+.entry-content .chidemoon-article-products h2 {
+	color: var(--chidemoon-ink);
+	font-family: var(--chidemoon-font-body);
+	font-size: clamp(1.4rem, 2.3vw, 1.8rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	line-height: 1.55;
 	margin: 0;
 }
 
-.chidemoon-article-product__body h3 {
-	font-size: 1.05rem;
-}
-
-.chidemoon-article-product__body p {
+.entry-content .chidemoon-article-products > p,
+.entry-content .chidemoon-article-products__note {
 	color: var(--chidemoon-muted);
-	font-size: 0.88rem;
-	line-height: 1.8;
+	font-family: var(--chidemoon-font-body);
+	font-size: 0.92rem;
+	letter-spacing: 0;
+	line-height: 1.95;
+	margin: 0.6rem 0 0;
+	max-width: 44rem;
 }
 
-.chidemoon-article-product__body strong {
-	margin-block-start: auto;
+.entry-content .chidemoon-article-products__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(1rem, 2vw, 1.4rem);
+	margin-block: 1.75rem 0;
+}
+
+.entry-content .chidemoon-article-product {
+	align-items: stretch;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
+}
+
+.entry-content .chidemoon-article-products .chidemoon-article-product:hover,
+.entry-content .chidemoon-article-products .chidemoon-article-product:focus-within {
+	border-color: var(--chidemoon-line-strong);
+	box-shadow: var(--chidemoon-shadow);
+	transform: translateY(-2px);
+}
+
+.entry-content .chidemoon-article-product__media {
+	display: block;
+	margin: 0;
+	min-width: 0;
+}
+
+.entry-content .chidemoon-article-product__media .chidemoon-article-product__image {
+	height: 100%;
+}
+
+.entry-content .chidemoon-article-product__image {
+	background: var(--chidemoon-surface-muted);
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
+}
+
+.entry-content .chidemoon-article-product__image img {
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--chidemoon-motion-image) var(--chidemoon-ease-out);
+	width: 100%;
+}
+
+.entry-content .chidemoon-article-product:hover .chidemoon-article-product__image img,
+.entry-content .chidemoon-article-product:focus-within .chidemoon-article-product__image img {
+	transform: scale(1.04);
+}
+
+.entry-content .chidemoon-article-product__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.55rem;
+	padding: 1.1rem 1.15rem 1.15rem;
+}
+
+/* wpautop closes a phantom <p> right after the media link of inline
+ * card markup; the browser parses it as an empty node that would add
+ * stray margins between the media and the body. Hide it at every width;
+ * real content never lives in a direct paragraph child of the card. */
+.entry-content .chidemoon-article-product > p:empty {
+	display: none;
+}
+
+.entry-content .chidemoon-article-product__title {
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	color: var(--chidemoon-ink);
+	display: -webkit-box;
+	font-family: var(--chidemoon-font-body);
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.7;
+	margin: 0;
+	overflow: hidden;
+}
+
+.entry-content .chidemoon-article-product__title a {
+	color: var(--chidemoon-ink);
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content .chidemoon-article-products .chidemoon-article-product__title a:hover,
+.entry-content .chidemoon-article-products .chidemoon-article-product__title a:focus-visible {
 	color: var(--chidemoon-clay);
+	text-decoration: none;
+}
+
+.entry-content .chidemoon-article-product__excerpt {
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	color: var(--chidemoon-muted);
+	display: -webkit-box;
+	font-size: 0.86rem;
+	letter-spacing: 0;
+	line-height: 1.85;
+	margin: 0;
+	overflow: hidden;
+}
+
+.entry-content .chidemoon-article-product__footer {
+	align-items: center;
+	border-block-start: 1px solid var(--chidemoon-line);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem 0.9rem;
+	justify-content: space-between;
+	margin-block-start: auto;
+	padding-block-start: 0.9rem;
+}
+
+.entry-content .chidemoon-article-product__price {
+	align-items: baseline;
+	color: var(--chidemoon-ink);
+	display: flex;
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	font-size: 0.95rem;
+	font-weight: 800;
+	gap: 0.35rem;
+	line-height: 1.5;
+	margin: 0;
+	min-width: 0;
+}
+
+.entry-content .chidemoon-article-product__price del {
+	color: var(--chidemoon-muted);
+	font-size: 0.78rem;
+	font-weight: 600;
+}
+
+.entry-content .chidemoon-article-product__price ins {
+	text-decoration: none;
+}
+
+.entry-content .chidemoon-article-product__price .woocommerce-Price-currencySymbol {
+	color: var(--chidemoon-muted);
+	font-size: 0.75rem;
+	font-weight: 700;
+}
+
+/* Same face and metrics as .chidemoon-button so the shelf reads as part
+ * of the design system, not a bolted-on link. */
+.entry-content .chidemoon-article-product__cta {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: var(--chidemoon-radius-sm);
+	box-shadow: var(--chidemoon-shadow-soft);
+	color: #fffcf7;
+	display: inline-flex;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.82rem;
+	font-weight: 700;
+	gap: 0.5rem;
+	justify-content: center;
+	letter-spacing: 0;
+	line-height: 1.2;
+	max-width: 100%;
+	min-height: 2.8rem;
+	padding: 0.55rem 1.05rem;
+	text-decoration: none;
+	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out), transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	white-space: nowrap;
+}
+
+.entry-content .chidemoon-article-product__cta:hover,
+.entry-content .chidemoon-article-product__cta:focus-visible {
+	background: var(--chidemoon-forest-deep);
+	border-color: var(--chidemoon-forest-deep);
+	box-shadow: var(--chidemoon-shadow);
+	color: #fffcf7;
+	text-decoration: none;
+	transform: translateY(-1px);
+}
+
+.entry-content .chidemoon-article-product__cta span {
+	font-size: 1.05em;
+	line-height: 1;
+	transition: transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.entry-content .chidemoon-article-product__cta:hover span,
+.entry-content .chidemoon-article-product__cta:focus-visible span {
+	transform: translateX(-0.18rem);
+}
+
+.entry-content .chidemoon-article-product__cta:focus-visible,
+.entry-content .chidemoon-article-product__title a:focus-visible {
+	outline: 2px solid var(--chidemoon-clay);
+	outline-offset: 2px;
 }
 
 @media (max-width: 780px) {
-	.chidemoon-article-products__grid {
+	.entry-content .chidemoon-article-products__grid {
 		grid-template-columns: 1fr;
 	}
 
-	.chidemoon-article-product {
+	/* Fixed grid areas pin the media and body cells in place. wpautop
+	 * closes a phantom <p> right after the media link of inline card
+	 * markup, and that empty node used to shuffle the two-column grid
+	 * into image-top/body-squeezed fragments; unknown children now fall
+	 * into an implicit row instead of displacing the real cells. */
+	.entry-content .chidemoon-article-product {
 		display: grid;
-		grid-template-columns: minmax(7rem, 34%) 1fr;
+		grid-template-areas: "media body";
+		grid-template-columns: minmax(7.5rem, 36%) 1fr;
 	}
 
-	.chidemoon-article-product__image {
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__media,
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__image {
+		grid-area: media;
+	}
+
+	.entry-content .chidemoon-article-product > .chidemoon-article-product__body {
+		grid-area: body;
+	}
+
+	.entry-content .chidemoon-article-product__image {
 		aspect-ratio: auto;
 		min-height: 100%;
+	}
+
+	.entry-content .chidemoon-article-product__body {
+		padding: 0.9rem 1rem;
+	}
+
+	.entry-content .chidemoon-article-product__excerpt {
+		-webkit-line-clamp: 2;
+	}
+
+	.entry-content .chidemoon-article-product__footer {
+		gap: 0.7rem 0.9rem;
+	}
+
+	/* Stack the CTA under the price: the narrow body column cannot fit
+	 * both on one row, so let the button own its full-width tap target. */
+	.entry-content .chidemoon-article-product__cta {
+		flex: 1 1 100%;
+		min-height: 2.6rem;
+		padding: 0.45rem 0.9rem;
+		width: 100%;
 	}
 
 	.ct-footer .ct-container {
@@ -1447,6 +2557,21 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 @media (prefers-reduced-motion: reduce) {
 	.ct-footer :where(a, .ct-menu-link) {
 		transition: none;
+	}
+
+	.entry-content .chidemoon-article-product,
+	.entry-content .chidemoon-article-product__cta,
+	.entry-content .chidemoon-article-product__cta span {
+		transition: none;
+	}
+
+	.entry-content .chidemoon-article-product:hover,
+	.entry-content .chidemoon-article-product:focus-within,
+	.entry-content .chidemoon-article-product__cta:hover,
+	.entry-content .chidemoon-article-product__cta:focus-visible,
+	.entry-content .chidemoon-article-product__cta:hover span,
+	.entry-content .chidemoon-article-product__cta:focus-visible span {
+		transform: none;
 	}
 }
 
@@ -1482,8 +2607,8 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .chidemoon-article-product h3 {
-	font-size: 1.06rem;
-	line-height: 1.6;
+	font-size: 1rem;
+	line-height: 1.7;
 }
 
 .chidemoon-article-product__body p {
@@ -1491,13 +2616,17 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 /* Mobile: the compact story card lays media and body side by side.
- * The collection-feed first-child aspect-ratio override is stronger
- * than the compact rules and squeezes the body under the media, so
- * reset it here and clip the media cell defensively. */
+ * The first-child and collection-feed aspect-ratio overrides are stronger
+ * than the compact rules; their ratio then transfers the row height into
+ * the media width, which overflows the media track and paints over the
+ * body text. Reset them here, cap the cell to its track, and clip it
+ * defensively. */
 @media (max-width: 640px) {
 	.chidemoon-story-card--compact .chidemoon-card__media,
+	.chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media,
 	.chidemoon-collection-page__feed .chidemoon-card-grid--archive > .chidemoon-story-card:first-child .chidemoon-card__media {
 		aspect-ratio: auto;
+		max-width: 100%;
 		min-width: 0;
 		overflow: hidden;
 	}
@@ -1512,6 +2641,11 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	.chidemoon-story-card--compact .chidemoon-card__media {
 		min-height: 6.5rem;
 		position: relative;
+	}
+
+	.chidemoon-story-card--compact .chidemoon-card__badge {
+		max-width: calc(100% - 1rem);
+		overflow-wrap: anywhere;
 	}
 }
 
@@ -1646,6 +2780,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	align-items: center;
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-sm);
 	color: var(--chidemoon-forest);
 	display: inline-flex;
 	font-size: 0.9rem;
@@ -1682,6 +2817,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 .chidemoon-look-card {
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
 	box-shadow: var(--chidemoon-shadow-soft);
 	padding: clamp(1rem, 2.5vw, 2rem);
 }
@@ -1695,7 +2831,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 .chidemoon-look-card__header h3 {
 	color: var(--chidemoon-forest);
 	font-family: var(--chidemoon-font-display);
-	font-size: clamp(1.5rem, 3vw, 2.4rem);
+	font-size: clamp(1.4rem, 2.7vw, 2.05rem);
 	line-height: 1.4;
 	margin: 0;
 }
@@ -1729,11 +2865,172 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 .chidemoon-comparison-picker,
 .chidemoon-comparison-table-section {
 	padding-block: clamp(2rem, 5vw, 4rem);
+	scroll-margin-block-start: 6.5rem;
+}
+
+/* "Your selections" strip: tells the visitor where their comparison lives
+ * and offers a one-click jump to the evidence table below. */
+.chidemoon-comparison-status {
+	align-items: center;
+	background: color-mix(in srgb, var(--chidemoon-sage) 45%, var(--chidemoon-surface));
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.9rem 1.4rem;
+	margin-top: clamp(1.25rem, 3vw, 2rem);
+	padding: clamp(1rem, 2.4vw, 1.4rem) clamp(1rem, 2.6vw, 1.6rem);
+}
+
+.chidemoon-comparison-status[hidden] {
+	display: none;
+}
+
+.chidemoon-comparison-status__count {
+	color: var(--chidemoon-forest);
+	font-weight: 800;
+	margin: 0;
+}
+
+.chidemoon-comparison-status__chips {
+	display: flex;
+	flex: 1 1 14rem;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.chidemoon-comparison-status__chip {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-forest-deep, var(--chidemoon-forest));
+	font-size: 0.82rem;
+	font-weight: 700;
+	padding: 0.35rem 0.8rem;
+}
+
+.chidemoon-comparison-status__cta {
+	margin-inline-start: auto;
 }
 
 .chidemoon-comparison-picker > p {
 	color: var(--chidemoon-muted);
-	max-width: 48rem;
+}
+
+/* Three-step strip: turns the dead space between the intro copy and the
+ * catalogue grid into a scannable flow banner. */
+.chidemoon-comparison-steps {
+	background:
+		radial-gradient(circle at 88% 10%, color-mix(in srgb, var(--chidemoon-clay-soft) 45%, transparent), transparent 40%),
+		radial-gradient(circle at 6% 100%, color-mix(in srgb, var(--chidemoon-sage) 65%, transparent), transparent 42%),
+		color-mix(in srgb, var(--chidemoon-sage) 32%, var(--chidemoon-surface));
+	border: 1px solid var(--chidemoon-line);
+	border-radius: calc(var(--chidemoon-radius-lg) + 0.55rem);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: grid;
+	gap: 1.1rem 1.9rem;
+	list-style: none;
+	margin-block: clamp(1.4rem, 3vw, 2.2rem);
+	padding: clamp(1.2rem, 2.6vw, 1.7rem);
+}
+
+@media (min-width: 48rem) {
+	.chidemoon-comparison-steps {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	/* Flow arrow between the step cards; SVG points along the RTL reading flow. */
+	.chidemoon-comparison-steps li:not(:last-child)::after {
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='10' viewBox='0 0 22 10'%3E%3Cpath d='M20 5H3M7 1 3 5l4 4' fill='none' stroke='%23b95d3e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+		content: "";
+		height: 0.625rem;
+		inset-inline-end: -1.55rem;
+		position: absolute;
+		top: 50%;
+		translate: 0 -50%;
+		width: 1.375rem;
+	}
+}
+
+[dir="ltr"] .chidemoon-comparison-steps li:not(:last-child)::after {
+	transform: scaleX(-1);
+}
+
+.chidemoon-comparison-steps li {
+	align-items: flex-start;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: var(--chidemoon-shadow-soft);
+	display: flex;
+	gap: 0.9rem;
+	margin: 0;
+	padding: 0.95rem 1.05rem;
+	position: relative;
+	transition: border-color var(--chidemoon-motion-standard) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-standard) var(--chidemoon-ease-out), transform var(--chidemoon-motion-standard) var(--chidemoon-ease-out);
+}
+
+.chidemoon-comparison-steps li:hover {
+	border-color: var(--chidemoon-line-strong);
+	box-shadow: var(--chidemoon-shadow);
+	transform: translateY(-3px);
+}
+
+.chidemoon-comparison-steps__badge {
+	background: linear-gradient(135deg, var(--chidemoon-clay) 10%, var(--chidemoon-clay-soft) 100%);
+	border-radius: 0.85rem;
+	box-shadow: 0 6px 16px rgba(185, 93, 62, 0.32);
+	color: #fff;
+	display: grid;
+	flex: 0 0 auto;
+	height: 3rem;
+	place-items: center;
+	position: relative;
+	width: 3rem;
+}
+
+.chidemoon-comparison-steps__badge--sage {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 55%, var(--chidemoon-forest)), var(--chidemoon-sage));
+	box-shadow: 0 6px 16px rgba(18, 63, 52, 0.18);
+}
+
+.chidemoon-comparison-steps__badge--forest {
+	background: linear-gradient(135deg, var(--chidemoon-forest) 12%, color-mix(in srgb, var(--chidemoon-forest) 70%, var(--chidemoon-sage)) 100%);
+	box-shadow: 0 6px 16px rgba(18, 63, 52, 0.3);
+}
+
+.chidemoon-comparison-steps__count {
+	color: var(--chidemoon-clay);
+	margin-inline-end: 0.1rem;
+}
+
+.chidemoon-comparison-steps li:hover .chidemoon-comparison-steps__badge {
+	transform: translateY(-2px);
+}
+
+.chidemoon-comparison-steps__badge svg {
+	height: 1.35rem;
+	width: 1.35rem;
+}
+
+.chidemoon-comparison-steps__copy {
+	display: grid;
+	gap: 0.2rem;
+	min-width: 0;
+}
+
+.chidemoon-comparison-steps__title {
+	color: var(--chidemoon-forest);
+	font-weight: 800;
+	margin: 0;
+}
+
+.chidemoon-comparison-steps__desc {
+	color: var(--chidemoon-muted);
+	font-size: 0.85rem;
+	line-height: 1.7;
+	margin: 0;
 }
 
 .chidemoon-comparison-table-wrap {
@@ -1792,6 +3089,7 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .chidemoon-comparison-table__remove {
+	align-items: center;
 	align-self: start;
 	background: transparent;
 	border: 1px solid var(--chidemoon-line-strong);
@@ -1799,11 +3097,10 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	color: var(--chidemoon-clay);
 	cursor: pointer;
 	display: inline-flex;
-	align-items: center;
-	justify-content: center;
 	font: inherit;
 	font-size: .8rem;
 	font-weight: 800;
+	justify-content: center;
 	margin-top: .7rem;
 	min-height: 2.25rem;
 	padding: .25rem .7rem;
@@ -1815,9 +3112,6 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	border-color: var(--chidemoon-clay);
 }
 
-/* At narrow widths the wide evidence table reflows into per-attribute cards:
- * the product header row hides, and each cell labels itself with the product
- * name from its data-label attribute instead of being clipped or scrolled. */
 @media (max-width: 700px) {
 	.chidemoon-comparison-table {
 		min-width: 0;
@@ -1845,10 +3139,10 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	}
 
 	.chidemoon-comparison-table tbody th {
-		border-inline: 0;
 		border-block-end: 1px solid var(--chidemoon-line-strong);
-		position: static;
+		border-inline: 0;
 		min-width: 0;
+		position: static;
 	}
 
 	.chidemoon-comparison-table tbody td {
@@ -1891,11 +3185,12 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .chidemoon-product-card__actions {
+	border-top: 1px solid var(--chidemoon-line);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.6rem;
 	margin-top: auto;
-	padding-top: 1rem;
+	padding-top: 0.9rem;
 }
 
 .chidemoon-product-card__actions .chidemoon-button {
@@ -1904,12 +3199,50 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 .chidemoon-product-card__actions .chidemoon-compare-control {
+	flex: 0 0 auto;
 	margin-top: 0;
+	min-height: 2.8rem;
+}
+
+/* The WooCommerce loop CTA ("مشاهده") must match the editorial
+ * button language instead of Blocksy's default chrome. */
+.ct-woo-card-actions .button,
+.ct-woo-card-actions .added_to_cart {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: var(--chidemoon-radius-sm, 0.35rem);
+	box-shadow: var(--chidemoon-shadow-soft);
+	color: #fffcf7;
+	display: inline-flex;
+	flex: 1 1 auto;
+	font-size: 0.82rem;
+	font-weight: 700;
+	justify-content: center;
+	letter-spacing: 0;
+	line-height: 1.2;
+	min-height: 2.8rem;
+	padding: 0.8rem 1.05rem;
+	text-decoration: none;
+	transition: background-color var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), box-shadow var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease), transform var(--chidemoon-motion-fast, 140ms) var(--chidemoon-ease-out, ease);
+}
+
+.ct-woo-card-actions .button:hover,
+.ct-woo-card-actions .button:focus-visible,
+.ct-woo-card-actions .added_to_cart:hover,
+.ct-woo-card-actions .added_to_cart:focus-visible {
+	background: var(--chidemoon-forest-deep);
+	border-color: var(--chidemoon-forest-deep);
+	box-shadow: var(--chidemoon-shadow);
+	color: #fffcf7;
+	text-decoration: none;
+	transform: translateY(-1px);
 }
 
 .chidemoon-comparison-search {
 	background: var(--chidemoon-surface);
 	border: 1px solid var(--chidemoon-line);
+	border-radius: var(--chidemoon-radius-lg);
 	box-shadow: var(--chidemoon-shadow-soft);
 	margin-top: 1.5rem;
 	max-width: 48rem;
@@ -1926,19 +3259,16 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 
 .chidemoon-comparison-search__field {
 	align-items: center;
-	background: var(--chidemoon-paper);
 	border: 1px solid var(--chidemoon-line-strong);
 	border-radius: var(--chidemoon-radius-sm);
 	display: flex;
 	gap: 0.7rem;
 	padding-inline: 0.8rem;
-	transition: border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
 .chidemoon-comparison-search__field:focus-within {
 	border-color: var(--chidemoon-forest);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--chidemoon-forest) 22%, transparent);
-	outline: none;
+	outline: 2px solid color-mix(in srgb, var(--chidemoon-forest) 25%, transparent);
 }
 
 .chidemoon-comparison-search__field svg {
@@ -1978,56 +3308,22 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 	align-items: center;
 	background: transparent;
 	border: 0;
-	border-radius: var(--chidemoon-radius-sm);
+	border-bottom: 1px solid var(--chidemoon-line);
 	color: var(--chidemoon-forest);
 	cursor: pointer;
 	display: flex;
 	font: inherit;
 	font-weight: 700;
-	gap: 0.75rem;
 	justify-content: space-between;
 	min-height: 3rem;
-	padding: 0.5rem 0.6rem;
+	padding: 0.5rem 0;
 	text-align: start;
-	transition: background-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 	width: 100%;
-}
-
-.chidemoon-comparison-search__result + .chidemoon-comparison-search__result {
-	border-top: 1px solid var(--chidemoon-line);
-}
-
-.chidemoon-comparison-search__result:hover,
-.chidemoon-comparison-search__result:focus-visible {
-	background: color-mix(in srgb, var(--chidemoon-sage) 14%, var(--chidemoon-surface));
-	outline: none;
-}
-
-.chidemoon-comparison-search__result.is-selected {
-	background: color-mix(in srgb, var(--chidemoon-forest) 8%, var(--chidemoon-surface));
-}
-
-.chidemoon-comparison-search__result span {
-	min-width: 0;
-	overflow-wrap: anywhere;
 }
 
 .chidemoon-comparison-search__result small {
 	color: var(--chidemoon-clay);
 	font-size: 0.76rem;
-}
-
-.chidemoon-article-product__actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.6rem;
-	margin-top: auto;
-	padding-top: 0.5rem;
-}
-
-.chidemoon-article-product__actions .chidemoon-button,
-.chidemoon-article-product__actions .chidemoon-compare-control {
-	margin-top: 0;
 }
 
 /* Images must always fill their media box: figures with a cropped
@@ -2048,42 +3344,744 @@ body.chidemoon-persian .chidemoon-shop-archive__catalogue .woocommerce-ordering 
 }
 
 /* ------------------------------------------------------------------ */
-/* Blocksy header search modal: same visual family as the site.       */
+/* Visual review fixes                                                 */
 /* ------------------------------------------------------------------ */
-#search-modal .ct-panel-content {
-	padding-block: clamp(2rem, 6vw, 4rem);
+
+/* Blocksy's configured footer is an empty copyright-only row that renders
+ * as a blank strip; the real editorial footer is printed by the theme just
+ * before it, so the empty shell is removed. */
+.ct-footer {
+	display: none;
 }
 
-#search-modal .ct-search-form .search-field {
+/* Editorial footer */
+.chidemoon-footer {
+	background: var(--chidemoon-forest-deep);
+	color: #fffcf7;
+	font-family: var(--chidemoon-font-ui);
+	margin-top: clamp(3rem, 7vw, 6rem);
+	position: relative;
+}
+
+.chidemoon-footer::before {
+	background: var(--chidemoon-clay);
+	content: "";
+	height: 0.35rem;
+	inset-block-start: 0;
+	inset-inline: 0;
+	position: absolute;
+}
+
+.chidemoon-footer__inner {
+	display: grid;
+	gap: clamp(2rem, 4vw, 3rem);
+	grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 0.9fr)) minmax(0, 1.1fr);
+	margin-inline: auto;
+	max-width: 1320px;
+	padding: clamp(2.75rem, 6vw, 5rem) clamp(1rem, 3.4vw, 3rem) clamp(2rem, 4vw, 3rem);
+}
+
+.chidemoon-footer__logo {
+	color: #fffcf7;
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.5rem, 2.4vw, 2rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0 0 0.9rem;
+}
+
+.chidemoon-footer__tagline,
+.chidemoon-footer__note p {
+	color: rgba(255, 252, 247, 0.78);
+	font-size: 0.92rem;
+	line-height: 1.95;
+	margin: 0;
+}
+
+.chidemoon-footer__tagline {
+	max-width: 30rem;
+}
+
+.chidemoon-footer__title {
+	color: var(--chidemoon-clay-soft);
+	font-family: var(--chidemoon-font-display);
+	font-size: 0.95rem;
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0 0 0.9rem;
+}
+
+.chidemoon-footer__nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chidemoon-footer__nav li + li {
+	margin-block-start: 0.55rem;
+}
+
+.chidemoon-footer__nav a {
+	color: rgba(255, 252, 247, 0.85);
+	font-size: 0.92rem;
+	text-decoration: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-footer__nav a:hover,
+.chidemoon-footer__nav a:focus-visible {
+	color: var(--chidemoon-clay-soft);
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+.chidemoon-footer__nav a:focus-visible {
+	outline: 3px solid var(--chidemoon-clay-soft);
+	outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-footer__inner {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.chidemoon-footer__brand,
+	.chidemoon-footer__note {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (max-width: 640px) {
+	.chidemoon-footer__inner {
+		gap: 1.75rem;
+	}
+}
+
+/* Affiliate CTA links inside article bodies: the generic
+ * `.entry-content a` colour beat the CTA's own white text, leaving
+ * forest-on-forest (invisible) labels. */
+.entry-content a.chidemoon-affiliate-cta {
+	color: #fffcf7;
+	display: inline-flex;
+	margin-block: 0.5rem;
+}
+
+.entry-content a.chidemoon-affiliate-cta:hover {
+	color: #fffcf7;
+	text-decoration: none;
+}
+
+/* WooCommerce single product: Blocksy prints two decorative divider spans
+ * around an empty add-to-cart wrapper; together with the meta border they
+ * render as stray lines. */
+.woocommerce div.product .ct-product-divider {
+	display: none;
+}
+
+.woocommerce div.product .ct-product-add-to-cart:empty {
+	display: none;
+}
+
+.woocommerce div.product .product_title {
+	font-size: clamp(1.75rem, 3vw, 2.6rem);
+	line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------ */
+/* Category art. The SVGs carry geometry only; every color resolves    */
+/* through these classes so illustrations always follow the palette.   */
+/* ------------------------------------------------------------------ */
+.chidemoon-cat-art .catart-ink {
+	stroke: var(--chidemoon-forest);
+}
+
+.chidemoon-cat-art .catart-accent {
+	stroke: var(--chidemoon-clay);
+}
+
+.chidemoon-cat-art .catart-fill-ink {
+	fill: var(--chidemoon-forest);
+}
+
+.chidemoon-cat-art .catart-fill-accent {
+	fill: color-mix(in srgb, var(--chidemoon-clay) 58%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-sage {
+	fill: color-mix(in srgb, var(--chidemoon-sage) 50%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-warm {
+	fill: color-mix(in srgb, var(--chidemoon-clay) 20%, transparent);
+}
+
+.chidemoon-cat-art .catart-fill-cream {
+	fill: var(--chidemoon-surface);
+}
+
+/* Home "shop categories": art-led cards. One hairline outline per card,
+ * a soft art tile, and an arrow that leans forward on hover. */
+.chidemoon-category-grid {
+	display: grid;
+	gap: clamp(0.8rem, 1.5vw, 1.1rem);
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.chidemoon-category-link {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius);
+	box-shadow: 0 0 0 1px var(--chidemoon-line);
 	color: var(--chidemoon-ink);
-	font-family: var(--chidemoon-font-body);
-	font-size: clamp(1.05rem, 2.4vw, 1.5rem);
-	line-height: 1.7;
+	display: flex;
+	gap: 0.9rem;
+	min-height: 7rem;
+	padding: 1rem 1.05rem;
+	text-decoration: none;
+	transition: box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
 }
 
-#search-modal .ct-search-form .search-field::placeholder {
+.chidemoon-category-link:is(:hover, :focus-visible) {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+}
+
+.chidemoon-category-link__art {
+	background: color-mix(in srgb, var(--chidemoon-sage) 26%, var(--chidemoon-surface-muted));
+	border-radius: var(--chidemoon-radius-sm);
+	flex: none;
+	height: 4.4rem;
+	padding: 0.4rem;
+	width: 4.4rem;
+}
+
+.chidemoon-category-link__body {
+	display: grid;
+	gap: 0.1rem;
+	min-width: 0;
+}
+
+.chidemoon-category-link__title {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+	font-weight: 700;
+	line-height: 1.5;
+}
+
+.chidemoon-category-link__count {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1.6;
+}
+
+.chidemoon-category-link__go {
+	color: var(--chidemoon-muted);
+	flex: none;
+	height: 1.15rem;
+	margin-inline-start: auto;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), transform var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	width: 1.15rem;
+}
+
+.chidemoon-category-link:is(:hover, :focus-visible) .chidemoon-category-link__go {
+	color: var(--chidemoon-clay);
+	transform: translateX(-3px);
+}
+
+.chidemoon-category-link:is(:hover, :focus-visible) .chidemoon-category-link__go .catart-ink {
+	stroke: var(--chidemoon-clay);
+}
+
+@media (max-width: 1024px) {
+	.chidemoon-category-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 520px) {
+	.chidemoon-category-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Article: collapse the empty aside column so the reading measure stays
+ * balanced when a post has no tags. */
+.chidemoon-article__layout:has(> .chidemoon-article__aside:not(:has(*))) {
+	grid-template-columns: minmax(0, 1fr);
+	max-width: 55rem;
+}
+
+.chidemoon-article__layout:has(> .chidemoon-article__aside:not(:has(*))) .chidemoon-article__aside {
+	display: none;
+}
+
+/* Post navigation: a lone prev/next card must not share a two-column
+ * grid with an empty cell. */
+.chidemoon-article__navigation .nav-links:has(> :only-child) {
+	grid-template-columns: 1fr;
+}
+
+.chidemoon-article__navigation .nav-links:not(:has(*)) {
+	display: none;
+}
+
+/* Public forms: reachable touch targets and consistent field height. */
+.chidemoon-public-form :where(input:not([type="checkbox"]), textarea) {
+	min-height: 2.9rem;
+}
+
+.chidemoon-public-form label {
+	line-height: 2;
+}
+
+.chidemoon-public-form button {
+	min-height: 2.9rem;
+}
+
+/* Price: keep a clear gap between the amount and the currency word in
+ * every surface that inherits WooCommerce's price markup. */
+:where(.price, .chidemoon-product-card__price, .chidemoon-article-product__price) :where(.woocommerce-Price-currencySymbol) {
+	margin-inline-start: 0.3rem;
+}
+
+/* Persian 404 */
+.chidemoon-error-404 {
+	padding-block: clamp(2rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem);
+}
+
+.chidemoon-error-404__panel {
+	background: var(--chidemoon-surface);
+	border-radius: var(--chidemoon-radius-lg);
+	box-shadow: 0 0 0 1px var(--chidemoon-line), var(--chidemoon-shadow-soft);
+	padding: clamp(2rem, 6vw, 4.5rem);
+	text-align: center;
+}
+
+.chidemoon-error-404__code {
+	color: var(--chidemoon-clay);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(2.6rem, 6vw, 4.5rem);
+	font-weight: 800;
+	line-height: 1;
+	margin: 0;
+}
+
+.chidemoon-error-404__panel h1 {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: clamp(1.55rem, 3.2vw, 2.4rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	margin: 0.9rem 0 0.8rem;
+}
+
+.chidemoon-error-404__description {
+	color: var(--chidemoon-muted);
+	line-height: 2;
+	margin: 0 auto;
+	max-width: 38rem;
+}
+
+.chidemoon-error-404__search {
+	margin: 1.75rem auto 0;
+	max-width: 30rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Search. One field composition serves the header modal, the mobile   */
+/* off-canvas, the search-archive refine box, and the 404 page. The    */
+/* raw-element rules intentionally out-rank Blocksy's late-printed     */
+/* form styles, which would otherwise strip the field surface.         */
+/* ------------------------------------------------------------------ */
+.chidemoon-search-form {
+	margin-inline: auto;
+	max-width: 34rem;
+	width: 100%;
+}
+
+.chidemoon-search-form__field {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border-radius: 0.9rem;
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow-soft);
+	display: flex;
+	gap: 0.65rem;
+	padding: 0.45rem;
+	padding-inline-start: 1.05rem;
+	transition: box-shadow var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__field:focus-within {
+	box-shadow: 0 0 0 2px var(--chidemoon-forest), var(--chidemoon-shadow-soft);
+}
+
+.chidemoon-search-form__icon {
+	color: var(--chidemoon-muted);
+	flex: none;
+	transition: color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__field:focus-within .chidemoon-search-form__icon {
+	color: var(--chidemoon-clay);
+}
+
+.chidemoon-search-form .chidemoon-search-form__field input[type="search"] {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: var(--chidemoon-ink);
+	flex: 1 1 auto;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 1rem;
+	height: auto;
+	min-height: 2.6rem;
+	min-width: 0;
+	padding: 0.35rem 0.15rem;
+	width: 100%;
+}
+
+.chidemoon-search-form .chidemoon-search-form__field input[type="search"]:focus {
+	border: 0;
+	box-shadow: none;
+	outline: none;
+}
+
+.chidemoon-search-form input[type="search"]::placeholder {
 	color: var(--chidemoon-muted);
 	opacity: 1;
 }
 
-#search-modal .ct-search-form :is(button, .ct-search-form-submit) {
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"] {
+	background: var(--chidemoon-forest);
+	border: 0;
+	border-radius: 0.55rem;
+	color: #fffcf7;
+	cursor: pointer;
+	flex: none;
+	font-family: var(--chidemoon-font-ui);
+	font-size: 0.88rem;
+	font-weight: 700;
+	min-height: 2.9rem;
+	padding: 0.45rem 1.1rem;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:hover {
+	background: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:disabled {
+	background: var(--chidemoon-surface-muted);
+	color: var(--chidemoon-muted);
+	cursor: not-allowed;
+}
+
+.chidemoon-search-form__hint {
+	color: var(--chidemoon-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.8rem;
+	font-weight: 600;
+	gap: 0.4rem 1.4rem;
+	justify-content: center;
+	margin: 1.15rem 0 0;
+}
+
+.chidemoon-search-form__hint kbd {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 0.35rem;
+	box-shadow: inset 0 -1.5px 0 var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	direction: ltr;
+	font-family: var(--chidemoon-font-mono);
+	font-size: 0.72rem;
+	padding: 0.14rem 0.45rem;
+}
+
+.chidemoon-search-form__links {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.55rem;
+	justify-content: center;
+	margin-top: 1.5rem;
+}
+
+.chidemoon-search-form__links-label {
+	color: var(--chidemoon-muted);
+	font-size: 0.78rem;
+	font-weight: 700;
+	width: 100%;
+}
+
+.chidemoon-search-form__links a {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
+	color: var(--chidemoon-forest);
+	font-size: 0.84rem;
+	font-weight: 700;
+	min-height: 2.5rem;
+	padding: 0.4rem 1.05rem;
+	text-decoration: none;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-search-form__links a:hover,
+.chidemoon-search-form__links a:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+/* Search results: a utility header, not a masthead. The query field is the
+ * hero centerpiece; eyebrow, count, and title compress around it so results
+ * start within the first viewport. The field stays reachable without the
+ * separate refine box this replaces. */
+.chidemoon-archive__hero--search {
+	background: linear-gradient(135deg, color-mix(in srgb, var(--chidemoon-sage) 16%, var(--chidemoon-surface)), var(--chidemoon-surface));
+	gap: clamp(0.8rem, 1.8vw, 1.15rem);
+	padding-block: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.chidemoon-archive__hero--search h1 {
+	font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+	line-height: 1.5;
+	margin-block: 0;
+	max-width: none;
+}
+
+.chidemoon-archive__hero-meta {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem 0.9rem;
+}
+
+.chidemoon-archive__hero-meta .chidemoon-eyebrow {
+	margin: 0;
+}
+
+.chidemoon-archive__hero-count {
+	align-items: baseline;
+	background: color-mix(in srgb, var(--chidemoon-forest) 9%, var(--chidemoon-surface));
+	border: 1px solid color-mix(in srgb, var(--chidemoon-forest) 24%, transparent);
+	border-radius: 999px;
+	color: var(--chidemoon-forest);
+	display: inline-flex;
+	font-size: 0.78rem;
+	font-weight: 700;
+	gap: 0.3rem;
+	line-height: 1.6;
+	padding: 0.18rem 0.8rem;
+}
+
+.chidemoon-archive__hero-count strong {
+	font-family: var(--chidemoon-font-display);
+	font-size: 0.95rem;
+	font-weight: 800;
+}
+
+.chidemoon-archive__hero--search .chidemoon-search-form {
+	margin-inline: 0;
+	max-width: 34rem;
+}
+
+/* The field is the hero centerpiece: a touch more presence than the shared
+ * form, but short of the header-modal scale. */
+.chidemoon-archive__hero--search .chidemoon-search-form__field {
+	padding: 0.5rem;
+	padding-inline-start: 1.1rem;
+}
+
+.chidemoon-archive__hero--search .chidemoon-search-form__field input[type="search"] {
+	min-height: 2.75rem;
+}
+
+/* The refine box is gone, so the feed follows the compact hero directly. */
+.chidemoon-archive--search > .chidemoon-section-shell {
+	padding-top: clamp(1.4rem, 3vw, 2.25rem);
+}
+
+/* Header search modal: a calm paper takeover instead of the near-black
+ * panel. The two-selector prefix out-ranks Blocksy's dynamic customizer
+ * CSS, which prints after this stylesheet at equal specificity. */
+body #search-modal.ct-panel[data-behaviour="modal"] {
+	background:
+		radial-gradient(circle at 12% 8%, rgba(230, 178, 158, 0.32) 0 16rem, transparent 16.2rem),
+		radial-gradient(circle at 88% 94%, rgba(169, 182, 158, 0.38) 0 18rem, transparent 18.2rem),
+		color-mix(in srgb, var(--chidemoon-paper) 96%, transparent);
+	backdrop-filter: blur(18px);
+}
+
+body #search-modal .ct-panel-content {
+	justify-content: center;
+	padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+body #search-modal .chidemoon-search-form {
+	max-width: 40rem;
+}
+
+body #search-modal .chidemoon-search-form__field {
+	box-shadow: 0 0 0 1px var(--chidemoon-line-strong), var(--chidemoon-shadow);
+	gap: 0.8rem;
+	padding: 0.55rem;
+	padding-inline-start: 1.2rem;
+}
+
+body #search-modal .chidemoon-search-form__field input[type="search"] {
+	font-size: 1.1rem;
+	min-height: 3rem;
+}
+
+body #search-modal .chidemoon-search-form__field button[type="submit"] {
+	font-size: 0.95rem;
+	min-height: 3.1rem;
+	padding: 0.55rem 1.45rem;
+}
+
+body #search-modal .chidemoon-search-form__icon {
 	color: var(--chidemoon-forest);
 }
 
-#search-modal .ct-search-form :is(input, button):focus-visible {
-	outline: 3px solid var(--chidemoon-clay);
-	outline-offset: 3px;
+body #search-modal .chidemoon-search-form__hint {
+	font-size: 0.84rem;
+	margin-top: 1.4rem;
 }
 
-#search-modal .ct-toggle-close {
+body #search-modal .ct-toggle-close {
+	align-items: center;
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: 999px;
 	color: var(--chidemoon-forest);
+	display: inline-flex;
+	height: 2.75rem;
+	justify-content: center;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), border-color var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+	width: 2.75rem;
 }
 
-#search-modal :is(.ct-search-results, .ct-search-form-results) :where(a, li) {
-	color: var(--chidemoon-ink);
-	font-family: var(--chidemoon-font-body);
+body #search-modal .ct-toggle-close:hover,
+body #search-modal .ct-toggle-close:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
 }
 
-#search-modal :is(.ct-search-results, .ct-search-form-results) :where(a:hover, li:hover) {
-	color: var(--chidemoon-clay);
+/* Off-canvas search entry: the field reads on the deep forest panel; the
+ * panel's content gap handles the spacing, so no margin is needed here. */
+#offcanvas .chidemoon-search-form {
+	max-width: none;
+}
+
+#offcanvas .chidemoon-search-form__field {
+	background: rgba(255, 252, 247, 0.07);
+	box-shadow: 0 0 0 1px rgba(255, 252, 247, 0.26);
+}
+
+#offcanvas .chidemoon-search-form__field:focus-within {
+	box-shadow: 0 0 0 2px var(--chidemoon-clay-soft);
+}
+
+#offcanvas .chidemoon-search-form__icon {
+	color: var(--chidemoon-clay-soft);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field input[type="search"] {
+	color: #fffcf7;
+}
+
+#offcanvas .chidemoon-search-form input[type="search"]::placeholder {
+	color: rgba(255, 252, 247, 0.62);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field button[type="submit"] {
+	background: #fffcf7;
+	color: var(--chidemoon-forest-deep);
+}
+
+#offcanvas .chidemoon-search-form .chidemoon-search-form__field button[type="submit"]:hover {
+	background: var(--chidemoon-clay-soft);
+	color: var(--chidemoon-forest-deep);
+}
+
+.chidemoon-error-404__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.65rem;
+	justify-content: center;
+	margin-top: 1.75rem;
+}
+
+.chidemoon-error-404__links a {
+	border: 1px solid var(--chidemoon-line-strong);
+	border-radius: var(--chidemoon-radius-sm);
+	color: var(--chidemoon-forest);
+	font-size: 0.88rem;
+	font-weight: 700;
+	min-height: 2.75rem;
+	padding: 0.55rem 1.1rem;
+	text-decoration: none;
+	transition: background var(--chidemoon-motion-fast) var(--chidemoon-ease-out), color var(--chidemoon-motion-fast) var(--chidemoon-ease-out);
+}
+
+.chidemoon-error-404__links a:hover,
+.chidemoon-error-404__links a:focus-visible {
+	background: var(--chidemoon-forest);
+	border-color: var(--chidemoon-forest);
+	color: #fffcf7;
+}
+
+/* ------------------------------------------------------------------ */
+/* Second polish pass                                                  */
+/* ------------------------------------------------------------------ */
+
+/* Home side stories stretch to match the featured column; centre the
+ * copy as one group instead of leaving a hollow middle between title
+ * and date. */
+.chidemoon-side-story__body {
+	justify-content: center;
+}
+
+.chidemoon-side-story__body time {
+	margin-top: 0;
+}
+
+/* Products without imagery: keep the honest fallback but hint at the
+ * catalogue object with a quiet vase silhouette. */
+.chidemoon-product-card .chidemoon-card__media-empty {
+	background:
+		url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M26 10h12c-1 4 0 6 2 9 4 5 6 10 6 17 0 10-6 18-14 18s-14-8-14-18c0-7 2-12 6-17 2-3 3-5 2-9z' fill='none' stroke='rgba(18,63,52,0.22)' stroke-width='1.6'/%3E%3C/svg%3E") center / 3.5rem no-repeat,
+		radial-gradient(circle at 72% 26%, rgba(255, 252, 247, 0.85) 0 12%, transparent 12.5%),
+		linear-gradient(135deg, transparent 0 46%, rgba(23, 63, 53, 0.14) 46% 47%, transparent 47% 100%),
+		linear-gradient(180deg, color-mix(in srgb, var(--chidemoon-clay) 16%, var(--chidemoon-surface-muted)) 0%, var(--chidemoon-surface-muted) 100%);
+}
+
+/* Public forms: give consent checkboxes a reachable, brand-coloured size. */
+.chidemoon-public-form input[type="checkbox"] {
+	accent-color: var(--chidemoon-forest);
+	block-size: 1.05rem;
+	inline-size: 1.05rem;
+}
+
+/* Search archive hero: the query belongs in the title, so the shared
+ * max-width for long Persian headings still applies. */
+.chidemoon-archive__hero h1 {
+	overflow-wrap: anywhere;
+}
+
+/* Archive hero fact: keep the count and its label from butting together. */
+.chidemoon-hero-facts__item strong {
+	margin-inline-end: 0.35rem;
+}
+
+/* Blocksy's own English skip link duplicates the theme's Persian one and
+ * would otherwise be the first tab stop. */
+a.skip-link.screen-reader-text:not(.chidemoon-skip-link) {
+	display: none !important;
 }

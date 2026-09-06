@@ -1,0 +1,96 @@
+{
+  "style": "Ultra photorealistic interior photograph, high-end editorial magazine quality, believable and lived-in, like a real photo from an interior design magazine, absolutely not a 3D render. Shot on a 35mm full-frame camera, natural light, soft depth of field. Warm color palette of sage green, warm sand, terracotta, cream and light oak. No people, no text, no watermark, no logos. 4:3 landscape.",
+  "posts": {
+    "39": {
+      "slug": "look-compact-home-office",
+      "title": "فضای کار جمع‌وجور در کنج اتاق خواب",
+      "scene": "A compact home office nook tucked into the corner of a bedroom: a slim modular beechwood bookshelf filled with books and small objects, a small light-oak desk with a laptop and notebooks, a classic wooden rocking chair as the seat, and a slender minimalist brass floor lamp glowing warmly beside it.",
+      "title_fa": "فضای کار جمع‌وجور در کنج اتاق خواب",
+      "alt_fa": "کنج کار خانگی با کتابخانه مدولار چوبی، آباژور برنجی و صندلی راک در نور گرم"
+    },
+    "40": {
+      "slug": "look-balcony-refresh",
+      "title": "بالکن کوچک، حال‌وهوای کافه",
+      "scene": "A small two-square-meter apartment balcony styled like a cozy café: a small round wood-and-metal table with two folding wooden chairs, a walnut wooden tray with two glasses of tea on the table, sand-colored handmade ceramic planters with lush green plants arranged at stepped heights, a soft string of warm fairy lights along the railing, morning light.",
+      "title_fa": "بالکن کوچک، حال‌وهوای کافه",
+      "alt_fa": "بالکن کوچک با میز گرد چوبی، صندلی تاشو، سینی چوبی و گلدان‌های سفالی در نور صبح"
+    },
+    "43": {
+      "slug": "look-minimal-entry",
+      "title": "ورودی مینیمال با جاکفشی دیواری",
+      "scene": "A minimal small apartment entryway: a slim wall-mounted wooden shoe cabinet floating above the floor, a round minimal wooden-framed mirror above it, a warm ceramic globe wall sconce glowing softly, a small walnut wooden tray with keys on the cabinet, a dark narrow runner rug on the floor, warm inviting light.",
+      "title_fa": "ورودی مینیمال با جاکفشی دیواری",
+      "alt_fa": "ورودی مینیمال با جاکفشی دیواری، آینه چوبی گرد و چراغ سفالی گرم"
+    },
+    "44": {
+      "slug": "look-reading-corner",
+      "title": "گوشه‌ی مطالعه‌ی دنج کنار پنجره",
+      "scene": "A cozy reading corner beside a bright window at golden hour: a comfortable nordic fabric armchair in cream boucle angled toward the window, a matte terracotta ceramic table lamp glowing warm, a small round light-oak side table with a closed book and a handmade ceramic cup, all on a round hand-woven Persian Kashan rug in muted terracotta and olive tones, a folded wool throw on the armrest.",
+      "title_fa": "گوشه‌ی مطالعه‌ی دنج کنار پنجره",
+      "alt_fa": "گوشه مطالعه کنار پنجره با مبل تک‌نفره بوکل، آباژور سرامیکی و پادری دستباف کاشان"
+    },
+    "46": {
+      "slug": "look-flexible-rental-living-room",
+      "title": "نشیمن اجاره‌ای؛ چیدمانی که با خانه‌ی بعدی هم می‌آید",
+      "scene": "A flexible rental apartment living room with no wall drilling: a large arched wooden-framed mirror leaning against the wall, a slim minimalist brass floor lamp glowing warmly, a hand-woven Persian Kashan runner rug warming a plain tiled floor, a light modular sofa with movable cushions, framed art prints leaning on a console instead of hanging, evening warm light.",
+      "title_fa": "نشیمن اجاره‌ای؛ چیدمانی که با خانه‌ی بعدی هم می‌آید",
+      "alt_fa": "نشیمن اجاره‌ای با آینه قوسی چوبی، آباژور برنجی و پادری دستباف کاشان"
+    },
+    "50": {
+      "slug": "look-japandi-dining",
+      "title": "ناهارخوری دنج به سبک جپندی با چوب روشن",
+      "scene": "A serene japandi-style dining space: a round matte light-oak dining table about ninety centimeters wide with two light-wood chairs with linen seats, a slim linear scandinavian pendant light with an opal diffuser hanging low above the table, a handcrafted matte ceramic vase with dried wheat and olive branches as the only centerpiece, sheer linen curtains diffusing soft daylight.",
+      "title_fa": "ناهارخوری دنج به سبک جپندی با چوب روشن",
+      "alt_fa": "ناهارخوری جپندی با میز گرد بلوط روشن، لوستر خطی اسکاندیناوی و گلدان سرامیکی"
+    },
+    "52": {
+      "slug": "look-warm-bedroom-layering",
+      "title": "اتاق خواب گرم و آرام با سه لایه‌ی بافتی",
+      "scene": "A warm calm bedroom built in three textile layers: a bed dressed in sandy organic linen duvet and rust and clay pillows, a chunky coarse-knit wool throw folded across the foot of the bed, a matte terracotta ceramic table lamp glowing warm 2700K on the wooden nightstand, a small hand-woven Persian Kashan rug beside the bed, neutral plaster walls, soft low evening light.",
+      "title_fa": "اتاق خواب گرم و آرام با سه لایه‌ی بافتی",
+      "alt_fa": "اتاق خواب گرم با روتختی کتان، شال پشمی بافت‌درشت و آباژور سرامیکی در نور کم"
+    },
+    "179": {
+      "slug": "look-cozy-dining-corner",
+      "title": "ناهارخوری دونفره‌ی دنج در کنج آشپزخانه",
+      "scene": "A cozy two-person dining nook tucked into a bright kitchen corner: a small round wood-and-metal table set for morning coffee with two cups, two simple wooden chairs, a slim scandinavian linear pendant light hanging low above, a matte ceramic vase with a small branch, kitchen cabinetry softly blurred in the background, morning light.",
+      "title_fa": "ناهارخوری دونفره‌ی دنج در کنج آشپزخانه",
+      "alt_fa": "ناهارخوری دونفره دنج در کنج آشپزخانه با میز گرد چوبی و لوستر خطی"
+    },
+    "182": {
+      "slug": "look-calm-green-bedroom",
+      "title": "اتاق خواب آرام با پالت سبز و کتان",
+      "scene": "A calm bedroom in a sage green and cream linen palette: a bed with a soft cream linen duvet, handmade geometric wool cushions in olive and cream, one sage-green accent wall, a warm ceramic globe wall sconce glowing softly, sheer curtains filtering gentle daylight, a small plant on the nightstand.",
+      "title_fa": "اتاق خواب آرام با پالت سبز و کتان",
+      "alt_fa": "اتاق خواب آرام با روتختی کتان کرم، کوسن‌های پشمی و چراغ سفالی گرم روی دیوار سبز"
+    },
+    "184": {
+      "slug": "look-work-nook-bookshelf",
+      "title": "کنج کار خانگی با کتابخانه‌ی مدولار",
+      "scene": "A home work nook organized around a modular beechwood bookshelf: the shelf styled with books, boxes and a small plant, a wooden desk with papers and a laptop, a classic wooden rocking chair pulled up to the desk, a matte terracotta ceramic table lamp glowing warm on the shelf, soft afternoon light.",
+      "title_fa": "کنج کار خانگی با کتابخانه‌ی مدولار",
+      "alt_fa": "کنج کار خانگی با کتابخانه مدولار چوب راش، صندلی راک و آباژور سرامیکی"
+    },
+    "186": {
+      "slug": "look-media-wall-minimal",
+      "title": "دیوار تلویزیون مینیمال بدون شلوغی",
+      "scene": "A minimal TV media wall with no clutter: a flat TV mounted on a warm off-white wall above a low light-oak media console with only a few objects, a cream nordic fabric armchair to the side, a slim minimalist brass floor lamp glowing warmly, a hand-woven Persian Kashan rug on the oak floor, calm evening ambient light.",
+      "title_fa": "دیوار تلویزیون مینیمال بدون شلوغی",
+      "alt_fa": "دیوار تلویزیون مینیمال با کنسول چوبی، مبل تک‌نفره، آباژور برنجی و پادری کاشان"
+    },
+    "188": {
+      "slug": "look-guest-room-ready",
+      "title": "اتاق مهمان همیشه‌آماده با سه تُن خنثی",
+      "scene": "A guest bedroom ready for visitors in three neutral tones: a bed with crisp cream linen bedding folded neatly with folded towels on top, a round wooden-framed mirror on the wall, a matte terracotta ceramic table lamp glowing warm on the nightstand, a folded robe and a small tray with a glass of water, soft welcoming light.",
+      "title_fa": "اتاق مهمان همیشه‌آماده با سه تُن خنثی",
+      "alt_fa": "اتاق مهمان با روتختی کتان، آینه چوبی گرد و آباژور سرامیکی در تُن‌های خنثی"
+    },
+    "191": {
+      "slug": "look-window-plant-corner",
+      "title": "گوشه‌ی سبز کنار پنجره با گلدان‌های هم‌خانواده",
+      "scene": "A lush green plant corner beside a bright window: handmade sand-colored ceramic planters with green plants arranged at three stepped heights, a tall planter in the corner, a medium one on a light wooden stool, small ones on the windowsill, a matte ceramic vase and a walnut wooden tray as quiet accents, sheer linen curtains diffusing morning light.",
+      "title_fa": "گوشه‌ی سبز کنار پنجره با گلدان‌های هم‌خانواده",
+      "alt_fa": "گوشه سبز کنار پنجره با گلدان‌های سفالی دست‌ساز در سه ارتفاع و سینی چوبی"
+    }
+  }
+}

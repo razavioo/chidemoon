@@ -36,12 +36,14 @@ foreach ( $rooms as $room ) {
 ?>
 <main id="primary" class="site-main chidemoon-collection-page chidemoon-look-page">
 	<?php while ( have_posts() ) : the_post(); ?>
-		<header class="chidemoon-collection-page__hero chidemoon-section-shell">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'یک اتاق، با دقت', 'chidemoon-blocksy-child' ); ?></p>
-			<h1><?php the_title(); ?></h1>
-			<?php if ( has_excerpt() ) : ?><p><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
+		<header class="chidemoon-collection-page__hero chidemoon-section-shell<?php echo has_post_thumbnail() ? ' has-media' : ''; ?>">
+			<div class="chidemoon-collection-page__hero-copy">
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'از عکس تا خرید', 'chidemoon-blocksy-child' ); ?></p>
+				<h1><?php the_title(); ?></h1>
+				<?php if ( has_excerpt() ) : ?><p><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
+			</div>
+			<?php if ( has_post_thumbnail() ) : ?><figure class="chidemoon-collection-page__hero-media"><?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?></figure><?php endif; ?>
 		</header>
-		<?php if ( has_post_thumbnail() ) : ?><figure class="chidemoon-collection-page__image chidemoon-section-shell"><?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?></figure><?php endif; ?>
 		<?php if ( '' !== trim( wp_strip_all_tags( get_the_content() ) ) ) : ?><section class="chidemoon-collection-page__content chidemoon-collection-page__content--single chidemoon-section-shell"><div class="entry-content"><?php the_content(); ?></div></section><?php endif; ?>
 		<?php if ( $core_ready && ! empty( $rooms ) ) : ?>
 			<nav class="chidemoon-look-rooms chidemoon-section-shell" aria-label="<?php esc_attr_e( 'انتخاب فضای خانه', 'chidemoon-blocksy-child' ); ?>">
@@ -53,7 +55,7 @@ foreach ( $rooms as $room ) {
 		<?php endif; ?>
 	<?php endwhile; ?>
 	<section class="chidemoon-section-shell chidemoon-collection-page__feed" aria-labelledby="chidemoon-looks-feed">
-		<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php echo $current_room instanceof WP_Term ? esc_html( $current_room->name ) : esc_html__( 'نکته‌های اتاق', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-looks-feed"><?php esc_html_e( 'چیدمان‌های قابل خرید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
+		<div class="chidemoon-section-heading"><div><p class="chidemoon-eyebrow"><?php echo $current_room instanceof WP_Term ? esc_html( $current_room->name ) : esc_html__( 'نکته‌های اتاق', 'chidemoon-blocksy-child' ); ?></p><h2 id="chidemoon-looks-feed"><?php esc_html_e( 'چیدمان‌هایی که می‌شود خرید', 'chidemoon-blocksy-child' ); ?></h2></div></div>
 		<?php if ( $look_posts->have_posts() ) : ?>
 			<div class="chidemoon-look-list">
 				<?php while ( $look_posts->have_posts() ) : $look_posts->the_post(); ?>
@@ -65,7 +67,7 @@ foreach ( $rooms as $room ) {
 			</div>
 			<?php if ( $look_posts->max_num_pages > 1 ) : ?>
 				<nav class="chidemoon-pagination" aria-label="<?php esc_attr_e( 'صفحه‌بندی چیدمان‌ها', 'chidemoon-blocksy-child' ); ?>">
-					<?php echo wp_kses_post( paginate_links( array( 'current' => $current_page, 'total' => $look_posts->max_num_pages, 'type' => 'list', 'mid_size' => 1, 'add_args' => '' !== $room_slug ? array( 'room' => $room_slug ) : false ) ) ); ?>
+					<?php echo wp_kses_post( chidemoon_fa_digits_in_markup( (string) paginate_links( chidemoon_pagination_args( array( 'current' => $current_page, 'total' => $look_posts->max_num_pages, 'type' => 'list', 'add_args' => '' !== $room_slug ? array( 'room' => $room_slug ) : false ) ) ) ) ); ?>
 				</nav>
 			<?php endif; ?>
 			<?php wp_reset_postdata(); ?>

@@ -35,6 +35,7 @@ final class Chidemoon_Core_Affiliate {
 		add_filter( 'woocommerce_loop_add_to_cart_args', array( __CLASS__, 'open_product_cta_in_new_tab' ), 100, 2 );
 		add_filter( 'woocommerce_widget_cart_item_visible', array( __CLASS__, 'hide_cart_widget_items' ) );
 		add_shortcode( 'chidemoon_affiliate_cta', array( __CLASS__, 'render_affiliate_cta' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_product_admin_assets' ) );
 	}
 
 	public static function register_redirect_rewrite(): void {
@@ -153,6 +154,15 @@ final class Chidemoon_Core_Affiliate {
 				'value'       => is_string( $facts ) ? $facts : '',
 			)
 		);
+		if ( current_user_can( 'edit_post', $product_id ) ) {
+			echo '<div class="options_group chidemoon-enrich-group">';
+			echo '<p><strong>' . esc_html__( 'AI enrichment', 'chidemoon-core' ) . '</strong></p>';
+			echo '<p>' . esc_html__( 'Fetch the saved source URL plus free web search and queue a review-gated enrichment proposal. Nothing is overwritten automatically.', 'chidemoon-core' ) . '</p>';
+			echo '<p><label><input type="checkbox" id="chidemoon_enrich_use_web" checked> ' . esc_html__( 'Free web search (DuckDuckGo, cached)', 'chidemoon-core' ) . '</label></p>';
+			echo '<p><button type="button" class="button" id="chidemoon_enrich_button" data-product-id="' . esc_attr( (string) $product_id ) . '">' . esc_html__( 'Enrich with AI', 'chidemoon-core' ) . '</button> ';
+			echo '<span id="chidemoon_enrich_result" aria-live="polite"></span></p>';
+			echo '</div>';
+		}
 		echo '</div>';
 		echo '</div>';
 	}
@@ -401,7 +411,11 @@ final class Chidemoon_Core_Affiliate {
 
 	private static function redirect_to_affiliate_offer( int $product_id ): void {
 		$product = wc_get_product( $product_id );
-		if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product_id ) || ! $product->is_type( 'external' ) ) {
+		// The public CTA, shortcode, compare table and purchasability gate all
+		// require is_publicly_eligible() (publish + external + reviewed + valid
+		// URL). The redirect must enforce the same gate, otherwise an
+		// unreviewed / quarantined product stays reachable via a direct /go/ ID.
+		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
 			self::render_not_found();
 			return;
 		}
@@ -414,6 +428,9 @@ final class Chidemoon_Core_Affiliate {
 
 		self::log_click( $product_id, $url );
 		nocache_headers();
+		// External merchant destination validated by is_allowed_affiliate_url()
+		// inside get_affiliate_url(). wp_safe_redirect() would reject every
+		// off-site merchant host, so wp_redirect() is intentional here.
 		wp_redirect( $url, 302, 'Chidemoon Core' );
 		exit;
 	}
@@ -519,5 +536,32 @@ final class Chidemoon_Core_Affiliate {
 		if ( class_exists( 'WC_Admin_Meta_Boxes' ) ) {
 			WC_Admin_Meta_Boxes::add_error( $message );
 		}
+	}
+
+	public static function enqueue_product_admin_assets( string $hook ): void {
+		if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'product' !== (string) ( $screen->post_type ?? '' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+		$handle = 'chidemoon-core-product-admin';
+		wp_enqueue_script( $handle, CHIDEMOON_CORE_URL . 'assets/js/product-admin.js', array(), CHIDEMOON_CORE_VERSION, true );
+		wp_add_inline_script(
+			$handle,
+			'window.ChidemoonProductAdmin = ' . wp_json_encode(
+				array(
+					'root'   => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
+					'nonce'  => wp_create_nonce( 'wp_rest' ),
+					'queued' => __( 'Enrichment queued. Review it under Chidemoon AI → Review Queue.', 'chidemoon-core' ),
+					'error'  => __( 'The enrichment request could not be queued.', 'chidemoon-core' ),
+				)
+			) . ';',
+			'before'
+		);
 	}
 }

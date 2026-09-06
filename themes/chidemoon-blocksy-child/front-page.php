@@ -47,29 +47,59 @@ array(
 : array();
 $product_categories = taxonomy_exists( 'product_cat' )
 ? get_terms(
-array(
-'taxonomy'   => 'product_cat',
-'hide_empty' => true,
-'number'     => 6,
-'orderby'    => 'count',
-'order'      => 'DESC',
-)
+	array(
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => true,
+		'number'     => 6,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+	)
 )
 : array();
+if ( ! is_wp_error( $product_categories ) ) {
+	$product_categories = array_filter(
+		$product_categories,
+		static fn( $category ): bool => $category instanceof WP_Term && 'uncategorized' !== $category->slug
+	);
+}
 $shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : chidemoon_blocksy_page_url( 'shop' );
+$hero_stats = chidemoon_home_hero_stats();
 ?>
 
 <main id="primary" class="site-main chidemoon-home">
 
-<?php if ( ! $featured_story instanceof WP_Post ) : ?>
-<h1 class="chidemoon-sr-only"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
-<?php endif; ?>
+<section class="chidemoon-home__hero chidemoon-section-shell" aria-label="معرفی چیدمون">
+	<div class="chidemoon-home__hero-copy">
+		<p class="chidemoon-eyebrow"><?php echo esc_html( get_bloginfo( 'name' ) ); ?> · <?php esc_html_e( 'مجله و فروشگاه چیدمان خانه', 'chidemoon-blocksy-child' ); ?></p>
+		<h1><?php esc_html_e( 'خانه را با شناخت بچین، نه با تبلیغ', 'chidemoon-blocksy-child' ); ?></h1>
+		<p class="chidemoon-home__lede"><?php esc_html_e( 'چیدمون راهنمای انتخاب و مقایسه‌ی محصولات خانه است. هر مطلب از تحریریه می‌گذرد و هر محصول پیش از انتشار، از نظر تصویر، دسته‌بندی و مقصد فروشنده بررسی می‌شود.', 'chidemoon-blocksy-child' ); ?></p>
+		<div class="chidemoon-home__actions">
+			<a class="chidemoon-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'دیدن محصولات منتخب', 'chidemoon-blocksy-child' ); ?></a>
+			<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>"><?php esc_html_e( 'سر بزنید به مجله', 'chidemoon-blocksy-child' ); ?></a>
+		</div>
+		<?php if ( ! empty( $hero_stats ) ) : ?>
+		<dl class="chidemoon-home__hero-meta">
+			<?php foreach ( $hero_stats as $stat_label => $stat_count ) : ?>
+			<div>
+				<dt><?php echo esc_html( $stat_label ); ?></dt>
+				<dd><?php echo esc_html( chidemoon_fa_digits( $stat_count ) ); ?></dd>
+			</div>
+			<?php endforeach; ?>
+		</dl>
+		<?php endif; ?>
+	</div>
+	<div class="chidemoon-home__hero-mark" aria-hidden="true">
+		<span><?php echo esc_html( mb_substr( get_bloginfo( 'name' ), 0, 1 ) ); ?></span>
+		<i></i>
+		<b></b>
+	</div>
+</section>
 
 <?php if ( $featured_story instanceof WP_Post ) : ?>
 <section class="chidemoon-home__top chidemoon-section-shell" aria-label="برجسته‌ترین مطالب">
 <?php
 $featured_id         = (int) $featured_story->ID;
-$featured_categories = get_the_category( $featured_id );
+$featured_category   = chidemoon_blocksy_primary_category( $featured_id );
 ?>
 <article class="chidemoon-featured">
 <a class="chidemoon-featured__media" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $featured_story ) ); ?>">
@@ -80,14 +110,14 @@ $featured_categories = get_the_category( $featured_id );
 <?php endif; ?>
 </a>
 <div class="chidemoon-featured__body">
-<?php if ( ! empty( $featured_categories ) ) : ?>
-<a class="chidemoon-card__badge chidemoon-card__badge--inline" href="<?php echo esc_url( get_category_link( $featured_categories[0]->term_id ) ); ?>"><?php echo esc_html( $featured_categories[0]->name ); ?></a>
+<?php if ( $featured_category instanceof WP_Term ) : ?>
+<a class="chidemoon-card__badge chidemoon-card__badge--inline" href="<?php echo esc_url( get_category_link( $featured_category->term_id ) ); ?>"><?php echo esc_html( $featured_category->name ); ?></a>
 <?php endif; ?>
 <h1 class="chidemoon-featured__title"><a href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>"><?php echo esc_html( get_the_title( $featured_story ) ); ?></a></h1>
 <p class="chidemoon-featured__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $featured_story ), 32 ) ); ?></p>
 <div class="chidemoon-featured__meta">
 <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $featured_story ) ); ?>"><?php echo esc_html( get_the_date( '', $featured_story ) ); ?></time>
-<a class="chidemoon-text-link" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">خواندن راهنما<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( get_permalink( $featured_story ) ); ?>">خواندن راهنما</a>
 </div>
 </div>
 </article>
@@ -95,8 +125,8 @@ $featured_categories = get_the_category( $featured_id );
 <div class="chidemoon-side-stories">
 <?php foreach ( $side_stories as $side_id ) : ?>
 <?php
-$side_post       = get_post( $side_id );
-$side_categories = get_the_category( $side_id );
+$side_post        = get_post( $side_id );
+$side_category    = chidemoon_blocksy_primary_category( $side_id );
 ?>
 <article class="chidemoon-side-story">
 <a class="chidemoon-side-story__media" href="<?php echo esc_url( get_permalink( $side_post ) ); ?>" aria-label="<?php echo esc_attr( get_the_title( $side_post ) ); ?>">
@@ -107,15 +137,15 @@ $side_categories = get_the_category( $side_id );
 <?php endif; ?>
 </a>
 <div class="chidemoon-side-story__body">
-<?php if ( ! empty( $side_categories ) ) : ?>
-<span class="chidemoon-side-story__category"><?php echo esc_html( $side_categories[0]->name ); ?></span>
+<?php if ( $side_category instanceof WP_Term ) : ?>
+<span class="chidemoon-side-story__category"><?php echo esc_html( $side_category->name ); ?></span>
 <?php endif; ?>
 <h2 class="chidemoon-side-story__title"><a href="<?php echo esc_url( get_permalink( $side_post ) ); ?>"><?php echo esc_html( get_the_title( $side_post ) ); ?></a></h2>
 <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $side_post ) ); ?>"><?php echo esc_html( get_the_date( '', $side_post ) ); ?></time>
 </div>
 </article>
 <?php endforeach; ?>
-<a class="chidemoon-side-story__all" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">همه مطالب مجله<span aria-hidden="true">←</span></a>
+<a class="chidemoon-side-story__all" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">همه مطالب مجله</a>
 </div>
 </section>
 <?php endif; ?>
@@ -125,7 +155,7 @@ $side_categories = get_the_category( $side_id );
 <div>
 <h2 id="chidemoon-latest-heading">آخرین مطالب</h2>
 </div>
-<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'magazine' ) ); ?>">آرشیو مجله</a>
 </div>
 <div class="chidemoon-card-grid chidemoon-card-grid--stories">
 <?php foreach ( $grid_stories as $grid_index => $grid_id ) : ?>
@@ -138,9 +168,9 @@ $side_categories = get_the_category( $side_id );
 <section class="chidemoon-home__section chidemoon-section-shell" aria-labelledby="chidemoon-products-heading">
 <div class="chidemoon-section-heading">
 <div>
-<h2 id="chidemoon-products-heading">کالاهای برگزیده</h2>
+<h2 id="chidemoon-products-heading">محصولات برگزیده</h2>
 </div>
-<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه کالاها<span aria-hidden="true">←</span></a>
+<a class="chidemoon-text-link" href="<?php echo esc_url( $shop_url ); ?>">همه محصولات</a>
 </div>
 
 <?php if ( ! empty( $products ) ) : ?>
@@ -148,7 +178,7 @@ $side_categories = get_the_category( $side_id );
 <?php chidemoon_blocksy_render_product_cards( $products ); ?>
 </div>
 <?php else : ?>
-<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'کالاها فقط پس از تأیید دسته‌بندی، تصویر و مقصد فروشنده منتشر می‌شوند.' ); ?>
+<?php chidemoon_blocksy_render_empty_state( 'کاتالوگ در حال آماده‌سازی است.', 'محصولات فقط وقتی منتشر می‌شوند که دسته‌بندی، تصویر و فروشنده‌ی مقصدشان تأیید شده باشد.' ); ?>
 <?php endif; ?>
 </section>
 
@@ -160,13 +190,16 @@ $side_categories = get_the_category( $side_id );
 </div>
 </div>
 <div class="chidemoon-category-grid">
-<?php foreach ( $product_categories as $index => $category ) : ?>
+<?php foreach ( $product_categories as $category ) : ?>
 <?php $category_link = get_term_link( $category ); ?>
 <?php if ( ! is_wp_error( $category_link ) ) : ?>
 <a class="chidemoon-category-link" href="<?php echo esc_url( $category_link ); ?>">
-<span class="chidemoon-category-link__index"><?php echo esc_html( chidemoon_fa_digits( '0' . ( $index + 1 ) ) ); ?></span>
+<span class="chidemoon-category-link__art" aria-hidden="true"><?php echo chidemoon_category_art( $category ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+<span class="chidemoon-category-link__body">
 <span class="chidemoon-category-link__title"><?php echo esc_html( $category->name ); ?></span>
-<span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> کالا</span>
+<span class="chidemoon-category-link__count"><?php echo esc_html( chidemoon_fa_digits( $category->count ) ); ?> محصول</span>
+</span>
+<span class="chidemoon-category-link__go" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" class="chidemoon-cat-art" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path class="catart-ink" d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 </a>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -176,16 +209,14 @@ $side_categories = get_the_category( $side_id );
 
 <section class="chidemoon-home__routes chidemoon-section-shell" aria-label="فرمت‌های چیدمون">
 <a class="chidemoon-route-card" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'comparisons' ) ); ?>">
-<span class="chidemoon-eyebrow">دو تا چهار کالا</span>
-<strong>مقایسه‌های شفاف</strong>
-<span>شواهد بررسی‌شده، مبادلات روشن، بدون توصیه‌ی خودکار.</span>
-<i aria-hidden="true">←</i>
+<span class="chidemoon-eyebrow">دو تا چهار محصول</span>
+<strong>مقایسه‌ی بی‌طرفانه</strong>
+<span>محصولات با معیارهای روشن سنجیده می‌شوند؛ نقطه‌ی قوت و ضعف همه پیدا است و انتخاب با شماست.</span>
 </a>
 <a class="chidemoon-route-card chidemoon-route-card--clay" href="<?php echo esc_url( chidemoon_blocksy_page_url( 'shop-the-look' ) ); ?>">
 <span class="chidemoon-eyebrow">یک اتاق را بچین</span>
-<strong>از تصویر بخر</strong>
-<span>ترکیب‌های ادیتوریال متصل به پیشنهاد مستقیم فروشنده.</span>
-<i aria-hidden="true">←</i>
+<strong>ببین و بخر</strong>
+<span>چیدمان‌های هماهنگی که تک‌تک وسایلشان را می‌توانید از همان فروشنده بخرید.</span>
 </a>
 </section>
 </main>

@@ -1,0 +1,4 @@
+Reference only. Nothing in legacy/ is loaded by compose.yml, plugins/,
+themes/ or ops/ (see legacy/kalahamoon-import/README.md and .cbmignore).
+Do not require, copy, or port from here without a fresh design review:
+the Kalahamoon connector protocol it encodes no longer exists server-side.

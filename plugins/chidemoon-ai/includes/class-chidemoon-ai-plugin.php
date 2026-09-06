@@ -25,6 +25,7 @@ class Chidemoon_AI_Plugin {
 	public function boot(): void {
 		load_plugin_textdomain( 'chidemoon-ai', false, dirname( plugin_basename( CHIDEMOON_AI_FILE ) ) . '/languages' );
 		Chidemoon_AI_Activator::maybe_upgrade();
+		Chidemoon_AI_Settings::register();
 		Chidemoon_AI_Runner::register();
 		Chidemoon_AI_Assistant_Widget::register();
 		add_action( 'rest_api_init', array( 'Chidemoon_AI_REST_Controller', 'register' ) );

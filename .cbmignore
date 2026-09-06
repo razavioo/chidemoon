@@ -1,0 +1,9 @@
+# Knowledge-graph exclusions: reference-only / generated / vendored code.
+# legacy/ is a frozen import of the retired Kalahamoon stack (see its README);
+# it must never be ported or referenced by the active plugins/themes/ops.
+legacy/
+# Sealed release artifacts and local dev checkouts are generated, not source.
+.deploy-artifacts/
+.local-dev/
+# Offline third-party archives verified by ops/*.sh; source is upstream.
+vendor/*.zip

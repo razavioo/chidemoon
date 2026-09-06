@@ -8,12 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Chidemoon_AI_Usage {
-	private const DEFAULT_DAILY_LIMIT       = 20;
+	// Single source of truth mirrored in .env.example, compose.yml and
+	// Chidemoon_AI_Settings::fields(). Costs are pre-authorization estimates
+	// (not metered provider billing); they only bound queue reservations.
+	private const DEFAULT_DAILY_LIMIT       = 25;
 	private const DEFAULT_MONTHLY_LIMIT     = 500;
-	private const DEFAULT_MONTHLY_BUDGET    = 50.0;
+	private const DEFAULT_MONTHLY_BUDGET    = 25.0;
 	private const DEFAULT_TEXT_COST         = 0.02;
-	private const DEFAULT_COMPARISON_COST   = 0.03;
-	private const DEFAULT_IMAGE_COST        = 0.10;
+	private const DEFAULT_COMPARISON_COST   = 0.04;
+	private const DEFAULT_IMAGE_COST        = 0.06;
 
 	/**
 	 * Reserves capacity before a background action is enqueued. A queued action
@@ -130,14 +133,26 @@ class Chidemoon_AI_Usage {
 	}
 
 	private static function daily_limit(): int {
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			return Chidemoon_AI_Settings::get_int( 'daily_limit' );
+		}
+
 		return max( 1, min( 1000, self::environment_int( 'CHIDEMOON_AI_DAILY_REQUEST_LIMIT', self::DEFAULT_DAILY_LIMIT ) ) );
 	}
 
 	private static function monthly_limit(): int {
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			return Chidemoon_AI_Settings::get_int( 'monthly_limit' );
+		}
+
 		return max( 1, min( 100000, self::environment_int( 'CHIDEMOON_AI_MONTHLY_REQUEST_LIMIT', self::DEFAULT_MONTHLY_LIMIT ) ) );
 	}
 
 	private static function monthly_budget(): float {
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			return Chidemoon_AI_Settings::get_float( 'monthly_budget' );
+		}
+
 		return max( 0.01, min( 1000000, self::environment_float( 'CHIDEMOON_AI_MONTHLY_BUDGET', self::DEFAULT_MONTHLY_BUDGET ) ) );
 	}
 
@@ -146,12 +161,29 @@ class Chidemoon_AI_Usage {
 			'text'       => self::DEFAULT_TEXT_COST,
 			'comparison' => self::DEFAULT_COMPARISON_COST,
 			'image'      => self::DEFAULT_IMAGE_COST,
+			'look'       => 0.12,
+			'enrich'     => 0.04,
 		);
 		$environment = array(
 			'text'       => 'CHIDEMOON_AI_TEXT_ESTIMATED_COST',
 			'comparison' => 'CHIDEMOON_AI_COMPARISON_ESTIMATED_COST',
 			'image'      => 'CHIDEMOON_AI_IMAGE_ESTIMATED_COST',
+			'look'       => 'CHIDEMOON_AI_LOOK_ESTIMATED_COST',
+			'enrich'     => 'CHIDEMOON_AI_ENRICH_ESTIMATED_COST',
 		);
+
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			$settings_key = array(
+				'text'       => 'text_cost',
+				'comparison' => 'comparison_cost',
+				'image'      => 'image_cost',
+				'look'       => 'look_cost',
+				'enrich'     => 'enrich_cost',
+			);
+			if ( isset( $settings_key[ $operation ] ) ) {
+				return max( 0, min( 10000, Chidemoon_AI_Settings::get_float( $settings_key[ $operation ] ) ) );
+			}
+		}
 
 		return max( 0, min( 10000, self::environment_float( $environment[ $operation ] ?? '', $defaults[ $operation ] ?? self::DEFAULT_TEXT_COST ) ) );
 	}

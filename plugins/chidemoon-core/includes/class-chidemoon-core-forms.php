@@ -24,7 +24,46 @@ final class Chidemoon_Core_Forms {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'submit_lead' ),
+				// Public by design (anonymous contact form). Abuse is contained
+				// by honeypot + IP rate limiting + strict args validation below.
 				'permission_callback' => '__return_true',
+				'args'                => array(
+					'email'   => array(
+						'required'          => true,
+						'type'              => 'string',
+						'format'            => 'email',
+						'maxLength'         => 320,
+						'sanitize_callback' => 'sanitize_email',
+					),
+					'name'    => array(
+						'required'          => false,
+						'type'              => 'string',
+						'maxLength'         => 160,
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'message' => array(
+						'required'          => true,
+						'type'              => 'string',
+						'minLength'         => 1,
+						'maxLength'         => 4000,
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+					'intent'  => array(
+						'required'          => false,
+						'type'              => 'string',
+						'enum'              => array( 'contact', 'consultation', 'issue' ),
+						'sanitize_callback' => 'sanitize_key',
+					),
+					'consent' => array(
+						'required' => true,
+					),
+					'website' => array(
+						'required'          => false,
+						'type'              => 'string',
+						'maxLength'         => 200,
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
 			)
 		);
 
@@ -34,7 +73,35 @@ final class Chidemoon_Core_Forms {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'submit_price_alert' ),
+				// Public by design (anonymous price alert). Same containment as leads.
 				'permission_callback' => '__return_true',
+				'args'                => array(
+					'email'       => array(
+						'required'          => true,
+						'type'              => 'string',
+						'format'            => 'email',
+						'maxLength'         => 320,
+						'sanitize_callback' => 'sanitize_email',
+					),
+					'productId'   => array(
+						'required'          => true,
+						'type'              => 'integer',
+						'minimum'           => 1,
+						'sanitize_callback' => 'absint',
+					),
+					'targetPrice' => array(
+						'required' => true,
+					),
+					'consent'     => array(
+						'required' => true,
+					),
+					'website'     => array(
+						'required'          => false,
+						'type'              => 'string',
+						'maxLength'         => 200,
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
 			)
 		);
 	}
@@ -136,10 +203,13 @@ final class Chidemoon_Core_Forms {
 		$now              = current_time( 'mysql', true );
 		global $wpdb;
 		$table = $wpdb->prefix . 'chidemoon_price_alerts';
+		// Never downgrade an operator-confirmed subscription back to pending on
+		// a repeat submission: a third party knowing (email, product_id) must
+		// not be able to flip a confirmed row back to a less-trusted state.
 		$query = $wpdb->prepare(
 			"INSERT INTO {$table} (email, product_id, target_price, subscription_key, consent_version, status, created_at, updated_at)
 			VALUES (%s, %d, %s, %s, %s, 'pending', %s, %s)
-			ON DUPLICATE KEY UPDATE target_price = VALUES(target_price), consent_version = VALUES(consent_version), status = 'pending', updated_at = VALUES(updated_at)",
+			ON DUPLICATE KEY UPDATE target_price = VALUES(target_price), consent_version = VALUES(consent_version), status = IF(status IN ('confirmed', 'active', 'notified'), status, 'pending'), updated_at = VALUES(updated_at)",
 			$email,
 			$product_id,
 			$price,
@@ -278,7 +348,19 @@ final class Chidemoon_Core_Forms {
 	}
 
 	private static function request_fingerprint( string $scope ): string {
-		$remote_addr = sanitize_text_field( (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+		// Prefer the left-most trusted proxy header when the site runs behind a
+		// CDN / load balancer; fall back to REMOTE_ADDR. The value is only a
+		// rate-limit bucket key (not authentication), so spoofing it merely
+		// moves the attacker into a different bucket.
+		$candidate = (string) ( $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '' );
+		if ( '' !== $candidate ) {
+			$parts     = explode( ',', $candidate );
+			$candidate = trim( (string) reset( $parts ) );
+		}
+		if ( '' === $candidate ) {
+			$candidate = (string) ( $_SERVER['REMOTE_ADDR'] ?? '' );
+		}
+		$remote_addr = sanitize_text_field( $candidate );
 		$user_agent  = sanitize_text_field( (string) ( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
 		return hash_hmac( 'sha256', $scope . '|' . $remote_addr . '|' . $user_agent, wp_salt( 'auth' ) );
 	}

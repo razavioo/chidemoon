@@ -48,7 +48,16 @@
 	}
 
 	function faDigits(value) {
-		return String(value).replace(/[0-9]/g, function (digit) { return '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]; });
+		var text = String(value);
+		return /^[0-9]+$/.test(text) ? text.replace(/[0-9]/g, function (digit) { return '۰۱۲۳۴۵۶۷۸۹'.charAt(digit); }) : text;
+	}
+
+	function thumbHtml(item, className) {
+		var name = (item.name || '').trim();
+		if (item.image) {
+			return '<img class="' + className + '" src="' + escapeHtml(item.image) + '" alt="" loading="lazy" width="40" height="40">';
+		}
+		return '<span class="' + className + ' ' + className + '--empty" aria-hidden="true">' + escapeHtml(name.charAt(0) || '#') + '</span>';
 	}
 
 	function showBarHint(bar, message) {
@@ -56,6 +65,7 @@
 		if (!hint) return;
 		hint.textContent = message;
 		hint.hidden = false;
+		setBarOffset(bar);
 	}
 
 	function syncControls(items) {
@@ -66,6 +76,12 @@
 				control.setAttribute('aria-pressed', active ? 'true' : 'false');
 				var label = control.querySelector('span');
 				if (label) label.textContent = active ? config.labels.removed : config.labels.added;
+			} else if (control.classList.contains('chidemoon-compare-single')) {
+				control.setAttribute('aria-pressed', active ? 'true' : 'false');
+				var singleLabel = control.querySelector('.chidemoon-compare-single__label');
+				var singleHint = control.querySelector('.chidemoon-compare-single__hint');
+				if (singleLabel) singleLabel.textContent = active ? config.labels.singleIn : config.labels.singleAdd;
+				if (singleHint) singleHint.textContent = active ? config.labels.singleRemoveHint : config.labels.singleHint;
 			} else if (control.classList.contains('chidemoon-comparison-search__result')) {
 				var action = control.querySelector('small');
 				if (action) action.textContent = active ? config.labels.removed : config.labels.added;
@@ -88,7 +104,8 @@
 
 	function comparisonUrl(items) {
 		var ids = items.map(function (item) { return item.id; }).join(',');
-		return config.compareUrl + (config.compareUrl.indexOf('?') === -1 ? '?' : '&') + 'products=' + encodeURIComponent(ids);
+		var url = config.compareUrl + (config.compareUrl.indexOf('?') === -1 ? '?' : '&') + 'products=' + encodeURIComponent(ids);
+		return url + '#chidemoon-comparison-table';
 	}
 
 	function syncPageSelection() {
@@ -104,8 +121,10 @@
 				current = current.filter(function (item) { return allowed.indexOf(Number(item.id)) === -1 || validIds.indexOf(Number(item.id)) !== -1; });
 				eligible.forEach(function (product) {
 					var existing = current.filter(function (item) { return Number(item.id) === Number(product.id); })[0];
-					if (existing) existing.name = product.title || existing.name;
-					else current.push({ id: product.id, name: product.title || '' });
+					if (existing) {
+						existing.name = product.title || existing.name;
+						existing.image = product.image || existing.image || '';
+					} else current.push({ id: product.id, name: product.title || '', image: product.image || '' });
 				});
 				if (invalidPersisted.length) announce(config.labels.staleSelection);
 				write(current);
@@ -145,8 +164,13 @@
 				if (event.target.closest('.chidemoon-compare-bar__go')) {
 					var selectedItems = read();
 					if (selectedItems.length < 2) {
-						showBarHint(bar, config.labels.needMore);
+						bar.querySelector('.chidemoon-compare-bar__summary').textContent = config.labels.needMore;
 						announce(config.labels.needMore);
+						return;
+					}
+					var tableSection = document.getElementById('chidemoon-comparison-table');
+					if (tableSection && document.querySelector('.chidemoon-comparison-table')) {
+						tableSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 						return;
 					}
 					window.location.assign(comparisonUrl(selectedItems));
@@ -162,32 +186,40 @@
 			setBarOffset(bar);
 			return;
 		}
-		bar.querySelector('.chidemoon-compare-bar__summary').textContent = faDigits(items.length) + ' ' + config.labels.count;
+		bar.querySelector('.chidemoon-compare-bar__summary').innerHTML = '<strong class="chidemoon-compare-bar__badge">' + faDigits(items.length) + '</strong>' + escapeHtml(config.labels.count);
 		bar.querySelector('.chidemoon-compare-bar__items').innerHTML = items.map(function (item) {
-			return '<button type="button" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + config.labels.removed) + '"><span dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span data-compare-chip-remove aria-hidden="true">×</span></button>';
+			return '<button type="button" class="chidemoon-compare-bar__chip" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + (config.labels.removeItem || config.labels.removed)) + '">' + thumbHtml(item, 'chidemoon-compare-bar__thumb') + '<span class="chidemoon-compare-bar__chip-name" dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span class="chidemoon-compare-bar__chip-x" aria-hidden="true">×</span></button>';
 		}).join('');
 		bar.querySelector('.chidemoon-compare-bar__clear').textContent = config.labels.clear;
 		var go = bar.querySelector('.chidemoon-compare-bar__go');
-		go.textContent = config.labels.compare;
-		/* One selected product is still worth showing (the choice survives
-		 * page navigation), but the compare action is meaningless before two:
-		 * swap the action for guidance instead of a dead disabled button. */
 		var hint = bar.querySelector('.chidemoon-compare-bar__hint');
-		if (items.length < 2) {
-			go.hidden = true;
-			hint.hidden = false;
-			hint.textContent = config.labels.oneMore;
-		} else {
-			go.hidden = false;
-			hint.hidden = true;
-		}
+		go.textContent = config.labels.compare;
+		go.hidden = items.length < 2;
+		hint.hidden = items.length >= 2;
+		if (items.length < 2) hint.textContent = config.labels.oneMore;
 		setBarOffset(bar);
+	}
+
+	function syncStatus(items) {
+		var strip = document.querySelector('[data-comparison-status]');
+		if (!strip) return;
+		strip.hidden = items.length === 0;
+		if (!items.length) return;
+		var count = strip.querySelector('[data-comparison-status-count]');
+		if (count) count.textContent = faDigits(items.length) + ' ' + config.labels.count + (items.length < 2 ? ' — ' + config.labels.needMore : '');
+		var chips = strip.querySelector('[data-comparison-status-chips]');
+		if (chips) {
+			chips.innerHTML = items.map(function (item) {
+				return '<span class="chidemoon-comparison-status__chip">' + thumbHtml(item, 'chidemoon-comparison-status__chip-thumb') + '<span dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span></span>';
+			}).join('');
+		}
 	}
 
 	function refresh() {
 		var items = read();
 		syncControls(items);
 		renderBar(items);
+		syncStatus(items);
 		if (persistenceFailed && !persistenceNoticeShown) {
 			persistenceNoticeShown = true;
 			announce(config.labels.sessionOnly);
@@ -226,7 +258,8 @@
 						results.hidden = false;
 						results.innerHTML = products.map(function (product) {
 							var active = selected(product.id);
-								return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '"><span dir="auto">' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
+							var thumb = product.image ? '<img class="chidemoon-comparison-search__thumb" src="' + escapeHtml(product.image) + '" alt="" loading="lazy" width="40" height="40">' : '';
+							return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '" data-compare-image="' + escapeHtml(product.image || '') + '">' + thumb + '<span dir="auto">' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
 						}).join('');
 					})
 					.catch(function (error) {
@@ -237,17 +270,51 @@
 		});
 	}
 
+	function backfillImages() {
+		if (!config.restUrl) return;
+		var pending = read().filter(function (item) { return !item.image; });
+		if (!pending.length) return;
+		fetch(config.restUrl + '?ids=' + encodeURIComponent(pending.map(function (item) { return item.id; }).join(',')))
+			.then(function (response) { if (!response.ok) throw new Error('images'); return response.json(); })
+			.then(function (products) {
+				var current = read();
+				var changed = false;
+				products.forEach(function (product) {
+					current.forEach(function (item) {
+						if (Number(item.id) === Number(product.id) && !item.image && product.image) {
+							item.image = product.image;
+							changed = true;
+						}
+					});
+				});
+				if (changed) {
+					write(current);
+					refresh();
+				}
+			})
+			.catch(function () {});
+	}
+
 	function bind() {
+		var statusCta = document.querySelector('[data-comparison-status] .chidemoon-comparison-status__cta');
+		if (statusCta) {
+			statusCta.addEventListener('click', function (event) {
+				var table = document.getElementById('chidemoon-comparison-table');
+				if (!table || !document.querySelector('.chidemoon-comparison-table')) return;
+				event.preventDefault();
+				table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		}
 		document.addEventListener('click', function (event) {
 			var tableRemove = event.target.closest('.chidemoon-comparison-table__remove');
 			if (tableRemove) {
 				event.preventDefault();
 				write(read().filter(function (item) { return Number(item.id) !== Number(tableRemove.dataset.compareProduct); }));
 				var remaining = read();
-				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl);
+				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl + '#chidemoon-comparison-table');
 				return;
 			}
-			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-comparison-search__result');
+			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-comparison-search__result');
 			if (!control) return;
 			event.preventDefault();
 			var id = Number(control.dataset.compareProduct);
@@ -255,12 +322,11 @@
 			if (selected(id, items)) {
 				write(items.filter(function (item) { return Number(item.id) !== id; }));
 			} else if (items.length < config.maximum) {
-				items.push({ id: id, name: control.dataset.compareName || '' });
+				items.push({ id: id, name: control.dataset.compareName || '', image: control.dataset.compareImage || '' });
 				write(items);
 			} else {
 				announce(config.labels.full);
-				var bar = document.querySelector('.chidemoon-compare-bar');
-				if (bar && !bar.hidden) showBarHint(bar, config.labels.full);
+				showBarHint(document.querySelector('.chidemoon-compare-bar'), config.labels.full);
 				return;
 			}
 			refresh();
@@ -268,6 +334,7 @@
 		syncPageSelection();
 		bindSearch();
 		refresh();
+		backfillImages();
 	}
 
 	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();

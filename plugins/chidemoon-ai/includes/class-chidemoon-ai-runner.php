@@ -58,6 +58,16 @@ class Chidemoon_AI_Runner {
 			return;
 		}
 
+		if ( 'enrich' === $job['job_type'] ) {
+			self::run_enrich_job( $job, $provider );
+			return;
+		}
+
+		if ( 'look' === $job['job_type'] ) {
+			self::run_look_job( $job, $provider );
+			return;
+		}
+
 		if ( 'image' === $job['job_type'] ) {
 			self::run_image_job( $job, $provider );
 			return;
@@ -79,6 +89,18 @@ class Chidemoon_AI_Runner {
 
 		if ( 'image' === $job['job_type'] ) {
 			return self::apply_image( $job );
+		}
+
+		if ( 'look' === $job['job_type'] ) {
+			return self::apply_look( $job );
+		}
+
+		if ( 'enrich' === $job['job_type'] ) {
+			if ( ! class_exists( 'Chidemoon_AI_Enrich' ) ) {
+				return new WP_Error( 'chidemoon_ai_apply_invalid', __( 'This AI job cannot be applied.', 'chidemoon-ai' ), array( 'status' => 400 ) );
+			}
+
+			return Chidemoon_AI_Enrich::apply( $job, $actor_id );
 		}
 
 		if ( ! in_array( $job['job_type'], array( 'text', 'comparison' ), true ) ) {
@@ -160,6 +182,159 @@ class Chidemoon_AI_Runner {
 			Chidemoon_AI_State_Machine::REVIEW_REQUIRED,
 			$provider->name(),
 			$provider->text_model(),
+			isset( $usage['prompt_tokens'] ) ? absint( $usage['prompt_tokens'] ) : null,
+			isset( $usage['completion_tokens'] ) ? absint( $usage['completion_tokens'] ) : null
+		);
+	}
+
+	/**
+	 * @param array<string, mixed> $job
+	 */
+	private static function run_enrich_job( array $job, Chidemoon_AI_Provider_Interface $provider ): void {
+		$evidence = Chidemoon_AI_Evidence::for_job( (int) $job['id'] );
+		if ( empty( $evidence ) ) {
+			self::fail( $job, new WP_Error( 'chidemoon_ai_evidence_empty', __( 'The enrichment job has no local evidence.', 'chidemoon-ai' ) ) );
+			return;
+		}
+		$input_moderation = Chidemoon_AI_Moderation::review_input( $job, $evidence );
+		if ( is_wp_error( $input_moderation ) ) {
+			self::record_moderation_error( $job, $input_moderation );
+			self::fail( $job, $input_moderation, $provider );
+			return;
+		}
+		Chidemoon_AI_Repository::record_moderation( (int) $job['id'], $input_moderation );
+
+		$result = $provider->generate_enrichment( $job, $evidence );
+		if ( is_wp_error( $result ) ) {
+			self::fail( $job, $result, $provider );
+			return;
+		}
+		if ( class_exists( 'Chidemoon_AI_Enrich' ) ) {
+			$validated = Chidemoon_AI_Enrich::validate_result( $result, Chidemoon_AI_Evidence::source_ids( $evidence ) );
+			if ( is_wp_error( $validated ) ) {
+				self::fail( $job, $validated, $provider );
+				return;
+			}
+		} else {
+			$validated = $result;
+			unset( $validated['_usage'] );
+		}
+		$output_moderation = Chidemoon_AI_Moderation::review_text_output(
+			array(
+				'title'                => (string) ( $validated['title'] ?? '' ),
+				'excerpt'              => (string) ( $validated['short_description'] ?? '' ),
+				'content'              => (string) ( $validated['description'] ?? '' ),
+				'facts_needing_review' => $validated['facts_needing_review'] ?? array(),
+			)
+		);
+		if ( is_wp_error( $output_moderation ) ) {
+			self::record_moderation_error( $job, $output_moderation );
+			self::fail( $job, $output_moderation, $provider );
+			return;
+		}
+		Chidemoon_AI_Repository::record_moderation( (int) $job['id'], $output_moderation );
+
+		$usage      = is_array( $result['_usage'] ?? null ) ? $result['_usage'] : array();
+		$provenance = self::provenance( $job, $provider, Chidemoon_AI_Evidence::source_ids( $evidence ) );
+		if ( ! Chidemoon_AI_Repository::mark_review_required( (int) $job['id'], $validated, $provenance ) ) {
+			self::fail( $job, new WP_Error( 'chidemoon_ai_state_conflict', __( 'The AI job changed before review could begin.', 'chidemoon-ai' ) ), $provider );
+			return;
+		}
+
+		Chidemoon_AI_Usage::complete(
+			(int) $job['id'],
+			Chidemoon_AI_State_Machine::REVIEW_REQUIRED,
+			$provider->name(),
+			$provider->text_model(),
+			isset( $usage['prompt_tokens'] ) ? absint( $usage['prompt_tokens'] ) : null,
+			isset( $usage['completion_tokens'] ) ? absint( $usage['completion_tokens'] ) : null
+		);
+	}
+
+	/**
+	 * @param array<string, mixed> $job
+	 */
+	private static function run_look_job( array $job, Chidemoon_AI_Provider_Interface $provider ): void {
+		$payload     = is_array( $job['request_payload'] ?? null ) ? $job['request_payload'] : array();
+		$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) ( $payload['product_ids'] ?? array() ) ) ) ) );
+		if ( empty( $product_ids ) ) {
+			self::fail( $job, new WP_Error( 'chidemoon_ai_look_products', __( 'A look needs at least one product.', 'chidemoon-ai' ) ), $provider );
+			return;
+		}
+		$input_moderation = Chidemoon_AI_Moderation::review_input( $job );
+		if ( is_wp_error( $input_moderation ) ) {
+			self::record_moderation_error( $job, $input_moderation );
+			self::fail( $job, $input_moderation, $provider );
+			return;
+		}
+		Chidemoon_AI_Repository::record_moderation( (int) $job['id'], $input_moderation );
+
+		$image_job               = $job;
+		$image_payload           = $payload;
+		$image_payload['mode']   = 'look_scene';
+		$image_job['request_payload'] = $image_payload;
+		$result = $provider->generate_image( $image_job );
+		if ( is_wp_error( $result ) ) {
+			self::fail( $job, $result, $provider );
+			return;
+		}
+		$output_moderation = Chidemoon_AI_Moderation::review_image_output( $result );
+		if ( is_wp_error( $output_moderation ) ) {
+			self::record_moderation_error( $job, $output_moderation );
+			self::fail( $job, $output_moderation, $provider );
+			return;
+		}
+		Chidemoon_AI_Repository::record_moderation( (int) $job['id'], $output_moderation );
+
+		$attachment_id = Chidemoon_AI_Media::persist_generated_image( $result, (int) $job['id'], (int) $job['requested_by'] );
+		if ( is_wp_error( $attachment_id ) ) {
+			self::fail( $job, $attachment_id, $provider );
+			return;
+		}
+
+		$hotspots       = class_exists( 'Chidemoon_AI_Look' ) ? Chidemoon_AI_Look::heuristic_hotspots( $product_ids ) : array();
+		$hotspot_source = 'heuristic';
+		if ( $provider->supports_vision() && class_exists( 'Chidemoon_AI_Look' ) ) {
+			$products_ctx = array();
+			foreach ( $product_ids as $pid ) {
+				$post = get_post( $pid );
+				$products_ctx[] = array( 'id' => $pid, 'name' => $post ? wp_strip_all_tags( get_the_title( $post ) ) : ( '#' . $pid ) );
+			}
+			$vision = $provider->analyze_image(
+				array( (int) $attachment_id ),
+				$products_ctx,
+				'Locate each listed product in this room photo. Return hotspot coordinates.'
+			);
+			if ( ! is_wp_error( $vision ) ) {
+				$hotspots       = Chidemoon_AI_Look::normalize_vision_hotspots( $vision, $product_ids );
+				$hotspot_source = 'vision';
+			}
+		}
+
+		$usage      = is_array( $result['_usage'] ?? null ) ? $result['_usage'] : array();
+		$provenance = self::provenance( $job, $provider, array_map( 'strval', $product_ids ) );
+		$provenance['hotspot_source'] = $hotspot_source;
+		$provenance['room']           = sanitize_key( (string) ( $payload['room'] ?? '' ) );
+		$provenance['style']          = sanitize_key( (string) ( $payload['style'] ?? '' ) );
+		$look     = array(
+			'attachment_id'     => $attachment_id,
+			'revised_prompt'    => sanitize_text_field( (string) ( $result['revised_prompt'] ?? '' ) ),
+			'product_ids'       => array_values( $product_ids ),
+			'room'              => sanitize_key( (string) ( $payload['room'] ?? '' ) ),
+			'style'             => sanitize_key( (string) ( $payload['style'] ?? '' ) ),
+			'hotspots_proposal' => $hotspots,
+			'hotspot_source'    => $hotspot_source,
+		);
+		if ( ! Chidemoon_AI_Repository::mark_review_required( (int) $job['id'], $look, $provenance ) ) {
+			self::fail( $job, new WP_Error( 'chidemoon_ai_state_conflict', __( 'The AI look job changed before review could begin.', 'chidemoon-ai' ) ), $provider );
+			return;
+		}
+
+		Chidemoon_AI_Usage::complete(
+			(int) $job['id'],
+			Chidemoon_AI_State_Machine::REVIEW_REQUIRED,
+			$provider->name(),
+			$provider->image_model(),
 			isset( $usage['prompt_tokens'] ) ? absint( $usage['prompt_tokens'] ) : null,
 			isset( $usage['completion_tokens'] ) ? absint( $usage['completion_tokens'] ) : null
 		);
@@ -293,6 +468,58 @@ class Chidemoon_AI_Runner {
 	}
 
 	/**
+	 * Applies an APPROVED look by creating a look draft post with the
+	 * generated image block prefilled. Never publishes.
+	 *
+	 * @param array<string, mixed> $job
+	 * @return int|WP_Error New look draft post ID.
+	 */
+	private static function apply_look( array $job ): int|WP_Error {
+		$result        = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array();
+		$attachment_id = absint( $result['attachment_id'] ?? 0 );
+		if ( ! $attachment_id || 'attachment' !== get_post_type( $attachment_id ) ) {
+			return new WP_Error( 'chidemoon_ai_look_missing', __( 'The approved look image is unavailable.', 'chidemoon-ai' ) );
+		}
+		if ( ! class_exists( 'Chidemoon_AI_Look' ) ) {
+			return new WP_Error( 'chidemoon_ai_look_missing', __( 'The look builder is unavailable.', 'chidemoon-ai' ) );
+		}
+
+		update_post_meta( $attachment_id, '_chidemoon_ai_review_state', Chidemoon_AI_State_Machine::APPROVED );
+
+		$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) ( $result['product_ids'] ?? array() ) ) ) ) );
+		$hotspots    = is_array( $result['hotspots_proposal'] ?? null ) ? array_values( $result['hotspots_proposal'] ) : Chidemoon_AI_Look::heuristic_hotspots( $product_ids );
+		$room        = sanitize_key( (string) ( $result['room'] ?? '' ) );
+		$caption     = sanitize_text_field( (string) ( $result['revised_prompt'] ?? __( 'AI styled look', 'chidemoon-ai' ) ) );
+
+		$post_id = wp_insert_post(
+			array(
+				'post_author'  => (int) ( $job['requested_by'] ?? get_current_user_id() ),
+				'post_status'  => 'draft',
+				'post_type'    => 'post',
+				'post_title'   => '' !== $caption ? $caption : __( 'AI styled look', 'chidemoon-ai' ),
+				'post_content' => Chidemoon_AI_Look::block_markup( $attachment_id, $caption, $hotspots ),
+				'post_excerpt' => $caption,
+				'tags_input'   => array( 'shop-the-look' ),
+			),
+			true
+		);
+		if ( is_wp_error( $post_id ) || ! $post_id ) {
+			return new WP_Error( 'chidemoon_ai_look_draft_failed', __( 'The look draft could not be created.', 'chidemoon-ai' ) );
+		}
+		if ( '' !== $room && taxonomy_exists( 'chidemoon_room' ) ) {
+			wp_set_object_terms( (int) $post_id, $room, 'chidemoon_room', false );
+		}
+		update_post_meta( (int) $post_id, '_chidemoon_ai_last_job_id', (int) $job['id'] );
+		update_post_meta( (int) $post_id, '_chidemoon_ai_provenance', wp_json_encode( $job['provenance'] ?? array(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
+
+		if ( ! Chidemoon_AI_Repository::mark_applied( (int) $job['id'], (int) $post_id ) ) {
+			return new WP_Error( 'chidemoon_ai_apply_state_conflict', __( 'The look job changed while it was being saved.', 'chidemoon-ai' ), array( 'status' => 409 ) );
+		}
+
+		return (int) $post_id;
+	}
+
+	/**
 	 * @param array<string, mixed> $job
 	 * @return WP_Post|WP_Error
 	 */
@@ -332,7 +559,7 @@ class Chidemoon_AI_Runner {
 		$previous   = is_array( $persisted['provenance'] ?? null ) ? $persisted['provenance'] : array();
 		$provenance = array(
 			'provider'          => $provider->name(),
-			'model'             => 'image' === $job['job_type'] ? $provider->image_model() : $provider->text_model(),
+			'model'             => in_array( $job['job_type'], array( 'image', 'look' ), true ) ? $provider->image_model() : $provider->text_model(),
 			'job_type'          => (string) $job['job_type'],
 			'generated_at'      => current_time( 'mysql', true ),
 			'source_ids'        => array_values( $source_ids ),
@@ -342,7 +569,7 @@ class Chidemoon_AI_Runner {
 		if ( ! empty( $previous['moderation'] ) && is_array( $previous['moderation'] ) ) {
 			$provenance['moderation'] = $previous['moderation'];
 		}
-		if ( 'image' === $job['job_type'] ) {
+		if ( in_array( $job['job_type'], array( 'image', 'look' ), true ) ) {
 			$payload = is_array( $job['request_payload'] ?? null ) ? $job['request_payload'] : array();
 			$provenance['rights_attestation'] = ! empty( $payload['rights_attestation'] );
 		}
@@ -364,7 +591,7 @@ class Chidemoon_AI_Runner {
 			(int) $job['id'],
 			Chidemoon_AI_State_Machine::FAILED,
 			$provider ? $provider->name() : '',
-			$provider ? ( 'image' === $job['job_type'] ? $provider->image_model() : $provider->text_model() ) : ''
+			$provider ? ( in_array( $job['job_type'], array( 'image', 'look' ), true ) ? $provider->image_model() : $provider->text_model() ) : ''
 		);
 	}
 

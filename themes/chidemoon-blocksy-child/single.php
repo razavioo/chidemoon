@@ -10,23 +10,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-$categories = get_the_category();
+$primary_category = chidemoon_blocksy_primary_category( (int) get_queried_object_id() );
 
 ?>
 <main id="primary" class="site-main chidemoon-article">
 	<?php while ( have_posts() ) : ?>
 		<?php the_post(); ?>
 		<header class="chidemoon-article__hero chidemoon-section-shell">
-			<?php if ( ! empty( $categories ) ) : ?>
-				<a class="chidemoon-eyebrow chidemoon-article__badge" href="<?php echo esc_url( get_category_link( $categories[0]->term_id ) ); ?>"><?php echo esc_html( $categories[0]->name ); ?></a>
+			<?php if ( $primary_category instanceof WP_Term ) : ?>
+				<a class="chidemoon-eyebrow chidemoon-article__badge" href="<?php echo esc_url( get_category_link( $primary_category->term_id ) ); ?>"><?php echo esc_html( $primary_category->name ); ?></a>
 			<?php else : ?>
 				<p class="chidemoon-eyebrow"><?php esc_html_e( 'مجله چیدمون', 'chidemoon-blocksy-child' ); ?></p>
 			<?php endif; ?>
 			<h1><?php the_title(); ?></h1>
 			<div class="chidemoon-article__meta">
+				<?php echo get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), array( 'extra_attr' => 'loading="lazy"' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<span class="chidemoon-article__author"><?php the_author(); ?></span>
+				<span aria-hidden="true">·</span>
 				<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 				<span aria-hidden="true">·</span>
-				<span><?php the_author(); ?></span>
+				<span class="chidemoon-article__reading-time"><?php echo esc_html( sprintf( '%s دقیقه مطالعه', chidemoon_fa_digits( chidemoon_reading_time( (int) get_queried_object_id() ) ) ) ); ?></span>
 			</div>
 			<?php if ( has_excerpt() ) : ?>
 				<p class="chidemoon-article__lede"><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -64,12 +67,12 @@ $categories = get_the_category();
 		</div>
 
 		<nav class="chidemoon-article__navigation chidemoon-section-shell" aria-label="<?php esc_attr_e( 'ادامه مجله', 'chidemoon-blocksy-child' ); ?>">
-			<?php the_post_navigation(
-				array(
-					'prev_text' => '<span class="chidemoon-eyebrow">' . esc_html__( 'مطلب قبلی', 'chidemoon-blocksy-child' ) . '</span><span class="chidemoon-article__nav-title">%title</span>',
-					'next_text' => '<span class="chidemoon-eyebrow">' . esc_html__( 'مطلب بعدی', 'chidemoon-blocksy-child' ) . '</span><span class="chidemoon-article__nav-title">%title</span>',
-				)
-			); ?>
+			<div class="nav-links">
+				<?php
+				chidemoon_blocksy_render_navigation_card( get_previous_post(), true );
+				chidemoon_blocksy_render_navigation_card( get_next_post(), false );
+				?>
+			</div>
 		</nav>
 	<?php endwhile; ?>
 </main>

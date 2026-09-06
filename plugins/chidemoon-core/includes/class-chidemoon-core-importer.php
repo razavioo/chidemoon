@@ -695,8 +695,12 @@ final class Chidemoon_Core_Importer {
 	}
 
 	private static function normalize_review_state( $state ): string {
+		// Strict: only an explicit "reviewed" from the exporter counts. Legacy
+		// aliases like verified/publish/published previously auto-promoted to
+		// reviewed and could publish unreviewed items; they now stay draft for
+		// human review.
 		$state = strtolower( sanitize_key( (string) $state ) );
-		if ( in_array( $state, array( 'reviewed', 'verified', 'publish', 'published' ), true ) ) {
+		if ( 'reviewed' === $state ) {
 			return 'reviewed';
 		}
 		if ( 'quarantine' === $state ) {
@@ -766,8 +770,23 @@ final class Chidemoon_Core_Importer {
 		if ( ! function_exists( 'dns_get_record' ) ) {
 			return false;
 		}
+		// DNS is the slowest part of an import (one lookup per image host).
+		// Cache per-host verdicts in-memory for the process and briefly in a
+		// transient so re-imports and retries do not re-resolve every URL.
+		static $memory_cache = array();
+		if ( isset( $memory_cache[ $host ] ) ) {
+			return $memory_cache[ $host ];
+		}
+		$transient_key = 'chidemoon_img_host_' . substr( hash( 'sha256', $host ), 0, 40 );
+		$cached        = get_transient( $transient_key );
+		if ( true === $cached || false === $cached ) {
+			$memory_cache[ $host ] = $cached;
+			return $cached;
+		}
 		$records = dns_get_record( $host, DNS_A | DNS_AAAA );
 		if ( ! is_array( $records ) || empty( $records ) ) {
+			$memory_cache[ $host ] = false;
+			set_transient( $transient_key, false, 10 * MINUTE_IN_SECONDS );
 			return false;
 		}
 
@@ -778,11 +797,15 @@ final class Chidemoon_Core_Importer {
 				continue;
 			}
 			if ( false === filter_var( $address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+				$memory_cache[ $host ] = false;
+				set_transient( $transient_key, false, 10 * MINUTE_IN_SECONDS );
 				return false;
 			}
 			$has_public_address = true;
 		}
 
+		$memory_cache[ $host ] = $has_public_address;
+		set_transient( $transient_key, $has_public_address, HOUR_IN_SECONDS );
 		return $has_public_address;
 	}
 
@@ -795,9 +818,17 @@ final class Chidemoon_Core_Importer {
 	}
 
 	/**
+	 * Must stay byte-identical to tools/build-import-export.mjs canonicalJson().
+	 * Notes: PHP INF/NAN have no JSON form (JS maps non-finite to null), and
+	 * ksort(SORT_STRING) matches the tool's byte-wise key ordering for the
+	 * ASCII-only export vocabulary.
+	 *
 	 * @param mixed $value
 	 */
 	private static function canonical_json( $value ): string {
+		if ( is_float( $value ) && ! is_finite( $value ) ) {
+			return 'null';
+		}
 		if ( null === $value || is_bool( $value ) || is_int( $value ) || is_float( $value ) || is_string( $value ) ) {
 			return (string) wp_json_encode( $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		}
@@ -818,23 +849,32 @@ final class Chidemoon_Core_Importer {
 	}
 
 	private static function acquire_lock(): string {
-		$token    = wp_generate_uuid4();
-		$existing = get_option( self::LOCK_OPTION, false );
-		if ( is_array( $existing ) && isset( $existing['createdAt'] ) && (int) $existing['createdAt'] < time() - self::LOCK_TIMEOUT ) {
-			delete_option( self::LOCK_OPTION );
+		$token = wp_generate_uuid4();
+		// Transient (not option) so a crashed import auto-expires instead of
+		// blocking every future run until an operator deletes the option.
+		// Token check keeps two concurrent starters from both proceeding.
+		$existing = get_transient( self::LOCK_OPTION );
+		if ( is_array( $existing ) && isset( $existing['token'] ) ) {
+			WP_CLI::error( 'Another import is already running. Wait for it to finish or wait up to 30 minutes for the lock to expire.' );
 		}
 
-		if ( ! add_option( self::LOCK_OPTION, array( 'token' => $token, 'createdAt' => time() ), '', false ) ) {
+		if ( ! set_transient( self::LOCK_OPTION, array( 'token' => $token, 'createdAt' => time() ), self::LOCK_TIMEOUT ) ) {
 			WP_CLI::error( 'Another import is already running. Wait for it to finish or resolve a stale lock.' );
+		}
+		// Re-read to close the check-then-set race: if another process won,
+		// back off instead of running concurrently.
+		$winner = get_transient( self::LOCK_OPTION );
+		if ( ! is_array( $winner ) || ! isset( $winner['token'] ) || ! hash_equals( (string) $winner['token'], $token ) ) {
+			WP_CLI::error( 'Another import is already running (lock race). Wait for it to finish.' );
 		}
 
 		return $token;
 	}
 
 	private static function release_lock( string $token ): void {
-		$existing = get_option( self::LOCK_OPTION, false );
+		$existing = get_transient( self::LOCK_OPTION );
 		if ( is_array( $existing ) && isset( $existing['token'] ) && hash_equals( (string) $existing['token'], $token ) ) {
-			delete_option( self::LOCK_OPTION );
+			delete_transient( self::LOCK_OPTION );
 		}
 	}
 

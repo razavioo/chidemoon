@@ -20,12 +20,15 @@ class Chidemoon_AI_Activator {
 	}
 
 	public static function maybe_upgrade(): void {
+		// Capability grants are idempotent, so they run on every load. This
+		// heals roles on sites that already carry the current DB version.
+		Chidemoon_AI_Capabilities::add();
+
 		if ( CHIDEMOON_AI_VERSION === get_option( 'chidemoon_ai_db_version' ) ) {
 			return;
 		}
 
 		self::create_tables();
-		Chidemoon_AI_Capabilities::add();
 	}
 
 	private static function create_tables(): void {
@@ -59,6 +62,7 @@ class Chidemoon_AI_Activator {
 			UNIQUE KEY job_key (job_key),
 			UNIQUE KEY idempotency_key (idempotency_key),
 			KEY state_created (state, created_at),
+			KEY job_type_state (job_type, state),
 			KEY target_post_id (target_post_id),
 			KEY requested_by (requested_by)
 		) $charset;";

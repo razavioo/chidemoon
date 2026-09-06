@@ -18,6 +18,7 @@ final class Chidemoon_Core_Compare {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 		add_filter( 'woocommerce_loop_add_to_cart_link', array( __CLASS__, 'append_loop_control' ), 100, 3 );
 		add_action( 'woocommerce_after_add_to_cart_form', array( __CLASS__, 'render_single_control' ), 25 );
+		add_action( 'woocommerce_single_product_summary', array( __CLASS__, 'render_single_control' ), 31 );
 		add_filter( 'woocommerce_product_add_to_cart_text', array( __CLASS__, 'offer_label' ), 100, 2 );
 		add_filter( 'woocommerce_product_single_add_to_cart_text', array( __CLASS__, 'offer_label' ), 100, 2 );
 		add_shortcode( 'chidemoon_compare_action', array( __CLASS__, 'render_shortcode' ) );
@@ -53,7 +54,7 @@ final class Chidemoon_Core_Compare {
 					'compareUrl'=> self::comparison_url(),
 					'restUrl'   => esc_url_raw( rest_url( 'chidemoon-core/v1/compare-products' ) ),
 					'labels'    => array(
-						'added'          => __( 'افزودن به مقایسه', 'chidemoon-core' ),
+						'added'          => __( 'مقایسه', 'chidemoon-core' ),
 						'removed'        => __( 'انتخاب شده', 'chidemoon-core' ),
 						'full'           => __( 'حداکثر چهار محصول را می‌توانید مقایسه کنید.', 'chidemoon-core' ),
 						'compare'        => __( 'مقایسه محصولات', 'chidemoon-core' ),
@@ -61,11 +62,16 @@ final class Chidemoon_Core_Compare {
 						'needMore'       => __( 'برای مقایسه حداقل دو محصول انتخاب کنید.', 'chidemoon-core' ),
 						'oneMore'        => __( 'برای شروع مقایسه، یک محصول دیگر انتخاب کنید.', 'chidemoon-core' ),
 						'count'          => __( 'محصول برای مقایسه', 'chidemoon-core' ),
-						'loading'        => __( 'در حال جست‌وجوی محصولات…', 'chidemoon-core' ),
+						'removeItem'     => __( 'حذف از مقایسه', 'chidemoon-core' ),
+						'loading'        => __( 'در حال جستجوی محصولات…', 'chidemoon-core' ),
 						'noResults'      => __( 'محصولی پیدا نشد.', 'chidemoon-core' ),
-						'searchError'    => __( 'جست‌وجو در حال حاضر در دسترس نیست. دوباره تلاش کنید.', 'chidemoon-core' ),
+						'searchError'    => __( 'جستجو در حال حاضر در دسترس نیست. دوباره تلاش کنید.', 'chidemoon-core' ),
 						'sessionOnly'    => __( 'انتخاب‌ها فقط تا پایان این صفحه نگه داشته می‌شوند.', 'chidemoon-core' ),
 						'staleSelection' => __( 'برخی انتخاب‌ها دیگر قابل مقایسه نیستند و حذف شدند.', 'chidemoon-core' ),
+						'singleAdd'        => __( 'افزودن به مقایسه', 'chidemoon-core' ),
+						'singleHint'       => __( 'با حداکثر چهار محصول بسنجید', 'chidemoon-core' ),
+						'singleIn'         => __( 'در فهرست مقایسه', 'chidemoon-core' ),
+						'singleRemoveHint' => __( 'برای حذف از فهرست کلیک کنید', 'chidemoon-core' ),
 					),
 				),
 				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
@@ -81,15 +87,22 @@ final class Chidemoon_Core_Compare {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'search_products' ),
+				// Public catalogue search over reviewed products only. Throttled
+				// per-IP inside the callback to avoid unauthenticated scraping.
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'search' => array(
+						'type'              => 'string',
+						'maxLength'         => 120,
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'browse' => array(
-						'sanitize_callback' => 'absint',
+						'type'              => 'boolean',
+						'sanitize_callback' => 'rest_sanitize_boolean',
 					),
 					'ids' => array(
+						'type'              => 'string',
+						'maxLength'         => 64,
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
@@ -97,8 +110,13 @@ final class Chidemoon_Core_Compare {
 		);
 	}
 
-	/** @return WP_REST_Response */
-	public static function search_products( WP_REST_Request $request ): WP_REST_Response {
+	/** @return WP_REST_Response|WP_Error */
+	public static function search_products( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$throttled = self::throttle_public_search();
+		if ( is_wp_error( $throttled ) ) {
+			return $throttled;
+		}
+
 		$term       = trim( (string) $request->get_param( 'search' ) );
 		$browse     = (bool) $request->get_param( 'browse' );
 		$requested  = self::product_ids( (string) $request->get_param( 'ids' ) );
@@ -107,13 +125,17 @@ final class Chidemoon_Core_Compare {
 		}
 
 		$candidates = ! empty( $requested )
-			? array_filter( array_map( 'wc_get_product', $requested ), static fn( $product ): bool => $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) )
+			? array_filter( array_map( 'wc_get_product', $requested ), static fn( $product ): bool => $product instanceof WC_Product && 'publish' === get_post_status( $product ) )
 			: self::eligible_products( self::SEARCH_LIMIT, $browse ? '' : $term );
 		$results = array();
 		foreach ( $candidates as $product ) {
+			if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+				continue;
+			}
 			$results[] = array(
 				'id'    => $product->get_id(),
 				'title' => wp_strip_all_tags( $product->get_name() ),
+				'image' => (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ),
 			);
 		}
 
@@ -143,7 +165,10 @@ final class Chidemoon_Core_Compare {
 			$args['offset'] = $offset;
 			$page            = wc_get_products( $args );
 			foreach ( $page as $product ) {
-				if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+				if ( ! $product instanceof WC_Product || 'publish' !== get_post_status( $product ) ) {
+					continue;
+				}
+				if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
 					continue;
 				}
 				$products[] = $product;
@@ -169,9 +194,16 @@ final class Chidemoon_Core_Compare {
 
 	public static function render_single_control(): void {
 		$product = self::current_product();
-		if ( $product instanceof WC_Product ) {
-			echo self::control( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		if ( ! $product instanceof WC_Product ) {
+			return;
 		}
+		static $rendered = array();
+		$product_id      = $product->get_id();
+		if ( isset( $rendered[ $product_id ] ) ) {
+			return;
+		}
+		$rendered[ $product_id ] = true;
+		echo self::single_control( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/** @param array<string, string> $attributes */
@@ -181,16 +213,41 @@ final class Chidemoon_Core_Compare {
 		return $product instanceof WC_Product ? self::control( $product ) : '';
 	}
 
-	public static function control( WC_Product $product ): string {
-		if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+	public static function single_control( WC_Product $product ): string {
+		if ( 'publish' !== get_post_status( $product ) ) {
 			return '';
 		}
 		self::enqueue_assets();
 		return sprintf(
-			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M19 4v16M9 8h6M9 16h6"/></svg><span>%3$s</span></button>',
+			'<button type="button" class="chidemoon-compare-single" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%3$s" aria-pressed="false">' .
+				'<span class="chidemoon-compare-single__icon" aria-hidden="true">' .
+					'<svg class="chidemoon-compare-single__icon-add" viewBox="0 0 24 24"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg>' .
+					'<svg class="chidemoon-compare-single__icon-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 7"/></svg>' .
+				'</span>' .
+				'<span class="chidemoon-compare-single__text">' .
+					'<span class="chidemoon-compare-single__label">%4$s</span>' .
+					'<span class="chidemoon-compare-single__hint">%5$s</span>' .
+				'</span>' .
+			'</button>',
 			$product->get_id(),
 			esc_attr( $product->get_name() ),
-			esc_html__( 'مقایسه', 'chidemoon-core' )
+			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) ),
+			esc_html__( 'افزودن به مقایسه', 'chidemoon-core' ),
+			esc_html__( 'با حداکثر چهار محصول بسنجید', 'chidemoon-core' )
+		);
+	}
+
+	public static function control( WC_Product $product ): string {
+		if ( 'publish' !== get_post_status( $product ) ) {
+			return '';
+		}
+		self::enqueue_assets();
+		return sprintf(
+			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%4$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
+			$product->get_id(),
+			esc_attr( $product->get_name() ),
+			esc_html__( 'مقایسه', 'chidemoon-core' ),
+			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) )
 		);
 	}
 
@@ -216,7 +273,7 @@ final class Chidemoon_Core_Compare {
 		$products  = array();
 		foreach ( self::product_ids( $requested ) as $id ) {
 			$product = wc_get_product( $id );
-			if ( $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
+			if ( $product instanceof WC_Product && 'publish' === get_post_status( $product ) ) {
 				$products[] = $product;
 			}
 		}
@@ -276,5 +333,31 @@ final class Chidemoon_Core_Compare {
 
 	private static function string_length( string $value ): int {
 		return function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
+	}
+
+	/**
+	 * @return true|WP_Error
+	 */
+	private static function throttle_public_search() {
+		$ip = self::client_ip();
+		$key = 'chidemoon_compare_' . substr( hash_hmac( 'sha256', $ip, wp_salt( 'nonce' ) ), 0, 36 );
+		$count = (int) get_transient( $key );
+		if ( $count >= 60 ) {
+			return new WP_Error( 'rate_limited', __( 'Too many requests. Please try again later.', 'chidemoon-core' ), array( 'status' => 429 ) );
+		}
+		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
+		return true;
+	}
+
+	private static function client_ip(): string {
+		$forwarded = (string) ( $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '' );
+		if ( '' !== $forwarded ) {
+			$parts = explode( ',', $forwarded );
+			$first = trim( (string) reset( $parts ) );
+			if ( '' !== $first ) {
+				return sanitize_text_field( $first );
+			}
+		}
+		return sanitize_text_field( (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 	}
 }

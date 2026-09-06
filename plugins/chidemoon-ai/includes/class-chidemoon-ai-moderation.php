@@ -163,7 +163,11 @@ class Chidemoon_AI_Moderation {
 		}
 
 		$timeout = getenv( 'CHIDEMOON_AI_MODERATION_TIMEOUT' );
-		$timeout = false === $timeout || ! is_numeric( $timeout ) ? 30 : (int) $timeout;
+		if ( class_exists( 'Chidemoon_AI_Settings' ) ) {
+			$timeout = Chidemoon_AI_Settings::get_int( 'moderation_timeout' );
+		} else {
+			$timeout = false === $timeout || ! is_numeric( $timeout ) ? 30 : (int) $timeout;
+		}
 		return array(
 			'base_url' => rtrim( $base_url, '/' ),
 			'api_key'  => $api_key,

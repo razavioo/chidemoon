@@ -25,19 +25,20 @@ $guide_posts = new WP_Query(
 <main id="primary" class="site-main chidemoon-collection-page chidemoon-guides-page">
 	<?php while ( have_posts() ) : ?>
 		<?php the_post(); ?>
-		<header class="chidemoon-collection-page__hero chidemoon-section-shell">
-			<p class="chidemoon-eyebrow"><?php esc_html_e( 'راهنماهای مبتنی بر تجربه', 'chidemoon-blocksy-child' ); ?></p>
-			<h1><?php the_title(); ?></h1>
-			<?php if ( has_excerpt() ) : ?>
-				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
+		<header class="chidemoon-collection-page__hero chidemoon-section-shell<?php echo has_post_thumbnail() ? ' has-media' : ''; ?>">
+			<div class="chidemoon-collection-page__hero-copy">
+				<p class="chidemoon-eyebrow"><?php esc_html_e( 'راهنمای خرید، از دل تجربه', 'chidemoon-blocksy-child' ); ?></p>
+				<h1><?php the_title(); ?></h1>
+				<?php if ( has_excerpt() ) : ?>
+					<p><?php echo esc_html( get_the_excerpt() ); ?></p>
+				<?php endif; ?>
+			</div>
+			<?php if ( has_post_thumbnail() ) : ?>
+				<figure class="chidemoon-collection-page__hero-media">
+					<?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?>
+				</figure>
 			<?php endif; ?>
 		</header>
-
-		<?php if ( has_post_thumbnail() ) : ?>
-			<figure class="chidemoon-collection-page__image chidemoon-section-shell">
-				<?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?>
-			</figure>
-		<?php endif; ?>
 
 		<?php if ( '' !== trim( wp_strip_all_tags( get_the_content() ) ) ) : ?>
 			<section class="chidemoon-collection-page__content chidemoon-collection-page__content--single chidemoon-section-shell">
@@ -52,7 +53,7 @@ $guide_posts = new WP_Query(
 		<div class="chidemoon-section-heading">
 			<div>
 				<p class="chidemoon-eyebrow"><?php esc_html_e( 'در مجله', 'chidemoon-blocksy-child' ); ?></p>
-				<h2 id="chidemoon-guides-feed"><?php esc_html_e( 'پیش از خرید، اصول را یاد بگیرید', 'chidemoon-blocksy-child' ); ?></h2>
+				<h2 id="chidemoon-guides-feed"><?php esc_html_e( 'قبل از خرید، اصول کار را بدانید', 'chidemoon-blocksy-child' ); ?></h2>
 			</div>
 		</div>
 		<?php if ( $guide_posts->have_posts() ) : ?>
@@ -64,9 +65,15 @@ $guide_posts = new WP_Query(
 			</div>
 			<?php wp_reset_postdata(); ?>
 		<?php else : ?>
-			<?php chidemoon_blocksy_render_empty_state( 'اولین راهنما در حال آماده‌سازی است.', 'فقط راهنماهایی که تجربه‌ی واقعی و معیارهای شفاف داشته باشند اینجا منتشر می‌شوند.' ); ?>
+			<?php chidemoon_blocksy_render_empty_state( 'اولین راهنما در حال آماده‌سازی است.', 'اینجا فقط راهنماهایی منتشر می‌شوند که از تجربه‌ی واقعی نوشته شده باشند.' ); ?>
 		<?php endif; ?>
 	</section>
+
+	<?php if ( shortcode_exists( 'chidemoon_ai_assistant' ) ) : ?>
+	<section class="chidemoon-section-shell chidemoon-collection-page__assistant" aria-labelledby="chidemoon-guides-assistant">
+		<?php echo do_shortcode( '[chidemoon_ai_assistant title="از راهنماها بپرسید"]' ); ?>
+	</section>
+	<?php endif; ?>
 </main>
 
 <?php
