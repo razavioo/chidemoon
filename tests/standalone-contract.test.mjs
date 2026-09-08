@@ -104,6 +104,7 @@ describe('standalone Chidemoon runtime', () => {
     assert.match(builder, /blocksy/);
     assert.match(builder, /woocommerce/);
     assert.match(builder, /tr -d/);
+    assert.match(builder, /sha256sum -c -/);
     assert.match(builder, /release shell scripts/);
     assert.match(verifier, /sha256sum -c/);
     assert.match(verifier, /--no-same-owner/);

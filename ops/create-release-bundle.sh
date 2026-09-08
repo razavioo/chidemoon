@@ -31,7 +31,7 @@ for package in blocksy woocommerce; do
 	[[ -f "$ROOT_DIR/vendor/${package}.sha256" ]] || fail "Missing offline package checksum: vendor/${package}.sha256"
 	(
 		cd "$ROOT_DIR/vendor"
-		sha256sum -c "${package}.sha256"
+		tr -d '\r' < "${package}.sha256" | sha256sum -c -
 	) || fail "Offline package checksum failed: ${package}"
 done
 
