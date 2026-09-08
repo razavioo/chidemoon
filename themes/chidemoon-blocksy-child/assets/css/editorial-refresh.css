@@ -3478,6 +3478,99 @@ html {
 	display: none;
 }
 
+/* Elementor Free owns these three landing bodies but still uses the Chidemoon type system. */
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) {
+	--padding-left: clamp(1rem, 4vw, 3rem);
+	--padding-right: clamp(1rem, 4vw, 3rem);
+	box-sizing: border-box;
+	inline-size: 100%;
+	max-inline-size: 100%;
+	min-inline-size: 0;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) :where(
+	.e-con-inner,
+	.elementor-widget,
+	.elementor-widget-container,
+	.elementor-shortcode
+) {
+	max-inline-size: 100%;
+	min-inline-size: 0;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > :is(.elementor-widget-heading, .elementor-widget-text-editor) {
+	direction: rtl;
+	text-align: start;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > .elementor-widget-heading .elementor-heading-title {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-synthesis: none;
+	font-weight: 800;
+	letter-spacing: 0;
+	line-height: 1.35;
+	max-inline-size: 100%;
+	overflow-wrap: anywhere;
+	text-wrap: balance;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > .elementor-widget-heading h1.elementor-heading-title {
+	font-size: clamp(2rem, 7vw, 2.75rem);
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > .elementor-widget-heading h2.elementor-heading-title {
+	font-size: clamp(1.35rem, 5.5vw, 2rem);
+	line-height: 1.4;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > .elementor-widget-heading :is(h3, h4).elementor-heading-title {
+	font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+	line-height: 1.45;
+}
+
+body.elementor-page .elementor-element:is(
+	.elementor-element-cmguides1,
+	.elementor-element-cmcompare1,
+	.elementor-element-cmlooks1
+) > .e-con-inner > .elementor-widget-text-editor :where(p, li) {
+	color: var(--chidemoon-muted);
+	font-family: var(--chidemoon-font-body);
+	font-size: clamp(1rem, 3.6vw, 1.125rem);
+	line-height: 1.9;
+	max-inline-size: 65ch;
+	overflow-wrap: anywhere;
+	text-wrap: pretty;
+}
+
 .woocommerce div.product .ct-product-add-to-cart:empty {
 	display: none;
 }

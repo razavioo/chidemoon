@@ -45,6 +45,25 @@ describe('Elementor Free landing components', () => {
     assert.match(i18n, /chidemoon_blocksy_skip_target/);
   });
 
+  it('scopes RTL containment and Persian typography to migrated Elementor pages', () => {
+    const styles = read('themes/chidemoon-blocksy-child/assets/css/editorial-refresh.css');
+
+    for (const rootClass of [
+      'elementor-element-cmguides1',
+      'elementor-element-cmcompare1',
+      'elementor-element-cmlooks1',
+    ]) {
+      assert.match(styles, new RegExp(rootClass));
+    }
+    assert.match(styles, /--padding-left: clamp/);
+    assert.match(styles, /--padding-right: clamp/);
+    assert.match(styles, /min-inline-size: 0/);
+    assert.match(styles, /font-family: var\(--chidemoon-font-display\)/);
+    assert.match(styles, /font-family: var\(--chidemoon-font-body\)/);
+    assert.match(styles, /font-synthesis: none/);
+    assert.match(styles, /overflow-wrap: anywhere/);
+  });
+
   it('uses the affiliate eligibility gate for every comparison surface', () => {
     const compare = read(`${core}/includes/class-chidemoon-core-compare.php`);
 
