@@ -31,6 +31,7 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-admin.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-blocks.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-shop-the-look.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-compare.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-landing-components.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-importer.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 

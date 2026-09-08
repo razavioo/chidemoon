@@ -104,5 +104,38 @@
 	function boot() {
 		document.querySelectorAll('.chidemoon-shop-the-look').forEach(init);
 	}
-	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+
+	// Elementor frontend compatibility: Elementor loads widgets via AJAX after DOMContentLoaded.
+	function bootElementor() {
+		if (window.elementorFrontend && window.elementorFrontend.hooks) {
+			window.elementorFrontend.hooks.addAction('frontend/element_ready/chidemoon-shop-the-look.default', function ($scope) {
+				$scope[0].querySelectorAll('.chidemoon-shop-the-look').forEach(init);
+				// also handle case where widget is inside generic HTML via shortcode
+				document.querySelectorAll('.chidemoon-shop-the-look').forEach(init);
+			});
+			// Fallback for any new nodes added dynamically (Elementor preview, AJAX)
+			if (window.MutationObserver) {
+				var observer = new MutationObserver(function (mutations) {
+					mutations.forEach(function (m) {
+						m.addedNodes.forEach(function (node) {
+							if (node.nodeType === 1) {
+								if (node.classList && node.classList.contains('chidemoon-shop-the-look')) init(node);
+								node.querySelectorAll && node.querySelectorAll('.chidemoon-shop-the-look').forEach(init);
+							}
+						});
+					});
+				});
+				observer.observe(document.body, { childList: true, subtree: true });
+			}
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', function () { boot(); bootElementor(); });
+	} else {
+		boot();
+		bootElementor();
+	}
+	// Also try after a delay for Elementor preview iframe
+	window.addEventListener('load', boot);
 })();

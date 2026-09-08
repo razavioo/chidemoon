@@ -74,3 +74,43 @@ html.has-chidemoon-compare-bar body, body:has(.chidemoon-compare-bar:not([hidden
 @keyframes chidemoon-compare-bar-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (prefers-reduced-motion: reduce) { .chidemoon-compare-bar, .chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-compare-bar__chip, .chidemoon-compare-bar__clear, .chidemoon-compare-bar__go { animation: none; transition: none; } .chidemoon-compare-control:active, .chidemoon-compare-single:hover, .chidemoon-compare-single:active, .chidemoon-compare-bar__chip:hover, .chidemoon-compare-bar__go:hover:not(:disabled) { transform: none; } }
+
+.chidemoon-comparison-status, .chidemoon-comparison-picker, .chidemoon-comparison-table-section { scroll-margin-block-start: 6.5rem; }
+.chidemoon-comparison-status { align-items: center; background: color-mix(in srgb, var(--chidemoon-sage, #a9c1ad) 45%, var(--chidemoon-surface, #fffdfa)); border: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); border-radius: var(--chidemoon-radius-lg, .7rem); box-shadow: var(--chidemoon-shadow-soft, 0 8px 26px rgba(13, 43, 35, .07)); display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; padding: clamp(1rem, 2.4vw, 1.4rem) clamp(1rem, 2.6vw, 1.6rem); }
+.chidemoon-comparison-status[hidden] { display: none; }
+.chidemoon-comparison-status__count { color: var(--chidemoon-forest, #123f34); font-weight: 800; margin: 0; }
+.chidemoon-comparison-status__chips { display: flex; flex: 1 1 14rem; flex-wrap: wrap; gap: .45rem; }
+.chidemoon-comparison-status__chip { background: var(--chidemoon-surface, #fffdfa); border: 1px solid var(--chidemoon-line-strong, rgba(18, 63, 52, .25)); color: var(--chidemoon-forest, #123f34); padding: .35rem .8rem; }
+.chidemoon-comparison-status__cta { margin-inline-start: auto; }
+.chidemoon-comparison-picker { display: grid; gap: 1.5rem; }
+.chidemoon-comparison-search { background: var(--chidemoon-surface, #fffdfa); border: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); border-radius: var(--chidemoon-radius-lg, .7rem); box-shadow: var(--chidemoon-shadow-soft, 0 8px 26px rgba(13, 43, 35, .07)); max-width: 48rem; padding: clamp(1rem, 3vw, 1.5rem); }
+.chidemoon-comparison-search label { color: var(--chidemoon-forest, #123f34); display: block; font-weight: 800; margin-block-end: .6rem; }
+.chidemoon-comparison-search__field { align-items: center; border: 1px solid var(--chidemoon-line-strong, rgba(18, 63, 52, .25)); border-radius: var(--chidemoon-radius-sm, .35rem); display: flex; gap: .7rem; padding-inline: .8rem; }
+.chidemoon-comparison-search__field:focus-within { border-color: var(--chidemoon-forest, #123f34); outline: 2px solid color-mix(in srgb, var(--chidemoon-forest, #123f34) 25%, transparent); }
+.chidemoon-comparison-search__field svg { fill: none; flex: 0 0 auto; height: 1.2rem; stroke: var(--chidemoon-forest, #123f34); stroke-linecap: round; stroke-width: 1.8; width: 1.2rem; }
+.chidemoon-comparison-search input { background: transparent; border: 0; color: inherit; font: inherit; min-height: 3rem; outline: 0; width: 100%; }
+.chidemoon-comparison-search__hint, .chidemoon-compare-empty { color: var(--chidemoon-muted, #607069); line-height: 1.8; margin: .75rem 0 0; }
+.chidemoon-comparison-search__results { border-block-start: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); margin-block-start: .9rem; padding-block-start: .7rem; }
+.chidemoon-comparison-search__result { align-items: center; background: transparent; border: 0; border-block-end: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); color: var(--chidemoon-forest, #123f34); cursor: pointer; display: flex; font: inherit; font-weight: 700; justify-content: space-between; min-height: 3rem; padding: .5rem 0; text-align: start; width: 100%; }
+.chidemoon-comparison-search__result:focus-visible, .chidemoon-comparison-table__remove:focus-visible { outline: 3px solid var(--chidemoon-clay, #b95d3e); outline-offset: 3px; }
+.chidemoon-core-product-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.chidemoon-core-product-card { background: var(--chidemoon-surface, #fffdfa); border: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); border-radius: var(--chidemoon-radius-lg, .7rem); box-shadow: var(--chidemoon-shadow-soft, 0 8px 26px rgba(13, 43, 35, .07)); display: flex; flex-direction: column; overflow: hidden; }
+.chidemoon-core-product-card__media { aspect-ratio: 1 / .8; background: var(--chidemoon-surface-muted, #eee8dc); display: block; }
+.chidemoon-core-product-card__media img { display: block; height: 100%; object-fit: cover; width: 100%; }
+.chidemoon-core-product-card__body { display: grid; flex: 1; gap: .65rem; padding: 1rem; }
+.chidemoon-core-product-card__body p { color: var(--chidemoon-muted, #607069); font-size: .8rem; margin: 0; }
+.chidemoon-core-product-card__body h3 { color: var(--chidemoon-forest, #123f34); font-size: 1rem; line-height: 1.55; margin: 0; }
+.chidemoon-core-product-card__body h3 a { color: inherit; text-decoration: none; }
+.chidemoon-core-product-card__price { color: var(--chidemoon-clay, #b95d3e); font-weight: 800; }
+.chidemoon-core-product-card .chidemoon-compare-control { margin-block-start: auto; width: 100%; }
+.chidemoon-comparison-table-wrap { overflow-x: auto; outline-offset: 4px; }
+.chidemoon-comparison-table { border-collapse: separate; border-spacing: 0; min-width: 48rem; width: 100%; }
+.chidemoon-comparison-table :where(th, td) { background: var(--chidemoon-surface, #fffdfa); border-block-end: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); border-inline-end: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); padding: 1rem; text-align: start; vertical-align: top; }
+.chidemoon-comparison-table :is(th:first-child, td:first-child) { border-inline-start: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); }
+.chidemoon-comparison-table thead th { background: color-mix(in srgb, var(--chidemoon-sage, #a9c1ad) 20%, var(--chidemoon-surface, #fffdfa)); font-weight: 700; min-width: 11rem; }
+.chidemoon-comparison-table tbody th { background: color-mix(in srgb, var(--chidemoon-forest, #123f34) 7%, var(--chidemoon-surface, #fffdfa)); color: var(--chidemoon-forest, #123f34); font-weight: 800; inset-inline-start: 0; min-width: 9rem; position: sticky; z-index: 2; }
+.chidemoon-comparison-table thead a { color: var(--chidemoon-forest, #123f34); display: grid; gap: .65rem; text-decoration: none; }
+.chidemoon-comparison-table thead img { aspect-ratio: 1 / .85; object-fit: cover; width: 100%; }
+.chidemoon-comparison-table__remove { background: transparent; border: 1px solid var(--chidemoon-line-strong, rgba(18, 63, 52, .25)); border-radius: var(--chidemoon-radius-sm, .35rem); color: var(--chidemoon-clay, #b95d3e); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 800; margin-block-start: .7rem; min-height: 2.5rem; padding: .25rem .7rem; }
+@media (max-width: 700px) { .chidemoon-comparison-table { min-width: 0; } .chidemoon-comparison-table thead { display: none; } .chidemoon-comparison-table, .chidemoon-comparison-table tbody, .chidemoon-comparison-table tbody tr, .chidemoon-comparison-table tbody th, .chidemoon-comparison-table tbody td { display: block; width: 100%; } .chidemoon-comparison-table tbody tr { border: 1px solid var(--chidemoon-line, rgba(18, 63, 52, .12)); border-radius: var(--chidemoon-radius, .5rem); box-shadow: var(--chidemoon-shadow-soft, 0 8px 26px rgba(13, 43, 35, .07)); margin-block-end: 1rem; overflow: hidden; } .chidemoon-comparison-table tbody th { border-inline: 0; min-width: 0; position: static; } .chidemoon-comparison-table tbody td { align-items: center; border-inline: 0; display: flex; gap: 1rem; justify-content: space-between; } .chidemoon-comparison-table tbody td::before { color: var(--chidemoon-muted, #607069); content: attr(data-label); flex: 0 1 auto; font-size: .78rem; font-weight: 700; overflow-wrap: anywhere; } .chidemoon-comparison-table tbody td > * { flex: 0 1 auto; min-width: 0; text-align: end; } .chidemoon-comparison-table tbody td .chidemoon-button { flex: 1 1 auto; justify-content: center; white-space: normal; } }
+@media (prefers-reduced-motion: reduce) { .chidemoon-core-product-card, .chidemoon-comparison-search__result { transition: none; } }
