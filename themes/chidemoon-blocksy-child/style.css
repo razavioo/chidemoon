@@ -1442,8 +1442,22 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-ai-assistant__form button {
+	background: var(--chidemoon-clay);
+	border: 1px solid var(--chidemoon-clay);
+	border-radius: var(--chidemoon-radius-sm);
+	color: #fffdf8;
+	font-family: var(--chidemoon-font-ui);
+	font-weight: 700;
 	justify-self: start;
 	min-height: 2.8rem;
+	padding-inline: 1.1rem;
+}
+
+.chidemoon-ai-assistant__form button:hover,
+.chidemoon-ai-assistant__form button:focus-visible {
+	background: var(--chidemoon-clay-soft);
+	border-color: var(--chidemoon-clay-soft);
+	color: var(--chidemoon-forest-deep);
 }
 
 .chidemoon-ai-assistant__form[aria-busy="true"] button {
