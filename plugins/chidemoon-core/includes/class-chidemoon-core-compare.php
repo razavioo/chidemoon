@@ -583,3 +583,4 @@ final class Chidemoon_Core_Compare {
 		<?php
 		return (string) ob_get_clean();
 	}
+}
