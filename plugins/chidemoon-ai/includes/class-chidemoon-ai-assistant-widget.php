@@ -23,7 +23,7 @@ class Chidemoon_AI_Assistant_Widget {
 	public static function render( array $attributes = array() ): string {
 		$attributes = shortcode_atts(
 			array(
-				'title' => __( 'Search published sources', 'chidemoon-ai' ),
+				'title' => '',
 			),
 			$attributes,
 			'chidemoon_ai_assistant'
@@ -33,13 +33,13 @@ class Chidemoon_AI_Assistant_Widget {
 		$instance_id = 'chidemoon-ai-assistant-' . wp_unique_id();
 		ob_start();
 		?>
-		<section id="<?php echo esc_attr( $instance_id ); ?>" class="chidemoon-ai-assistant" data-chidemoon-ai-assistant>
-			<h2><?php echo esc_html( (string) $attributes['title'] ); ?></h2>
-			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'Keyword search over published Chidemoon articles, pages, and products only. No generative AI, live prices, shopping actions, or unreviewed claims.', 'chidemoon-ai' ); ?></p>
+		<section id="<?php echo esc_attr( $instance_id ); ?>" class="chidemoon-ai-assistant" data-chidemoon-ai-assistant dir="rtl">
+			<?php if ( '' !== trim( (string) $attributes['title'] ) ) : ?><h2><?php echo esc_html( (string) $attributes['title'] ); ?></h2><?php endif; ?>
+			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'این بخش فقط مطالب منتشرشدهٔ چیدمون را پیدا می‌کند و قیمت لحظه‌ای یا امکان خرید ارائه نمی‌دهد.', 'chidemoon-ai' ); ?></p>
 			<form class="chidemoon-ai-assistant__form">
-				<label for="<?php echo esc_attr( $instance_id ); ?>-question"><?php esc_html_e( 'Your question', 'chidemoon-ai' ); ?></label>
-				<textarea id="<?php echo esc_attr( $instance_id ); ?>-question" name="question" maxlength="500" required></textarea>
-				<button type="submit"><?php esc_html_e( 'Search published sources', 'chidemoon-ai' ); ?></button>
+				<label for="<?php echo esc_attr( $instance_id ); ?>-question"><?php esc_html_e( 'موضوع یا پرسش خود را بنویسید', 'chidemoon-ai' ); ?></label>
+				<textarea id="<?php echo esc_attr( $instance_id ); ?>-question" name="question" maxlength="500" placeholder="<?php esc_attr_e( 'مثلاً: مبل مناسب نشیمن کوچک', 'chidemoon-ai' ); ?>" required></textarea>
+				<button type="submit"><?php esc_html_e( 'جست‌وجو', 'chidemoon-ai' ); ?></button>
 			</form>
 			<div class="chidemoon-ai-assistant__result" aria-live="polite" aria-atomic="true"></div>
 		</section>
@@ -62,7 +62,7 @@ class Chidemoon_AI_Assistant_Widget {
 				'window.ChidemoonAiAssistant = ' . wp_json_encode(
 					array(
 						'endpoint' => esc_url_raw( rest_url( 'chidemoon-ai/v1/assistant' ) ),
-						'error'    => __( 'The assistant could not retrieve published sources right now.', 'chidemoon-ai' ),
+						'error'    => __( 'اکنون دسترسی به منابع ممکن نیست. کمی بعد دوباره تلاش کنید.', 'chidemoon-ai' ),
 					)
 				) . ';',
 				'before'

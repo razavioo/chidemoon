@@ -49,20 +49,27 @@
 	function init(widget) {
 		var form = widget.querySelector('form');
 		var field = widget.querySelector('textarea[name="question"]');
+		var button = form ? form.querySelector('button[type="submit"]') : null;
 		var result = widget.querySelector('.chidemoon-ai-assistant__result');
-		if (!form || !field || !result || !window.ChidemoonAiAssistant) {
+		if (!form || !field || !button || !result || !window.ChidemoonAiAssistant) {
 			return;
+		}
+
+		function setPending(pending) {
+			form.setAttribute('aria-busy', pending ? 'true' : 'false');
+			button.disabled = pending;
 		}
 
 		form.addEventListener('submit', function (event) {
 			event.preventDefault();
 			var question = field.value.trim();
 			if (question.length < 3) {
-				setMessage(result, 'Please enter a longer question.');
+				setMessage(result, 'لطفاً پرسشی با ۳ تا ۵۰۰ نویسه بنویسید.');
 				return;
 			}
 
-			setMessage(result, 'Searching published Chidemoon sources…');
+			setPending(true);
+			setMessage(result, 'در حال جست‌وجو در مطالب منتشرشدهٔ چیدمون…');
 			fetch(window.ChidemoonAiAssistant.endpoint, {
 				method: 'POST',
 				credentials: 'same-origin',
@@ -81,8 +88,10 @@
 				answer.textContent = text(payload.answer);
 				result.appendChild(answer);
 				renderSources(result, Array.isArray(payload.sources) ? payload.sources : []);
-			}).catch(function () {
-				setMessage(result, text(window.ChidemoonAiAssistant.error) || 'The assistant is unavailable.');
+			}).catch(function (error) {
+				setMessage(result, text(error.message) || text(window.ChidemoonAiAssistant.error) || 'اکنون دسترسی به منابع ممکن نیست. کمی بعد دوباره تلاش کنید.');
+			}).finally(function () {
+				setPending(false);
 			});
 		});
 	}

@@ -17,7 +17,7 @@ class Chidemoon_AI_Assistant {
 	public static function answer( string $question ): array|WP_Error {
 		$question = trim( preg_replace( '/\s+/', ' ', sanitize_textarea_field( $question ) ) ?? '' );
 		if ( self::length( $question ) < 3 || self::length( $question ) > 500 ) {
-			return new WP_Error( 'chidemoon_ai_assistant_question_invalid', __( 'Ask a question between 3 and 500 characters.', 'chidemoon-ai' ), array( 'status' => 400 ) );
+			return new WP_Error( 'chidemoon_ai_assistant_question_invalid', __( 'لطفاً پرسشی با ۳ تا ۵۰۰ نویسه بنویسید.', 'chidemoon-ai' ), array( 'status' => 400 ) );
 		}
 
 		$limited = self::check_rate_limit();
@@ -74,7 +74,7 @@ class Chidemoon_AI_Assistant {
 
 		if ( empty( $sources ) ) {
 			$response = array(
-				'answer'  => __( 'No published Chidemoon source matched that question yet.', 'chidemoon-ai' ),
+				'answer'  => __( 'برای این پرسش، مطلب منتشرشده‌ای پیدا نشد. عبارت دیگری را امتحان کنید.', 'chidemoon-ai' ),
 				'sources' => array(),
 				'mode'    => 'published-retrieval-only',
 			);
@@ -83,7 +83,7 @@ class Chidemoon_AI_Assistant {
 		}
 
 		$response = array(
-			'answer'  => __( 'These published Chidemoon sources are the available evidence for your question. Open a source for the full, reviewed details.', 'chidemoon-ai' ),
+			'answer'  => __( 'این مطالب منتشرشده به پرسش شما نزدیک‌ترند. برای جزئیات، منبع را باز کنید.', 'chidemoon-ai' ),
 			'sources' => $sources,
 			'mode'    => 'published-retrieval-only',
 		);
@@ -104,7 +104,7 @@ class Chidemoon_AI_Assistant {
 			$record = array( 'started_at' => $now, 'count' => 0 );
 		}
 		if ( (int) $record['count'] >= self::WINDOW_LIMIT ) {
-			return new WP_Error( 'chidemoon_ai_assistant_rate_limited', __( 'Too many assistant requests. Please wait before trying again.', 'chidemoon-ai' ), array( 'status' => 429 ) );
+			return new WP_Error( 'chidemoon_ai_assistant_rate_limited', __( 'تعداد جست‌وجوها در این چند دقیقه زیاد بوده است. کمی بعد دوباره تلاش کنید.', 'chidemoon-ai' ), array( 'status' => 429 ) );
 		}
 
 		$record['count'] = (int) $record['count'] + 1;

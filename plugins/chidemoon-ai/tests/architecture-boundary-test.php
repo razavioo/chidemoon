@@ -60,5 +60,13 @@ chidemoon_ai_architecture_assert(
 	false !== strpos( $widget_source, "add_shortcode( 'chidemoon_ai_assistant'" ),
 	'The published-content assistant needs a usable shortcode shell.'
 );
+chidemoon_ai_architecture_assert(
+	false !== strpos( $widget_source, "'title' => ''" ) && false !== strpos( $widget_source, "trim( (string) \$attributes['title'] )" ),
+	'The published-content assistant must not render a duplicate heading by default.'
+);
+chidemoon_ai_architecture_assert(
+	false !== strpos( $widget_source, 'موضوع یا پرسش خود را بنویسید' ) && false !== strpos( $widget_source, 'جست‌وجو' ),
+	'The public assistant widget must use Persian search copy.'
+);
 
 echo "Chidemoon AI architecture contracts passed.\n";

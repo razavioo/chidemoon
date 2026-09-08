@@ -1406,8 +1406,70 @@ body:not(.rtl) .chidemoon-text-link:hover span {
 }
 
 .chidemoon-ai-assistant__sources {
-	font-size: 0.86rem;
+	font-size: 0.95rem;
 	margin-top: 1rem;
+}
+
+.chidemoon-ai-assistant {
+	direction: rtl;
+	font-family: var(--chidemoon-font-body);
+	text-align: start;
+}
+
+.chidemoon-ai-assistant__disclosure {
+	color: rgba(255, 253, 248, 0.82);
+	font-size: 0.95rem;
+	line-height: 1.9;
+	margin: 0;
+	max-width: 50rem;
+}
+
+.chidemoon-ai-assistant__form {
+	display: grid;
+	gap: 0.75rem;
+	margin-top: 1.25rem;
+}
+
+.chidemoon-ai-assistant__form label {
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+.chidemoon-ai-assistant__form textarea {
+	line-height: 1.8;
+	min-height: 7rem;
+	resize: vertical;
+}
+
+.chidemoon-ai-assistant__form button {
+	justify-self: start;
+	min-height: 2.8rem;
+}
+
+.chidemoon-ai-assistant__form[aria-busy="true"] button {
+	cursor: progress;
+	opacity: 0.7;
+}
+
+.chidemoon-ai-assistant__result {
+	color: #fffdf8;
+	font-size: 0.95rem;
+	line-height: 1.9;
+	margin-top: 1rem;
+}
+
+.chidemoon-ai-assistant__result :where(p, li) {
+	margin-block: 0.5rem;
+}
+
+.chidemoon-ai-assistant__result a {
+	color: var(--chidemoon-clay-soft);
+	font-weight: 700;
+}
+
+.chidemoon-ai-assistant__result a:hover,
+.chidemoon-ai-assistant__result a:focus-visible {
+	color: #fffdf8;
 }
 
 :where(a, button, input, select, textarea):focus-visible {
