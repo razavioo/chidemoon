@@ -135,5 +135,5 @@ add_filter(
  */
 add_filter(
 	'blocksy:head:skip-to-content:href',
-	static fn(): string => '#primary'
+	static fn(): string => function_exists( 'chidemoon_blocksy_skip_target' ) ? chidemoon_blocksy_skip_target() : '#primary'
 );

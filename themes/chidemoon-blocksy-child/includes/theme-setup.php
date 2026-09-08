@@ -21,9 +21,13 @@ add_action(
  * Keep keyboard users out of the Blocksy navigation chrome when they want the
  * page content. The target is shared by every public template in this theme.
  */
+function chidemoon_blocksy_skip_target(): string {
+	return is_page( array( 'guides', 'comparisons', 'shop-the-look' ) ) ? '#main' : '#primary';
+}
+
 function chidemoon_blocksy_render_skip_link(): void {
 	?>
-	<a class="chidemoon-skip-link" href="#primary"><?php esc_html_e( 'رفتن به محتوای اصلی', 'chidemoon-blocksy-child' ); ?></a>
+	<a class="chidemoon-skip-link" href="<?php echo esc_attr( chidemoon_blocksy_skip_target() ); ?>"><?php esc_html_e( 'رفتن به محتوای اصلی', 'chidemoon-blocksy-child' ); ?></a>
 	<?php
 }
 add_action( 'wp_body_open', 'chidemoon_blocksy_render_skip_link', 5 );

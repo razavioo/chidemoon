@@ -31,6 +31,20 @@ describe('Elementor Free landing components', () => {
     assert.match(landing, /paginate_links/);
   });
 
+  it('removes legacy route renderers after Elementor takes body ownership', () => {
+    for (const path of [
+      'themes/chidemoon-blocksy-child/page-guides.php',
+      'themes/chidemoon-blocksy-child/page-comparisons.php',
+      'themes/chidemoon-blocksy-child/page-shop-the-look.php',
+    ]) {
+      assert.equal(existsSync(join(root, path)), false, `${path} must not render alongside Elementor`);
+    }
+    const setup = read('themes/chidemoon-blocksy-child/includes/theme-setup.php');
+    const i18n = read('themes/chidemoon-blocksy-child/includes/theme-i18n.php');
+    assert.match(setup, /is_page\( array\( 'guides', 'comparisons', 'shop-the-look' \) \) \? '#main' : '#primary'/);
+    assert.match(i18n, /chidemoon_blocksy_skip_target/);
+  });
+
   it('uses the affiliate eligibility gate for every comparison surface', () => {
     const compare = read(`${core}/includes/class-chidemoon-core-compare.php`);
 
