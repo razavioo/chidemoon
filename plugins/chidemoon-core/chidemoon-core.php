@@ -33,6 +33,7 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-shop-the-look.p
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-compare.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-importer.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-public-design.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-search-facets.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-dates.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 

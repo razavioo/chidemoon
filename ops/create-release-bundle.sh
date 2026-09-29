@@ -72,6 +72,7 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	plugins \
 	tools/elementor-rebuild.php \
 	tools/rebuild-editorial.php \
+	tools/ui-catalogue-refresh.php \
 	tools/verify-elementor.php \
 	tools/catalogue \
 	README.md \

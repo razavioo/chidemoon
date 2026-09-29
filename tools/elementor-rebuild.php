@@ -3,6 +3,8 @@
  * Chidemoon's one-time, reviewable Elementor migration.
  * Run with: wp eval-file /tools/elementor-rebuild.php apply
  * An existing migration is left alone unless force is passed.
+ * Run with: wp eval-file /tools/elementor-rebuild.php ui-upgrade apply
+ * The UI upgrade patches only known elements in managed documents.
  */
 
 if ( ! defined( 'ABSPATH' ) || ! defined( 'WP_CLI' ) || ! WP_CLI ) {
@@ -16,13 +18,17 @@ if ( ! class_exists( '\\Elementor\\Plugin' ) || ! class_exists( '\\ElementorPro\
 $apply = in_array( 'apply', $args, true );
 $force = in_array( 'force', $args, true );
 $reset_demo = in_array( 'reset-demo', $args, true );
+$ui_upgrade = in_array( 'ui-upgrade', $args, true );
 if ( $force && ! $apply ) {
 	WP_CLI::error( 'force requires apply.' );
+}
+if ( $ui_upgrade && ( $force || $reset_demo ) ) {
+	WP_CLI::error( 'ui-upgrade cannot be combined with force or reset-demo.' );
 }
 if ( $apply && ( ! current_user_can( 'edit_theme_options' ) || ! current_user_can( 'edit_pages' ) ) ) {
 	WP_CLI::error( 'Run as an administrator with --user=<id>.' );
 }
-if ( $apply ) {
+if ( $apply && ! $ui_upgrade ) {
 	update_option( 'timezone_string', 'Asia/Tehran' );
 	update_option( 'date_format', 'j F Y' );
 	foreach ( array( 'guides' => 'راهنمای خرید', 'comparisons' => 'مقایسه‌ها', 'room-ideas' => 'ایده‌های چیدمان' ) as $slug => $name ) {
@@ -35,12 +41,12 @@ if ( $apply ) {
 $required_pages = array( 'home' => 'چیدمون', 'guides' => 'راهنمای خرید', 'comparisons' => 'مقایسه‌ها', 'shop-the-look' => 'ایده‌های چیدمان', 'magazine' => 'مجله', 'shop' => 'محصولات' );
 foreach ( $required_pages as $slug => $title ) {
 	$page = get_page_by_path( $slug );
-	if ( $apply && ! $page ) {
+	if ( $apply && ! $ui_upgrade && ! $page ) {
 		$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title ), true );
 		if ( is_wp_error( $id ) ) {
 			WP_CLI::error( $id->get_error_message() );
 		}
-	} elseif ( $apply && $page && $page->post_title !== $title ) {
+	} elseif ( $apply && ! $ui_upgrade && $page && $page->post_title !== $title ) {
 		wp_update_post( array( 'ID' => $page->ID, 'post_title' => $title ) );
 	}
 }
@@ -55,7 +61,7 @@ $assets = array(
 );
 foreach ( $assets as $key => $file ) {
 	$matches = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => 1, 'meta_key' => '_wp_attached_file', 'meta_value' => $file, 'meta_compare' => 'LIKE', 'fields' => 'ids' ) );
-	if ( ! $matches && $apply ) {
+	if ( ! $matches && $apply && ! $ui_upgrade ) {
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -73,11 +79,11 @@ foreach ( $assets as $key => $file ) {
 		$matches = array( $id );
 	}
 	$assets[ $key ] = $matches ? (int) $matches[0] : 0;
-	if ( $apply && $assets[ $key ] && false === get_option( 'chidemoon_concept_media', false ) ) {
+	if ( $apply && ! $ui_upgrade && $assets[ $key ] && false === get_option( 'chidemoon_concept_media', false ) ) {
 		update_post_meta( $assets[ $key ], '_wp_attachment_image_alt', 'چیدمان مفهومی خانه' );
 	}
 }
-if ( $apply && false === get_option( 'chidemoon_concept_media', false ) ) {
+if ( $apply && ! $ui_upgrade && false === get_option( 'chidemoon_concept_media', false ) ) {
 	update_option( 'chidemoon_concept_media', array_values( $assets ), false );
 }
 
@@ -91,16 +97,18 @@ foreach ( $template_names as $name ) {
 	$summary[] = 'template ' . $name;
 }
 if ( ! $apply ) {
-	WP_CLI::log( "Dry run. Pass apply to write:\n- " . implode( "\n- ", $summary ) );
-	return;
+	if ( ! $ui_upgrade ) {
+		WP_CLI::log( "Dry run. Pass apply to write:\n- " . implode( "\n- ", $summary ) );
+		return;
+	}
 }
 
-if ( ! current_user_can( 'edit_theme_options' ) || ! current_user_can( 'edit_pages' ) ) {
+if ( $apply && ( ! current_user_can( 'edit_theme_options' ) || ! current_user_can( 'edit_pages' ) ) ) {
 	WP_CLI::error( 'Run as an administrator with --user=<id>.' );
 }
 
 // Retire only the first inventory, so a later rerun cannot hide the editor's new work.
-if ( $reset_demo && false === get_option( 'chidemoon_demo_retirement', false ) ) {
+if ( ! $ui_upgrade && $reset_demo && false === get_option( 'chidemoon_demo_retirement', false ) ) {
 	$previous = array();
 	foreach ( get_posts( array( 'post_type' => array( 'post', 'product' ), 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
 		if ( get_post_meta( $post->ID, '_chidemoon_rebuild_editorial', true ) ) {
@@ -127,10 +135,15 @@ class Chidemoon_Elementor_Rebuild {
 	private int $menu_id;
 	private \Elementor\Plugin $elementor;
 
-	public function __construct( array $assets, bool $force ) {
+	public function __construct( array $assets, bool $force, bool $ui_upgrade = false ) {
 		$this->assets    = $assets;
 		$this->force     = $force;
 		$this->elementor = \Elementor\Plugin::$instance;
+		if ( $ui_upgrade ) {
+			$this->menu_id = 0;
+			$this->next_id = 100000;
+			return;
+		}
 		$menu = wp_get_nav_menu_object( 'chidemoon-primary' );
 		$this->menu_id = $menu ? (int) $menu->term_id : (int) wp_create_nav_menu( 'chidemoon-primary' );
 		if ( get_option( 'chidemoon_visual_setup' ) && ! $force ) {
@@ -220,6 +233,24 @@ class Chidemoon_Elementor_Rebuild {
 		);
 	}
 
+	private function require_product_archive_controls(): void {
+		$widget = $this->elementor->widgets_manager->get_widget_types( 'woocommerce-archive-products' );
+		$controls = $widget ? $widget->get_controls() : array();
+		foreach ( array( 'allow_order', 'show_result_count' ) as $key ) {
+			if ( ! array_key_exists( $key, $controls ) ) {
+				WP_CLI::error( 'Installed Elementor Archive Products widget lacks control: ' . $key );
+			}
+		}
+	}
+
+	private function product_archive_grid(): array {
+		$this->require_product_archive_controls();
+		return $this->widget( 'woocommerce-archive-products', array_merge( $this->product_grid_settings(), array(
+			'columns' => 4, 'columns_tablet' => '2', 'columns_mobile' => '1',
+			'allow_order' => 'yes', 'show_result_count' => 'yes',
+		) ) );
+	}
+
 	private function image( string $key, string $class = '' ): array {
 		$id = $this->assets[ $key ];
 		return $this->widget( 'image', array( 'image' => array( 'id' => $id, 'url' => wp_get_attachment_url( $id ) ), 'image_size' => 'full', '_css_classes' => $class ) );
@@ -229,7 +260,7 @@ class Chidemoon_Elementor_Rebuild {
 		$settings = array(
 			'_skin' => 'classic', 'classic_columns' => '3', 'classic_columns_tablet' => '2', 'classic_columns_mobile' => '1',
 			'classic_posts_per_page' => $count, 'classic_thumbnail_size_size' => 'large', 'classic_meta_data' => array( 'date' ),
-			'classic_excerpt_length' => 16, 'classic_read_more_text' => 'مشاهدهٔ مطلب', 'classic_masonry' => 'yes',
+			'classic_excerpt_length' => 16, 'classic_read_more_text' => 'مشاهدهٔ مطلب', 'classic_masonry' => 'no',
 			'posts_post_type' => 'post', 'posts_orderby' => 'date', 'posts_order' => 'DESC', '_css_classes' => 'ch-editorial-feed',
 			'posts_query_id' => $query_id,
 			'pagination_type' => $count > 6 ? 'numbers' : '',
@@ -244,12 +275,12 @@ class Chidemoon_Elementor_Rebuild {
 		return $this->widget( 'posts', $settings );
 	}
 
-	private function route( string $image, string $title, string $description, string $path ): array {
+	private function route( string $image, string $title, string $description, string $path, string $action ): array {
 		return $this->box( array(
 			$this->image( $image, 'ch-route-media' ),
 			$this->heading( $title, 'h3' ),
 			$this->text( '<p>' . esc_html( $description ) . '</p>' ),
-			$this->button( 'مشاهده', $path, 'ch-link-button' ),
+			$this->button( $action, $path, 'ch-link-button' ),
 		), 'ch-route', array( 'width' => array( 'unit' => '%', 'size' => 31, 'sizes' => array() ), 'width_mobile' => array( 'unit' => '%', 'size' => 100, 'sizes' => array() ) ) );
 	}
 
@@ -279,9 +310,9 @@ class Chidemoon_Elementor_Rebuild {
 				$this->text( '<p>از کجا شروع کنیم؟</p>', 'ch-eyebrow' ),
 				$this->heading( 'مسیر خودت را پیدا کن' ),
 				$this->box( array(
-					$this->route( 'reading', 'ایده‌های چیدمان', 'از ترکیب رنگ، نور و وسایل برای فضای خودت ایده بگیر.', '/shop-the-look/' ),
-					$this->route( 'work', 'راهنمای خرید', 'برای انتخاب اندازه، جنس و کاربرد درست شروع کن.', '/guides/' ),
-					$this->route( 'dining', 'مقایسه‌ها', 'تفاوت گزینه‌ها را در کنار هم بخوان.', '/comparisons/' ),
+					$this->route( 'reading', 'ایده‌های چیدمان', 'از ترکیب رنگ، نور و وسایل برای فضای خودت ایده بگیر.', '/shop-the-look/', 'دیدن ایده‌ها' ),
+					$this->route( 'work', 'راهنمای خرید', 'برای انتخاب اندازه، جنس و کاربرد درست شروع کن.', '/guides/', 'خواندن راهنماها' ),
+					$this->route( 'dining', 'مقایسه‌ها', 'تفاوت گزینه‌ها را در کنار هم بخوان.', '/comparisons/', 'دیدن مقایسه‌ها' ),
 				), 'ch-route-grid', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_wrap' => 'wrap', 'flex_justify_content' => 'space-between' ) ),
 			), 'ch-discovery' ),
 			$this->section( array(
@@ -295,14 +326,14 @@ class Chidemoon_Elementor_Rebuild {
 
 	private function landing( string $kind ): array {
 		if ( 'guides' === $kind ) {
-			return array( $this->intro( 'راهنمای خرید', 'قبل از خرید، بهتر انتخاب کن', 'راهنماهای چیدمون به اندازه، کاربرد و جزئیات قابل بررسی می‌پردازند.', 'work' ), $this->section( array( $this->heading( 'راهنماها' ), $this->posts( 'guides', 12 ) ), 'ch-listing' ) );
+			return array( $this->intro( 'راهنمای خرید', 'راهنماهای انتخاب و خرید', 'راهنماهای چیدمون به اندازه، کاربرد و جزئیات قابل بررسی می‌پردازند.', 'work' ), $this->section( array( $this->heading( 'راهنماها' ), $this->posts( 'guides', 12 ) ), 'ch-listing' ) );
 		}
 		if ( 'comparisons' === $kind ) {
 			return array( $this->section( array( $this->text( '<p>مقایسه‌ها</p>', 'ch-eyebrow' ), $this->heading( 'دو انتخاب را کنار هم ببین', 'h1' ), $this->text( '<p>مشخصات محصولات و اطلاعات فروشنده را کنار هم ببین؛ برای انتخاب متناسب با خانهٔ خودت.</p>' ), $this->widget( 'chidemoon-compare-table', array( 'show_picker' => 'yes', 'show_status' => 'yes', 'columns' => '4', 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ), 'ch-compare-section' ), $this->section( array( $this->heading( 'مقایسه‌های منتشر شده' ), $this->posts( 'comparisons', 12 ) ), 'ch-listing' ) );
 		}
 		return array(
 			$this->shoppable_look(),
-			$this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ),
+			$this->section( array( $this->heading( 'فضاهای خانه' ), $this->text( '<p>نقطه‌های روی تصویر، محصولات قابل بررسی را نشان می‌دهند. چیدمان‌های بدون نقطه برای الهام‌اند.</p>', 'ch-looks-context' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ),
 		);
 	}
 
@@ -310,7 +341,7 @@ class Chidemoon_Elementor_Rebuild {
 		$look_image_id = $this->assets['shoppable'];
 		return $this->section( array(
 				$this->text( '<p>ایده‌های چیدمان</p>', 'ch-eyebrow' ),
-				$this->heading( 'ببین و بخر', 'h1' ),
+				$this->heading( 'چیدمان قابل خرید', 'h1' ),
 				$this->widget( 'chidemoon-shop-the-look', array(
 					'image' => array( 'id' => $look_image_id, 'url' => wp_get_attachment_url( $look_image_id ) ),
 					'image_alt' => 'گوشهٔ مطالعه با چراغ بازویی مشکی در چپ و چراغ شارژی سفید در راست',
@@ -321,6 +352,40 @@ class Chidemoon_Elementor_Rebuild {
 					),
 				) ),
 			), 'ch-look-feature' );
+	}
+
+	private function article_next(): array {
+		$posts = $this->posts( '', 2, 'chidemoon_related_posts' );
+		$posts['settings']['_css_classes'] = 'ch-editorial-feed ch-related-feed';
+		$posts['settings']['classic_read_more_text'] = 'خواندن مطلب';
+		return $this->section( array(
+			$this->heading( 'برای مطالعهٔ بیشتر' ),
+			$posts,
+		), 'ch-article-next' );
+	}
+
+	private function search_help(): array {
+		return $this->text( '<p>نتیجه‌ها از میان محصولات، ایده‌ها، راهنماها و مقایسه‌ها هستند.</p>', 'ch-search-help' );
+	}
+
+	private function search_facets(): array {
+		return $this->widget( 'chidemoon-search-facets', array( '_css_classes' => 'ch-search-facet-widget' ) );
+	}
+
+	private function search_recovery(): array {
+		$paths = array(
+			'/shop/'          => 'محصولات',
+			'/shop-the-look/' => 'ایده‌های چیدمان',
+			'/guides/'        => 'راهنماهای خرید',
+		);
+		$links = array();
+		foreach ( $paths as $path => $label ) {
+			$links[] = '<a href="' . esc_url( home_url( $path ) ) . '">' . esc_html( $label ) . '</a>';
+		}
+		return $this->box( array(
+			$this->heading( 'از مسیرهای دیگر ادامه بده', 'h2' ),
+			$this->text( '<p>می‌توانی عبارت بالا را اصلاح کنی یا این بخش‌ها را ببینی.</p><p class="ch-search-recovery-links">' . implode( '، ', $links ) . '</p>' ),
+		), 'ch-search-recovery' );
 	}
 
 	private function upgrade_shop_look_page( int $page_id, array $feature ): void {
@@ -374,12 +439,13 @@ class Chidemoon_Elementor_Rebuild {
 			'post-single' => array( 'single-post', array( array( 'type' => 'include', 'name' => 'singular', 'sub_name' => 'post' ) ), array(
 				$this->section( array( $this->widget( 'theme-post-title', array( 'header_size' => 'h1', '_css_classes' => 'ch-article-title' ) ), $this->widget( 'post-info', array( 'icon_list' => array( array( '_id' => 'chdate', 'type' => 'date', 'date_format' => 'custom', 'custom_date_format' => 'j F Y', 'link' => '', 'show_icon' => 'none' ) ), '_css_classes' => 'ch-article-meta' ) ), $this->widget( 'theme-post-featured-image', array( 'image_size' => 'full', '_css_classes' => 'ch-article-media' ) ) ), 'ch-article-header' ),
 				$this->section( array( $this->widget( 'theme-post-content', array( '_css_classes' => 'ch-article-body' ) ), $this->widget( 'post-comments' ) ), 'ch-article-section' ),
+				$this->article_next(),
 			) ),
 			'post-archive' => array( 'archive', array( array( 'type' => 'include', 'name' => 'archive' ) ), array(
 				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%2C%22fallback%22%3A%22مجلهٔ چیدمون%22%7D"]' ) ) ), $this->text( '<p>ایده‌ها، راهنماها و مقایسه‌ها برای فضاهای خانه.</p>' ), $this->archive_posts() ), 'ch-archive' ),
 			) ),
 			'search-results' => array( 'search-results', array( array( 'type' => 'include', 'name' => 'archive', 'sub_name' => 'search' ) ), array(
-				$this->section( array( $this->text( '<p>در چیدمون پیدا کن</p>', 'ch-eyebrow' ), $this->widget( 'theme-archive-title', array( 'header_size' => 'h1' ) ), $this->search( 'ch-page-search' ), $this->archive_posts( true ) ), 'ch-search' ),
+				$this->section( array( $this->text( '<p>در چیدمون پیدا کن</p>', 'ch-eyebrow' ), $this->widget( 'theme-archive-title', array( 'header_size' => 'h1' ) ), $this->search( 'ch-page-search' ), $this->search_help(), $this->search_facets(), $this->archive_posts( true ), $this->search_recovery() ), 'ch-search' ),
 			) ),
 			'not-found' => array( 'error-404', array( array( 'type' => 'include', 'name' => 'singular', 'sub_name' => 'not_found404' ) ), array(
 				$this->section( array( $this->heading( 'این صفحه پیدا نشد', 'h1' ), $this->text( '<p>ممکن است نشانی تغییر کرده باشد. از جست‌وجو یا مسیرهای اصلی چیدمون ادامه بده.</p>' ), $this->search( 'ch-page-search' ), $this->button( 'بازگشت به صفحهٔ اصلی', '/' ) ), 'ch-not-found' ),
@@ -387,17 +453,273 @@ class Chidemoon_Elementor_Rebuild {
 			'product-single' => array( 'product', array( array( 'type' => 'include', 'name' => 'woocommerce', 'sub_name' => 'product' ) ), array(
 				$this->section( array( $this->widget( 'woocommerce-breadcrumb' ), $this->box( array(
 					$this->widget( 'woocommerce-product-images', array( '_css_classes' => 'ch-product-media' ) ),
-					$this->box( array( $this->widget( 'woocommerce-product-title', array( 'header_size' => 'h1' ) ), $this->widget( 'woocommerce-product-price', array( '__globals__' => array( 'price_color' => 'globals/colors?id=secondary' ) ) ), $this->widget( 'woocommerce-product-short-description' ), $this->widget( 'chidemoon-product-offer' ) ), 'ch-product-summary' ),
-				), 'ch-product-layout', array( 'flex_direction' => 'row', 'flex_wrap' => 'wrap' ) ), $this->widget( 'woocommerce-product-data-tabs' ), $this->widget( 'woocommerce-product-related', $this->product_grid_settings() ) ), 'ch-product-single' ),
+					$this->box( array( $this->widget( 'woocommerce-product-title', array( 'header_size' => 'h1' ) ), $this->widget( 'woocommerce-product-price', array( '__globals__' => array( 'price_color' => 'globals/colors?id=secondary' ) ) ), $this->widget( 'woocommerce-product-short-description' ), $this->widget( 'chidemoon-product-offer', array( 'show_facts' => 'no' ) ) ), 'ch-product-summary' ),
+				), 'ch-product-layout', array( 'flex_direction' => 'row', 'flex_wrap' => 'wrap' ) ), $this->widget( 'chidemoon-product-offer', array( 'facts_only' => 'yes', '_css_classes' => 'ch-product-facts-widget' ) ), $this->widget( 'woocommerce-product-data-tabs', array( '_css_classes' => 'ch-product-tabs-widget' ) ), $this->widget( 'woocommerce-product-related', $this->product_grid_settings() ) ), 'ch-product-single' ),
 			) ),
 			'product-archive' => array( 'product-archive', array( array( 'type' => 'include', 'name' => 'woocommerce', 'sub_name' => 'product_archive' ) ), array(
-				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%7D"]' ) ) ), $this->text( '<p>محصولات این فهرست برای بررسی و مقایسه‌اند. پیشنهاد خرید فقط برای محصولات تأییدشده فعال می‌شود.</p>' ), $this->widget( 'woocommerce-archive-description' ), $this->widget( 'woocommerce-archive-products', array_merge( $this->product_grid_settings(), array( 'columns' => 4, 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ) ), 'ch-product-archive' ),
+				$this->section( array( $this->widget( 'woocommerce-breadcrumb', array( '_css_classes' => 'ch-product-archive-breadcrumb' ) ), $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%7D"]' ) ) ), $this->text( '<p>محصولات این فهرست برای بررسی و مقایسه‌اند. پیشنهاد خرید فقط برای محصولات تأییدشده فعال می‌شود.</p>' ), $this->widget( 'woocommerce-archive-description' ), $this->product_archive_grid() ), 'ch-product-archive' ),
 			) ),
 		);
 	}
 
 	private function archive_posts( bool $search = false ): array {
-		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_title_tag' => 'h2', 'archive_classic_masonry' => 'yes', 'archive_classic_meta_data' => $search ? array() : array( 'date' ), 'archive_classic_read_more_text' => $search ? 'مشاهده' : 'مشاهدهٔ مطلب', 'nothing_found_message' => $search ? 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' : 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => 'ch-editorial-feed' ) );
+		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_title_tag' => 'h2', 'archive_classic_masonry' => 'no', 'archive_classic_meta_data' => $search ? array() : array( 'date' ), 'archive_classic_read_more_text' => $search ? 'مشاهدهٔ نتیجه' : 'مشاهدهٔ مطلب', 'nothing_found_message' => $search ? 'نتیجه‌ای پیدا نشد.' : 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => $search ? 'ch-editorial-feed ch-search-results-feed' : 'ch-editorial-feed' ) );
+	}
+
+	private function has_class( array $element, string $class ): bool {
+		$classes = trim( (string) ( $element['settings']['css_classes'] ?? $element['settings']['_css_classes'] ?? '' ) );
+		return in_array( $class, preg_split( '/\s+/', $classes ), true );
+	}
+
+	private function child_has_class( array $children, string $class ): bool {
+		foreach ( $children as $child ) {
+			if ( $this->has_class( $child, $class ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private function patch_ui_elements( array &$elements, string $target, array &$changes ): void {
+		foreach ( $elements as &$element ) {
+			if ( in_array( $element['widgetType'] ?? '', array( 'posts', 'archive-posts' ), true ) && $this->has_class( $element, 'ch-editorial-feed' ) ) {
+				$key = 'posts' === $element['widgetType'] ? 'classic_masonry' : 'archive_classic_masonry';
+				if ( 'no' !== ( $element['settings'][ $key ] ?? '' ) ) {
+					$element['settings'][ $key ] = 'no';
+					$changes[] = 'editorial grid without masonry';
+				}
+			}
+			$children = &$element['elements'];
+			if ( ! is_array( $children ) ) {
+				continue;
+			}
+			if ( 'home' === $target && $this->has_class( $element, 'ch-route' ) ) {
+				$labels = array( '/shop-the-look/' => 'دیدن ایده‌ها', '/guides/' => 'خواندن راهنماها', '/comparisons/' => 'دیدن مقایسه‌ها' );
+				foreach ( $children as &$child ) {
+					$path = (string) wp_parse_url( (string) ( $child['settings']['link']['url'] ?? '' ), PHP_URL_PATH );
+					if ( 'button' === ( $child['widgetType'] ?? '' ) && 'مشاهده' === ( $child['settings']['text'] ?? '' ) && isset( $labels[ $path ] ) ) {
+						$child['settings']['text'] = $labels[ $path ];
+						$changes[] = 'route action ' . $path;
+					}
+				}
+				unset( $child );
+			}
+			if ( 'guides' === $target && $this->has_class( $element, 'ch-hero-copy' ) ) {
+				foreach ( $children as &$child ) {
+					if ( 'heading' === ( $child['widgetType'] ?? '' ) && 'قبل از خرید، بهتر انتخاب کن' === ( $child['settings']['title'] ?? '' ) ) {
+						$child['settings']['title'] = 'راهنماهای انتخاب و خرید';
+						$changes[] = 'guide headline';
+					}
+				}
+				unset( $child );
+			}
+			if ( 'shop-the-look' === $target && $this->has_class( $element, 'ch-look-feature' ) ) {
+				foreach ( $children as &$child ) {
+					if ( 'heading' === ( $child['widgetType'] ?? '' ) && 'ببین و بخر' === ( $child['settings']['title'] ?? '' ) ) {
+						$child['settings']['title'] = 'چیدمان قابل خرید';
+						$changes[] = 'buyable feature title';
+					}
+				}
+				unset( $child );
+			}
+			if ( 'shop-the-look' === $target && $this->has_class( $element, 'ch-listing' ) && ! $this->child_has_class( $children, 'ch-looks-context' ) ) {
+				foreach ( $children as $index => $child ) {
+					if ( 'chidemoon-room-filters' === ( $child['widgetType'] ?? '' ) ) {
+						array_splice( $children, $index, 0, array( $this->text( '<p>نقطه‌های روی تصویر، محصولات قابل بررسی را نشان می‌دهند. چیدمان‌های بدون نقطه برای الهام‌اند.</p>', 'ch-looks-context' ) ) );
+						$changes[] = 'look listing context';
+						break;
+					}
+				}
+			}
+			if ( 'search-results' === $target && $this->has_class( $element, 'ch-search' ) ) {
+				foreach ( $children as $index => &$child ) {
+					if ( 'search' === ( $child['widgetType'] ?? '' ) && $this->has_class( $child, 'ch-page-search' ) && ! $this->child_has_class( $children, 'ch-search-help' ) ) {
+						array_splice( $children, $index + 1, 0, array( $this->search_help() ) );
+						$changes[] = 'search context';
+						break;
+					}
+				}
+				unset( $child );
+				if ( ! $this->child_has_class( $children, 'ch-search-facet-widget' ) ) {
+					foreach ( $children as $index => $child ) {
+						if ( $this->has_class( $child, 'ch-search-help' ) ) {
+							array_splice( $children, $index + 1, 0, array( $this->search_facets() ) );
+							$changes[] = 'search result facets';
+							break;
+						}
+					}
+				}
+				foreach ( $children as &$child ) {
+					if ( 'archive-posts' !== ( $child['widgetType'] ?? '' ) ) {
+						continue;
+					}
+					if ( 'مشاهده' === ( $child['settings']['archive_classic_read_more_text'] ?? '' ) ) {
+						$child['settings']['archive_classic_read_more_text'] = 'مشاهدهٔ نتیجه';
+						$changes[] = 'search result action';
+					}
+					if ( 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' === ( $child['settings']['nothing_found_message'] ?? '' ) ) {
+						$child['settings']['nothing_found_message'] = 'نتیجه‌ای پیدا نشد.';
+						$changes[] = 'search empty copy';
+					}
+					if ( 'ch-editorial-feed' === ( $child['settings']['_css_classes'] ?? '' ) ) {
+						$child['settings']['_css_classes'] = 'ch-editorial-feed ch-search-results-feed';
+						$changes[] = 'search result class';
+					}
+				}
+				unset( $child );
+				if ( ! $this->child_has_class( $children, 'ch-search-recovery' ) ) {
+					foreach ( $children as $index => $child ) {
+						if ( 'archive-posts' === ( $child['widgetType'] ?? '' ) ) {
+							array_splice( $children, $index + 1, 0, array( $this->search_recovery() ) );
+							$changes[] = 'empty search recovery';
+							break;
+						}
+					}
+				}
+			}
+			if ( 'post-single' === $target && $this->has_class( $element, 'ch-main' ) && $this->child_has_class( $children, 'ch-article-section' ) && ! $this->child_has_class( $children, 'ch-article-next' ) ) {
+				$children[] = $this->article_next();
+				$changes[] = 'related articles';
+			}
+			if ( 'post-single' === $target && $this->has_class( $element, 'ch-article-next' ) ) {
+				foreach ( $children as &$child ) {
+					if ( 'heading' === ( $child['widgetType'] ?? '' ) && 'در همین موضوع بخوان' === ( $child['settings']['title'] ?? '' ) ) {
+						$child['settings']['title'] = 'برای مطالعهٔ بیشتر';
+						$changes[] = 'related articles heading';
+					}
+				}
+				unset( $child );
+			}
+			if ( 'product-single' === $target && $this->has_class( $element, 'ch-product-single' ) ) {
+				$facts_settings = null;
+				$layout_index = null;
+				foreach ( $children as $index => &$child ) {
+					if ( $this->has_class( $child, 'ch-product-layout' ) ) {
+						$layout_index = $index;
+						foreach ( $child['elements'] as &$column ) {
+							if ( ! $this->has_class( $column, 'ch-product-summary' ) ) {
+								continue;
+							}
+							foreach ( $column['elements'] as &$offer ) {
+								if ( 'chidemoon-product-offer' !== ( $offer['widgetType'] ?? '' ) || 'yes' === ( $offer['settings']['facts_only'] ?? 'no' ) || 'no' === ( $offer['settings']['show_facts'] ?? 'yes' ) ) {
+									continue;
+								}
+								$facts_settings = array( 'facts_only' => 'yes', '_css_classes' => 'ch-product-facts-widget' );
+								foreach ( $offer['settings'] as $key => $value ) {
+									if ( in_array( $key, array( 'product_id', 'text_color', 'facts_label_color' ), true ) || str_starts_with( $key, 'facts_gap' ) || str_starts_with( $key, 'typography_' ) ) {
+										$facts_settings[ $key ] = $value;
+									}
+								}
+								$offer['settings']['show_facts'] = 'no';
+								$changes[] = 'product summary facts moved';
+								break;
+							}
+							unset( $offer );
+						}
+						unset( $column );
+					}
+					if ( 'woocommerce-product-data-tabs' === ( $child['widgetType'] ?? '' ) && ! $this->has_class( $child, 'ch-product-tabs-widget' ) ) {
+						$child['settings']['_css_classes'] = trim( (string) ( $child['settings']['_css_classes'] ?? '' ) . ' ch-product-tabs-widget' );
+						$changes[] = 'product tabs aligned';
+					}
+				}
+				unset( $child );
+				if ( null !== $facts_settings && null !== $layout_index && ! $this->child_has_class( $children, 'ch-product-facts-widget' ) ) {
+					array_splice( $children, $layout_index + 1, 0, array( $this->widget( 'chidemoon-product-offer', $facts_settings ) ) );
+					$changes[] = 'product full-width facts';
+				}
+			}
+			if ( 'product-archive' === $target && $this->has_class( $element, 'ch-product-archive' ) ) {
+				$this->require_product_archive_controls();
+				if ( ! $this->child_has_class( $children, 'ch-product-archive-breadcrumb' ) ) {
+					array_unshift( $children, $this->widget( 'woocommerce-breadcrumb', array( '_css_classes' => 'ch-product-archive-breadcrumb' ) ) );
+					$changes[] = 'product archive breadcrumb';
+				}
+				foreach ( $children as &$child ) {
+					if ( 'woocommerce-archive-products' !== ( $child['widgetType'] ?? '' ) ) {
+						continue;
+					}
+					foreach ( array( 'allow_order' => 'sorting', 'show_result_count' => 'result count' ) as $key => $label ) {
+						if ( ! array_key_exists( $key, $child['settings'] ) ) {
+							$child['settings'][ $key ] = 'yes';
+							$changes[] = 'product archive ' . $label;
+						}
+					}
+				}
+				unset( $child );
+			}
+			if ( 'conceptual-look' === $target && ! $this->child_has_class( $children, 'ch-look-state' ) ) {
+				foreach ( $children as $index => $child ) {
+					if ( 'chidemoon-shop-the-look' === ( $child['widgetType'] ?? '' ) && empty( $child['settings']['hotspots'] ) ) {
+						array_splice( $children, $index, 0, array( $this->text( '<p><strong>ایدهٔ مفهومی</strong> · محصولات این تصویر برای خرید معرفی نشده‌اند.</p>', 'ch-look-state ch-look-state-conceptual' ) ) );
+						$changes[] = 'conceptual look label';
+						break;
+					}
+				}
+			}
+			$this->patch_ui_elements( $children, $target, $changes );
+		}
+		unset( $element, $children );
+	}
+
+	private function upgrade_ui_document( int $id, string $target, bool $apply ): bool {
+		if ( 'conceptual-look' !== $target && ! get_post_meta( $id, '_chidemoon_elementor_rebuild', true ) ) {
+			WP_CLI::log( 'Skipped unmanaged Elementor document #' . $id );
+			return false;
+		}
+		$raw = (string) get_post_meta( $id, '_elementor_data', true );
+		$elements = json_decode( $raw, true );
+		if ( ! is_array( $elements ) ) {
+			WP_CLI::warning( 'Skipped invalid Elementor data in document #' . $id );
+			return false;
+		}
+		$changes = array();
+		$this->patch_ui_elements( $elements, $target, $changes );
+		if ( ! $changes ) {
+			WP_CLI::log( 'No matching UI changes for #' . $id . ' (' . $target . ')' );
+			return false;
+		}
+		WP_CLI::log( ( $apply ? 'Applying' : 'Would apply' ) . ' #' . $id . ' (' . $target . '): ' . implode( ', ', $changes ) );
+		if ( ! $apply ) {
+			return true;
+		}
+		$backup_key = '_chidemoon_pre_ui_upgrade_20260929_elementor_data';
+		if ( ! metadata_exists( 'post', $id, $backup_key ) && ! add_post_meta( $id, $backup_key, wp_slash( $raw ), true ) ) {
+			WP_CLI::error( 'Could not back up Elementor document #' . $id );
+		}
+		$document = $this->elementor->documents->get( $id, false );
+		if ( ! $document || ! $document->save( array( 'elements' => $elements ) ) ) {
+			WP_CLI::error( 'Could not save UI upgrade for document #' . $id );
+		}
+		update_post_meta( $id, '_chidemoon_ui_upgrade', '2026-09-29' );
+		return true;
+	}
+
+	public function upgrade_ui( bool $apply ): void {
+		$this->require_product_archive_controls();
+		$count = 0;
+		foreach ( array( 'home', 'guides', 'comparisons', 'shop-the-look' ) as $slug ) {
+			$page = get_page_by_path( $slug );
+			if ( $page && $this->upgrade_ui_document( (int) $page->ID, $slug, $apply ) ) {
+				++$count;
+			}
+		}
+		foreach ( array( 'search-results', 'post-single', 'post-archive', 'product-single', 'product-archive' ) as $slug ) {
+			$templates = get_posts( array( 'post_type' => 'elementor_library', 'post_status' => 'publish', 'name' => 'chidemoon-' . $slug, 'posts_per_page' => 1 ) );
+			if ( $templates && $this->upgrade_ui_document( (int) $templates[0]->ID, $slug, $apply ) ) {
+				++$count;
+			}
+		}
+		$looks = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => -1, 'meta_key' => '_chidemoon_native_look', 'meta_value' => '1' ) );
+		foreach ( $looks as $look ) {
+			if ( $this->upgrade_ui_document( (int) $look->ID, 'conceptual-look', $apply ) ) {
+				++$count;
+			}
+		}
+		if ( $apply && $count ) {
+			$this->elementor->files_manager->clear_cache();
+		}
+		WP_CLI::success( ( $apply ? 'Updated ' : 'Would update ' ) . $count . ' Elementor documents.' );
 	}
 
 	private function save( int $id, array $elements ): void {
@@ -500,5 +822,10 @@ class Chidemoon_Elementor_Rebuild {
 	}
 }
 
-( new Chidemoon_Elementor_Rebuild( $assets, $force ) )->run();
-WP_CLI::success( 'Migration finished. Inspect every template and route before activating Hello on production.' );
+$rebuild = new Chidemoon_Elementor_Rebuild( $assets, $force, $ui_upgrade );
+if ( $ui_upgrade ) {
+	$rebuild->upgrade_ui( $apply );
+} else {
+	$rebuild->run();
+	WP_CLI::success( 'Migration finished. Inspect every template and route before activating Hello on production.' );
+}
