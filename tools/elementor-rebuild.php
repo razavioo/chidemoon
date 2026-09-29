@@ -348,7 +348,7 @@ class Chidemoon_Elementor_Rebuild {
 	}
 
 	private function archive_posts( bool $search = false ): array {
-		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_masonry' => 'yes', 'archive_classic_meta_data' => $search ? array() : array( 'date' ), 'archive_classic_read_more_text' => $search ? 'مشاهده' : 'مشاهدهٔ مطلب', 'nothing_found_message' => $search ? 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' : 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => 'ch-editorial-feed' ) );
+		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_title_tag' => 'h2', 'archive_classic_masonry' => 'yes', 'archive_classic_meta_data' => $search ? array() : array( 'date' ), 'archive_classic_read_more_text' => $search ? 'مشاهده' : 'مشاهدهٔ مطلب', 'nothing_found_message' => $search ? 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' : 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => 'ch-editorial-feed' ) );
 	}
 
 	private function save( int $id, array $elements ): void {
