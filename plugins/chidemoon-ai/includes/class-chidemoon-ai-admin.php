@@ -165,7 +165,7 @@ class Chidemoon_AI_Admin {
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
 							<td><?php echo esc_html( (string) ( $job['target_post_id'] ?: '—' ) ); ?></td>
 							<td style="max-width:420px"><?php echo wp_kses_post( self::job_preview( $job ) ); ?></td>
-							<td><?php echo esc_html( (string) $job['created_at'] ); ?></td>
+							<td><?php echo esc_html( wp_date( 'j F Y، H:i', strtotime( $job['created_at'] . ' UTC' ) ) ); ?></td>
 							<td>
 								<?php if ( Chidemoon_AI_State_Machine::APPROVED === $job['state'] ) : ?>
 									<button type="button" class="button button-primary" data-chidemoon-ai-review="apply" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php echo esc_html( 'look' === $job['job_type'] ? __( 'Create look draft', 'chidemoon-ai' ) : __( 'Apply to draft', 'chidemoon-ai' ) ); ?></button>
@@ -191,7 +191,7 @@ class Chidemoon_AI_Admin {
 							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
 							<td><?php echo esc_html( (string) ( $job['error_message'] ?: $job['error_code'] ) ); ?></td>
-							<td><?php echo esc_html( (string) $job['created_at'] ); ?></td>
+							<td><?php echo esc_html( wp_date( 'j F Y، H:i', strtotime( $job['created_at'] . ' UTC' ) ) ); ?></td>
 							<td><button type="button" class="button" data-chidemoon-ai-review="retry" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Retry', 'chidemoon-ai' ); ?></button></td>
 						</tr>
 					<?php endforeach; ?>

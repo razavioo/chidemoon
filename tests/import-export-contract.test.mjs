@@ -129,6 +129,16 @@ describe('record validation vocabulary', () => {
 		assert.deepEqual(validateRecord(null).issues, ['record_not_object']);
 	});
 
+	it('rejects unsafe gallery images and keeps gallery data in the checksum', () => {
+		assert.deepEqual(validateRecord({ ...VALID_RECORD, gallery: ['https://127.0.0.1/private.jpg'] }).issues, ['unsafe_gallery_image_url']);
+		assert.deepEqual(validateRecord({ ...VALID_RECORD, gallery: Array(13).fill('https://cdn.example.com/p.jpg') }).issues, ['unsafe_gallery_image_url']);
+		const record = { ...VALID_RECORD, gallery: ['https://cdn.example.com/side.jpg'] };
+		const artifact = buildExport({ records: [record], organizationSlug: 'chidemoon', generatedAt: '2026-09-29T15:05:00Z' });
+		assert.equal(artifact.items.length, 1);
+		artifact.items[0].gallery[0] = 'https://cdn.example.com/other.jpg';
+		assert.equal(verifyChecksum(artifact), false);
+	});
+
 	it('emits the exact issue codes for each failure mode', () => {
 		const cases = [
 			[{ ...VALID_RECORD, title: '   ' }, ['missing_title']],

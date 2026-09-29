@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# First theme migration includes database recovery; later code releases use deploy-release-bundle.sh.
+# Visual migrations include database recovery; code-only releases use deploy-release-bundle.sh.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bundle_path="${1:?Pass the sealed source bundle}"
 image_bundle_path="${2:?Pass the matching offline image archive}"
@@ -9,10 +9,13 @@ deploy_root="${CHIDEMOON_DEPLOY_ROOT:-/opt/chidemoon}"
 environment_file="${CHIDEMOON_ENV_FILE:-$deploy_root/.env}"
 project="${CHIDEMOON_COMPOSE_PROJECT:-chidemoon}"
 editor_id="${CHIDEMOON_EDITOR_ID:-1}"
+visual_refresh="${CHIDEMOON_VISUAL_REFRESH:-0}"
+import_catalogue="${CHIDEMOON_IMPORT_VERIFIED_CATALOGUE:-0}"
 
 fail() { printf 'Elementor deployment failed: %s\n' "$1" >&2; exit 1; }
 [[ "$deploy_root" = /* && -f "$environment_file" ]] || fail 'An absolute deployment root and host-managed .env are required.'
 [[ "$editor_id" =~ ^[1-9][0-9]*$ ]] || fail 'CHIDEMOON_EDITOR_ID must be an administrator ID.'
+[[ "$visual_refresh" =~ ^[01]$ && "$import_catalogue" =~ ^[01]$ ]] || fail 'Migration flags must be 0 or 1.'
 [[ -L "$deploy_root/current" ]] || fail 'An existing current release symlink is required.'
 previous_release="$(readlink -f "$deploy_root/current")"
 [[ -f "$previous_release/compose.yml" ]] || fail 'Previous release is incomplete.'
@@ -61,8 +64,13 @@ mv -Tf "$deploy_root/.next-$$" "$deploy_root/current"
 # Health is checked after Hello activation, since the previous child theme is no longer mounted.
 compose "$release_dir" up -d --pull never --force-recreate wordpress
 wp theme install /packages/hello-elementor.zip --force
-wp --user="$editor_id" eval-file /tools/elementor-rebuild.php apply reset-demo
+migration_args=(apply reset-demo)
+if [[ "$visual_refresh" = 1 ]]; then migration_args+=(force); fi
+wp --user="$editor_id" eval-file /tools/elementor-rebuild.php "${migration_args[@]}"
 wp --user="$editor_id" eval-file /tools/rebuild-editorial.php
+if [[ "$import_catalogue" = 1 ]]; then
+	wp chidemoon import-products --file=/tools/catalogue/verified-products.export.json --organization-slug=chidemoon
+fi
 wp theme activate hello-elementor
 wp rewrite flush --hard
 wp --user="$editor_id" eval-file /tools/verify-elementor.php

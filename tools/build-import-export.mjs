@@ -270,6 +270,9 @@ export function validateRecord(record) {
 	if ('' !== imageUrl && !isSafeHttpsImageUrlStatic(imageUrl)) {
 		issues.push('unsafe_image_url');
 	}
+	if (record.gallery !== undefined && (!Array.isArray(record.gallery) || record.gallery.length > 12 || record.gallery.some((url) => typeof url !== 'string' || !isSafeHttpsImageUrlStatic(url)))) {
+		issues.push('unsafe_gallery_image_url');
+	}
 
 	const reviewState = normalizeReviewState(record.status ?? 'draft');
 	if ('quarantine' === reviewState) {

@@ -73,6 +73,7 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	tools/elementor-rebuild.php \
 	tools/rebuild-editorial.php \
 	tools/verify-elementor.php \
+	tools/catalogue \
 	README.md \
 	tools/seed-images/looks \
 	vendor/README.md \

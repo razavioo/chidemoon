@@ -415,7 +415,7 @@ final class Chidemoon_Core_Compare {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'مدیریت مقایسه محصولات', 'chidemoon-core' ); ?></h1>
-			<p><?php esc_html_e( 'این بخش فقط محصولات منتشرشده، بررسی‌شده و قابل‌خرید (External/Affiliate) را برای مقایسه فهرست می‌کند. جدول مقایسه در فرانت‌اند از همین داده و ویژگی‌های ساختاریافته (Structured facts) استفاده می‌کند.', 'chidemoon-core' ); ?></p>
+			<p><?php esc_html_e( 'این بخش فقط محصولات منتشر شده، بررسی‌شده و قابل‌خرید را برای مقایسه فهرست می‌کند. مشخصات را در ویرایش محصول تغییر دهید و ظاهر را با ویجت مقایسهٔ المنتور تنظیم کنید.', 'chidemoon-core' ); ?></p>
 			<p>
 				<strong><?php esc_html_e( 'آدرس صفحه مقایسه:', 'chidemoon-core' ); ?></strong>
 				<a href="<?php echo esc_url( $compare_url ); ?>" target="_blank"><?php echo esc_html( $compare_url ); ?></a>
@@ -498,16 +498,15 @@ final class Chidemoon_Core_Compare {
 
 	/** @param array<string,string> $atts */
 	public static function render_picker_shortcode( $atts = array() ): string {
-		unset( $atts );
 		self::enqueue_assets();
 		$catalogue = self::catalogue_products();
+		$input_id = wp_unique_id( 'chidemoon-comparison-search-' );
 		ob_start();
 		?>
 		<section class="chidemoon-comparison-picker" aria-label="<?php esc_attr_e( 'انتخاب محصولات برای مقایسه', 'chidemoon-core' ); ?>">
 			<div class="chidemoon-comparison-search">
-				<label for="chidemoon-comparison-search-input"><?php esc_html_e( 'جستجوی محصول بررسی‌شده', 'chidemoon-core' ); ?></label>
-				<div class="chidemoon-comparison-search__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input id="chidemoon-comparison-search-input" type="search" autocomplete="off" data-comparison-search-input placeholder="<?php esc_attr_e( 'حداقل دو حرف بنویسید', 'chidemoon-core' ); ?>"></div>
-				<p class="chidemoon-comparison-search__hint"><?php esc_html_e( 'تا چهار محصول بررسی‌شده را انتخاب کنید.', 'chidemoon-core' ); ?></p>
+				<div class="chidemoon-comparison-search__heading"><label for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $atts['search_label'] ?? 'محصولات را انتخاب کن' ); ?></label><p class="chidemoon-comparison-search__hint"><?php echo esc_html( $atts['selection_hint'] ?? '۲ تا ۴ محصول برای مقایسه' ); ?></p></div>
+				<div class="chidemoon-comparison-search__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input id="<?php echo esc_attr( $input_id ); ?>" type="search" autocomplete="off" data-comparison-search-input placeholder="<?php echo esc_attr( $atts['search_placeholder'] ?? 'نام محصول یا مدل را جست‌وجو کن' ); ?>"></div>
 				<div class="chidemoon-comparison-search__results" data-comparison-search-results hidden></div>
 			</div>
 			<?php if ( ! empty( $catalogue ) ) : ?>
@@ -517,7 +516,7 @@ final class Chidemoon_Core_Compare {
 					<?php endforeach; ?>
 				</div>
 			<?php else : ?>
-				<p class="chidemoon-compare-empty"><?php esc_html_e( 'هنوز محصول قابل مقایسه‌ای وجود ندارد.', 'chidemoon-core' ); ?></p>
+				<div class="chidemoon-compare-empty"><strong><?php echo esc_html( $atts['empty_title'] ?? 'محصولی برای مقایسه موجود نیست' ); ?></strong><p><?php echo esc_html( $atts['empty_text'] ?? 'محصولات پس از بررسی مشخصات فروشنده به این فهرست اضافه می‌شوند.' ); ?></p></div>
 			<?php endif; ?>
 		</section>
 		<?php
@@ -530,17 +529,17 @@ final class Chidemoon_Core_Compare {
 	 * @param array<string,string> $atts
 	 */
 	public static function render_compare_table_shortcode( $atts = array() ): string {
-		$atts     = shortcode_atts( array( 'products' => '', 'ids' => '' ), $atts, 'chidemoon_compare_table' );
+		$atts     = shortcode_atts( array( 'products' => '', 'ids' => '', 'show_empty' => true, 'empty_text' => 'دو محصول انتخاب کن تا ویژگی‌ها را کنار هم ببینی.' ), $atts, 'chidemoon_compare_table' );
 		$raw      = $atts['products'] ?: $atts['ids'];
 		$products = '' === $raw ? self::products_from_request() : self::selected_products( $raw );
 		self::enqueue_assets();
-		return self::render_comparison_table( $products );
+		return self::render_comparison_table( $products, $atts );
 	}
 
 	/** @param WC_Product[] $products */
-	public static function render_comparison_table( array $products ): string {
+	public static function render_comparison_table( array $products, array $settings = array() ): string {
 		if ( count( $products ) < 2 ) {
-			return '<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section"><p class="chidemoon-compare-empty">' . esc_html__( 'برای نمایش جدول مقایسه حداقل دو محصول بررسی‌شده انتخاب کنید.', 'chidemoon-core' ) . '</p></div>';
+			return '<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">' . ( ( $settings['show_empty'] ?? true ) ? '<p class="chidemoon-compare-empty">' . esc_html( $settings['empty_text'] ?? 'دو محصول انتخاب کن تا ویژگی‌ها را کنار هم ببینی.' ) . '</p>' : '' ) . '</div>';
 		}
 		self::enqueue_assets();
 		$labels = self::fact_labels( $products );

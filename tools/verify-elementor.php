@@ -12,6 +12,8 @@ $check = static function ( bool $passed, string $message ): void {
 };
 $check( 'hello-elementor' === get_stylesheet(), 'Hello Elementor is active.' );
 $check( class_exists( '\\ElementorPro\\Plugin' ), 'Elementor Pro is active.' );
+$check( class_exists( IntlDateFormatter::class ), 'ICU Persian calendar is available.' );
+$check( 'Asia/Tehran' === wp_timezone_string(), 'Display dates use the Tehran timezone.' );
 $widgets = \Elementor\Plugin::$instance->widgets_manager;
 $types = array();
 $validate = static function ( array $elements, array &$ids ) use ( &$validate, &$types, $widgets, $check ): void {

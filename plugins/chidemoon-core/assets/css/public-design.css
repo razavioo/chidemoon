@@ -50,7 +50,7 @@
 :root,
 body {
 	--chidemoon-paper: #f3f4f1;
-	--chidemoon-surface: #fffdfa;
+	--chidemoon-surface: #ffffff;
 	--chidemoon-ink: var(--e-global-color-text, #17241f);
 	--chidemoon-muted: var(--e-global-color-accent, #607069);
 	--chidemoon-forest: var(--e-global-color-primary, #123f34);
@@ -93,6 +93,7 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 .elementor-location-header {
 	background: var(--chidemoon-surface);
 	border-block-end: 1px solid var(--chidemoon-line);
+	border-block-start: 3px solid var(--chidemoon-forest);
 	position: sticky;
 	top: 0;
 	z-index: 30;
@@ -109,10 +110,14 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 .ch-brand .elementor-heading-title,
 .ch-brand .elementor-heading-title a {
 	color: var(--chidemoon-forest);
-	font-size: 28px;
+	font-size: 32px;
 	font-weight: 800;
 	text-decoration: none;
 }
+.ch-brand-caption p { margin: 2px 0 0; color: var(--chidemoon-muted); font-size: 12px; }
+.ch-nav .elementor-item.elementor-item-active { color: var(--chidemoon-forest); }
+.ch-nav .elementor-item:after { background-color: var(--chidemoon-clay); }
+.ch-nav .elementor-nav-menu--dropdown { border-radius: 6px; box-shadow: 0 8px 20px #17241f16; }
 
 .ch-nav .elementor-nav-menu--main .elementor-item {
 	color: var(--chidemoon-ink);
@@ -121,17 +126,24 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	min-height: 44px;
 }
 
-.ch-header-search {
-	inline-size: min(100%, 270px);
+.ch-header-search.elementor-widget-search {
+	inline-size: 300px;
+	max-inline-size: 100%;
 }
-
-.ch-header-search input.elementor-search-form__input,
-.ch-search input.elementor-search-form__input {
-	background: var(--chidemoon-paper);
-	border: 1px solid var(--chidemoon-line);
-	border-radius: 6px;
-	min-height: 44px;
-}
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-form { border: 1px solid #e0e7e2; background: #f4f6f4; border-radius: 8px; padding: 2px; gap: 2px; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-input-wrapper { flex: 1; min-width: 0; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-input { border: 0; height: 44px; min-height: 44px; background: transparent; font-size: 14px; color: var(--chidemoon-ink); padding: 8px 12px; min-width: 0; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-submit { border: 0; border-radius: 6px; background: transparent; color: var(--chidemoon-forest); min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; padding: 10px; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-submit:hover { background: #e5ebe6; }
+.ch-header-search.elementor-widget-search .e-search-submit { width: 44px; flex: 0 0 44px; }
+.ch-header-search.elementor-widget-search .e-search-submit span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.ch-section .ch-page-search.elementor-widget-search.elementor-widget { max-inline-size: 760px; margin-block: 8px 24px; }
+.ch-page-search.elementor-widget-search .e-search-input { height: 52px; min-height: 52px; font-size: 16px; }
+.ch-page-search.elementor-widget-search .e-search-submit { min-height: 52px; width: 52px; flex: 0 0 52px; }
+.ch-page-search.elementor-widget-search .e-search-submit span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-form:focus-within { outline: 2px solid var(--chidemoon-forest); outline-offset: 3px; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-submit svg { width: 18px; height: 18px; }
+.elementor-widget-search:is(.ch-header-search, .ch-page-search) .e-search-submit svg path { fill: currentColor; }
 
 .ch-section {
 	text-align: start;
@@ -225,7 +237,14 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	font-weight: 700;
 	min-height: 44px;
 	padding: 10px 20px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 }
+.elementor-button-content-wrapper { align-items: center; justify-content: center; }
+.ch-route .elementor-widget-button { margin-block-start: auto; }
+.ch-editorial-feed .elementor-post__read-more { display: inline-flex; align-items: center; justify-content: center; text-align: center; min-height: 44px; padding: 8px 16px; border: 1px solid var(--chidemoon-line); border-radius: 6px; color: var(--chidemoon-forest); font-weight: 600; }
 
 .ch-section .ch-link-button .elementor-button {
 	background: transparent;
@@ -289,15 +308,27 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 }
 
 .elementor-location-footer {
-	background: var(--chidemoon-forest);
-	color: #fff;
+	background: #fff;
+	color: var(--chidemoon-ink);
+	border-block-start: 1px solid var(--chidemoon-line);
 }
 
 .ch-footer .elementor-heading-title,
 .ch-footer .elementor-widget-text-editor,
 .ch-footer :where(.elementor-heading-title a, .elementor-widget-text-editor p) {
-	color: #fff;
+	color: var(--chidemoon-ink);
 }
+.ch-footer-about .elementor-heading-title { font-size: 34px; color: var(--chidemoon-forest); }
+.ch-footer .ch-footer-tagline p { color: var(--chidemoon-clay); font-weight: 600; }
+.ch-footer-about p { max-inline-size: 30em; font-size: 14px; }
+.ch-footer-links .elementor-heading-title { font-size: 17px; font-weight: 700; }
+.ch-footer-links .elementor-widget-text-editor p { font-size: 13px; color: var(--chidemoon-muted); }
+.ch-footer-nav .elementor-icon-list-item a { min-height: 40px; }
+.ch-footer-nav .elementor-icon-list-text { color: var(--chidemoon-forest); font-size: 14px; }
+.ch-footer-nav .elementor-icon-list-icon i, .ch-footer-nav .elementor-icon-list-icon svg { color: var(--chidemoon-clay); fill: var(--chidemoon-clay); }
+.ch-footer-bottom { background: var(--chidemoon-forest); }
+.ch-footer-bottom .elementor-widget-text-editor { color: white; font-size: 12px; }
+.ch-footer-bottom p { margin: 0; }
 
 .ch-footer-about {
 	inline-size: 36%;
@@ -307,17 +338,8 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	inline-size: 23%;
 }
 
-.ch-footer .ch-link-button .elementor-button {
-	border-color: transparent;
-	color: #fff;
-	min-height: 40px;
-	padding-inline: 0;
-}
-
 .ch-disclosure {
-	border-block-start: 1px solid rgba(255,255,255,.25);
-	inline-size: 100%;
-	padding-block-start: 16px;
+	inline-size: auto;
 }
 
 .ch-article-header,
@@ -367,11 +389,28 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 
 .ch-product-grid li.product img {
 	object-fit: contain;
+	aspect-ratio: 1;
+	background: white;
 }
+.ch-product-grid .woocommerce-loop-product__title { font-size: 17px; line-height: 1.7; min-height: 3.4em; }
 
 .ch-product-grid li.product .button {
 	min-height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	border-radius: 6px;
+	background: var(--chidemoon-forest);
+	color: white;
+	padding: 10px 16px;
 }
+.ch-product-grid.elementor-wc-products ul.products li.product { display: flex; flex-direction: column; }
+.ch-product-grid.elementor-wc-products ul.products li.product .price { margin-block-start: auto; margin-block-end: 16px; }
+.ch-product-grid.elementor-wc-products ul.products li.product .button { display: flex; width: 100%; margin: 0 0 8px; }
+.ch-product-grid.elementor-wc-products ul.products li.product .chidemoon-compare-control { width: 100%; margin: 0; }
+.ch-product-grid.elementor-wc-products ul.products li.product a.woocommerce-loop-product__link { flex: 1; display: flex; flex-direction: column; }
+.ch-product-grid.elementor-wc-products ul.products li.product .woocommerce-loop-product__title { margin-block: 12px; }
 
 .ch-product-offer .chidemoon-affiliate-cta {
 	background: var(--chidemoon-forest);
@@ -380,6 +419,8 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	display: inline-flex;
 	min-height: 44px;
 	align-items: center;
+	justify-content: center;
+	text-align: center;
 	padding: 10px 20px;
 }
 
@@ -389,22 +430,26 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	color: var(--chidemoon-forest);
 	display: flex;
 	margin-block: 16px;
+	width: 100%;
+	border-radius: 6px;
 }
 .ch-product-offer .chidemoon-compare-single.is-selected {
 	background: var(--chidemoon-forest);
 	color: #fff;
 }
 .ch-product-summary .price { color: var(--chidemoon-clay); }
+.ch-product-summary .elementor-heading-title { font-size: 30px; line-height: 1.5; }
+.ch-product-single .woocommerce-Tabs-panel { max-inline-size: 960px; margin-inline: auto; font-size: 16px; line-height: 1.9; }
+.ch-product-single .woocommerce-Tabs-panel :where(h2, h3) { font-size: 23px; margin-block: 28px 12px; }
+.ch-editorial-feed .elementor-post__meta-data { color: var(--chidemoon-muted); font-size: 13px; }
 .woocommerce-Price-currencySymbol { margin-inline-end: 4px; }
-.elementor-widget-chidemoon-compare-table .chidemoon-button {
-	background: var(--chidemoon-forest);
-	color: #fff;
-	border-radius: 6px;
-	display: inline-flex;
-	padding: 10px 16px;
-}
 .ch-product-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.ch-product-facts dd { margin: 0; }
+.ch-product-facts dt, .ch-product-facts dd { margin: 0; border-block-end: 1px solid var(--chidemoon-line); padding-block: 10px; font-size: 14px; }
+.ch-product-facts dt { color: var(--chidemoon-muted); }
+.ch-product-source { font-size: 13px; color: var(--chidemoon-muted); padding-block: 16px; border-block: 1px solid var(--chidemoon-line); }
+.ch-product-source p { margin-block: 0 4px; }
+.ch-product-source a { color: var(--chidemoon-forest); text-decoration: underline; }
+.ch-product-offer-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .chidemoon-compare-bar .chidemoon-compare-bar__chip,
 .chidemoon-compare-bar .chidemoon-compare-bar__clear {
@@ -452,6 +497,11 @@ body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-v
 	.admin-bar .elementor-location-header { top: 46px; }
 	.ch-header { min-height: 64px; }
 	.ch-brand .elementor-heading-title { font-size: 23px; }
+	.ch-header .ch-nav.elementor-widget { position: static; }
+	.ch-nav .elementor-nav-menu--dropdown { position: absolute; inset-inline: 16px; top: calc(100% - 1px); width: auto; }
+	.ch-header-search { order: 3; }
+	.ch-page-search .e-search-submit { padding-inline: 12px; }
+	.ch-footer-bottom { gap: 8px; }
 	.ch-display .elementor-heading-title { font-size: 32px; }
 	.ch-article-title .elementor-heading-title { font-size: 30px; }
 	.ch-hero .ch-intro-copy p { font-size: 16px; }

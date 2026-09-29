@@ -23,6 +23,8 @@ if ( $apply && ( ! current_user_can( 'edit_theme_options' ) || ! current_user_ca
 	WP_CLI::error( 'Run as an administrator with --user=<id>.' );
 }
 if ( $apply ) {
+	update_option( 'timezone_string', 'Asia/Tehran' );
+	update_option( 'date_format', 'j F Y' );
 	foreach ( array( 'guides' => 'راهنمای خرید', 'comparisons' => 'مقایسه‌ها', 'room-ideas' => 'ایده‌های چیدمان' ) as $slug => $name ) {
 		if ( ! get_category_by_slug( $slug ) ) {
 			wp_insert_term( $name, 'category', array( 'slug' => $slug ) );
@@ -182,7 +184,36 @@ class Chidemoon_Elementor_Rebuild {
 	}
 
 	private function button( string $label, string $url, string $class = '' ): array {
-		return $this->widget( 'button', array( 'text' => $label, 'link' => array( 'url' => home_url( $url ) ), '_css_classes' => $class ) );
+		return $this->widget( 'button', array( 'text' => $label, 'link' => array( 'url' => home_url( $url ) ), 'align' => 'right', '_css_classes' => $class ) );
+	}
+
+	private function search( string $class = '' ): array {
+		$settings = array( 'search_input_placeholder_text' => 'جست‌وجو در چیدمون', 'submit_trigger' => 'both', 'submit_button_text' => 'جست‌وجو', 'icon_submit' => array( 'value' => 'fas fa-search', 'library' => 'fa-solid' ), 'live_results' => '', '_css_classes' => $class );
+		if ( 'ch-header-search' === $class ) {
+			$settings['_element_width'] = 'initial';
+			$settings['_element_custom_width'] = array( 'unit' => 'px', 'size' => 300 );
+			$settings['_element_custom_width_tablet'] = array( 'unit' => '%', 'size' => 100 );
+		}
+		return $this->widget( 'search', $settings );
+	}
+
+	private function links( array $links ): array {
+		$items = array();
+		foreach ( $links as $path => $label ) {
+			$items[] = array( '_id' => $this->id(), 'text' => $label, 'link' => array( 'url' => home_url( $path ) ), 'selected_icon' => array( 'value' => 'fas fa-angle-left', 'library' => 'fa-solid' ) );
+		}
+		return $this->widget( 'icon-list', array( 'icon_list' => $items, '_css_classes' => 'ch-footer-nav' ) );
+	}
+
+	private function product_grid_settings(): array {
+		return array(
+			'_css_classes' => 'ch-product-grid', 'button_text_color' => '#ffffff', 'columns_tablet' => '2', 'columns_mobile' => '1',
+			'box_padding' => array( 'unit' => 'px', 'top' => '16', 'right' => '16', 'bottom' => '16', 'left' => '16', 'isLinked' => true ),
+			'box_border_radius' => array( 'unit' => 'px', 'size' => 8 ),
+			'button_border_radius' => array( 'unit' => 'px', 'top' => '6', 'right' => '6', 'bottom' => '6', 'left' => '6', 'isLinked' => true ),
+			'title_typography_typography' => 'custom', 'title_typography_font_size' => array( 'unit' => 'px', 'size' => 17 ), 'title_typography_line_height' => array( 'unit' => 'em', 'size' => 1.7 ),
+			'__globals__' => array( 'title_color' => 'globals/colors?id=primary', 'price_color' => 'globals/colors?id=secondary', 'button_background_color' => 'globals/colors?id=primary' ),
+		);
 	}
 
 	private function image( string $key, string $class = '' ): array {
@@ -263,7 +294,7 @@ class Chidemoon_Elementor_Rebuild {
 			return array( $this->intro( 'راهنمای خرید', 'قبل از خرید، بهتر انتخاب کن', 'راهنماهای چیدمون به اندازه، کاربرد و جزئیات قابل بررسی می‌پردازند.', 'work' ), $this->section( array( $this->heading( 'راهنماها' ), $this->posts( 'guides', 12 ) ), 'ch-listing' ) );
 		}
 		if ( 'comparisons' === $kind ) {
-			return array( $this->intro( 'مقایسه‌ها', 'دو انتخاب را کنار هم ببین', 'تفاوت جنس، کاربری و شرایط خانه را در مقایسه‌های تحریریه دنبال کن.', 'dining' ), $this->section( array( $this->heading( 'مقایسهٔ محصولات' ), $this->widget( 'chidemoon-compare-table', array( 'show_picker' => 'yes', 'show_status' => 'yes' ) ) ), 'ch-compare-section' ), $this->section( array( $this->heading( 'مقایسه‌های منتشرشده' ), $this->posts( 'comparisons', 12 ) ), 'ch-listing' ) );
+			return array( $this->section( array( $this->text( '<p>مقایسه‌ها</p>', 'ch-eyebrow' ), $this->heading( 'دو انتخاب را کنار هم ببین', 'h1' ), $this->text( '<p>مشخصات محصولات و اطلاعات فروشنده را کنار هم ببین؛ برای انتخاب متناسب با خانهٔ خودت.</p>' ), $this->widget( 'chidemoon-compare-table', array( 'show_picker' => 'yes', 'show_status' => 'yes', 'columns' => '4', 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ), 'ch-compare-section' ), $this->section( array( $this->heading( 'مقایسه‌های منتشر شده' ), $this->posts( 'comparisons', 12 ) ), 'ch-listing' ) );
 		}
 		return array( $this->intro( 'ببین و بخر', 'چیدمان را از نزدیک ببین', 'در هر فضا ایده‌ها و جزئیات چیدمان را ببین. لینک خرید فقط برای محصولات بررسی‌شده فعال می‌شود.', 'reading' ), $this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ) );
 	}
@@ -272,18 +303,21 @@ class Chidemoon_Elementor_Rebuild {
 		return array(
 			'site-header' => array( 'header', array( array( 'type' => 'include', 'name' => 'general' ) ), array(
 				$this->section( array(
-					$this->widget( 'theme-site-title', array( 'header_size' => 'div', '_css_classes' => 'ch-brand', '_element_width' => 'auto' ) ),
+					$this->box( array( $this->widget( 'theme-site-title', array( 'header_size' => 'div', '_css_classes' => 'ch-brand' ) ), $this->text( '<p>خانه، به سلیقهٔ تو</p>', 'ch-brand-caption' ) ), 'ch-brand-block', array( 'width' => array( 'unit' => '%', 'size' => 16 ), 'width_mobile' => array( 'unit' => '%', 'size' => 55 ), 'flex_gap' => array( 'column' => '0', 'row' => '0', 'isLinked' => true, 'unit' => 'px', 'size' => 0 ) ) ),
 					$this->widget( 'nav-menu', array( 'menu' => (string) $this->menu_id, 'layout' => 'horizontal', 'dropdown' => 'tablet', '_css_classes' => 'ch-nav', '_element_width' => 'auto' ) ),
-					$this->widget( 'search-form', array( 'skin' => 'classic', 'placeholder' => 'جست‌وجو در چیدمون', '_css_classes' => 'ch-header-search', '_element_width' => 'auto' ) ),
+					$this->search( 'ch-header-search' ),
 				), 'ch-header', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'row', 'flex_wrap' => 'wrap', 'flex_justify_content' => 'space-between', 'flex_align_items' => 'center', 'padding' => array( 'unit' => 'px', 'top' => '12', 'right' => '24', 'bottom' => '12', 'left' => '24', 'isLinked' => false ), 'padding_mobile' => array( 'unit' => 'px', 'top' => '10', 'right' => '16', 'bottom' => '10', 'left' => '16', 'isLinked' => false ) ) ),
 			) ),
 			'site-footer' => array( 'footer', array( array( 'type' => 'include', 'name' => 'general' ) ), array(
 				$this->section( array(
-					$this->box( array( $this->heading( 'چیدمون', 'h2' ), $this->text( '<p>ایده، راهنما و مقایسه برای خانه‌ای که در آن زندگی می‌کنی.</p>' ) ), 'ch-footer-about' ),
-					$this->box( array( $this->heading( 'کشف کن', 'h3' ), $this->button( 'ببین و بخر', '/shop-the-look/', 'ch-link-button' ), $this->button( 'راهنماها', '/guides/', 'ch-link-button' ), $this->button( 'مقایسه‌ها', '/comparisons/', 'ch-link-button' ) ), 'ch-footer-links' ),
-					$this->box( array( $this->heading( 'مطالب و محصولات', 'h3' ), $this->button( 'مجله', '/magazine/', 'ch-link-button' ), $this->button( 'فروشگاه', '/shop/', 'ch-link-button' ) ), 'ch-footer-links' ),
-					$this->text( '<p>چیدمون ممکن است از برخی لینک‌های فروشنده کارمزد دریافت کند؛ این موضوع روی معیارهای بررسی ما اثر نمی‌گذارد.</p>', 'ch-disclosure' ),
+					$this->box( array( $this->heading( 'چیدمون', 'h2' ), $this->text( '<p>خانه، به سلیقهٔ تو</p>', 'ch-footer-tagline' ), $this->text( '<p>از دیدن یک ایده تا انتخاب جزئیات خانه؛ چیدمان‌ها، راهنماها و محصولات را کنار هم پیدا کن.</p>' ) ), 'ch-footer-about' ),
+					$this->box( array( $this->heading( 'کشف چیدمون', 'h3' ), $this->links( array( '/shop-the-look/' => 'ایده‌های چیدمان', '/guides/' => 'راهنمای خرید', '/comparisons/' => 'مقایسهٔ محصولات', '/magazine/' => 'مجلهٔ چیدمون' ) ) ), 'ch-footer-links' ),
+					$this->box( array( $this->heading( 'انتخاب آگاهانه', 'h3' ), $this->links( array( '/shop/' => 'محصولات و فروشنده‌ها', '/product-category/desk-lamps/' => 'چراغ‌های مطالعه' ) ), $this->text( '<p>قیمت‌ها مربوط به زمان بررسی منبع‌اند. قیمت نهایی و شرایط ارسال را در فروشگاه ببین.</p>' ) ), 'ch-footer-links' ),
 				), 'ch-footer', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_wrap' => 'wrap', 'flex_justify_content' => 'space-between' ) ),
+				$this->section( array(
+					$this->text( '<p>چیدمون ممکن است از بعضی لینک‌های فروشنده کارمزد دریافت کند.</p>', 'ch-disclosure' ),
+					$this->text( '<p>با دقت انتخاب کن، با سلیقه بچین.</p>', 'ch-footer-signoff' ),
+				), 'ch-footer-bottom', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_justify_content' => 'space-between', 'padding' => array( 'unit' => 'px', 'top' => '20', 'right' => '24', 'bottom' => '20', 'left' => '24', 'isLinked' => false ) ) ),
 			) ),
 			'post-single' => array( 'single-post', array( array( 'type' => 'include', 'name' => 'singular', 'sub_name' => 'post' ) ), array(
 				$this->section( array( $this->widget( 'theme-post-title', array( 'header_size' => 'h1', '_css_classes' => 'ch-article-title' ) ), $this->widget( 'post-info', array( 'icon_list' => array( array( '_id' => 'chdate', 'type' => 'date', 'date_format' => 'custom', 'custom_date_format' => 'j F Y', 'link' => '', 'show_icon' => 'none' ) ), '_css_classes' => 'ch-article-meta' ) ), $this->widget( 'theme-post-featured-image', array( 'image_size' => 'full', '_css_classes' => 'ch-article-media' ) ) ), 'ch-article-header' ),
@@ -293,25 +327,25 @@ class Chidemoon_Elementor_Rebuild {
 				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%2C%22fallback%22%3A%22مجلهٔ چیدمون%22%7D"]' ) ) ), $this->text( '<p>ایده‌ها، راهنماها و مقایسه‌ها برای فضاهای خانه.</p>' ), $this->archive_posts() ), 'ch-archive' ),
 			) ),
 			'search-results' => array( 'search-results', array( array( 'type' => 'include', 'name' => 'archive', 'sub_name' => 'search' ) ), array(
-				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1' ) ), $this->widget( 'search-form', array( 'skin' => 'classic', 'placeholder' => 'جست‌وجو در چیدمون' ) ), $this->archive_posts() ), 'ch-search' ),
+				$this->section( array( $this->text( '<p>در چیدمون پیدا کن</p>', 'ch-eyebrow' ), $this->widget( 'theme-archive-title', array( 'header_size' => 'h1' ) ), $this->search( 'ch-page-search' ), $this->archive_posts( true ) ), 'ch-search' ),
 			) ),
 			'not-found' => array( 'error-404', array( array( 'type' => 'include', 'name' => 'singular', 'sub_name' => 'not_found404' ) ), array(
-				$this->section( array( $this->heading( 'این صفحه پیدا نشد', 'h1' ), $this->text( '<p>ممکن است نشانی تغییر کرده باشد. از جست‌وجو یا مسیرهای اصلی چیدمون ادامه بده.</p>' ), $this->widget( 'search-form', array( 'skin' => 'classic' ) ), $this->button( 'بازگشت به صفحهٔ اصلی', '/' ) ), 'ch-not-found' ),
+				$this->section( array( $this->heading( 'این صفحه پیدا نشد', 'h1' ), $this->text( '<p>ممکن است نشانی تغییر کرده باشد. از جست‌وجو یا مسیرهای اصلی چیدمون ادامه بده.</p>' ), $this->search( 'ch-page-search' ), $this->button( 'بازگشت به صفحهٔ اصلی', '/' ) ), 'ch-not-found' ),
 			) ),
 			'product-single' => array( 'product', array( array( 'type' => 'include', 'name' => 'woocommerce', 'sub_name' => 'product' ) ), array(
 				$this->section( array( $this->widget( 'woocommerce-breadcrumb' ), $this->box( array(
 					$this->widget( 'woocommerce-product-images', array( '_css_classes' => 'ch-product-media' ) ),
-					$this->box( array( $this->widget( 'woocommerce-product-title', array( 'header_size' => 'h1' ) ), $this->widget( 'woocommerce-product-price' ), $this->widget( 'woocommerce-product-short-description' ), $this->widget( 'chidemoon-product-offer' ) ), 'ch-product-summary' ),
-				), 'ch-product-layout', array( 'flex_direction' => 'row', 'flex_wrap' => 'wrap' ) ), $this->widget( 'woocommerce-product-data-tabs' ), $this->widget( 'woocommerce-product-related' ) ), 'ch-product-single' ),
+					$this->box( array( $this->widget( 'woocommerce-product-title', array( 'header_size' => 'h1' ) ), $this->widget( 'woocommerce-product-price', array( '__globals__' => array( 'price_color' => 'globals/colors?id=secondary' ) ) ), $this->widget( 'woocommerce-product-short-description' ), $this->widget( 'chidemoon-product-offer' ) ), 'ch-product-summary' ),
+				), 'ch-product-layout', array( 'flex_direction' => 'row', 'flex_wrap' => 'wrap' ) ), $this->widget( 'woocommerce-product-data-tabs' ), $this->widget( 'woocommerce-product-related', $this->product_grid_settings() ) ), 'ch-product-single' ),
 			) ),
 			'product-archive' => array( 'product-archive', array( array( 'type' => 'include', 'name' => 'woocommerce', 'sub_name' => 'product_archive' ) ), array(
-				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%7D"]' ) ) ), $this->text( '<p>محصولات این فهرست برای بررسی و مقایسه‌اند. پیشنهاد خرید فقط برای محصولات تأییدشده فعال می‌شود.</p>' ), $this->widget( 'woocommerce-archive-description' ), $this->widget( 'woocommerce-archive-products', array( 'columns' => 4, 'columns_tablet' => '2', 'columns_mobile' => '1', '_css_classes' => 'ch-product-grid' ) ) ), 'ch-product-archive' ),
+				$this->section( array( $this->widget( 'theme-archive-title', array( 'header_size' => 'h1', '__dynamic__' => array( 'title' => '[elementor-tag id="" name="archive-title" settings="%7B%22include_context%22%3A%22no%22%7D"]' ) ) ), $this->text( '<p>محصولات این فهرست برای بررسی و مقایسه‌اند. پیشنهاد خرید فقط برای محصولات تأییدشده فعال می‌شود.</p>' ), $this->widget( 'woocommerce-archive-description' ), $this->widget( 'woocommerce-archive-products', array_merge( $this->product_grid_settings(), array( 'columns' => 4, 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ) ), 'ch-product-archive' ),
 			) ),
 		);
 	}
 
-	private function archive_posts(): array {
-		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_masonry' => 'yes', 'archive_classic_meta_data' => array( 'date' ), 'archive_classic_read_more_text' => 'مشاهدهٔ مطلب', 'nothing_found_message' => 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => 'ch-editorial-feed' ) );
+	private function archive_posts( bool $search = false ): array {
+		return $this->widget( 'archive-posts', array( '_skin' => 'archive_classic', 'archive_classic_columns' => '3', 'archive_classic_columns_tablet' => '2', 'archive_classic_columns_mobile' => '1', 'archive_classic_masonry' => 'yes', 'archive_classic_meta_data' => $search ? array() : array( 'date' ), 'archive_classic_read_more_text' => $search ? 'مشاهده' : 'مشاهدهٔ مطلب', 'nothing_found_message' => $search ? 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' : 'مطلبی با این مشخصات پیدا نشد. عبارت دیگری را جست‌وجو کن.', 'pagination_type' => 'numbers', '_css_classes' => 'ch-editorial-feed' ) );
 	}
 
 	private function save( int $id, array $elements ): void {

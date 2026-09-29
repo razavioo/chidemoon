@@ -20,6 +20,11 @@ final class Chidemoon_Core_Public_Design {
 		} );
 		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'featured_image' ), 10, 2 );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'widgets' ) );
+		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
+			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
+				$query->set( 'post_type', array( 'post', 'product' ) );
+			}
+		} );
 		add_filter( 'gettext', static function ( string $translation, string $text, string $domain ): string {
 			return 'hello-elementor' === $domain && 'Skip to content' === $text && is_rtl() ? 'رفتن به محتوا' : $translation;
 		}, 10, 3 );
