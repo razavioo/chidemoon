@@ -46,7 +46,9 @@
 	src: url('../fonts/Estedad-Variable.woff2') format('woff2');
 }
 
-:root {
+/* Resolve Elementor tokens where its kit class defines them, on body. */
+:root,
+body {
 	--chidemoon-paper: #f3f4f1;
 	--chidemoon-surface: #fffdfa;
 	--chidemoon-ink: var(--e-global-color-text, #17241f);
