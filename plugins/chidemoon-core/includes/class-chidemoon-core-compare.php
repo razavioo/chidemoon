@@ -14,7 +14,7 @@ final class Chidemoon_Core_Compare {
 	private const CATALOGUE_LIMIT = 24;
 
 	public static function register(): void {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ), 40 );
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 		add_filter( 'woocommerce_loop_add_to_cart_link', array( __CLASS__, 'append_loop_control' ), 100, 3 );
 		add_action( 'woocommerce_after_add_to_cart_form', array( __CLASS__, 'render_single_control' ), 25 );
@@ -33,7 +33,7 @@ final class Chidemoon_Core_Compare {
 		$script_path = CHIDEMOON_CORE_DIR . 'assets/js/compare.js';
 		$style_path  = CHIDEMOON_CORE_DIR . 'assets/css/compare.css';
 		wp_register_script( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/js/compare.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
-		wp_register_style( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/css/compare.css', array(), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
+		wp_register_style( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/css/compare.css', array( 'chidemoon-public-design' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
 		if ( is_front_page() || is_shop() || is_product_taxonomy() || is_product() || is_page( array( 'comparisons', 'shop-the-look' ) ) || is_page_template( array( 'page-comparisons.php', 'page-shop-the-look.php' ) ) || has_block( 'chidemoon/shop-the-look' ) ) {
 			self::enqueue_assets();
 		}

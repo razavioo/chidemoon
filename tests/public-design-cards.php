@@ -29,6 +29,10 @@ class WP_Query {
 	public function set( string $key, $value ): void { $this->settings[ $key ] = $value; }
 }
 
+class WP_Term {
+	public function __construct( public int $count ) {}
+}
+
 class Test_Widget {
 	public function __construct( private string $name, private string $classes = '' ) {}
 	public function get_name(): string { return $this->name; }
@@ -56,10 +60,12 @@ function get_post_meta( int $id, string $key, bool $single = false ) {
 	return '';
 }
 function wp_get_post_categories( int $id, array $args = array() ): array { return isset( $args['fields'] ) ? array( 'room-ideas' ) : array( 8 ); }
+function get_term( int $id, string $taxonomy ): WP_Term { return new WP_Term( $GLOBALS['related_category_count'] ?? 2 ); }
 function wp_strip_all_tags( string $html ): string { return strip_tags( $html ); }
 function get_the_title( int $id ): string { return 1 === $id ? 'چراغ نمونه' : 'ایدهٔ اتاق'; }
 function get_queried_object_id(): int { return 2; }
 function get_posts( array $args ): array {
+	if ( $GLOBALS['forbid_nested_posts_query'] ?? false ) throw new RuntimeException( 'Related-posts filter must not start a nested post query.' );
 	if ( isset( $args['meta_key'] ) ) {
 		if ( 'product' !== $args['post_type'] || 'publish' !== $args['post_status'] || Chidemoon_Core_Affiliate::META_SOURCE_KEY !== $args['meta_key'] ) {
 			throw new RuntimeException( 'Source-key lookup must use public products.' );
@@ -80,12 +86,26 @@ function esc_html( string $value ): string { return $value; }
 function add_query_arg( string $key, string $value, string $url ): string { return $url . '?' . $key . '=' . $value; }
 function sanitize_title( string $value ): string { return $value; }
 function wp_unslash( string $value ): string { return $value; }
+function is_admin(): bool { return (bool) ( $GLOBALS['test_is_admin'] ?? false ); }
+function add_action( string $hook, $callback, int $priority = 10 ): void {}
+function add_filter( string $hook, $callback, int $priority = 10, int $accepted_args = 1 ): void { $GLOBALS['test_filters'][ $hook ][] = $callback; }
+function add_shortcode( string $tag, $callback ): void {}
 
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-public-design.php';
 
 function check( bool $condition, string $message ): void {
 	if ( ! $condition ) throw new RuntimeException( $message );
 }
+
+check( '۱,۱۹۵,۰۰۰' === Chidemoon_Core_Public_Design::public_price_digits( '1,195,000' ), 'Formatted price digits are localized.' );
+Chidemoon_Core_Public_Design::register();
+check( in_array( array( Chidemoon_Core_Public_Design::class, 'public_price_digits' ), $GLOBALS['test_filters']['formatted_woocommerce_price'] ?? array(), true ), 'Price digits run on the formatted number before WooCommerce builds currency HTML.' );
+check( ! isset( $GLOBALS['test_filters']['wc_price'] ), 'The complete price HTML is never transliterated.' );
+$currency_html = '<span class="woocommerce-Price-amount amount"><bdi>' . Chidemoon_Core_Public_Design::public_price_digits( '1,195,000' ) . '<span class="woocommerce-Price-currencySymbol">&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;</span></bdi></span>';
+check( str_contains( $currency_html, '۱,۱۹۵,۰۰۰<span' ) && str_contains( $currency_html, '&#x062A;' ), 'Localized amount leaves currency entities intact.' );
+$GLOBALS['test_is_admin'] = true;
+check( '1,195,000' === Chidemoon_Core_Public_Design::public_price_digits( '1,195,000' ), 'Admin prices are unchanged.' );
+$GLOBALS['test_is_admin'] = false;
 
 $html = '<div class="elementor-posts-container">'
 	. '<article class="elementor-post post-1 type-product"><a class="elementor-post__thumbnail__link" href="/product/"><div class="elementor-post__thumbnail"><img src="/a.jpg" alt="چراغ"></div></a><div class="elementor-post__text"><h2 class="elementor-post__title"><a href="/product/">چراغ نمونه</a></h2><div class="elementor-post__excerpt">توضیح</div><a class="elementor-post__read-more" href="/product/">مشاهده</a></div></article>'
@@ -121,10 +141,16 @@ $GLOBALS['eligible_product_ids'] = array();
 check( str_contains( look_card( 3, $editorial_widget ), 'ایدهٔ مفهومی' ), 'A hotspot loses its buyable label when eligibility changes.' );
 
 $query = new WP_Query();
+$GLOBALS['forbid_nested_posts_query'] = true;
 Chidemoon_Core_Public_Design::related_posts_query( $query );
+$GLOBALS['forbid_nested_posts_query'] = false;
 check( array( 2 ) === $query->settings['post__not_in'], 'Related posts exclude the current article.' );
 check( array( 8 ) === $query->settings['category__in'], 'Related posts prefer the same category.' );
 check( 2 === $query->settings['posts_per_page'], 'Related posts remain compact.' );
+$GLOBALS['related_category_count'] = 1;
+$fallback_query = new WP_Query();
+Chidemoon_Core_Public_Design::related_posts_query( $fallback_query );
+check( ! isset( $fallback_query->settings['category__in'] ), 'A category containing only the current article falls back to recent posts.' );
 
 $filters = Chidemoon_Core_Public_Design::room_filters();
 check( str_contains( $filters, 'id="ch-room-filters"' ), 'Room filters have a stable target.' );

@@ -479,7 +479,7 @@ body.search-no-results .ch-search-recovery { display: block; }
 	color: white;
 	padding: 10px 16px;
 }
-.ch-product-grid.elementor-wc-products ul.products li.product { display: flex; flex-direction: column; }
+.ch-product-grid.elementor-wc-products ul.products li.product { display: flex; flex-direction: column; min-inline-size: 0; }
 .ch-product-grid.elementor-wc-products ul.products li.product .price { margin-block-start: auto; margin-block-end: 4px; }
 .ch-product-grid.elementor-wc-products ul.products li.product .ch-product-card-merchant { color: var(--chidemoon-muted); font-size: 13px; line-height: 1.55; margin-block: 0 14px; }
 .ch-product-grid.elementor-wc-products ul.products li.product .woocommerce-loop-product__link { min-inline-size: 0; }

@@ -24,7 +24,7 @@ final class Chidemoon_Core_Public_Design {
 		add_action( 'woocommerce_after_shop_loop_item_title', array( __CLASS__, 'loop_merchant' ), 11 );
 		add_filter( 'woocommerce_product_add_to_cart_text', array( __CLASS__, 'loop_offer_text' ), 110, 2 );
 		add_filter( 'woocommerce_loop_add_to_cart_args', array( __CLASS__, 'loop_offer_label' ), 110, 2 );
-		add_filter( 'wc_price', array( __CLASS__, 'public_price_digits' ), 100 );
+		add_filter( 'formatted_woocommerce_price', array( __CLASS__, 'public_price_digits' ), 100 );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'widgets' ) );
 		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
 			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
@@ -59,8 +59,15 @@ final class Chidemoon_Core_Public_Design {
 		$query->set( 'posts_per_page', 2 );
 		$query->set( 'ignore_sticky_posts', true );
 		$categories = wp_get_post_categories( $post_id );
-		if ( $categories && get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 1, 'fields' => 'ids', 'category__in' => $categories, 'post__not_in' => array( $post_id ) ) ) ) {
-			$query->set( 'category__in', $categories );
+		$shared_categories = array();
+		foreach ( $categories as $category_id ) {
+			$category = get_term( $category_id, 'category' );
+			if ( $category instanceof WP_Term && $category->count > 1 ) {
+				$shared_categories[] = $category_id;
+			}
+		}
+		if ( $shared_categories ) {
+			$query->set( 'category__in', $shared_categories );
 		}
 	}
 
@@ -90,8 +97,8 @@ final class Chidemoon_Core_Public_Design {
 		return $args;
 	}
 
-	public static function public_price_digits( string $html ): string {
-		return is_admin() ? $html : self::persian_digits( $html );
+	public static function public_price_digits( string $price ): string {
+		return is_admin() ? $price : self::persian_digits( $price );
 	}
 
 	public static function content_card_details( string $content, $widget ): string {

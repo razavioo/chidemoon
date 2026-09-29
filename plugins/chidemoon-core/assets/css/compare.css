@@ -89,16 +89,16 @@ body .chidemoon-compare-single.is-selected:is(:hover, :focus) { background: var(
 	z-index: 1000;
 }
 .ch-mobile-menu-open .chidemoon-compare-bar { display: none; }
-.chidemoon-compare-bar[hidden], .chidemoon-compare-bar__details[hidden], .chidemoon-compare-bar__go[hidden], .chidemoon-comparison-status[hidden] { display: none; }
+.chidemoon-compare-bar[hidden], .chidemoon-compare-bar__details[hidden], .chidemoon-compare-bar .chidemoon-compare-bar__go[hidden], .chidemoon-comparison-status[hidden] { display: none; }
 .chidemoon-compare-bar__toolbar { align-items: center; display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) auto; }
-.chidemoon-compare-bar__summary { align-items: center; background: transparent; border: 0; border-radius: 6px; color: var(--chidemoon-forest, #123f34); cursor: pointer; display: flex; font: inherit; font-size: 14px; font-weight: 700; gap: 8px; min-block-size: 44px; min-inline-size: 0; padding: 6px 8px; text-align: start; }
+.chidemoon-compare-bar .chidemoon-compare-bar__summary { align-items: center; background: transparent; border: 0; border-radius: 6px; color: var(--chidemoon-forest, #123f34); cursor: pointer; display: flex; font: inherit; font-size: 14px; font-weight: 700; gap: 8px; min-block-size: 44px; min-inline-size: 0; padding: 6px 8px; text-align: start; }
 .chidemoon-compare-bar__badge { align-items: center; background: var(--chidemoon-forest, #123f34); border-radius: 50%; color: white; display: flex; flex: 0 0 28px; block-size: 28px; justify-content: center; }
 .chidemoon-compare-bar__summary-count, .chidemoon-compare-bar__summary-context { white-space: nowrap; }
 .chidemoon-compare-bar__chevron { border-block-end: 2px solid currentColor; border-inline-end: 2px solid currentColor; flex: 0 0 8px; block-size: 8px; margin-inline-start: 2px; transform: rotate(45deg); }
 .chidemoon-compare-bar.is-expanded .chidemoon-compare-bar__chevron { transform: rotate(225deg); }
 .chidemoon-compare-bar__details { border-block-start: 1px solid var(--chidemoon-line, #ccd6d0); margin-block-start: 8px; max-block-size: min(38dvh, 320px); overflow-y: auto; overscroll-behavior: contain; padding-block-start: 10px; }
 .chidemoon-compare-bar__items { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); min-inline-size: 0; }
-.chidemoon-compare-bar__chip {
+.chidemoon-compare-bar .chidemoon-compare-bar__chip {
 	align-items: center;
 	background: #f3f4f1;
 	border: 1px solid var(--chidemoon-line, #ccd6d0);
@@ -120,7 +120,7 @@ body .chidemoon-compare-single.is-selected:is(:hover, :focus) { background: var(
 .chidemoon-compare-bar__chip-x { flex-shrink: 0; font-size: 20px; }
 .chidemoon-compare-bar__thumb, .chidemoon-comparison-status__chip-thumb { width: 32px; height: 32px; object-fit: contain; background: white; flex-shrink: 0; border-radius: 4px; }
 .chidemoon-compare-bar__details-footer { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-block-start: 10px; }
-.chidemoon-compare-bar__go, .chidemoon-compare-bar__clear {
+.chidemoon-compare-bar .chidemoon-compare-bar__go, .chidemoon-compare-bar .chidemoon-compare-bar__clear {
 	font: inherit;
 	font-size: 14px;
 	min-height: 44px;
@@ -180,8 +180,9 @@ body .chidemoon-comparison-search__result:is(:hover, :focus) { background: #f3f4
 .chidemoon-comparison-table :where(th, td):last-child { border-inline-end: 0; }
 .chidemoon-comparison-table thead th { min-width: 220px; font-size: 15px; }
 .chidemoon-comparison-table tbody th, .chidemoon-comparison-table thead th:first-child { background: #f3f4f1; color: var(--chidemoon-forest, #123f34); font-weight: 600; width: 160px; min-width: 160px; inset-inline-start: 0; position: sticky; z-index: 2; }
-.chidemoon-comparison-table thead a { color: var(--chidemoon-forest, #123f34); display: grid; gap: 12px; text-decoration: none; }
-.chidemoon-comparison-table thead img { aspect-ratio: 1; max-height: 180px; object-fit: contain; width: 100%; }
+.chidemoon-comparison-table thead a { color: var(--chidemoon-forest, #123f34); display: grid; gap: 12px; min-inline-size: 0; text-decoration: none; }
+.chidemoon-comparison-table thead a span { min-inline-size: 0; overflow-wrap: anywhere; white-space: normal; }
+.chidemoon-comparison-table thead img { aspect-ratio: 1; block-size: 120px; inline-size: 120px; justify-self: center; max-inline-size: 100%; object-fit: contain; }
 .chidemoon-comparison-table__remove { color: var(--chidemoon-clay, #b95d3e); margin-block-start: 12px; font-size: 12px; }
 body :is(.chidemoon-comparison-status__chip, .chidemoon-comparison-table__remove):is(:hover, :focus) { background: #f3f4f1; color: var(--chidemoon-forest, #123f34); }
 .chidemoon-comparison-table .chidemoon-button, .chidemoon-comparison-status__cta { background: var(--chidemoon-forest, #123f34); color: white; }
@@ -190,7 +191,7 @@ body :is(.chidemoon-comparison-status__chip, .chidemoon-comparison-table__remove
 	.chidemoon-compare-bar { bottom: max(8px, env(safe-area-inset-bottom)); inset-inline: 8px; padding: 6px 8px; }
 	.chidemoon-compare-bar__summary-context { display: none; }
 	.chidemoon-compare-bar__items { grid-template-columns: minmax(0, 1fr); }
-	.chidemoon-compare-bar__go, .chidemoon-compare-bar__clear { min-width: 0; padding-inline: 12px; font-size: 13px; }
+	.chidemoon-compare-bar .chidemoon-compare-bar__go, .chidemoon-compare-bar .chidemoon-compare-bar__clear { min-width: 0; padding-inline: 12px; font-size: 13px; }
 	.chidemoon-core-product-grid { gap: 10px; grid-template-columns: minmax(0, 1fr); }
 	.chidemoon-core-product-card { display: grid; grid-template-columns: minmax(96px, 30%) minmax(0, 1fr); }
 	.chidemoon-core-product-card__media { align-self: stretch; aspect-ratio: auto; min-inline-size: 0; padding: 8px; }
