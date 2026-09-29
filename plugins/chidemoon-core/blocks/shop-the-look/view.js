@@ -33,8 +33,11 @@
 			var left = centerX + 12;
 			if (left + width > canvasRect.width - 12) left = centerX - width - 12;
 			if (left < 12) left = (canvasRect.width - width) / 2;
+			var header = document.querySelector('.elementor-location-header');
+			var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+			var minTop = Math.max(12, headerBottom + 12 - canvasRect.top);
 			tooltip.style.left = Math.max(12, Math.min(left, canvasRect.width - width - 12)) + 'px';
-			tooltip.style.top = Math.max(12, Math.min(centerY - height / 2, canvasRect.height - height - 12)) + 'px';
+			tooltip.style.top = Math.max(minTop, Math.min(centerY - height / 2, canvasRect.height - height - 12)) + 'px';
 		}
 
 		function closeAll(restore) {
