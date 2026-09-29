@@ -39,7 +39,16 @@ $collection = array(
 
 foreach ( $collection as $item ) {
 	list( $slug, $title, $category, $room, $file, $excerpt, $sections, $look ) = $item;
-	if ( get_page_by_path( $slug, OBJECT, 'post' ) ) {
+	$existing = get_page_by_path( $slug, OBJECT, 'post' );
+	if ( $existing ) {
+		$obsolete_notice = '<p><small>تصویر این مطلب یک چیدمان مفهومی است و معرفی محصول یا پروژهٔ اجراشده نیست.</small></p>';
+		if ( str_contains( $existing->post_content, $obsolete_notice ) ) {
+			wp_update_post( array( 'ID' => $existing->ID, 'post_content' => str_replace( $obsolete_notice, '', $existing->post_content ) ) );
+		}
+		$elementor_data = (string) get_post_meta( $existing->ID, '_elementor_data', true );
+		if ( str_contains( $elementor_data, $obsolete_notice ) ) {
+			update_post_meta( $existing->ID, '_elementor_data', str_replace( $obsolete_notice, '', $elementor_data ) );
+		}
 		WP_CLI::log( 'Preserved editorial post: ' . $slug );
 		continue;
 	}
@@ -59,7 +68,6 @@ foreach ( $collection as $item ) {
 	foreach ( $sections as $heading => $paragraph ) {
 		$html .= '<h2>' . esc_html( $heading ) . '</h2><p>' . esc_html( $paragraph ) . '</p>';
 	}
-	$html .= '<p><small>تصویر این مطلب یک چیدمان مفهومی است و معرفی محصول یا پروژهٔ اجراشده نیست.</small></p>';
 	$id = wp_insert_post( array( 'post_type' => 'post', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title, 'post_excerpt' => $excerpt, 'post_content' => $html, 'post_category' => array( $term->term_id ), 'comment_status' => 'closed' ), true );
 	if ( is_wp_error( $id ) ) {
 		WP_CLI::error( $id->get_error_message() );

@@ -22,7 +22,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		$this->add_control( 'merchant_label', array( 'label' => 'عنوان فروشنده', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'فروشنده' ) );
 		$this->add_control( 'source_label', array( 'label' => 'متن لینک منبع', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشاهدهٔ اطلاعات در فروشگاه' ) );
 		$this->add_control( 'checked_label', array( 'label' => 'عنوان تاریخ بررسی', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'بررسی منبع' ) );
-		$this->add_control( 'price_notice', array( 'label' => 'توضیح قیمت', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'قیمت ثبت‌شده مربوط به زمان بررسی است؛ قیمت نهایی و موجودی را در فروشگاه ببین.' ) );
+		$this->add_control( 'price_notice', array( 'label' => 'توضیح قیمت', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'قیمت و موجودی را پیش از خرید در فروشگاه بررسی کن.' ) );
 		$this->end_controls_section();
 		$this->start_controls_section( 'style', array( 'label' => 'ظاهر', 'tab' => \Elementor\Controls_Manager::TAB_STYLE ) );
 		$this->add_control( 'text_color', array( 'label' => 'رنگ متن', 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .ch-product-offer' => 'color: {{VALUE}};' ) ) );
@@ -51,7 +51,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		}
 		$merchant = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME );
 		if ( $merchant ) {
-			echo '<p>' . esc_html( ( $settings['merchant_label'] ?? 'فروشنده' ) . ': ' . $merchant ) . '</p>';
+			echo '<p class="ch-product-merchant"><span>' . esc_html( $settings['merchant_label'] ?? 'فروشنده' ) . '</span>' . esc_html( $merchant ) . '</p>';
 		}
 		echo '<div class="ch-product-offer-actions">';
 		echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => (string) $product->get_id(), 'label' => $settings['button_text'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

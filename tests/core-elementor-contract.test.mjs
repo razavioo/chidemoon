@@ -16,6 +16,10 @@ describe('native Elementor ownership', () => {
     const rebuild = read('tools/elementor-rebuild.php');
     assert.doesNotMatch(rebuild, /widget\( '(?:html|shortcode|search-form)'/);
     assert.match(rebuild, /widget\( 'search'/);
+    assert.match(rebuild, /'shop-the-look' => 'ایده‌های چیدمان'/);
+    const editorial = read('tools/rebuild-editorial.php');
+    assert.doesNotMatch(editorial, /\$html \+= '<p><small>تصویر این مطلب یک چیدمان مفهومی است و معرفی محصول یا پروژهٔ اجراشده نیست/);
+    assert.match(editorial, /str_replace\( \$obsolete_notice/);
   });
 
   it('keeps affiliate eligibility across all comparison surfaces', () => {

@@ -217,7 +217,7 @@ $homePageId = Ensure-Page -Slug 'home' -Title 'چیدمون'
 $blogPageId = Ensure-Page -Slug 'magazine' -Title 'مجله'
 $null = Ensure-Page -Slug 'guides' -Title 'راهنمای خرید'
 $null = Ensure-Page -Slug 'comparisons' -Title 'مقایسه‌ها'
-$null = Ensure-Page -Slug 'shop-the-look' -Title 'ببین و بخر'
+$null = Ensure-Page -Slug 'shop-the-look' -Title 'ایده‌های چیدمان'
 
 Invoke-Wp option update show_on_front page
 Invoke-Wp option update page_on_front $homePageId

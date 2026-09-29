@@ -32,13 +32,16 @@ if ( $apply ) {
 	}
 }
 
-$required_pages = array( 'home' => 'چیدمون', 'guides' => 'راهنمای خرید', 'comparisons' => 'مقایسه‌ها', 'shop-the-look' => 'ببین و بخر', 'magazine' => 'مجله', 'shop' => 'محصولات' );
+$required_pages = array( 'home' => 'چیدمون', 'guides' => 'راهنمای خرید', 'comparisons' => 'مقایسه‌ها', 'shop-the-look' => 'ایده‌های چیدمان', 'magazine' => 'مجله', 'shop' => 'محصولات' );
 foreach ( $required_pages as $slug => $title ) {
-	if ( $apply && ! get_page_by_path( $slug ) ) {
+	$page = get_page_by_path( $slug );
+	if ( $apply && ! $page ) {
 		$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title ), true );
 		if ( is_wp_error( $id ) ) {
 			WP_CLI::error( $id->get_error_message() );
 		}
+	} elseif ( $apply && $page && $page->post_title !== $title ) {
+		wp_update_post( array( 'ID' => $page->ID, 'post_title' => $title ) );
 	}
 }
 
@@ -296,7 +299,7 @@ class Chidemoon_Elementor_Rebuild {
 		if ( 'comparisons' === $kind ) {
 			return array( $this->section( array( $this->text( '<p>مقایسه‌ها</p>', 'ch-eyebrow' ), $this->heading( 'دو انتخاب را کنار هم ببین', 'h1' ), $this->text( '<p>مشخصات محصولات و اطلاعات فروشنده را کنار هم ببین؛ برای انتخاب متناسب با خانهٔ خودت.</p>' ), $this->widget( 'chidemoon-compare-table', array( 'show_picker' => 'yes', 'show_status' => 'yes', 'columns' => '4', 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ), 'ch-compare-section' ), $this->section( array( $this->heading( 'مقایسه‌های منتشر شده' ), $this->posts( 'comparisons', 12 ) ), 'ch-listing' ) );
 		}
-		return array( $this->intro( 'ببین و بخر', 'چیدمان را از نزدیک ببین', 'در هر فضا ایده‌ها و جزئیات چیدمان را ببین. لینک خرید فقط برای محصولات بررسی‌شده فعال می‌شود.', 'reading' ), $this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ) );
+		return array( $this->intro( 'ایده‌های چیدمان', 'چیدمان را از نزدیک ببین', 'برای هر فضا ایده بگیر و جزئیات قابل خرید را همان‌جا ببین.', 'reading' ), $this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ) );
 	}
 
 	private function templates(): array {
@@ -312,7 +315,7 @@ class Chidemoon_Elementor_Rebuild {
 				$this->section( array(
 					$this->box( array( $this->heading( 'چیدمون', 'h2' ), $this->text( '<p>خانه، به سلیقهٔ تو</p>', 'ch-footer-tagline' ), $this->text( '<p>از دیدن یک ایده تا انتخاب جزئیات خانه؛ چیدمان‌ها، راهنماها و محصولات را کنار هم پیدا کن.</p>' ) ), 'ch-footer-about' ),
 					$this->box( array( $this->heading( 'کشف چیدمون', 'h3' ), $this->links( array( '/shop-the-look/' => 'ایده‌های چیدمان', '/guides/' => 'راهنمای خرید', '/comparisons/' => 'مقایسهٔ محصولات', '/magazine/' => 'مجلهٔ چیدمون' ) ) ), 'ch-footer-links' ),
-					$this->box( array( $this->heading( 'انتخاب آگاهانه', 'h3' ), $this->links( array( '/shop/' => 'محصولات و فروشنده‌ها', '/product-category/desk-lamps/' => 'چراغ‌های مطالعه' ) ), $this->text( '<p>قیمت‌ها مربوط به زمان بررسی منبع‌اند. قیمت نهایی و شرایط ارسال را در فروشگاه ببین.</p>' ) ), 'ch-footer-links' ),
+					$this->box( array( $this->heading( 'محصولات', 'h3' ), $this->links( array( '/shop/' => 'فروشگاه', '/product-category/desk-lamps/' => 'چراغ مطالعه' ) ) ), 'ch-footer-links' ),
 				), 'ch-footer', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_wrap' => 'wrap', 'flex_justify_content' => 'space-between' ) ),
 				$this->section( array(
 					$this->text( '<p>چیدمون ممکن است از بعضی لینک‌های فروشنده کارمزد دریافت کند.</p>', 'ch-disclosure' ),
