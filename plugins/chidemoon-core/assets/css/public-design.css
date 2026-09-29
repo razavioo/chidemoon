@@ -1,0 +1,468 @@
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/Vazirmatn-Regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/Vazirmatn-Medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/Vazirmatn-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../fonts/Vazirmatn-Bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+	src: url('../fonts/Vazirmatn-ExtraBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: Estedad;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('../fonts/Estedad-Variable.woff2') format('woff2');
+}
+
+:root {
+	--chidemoon-paper: #f3f4f1;
+	--chidemoon-surface: #fffdfa;
+	--chidemoon-ink: var(--e-global-color-text, #17241f);
+	--chidemoon-muted: var(--e-global-color-accent, #607069);
+	--chidemoon-forest: var(--e-global-color-primary, #123f34);
+	--chidemoon-clay: var(--e-global-color-secondary, #b95d3e);
+	--chidemoon-line: rgba(18, 63, 52, 0.16);
+	--chidemoon-radius-lg: 8px;
+	--chidemoon-font-body: var(--e-global-typography-text-font-family, Vazirmatn), Tahoma, sans-serif;
+	--chidemoon-font-display: var(--e-global-typography-primary-font-family, Estedad), Vazirmatn, Tahoma, sans-serif;
+}
+
+body.wp-theme-hello-elementor {
+	background: var(--chidemoon-paper);
+	color: var(--chidemoon-ink);
+	font-family: var(--chidemoon-font-body);
+	font-size: 16px;
+	line-height: 1.8;
+}
+
+body.wp-theme-hello-elementor :where(button, input, select, textarea) {
+	font: inherit;
+}
+
+body.wp-theme-hello-elementor :where(h1, h2, h3, h4, .elementor-heading-title) {
+	font-family: var(--chidemoon-font-display);
+	letter-spacing: 0;
+	line-height: 1.38;
+	overflow-wrap: normal;
+	word-break: normal;
+}
+
+body.wp-theme-hello-elementor :where(p, li) {
+	line-height: 1.9;
+}
+
+body.wp-theme-hello-elementor :where(a, button, input, select, textarea):focus-visible {
+	outline: 3px solid var(--chidemoon-clay);
+	outline-offset: 3px;
+}
+
+.elementor-location-header {
+	background: var(--chidemoon-surface);
+	border-block-end: 1px solid var(--chidemoon-line);
+	position: sticky;
+	top: 0;
+	z-index: 30;
+}
+
+.admin-bar .elementor-location-header {
+	top: 32px;
+}
+
+.ch-header {
+	min-height: 76px;
+}
+
+.ch-brand .elementor-heading-title,
+.ch-brand .elementor-heading-title a {
+	color: var(--chidemoon-forest);
+	font-size: 28px;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.ch-nav .elementor-nav-menu--main .elementor-item {
+	color: var(--chidemoon-ink);
+	font-size: 14px;
+	font-weight: 600;
+	min-height: 44px;
+}
+
+.ch-header-search {
+	inline-size: min(100%, 270px);
+}
+
+.ch-header-search input.elementor-search-form__input,
+.ch-search input.elementor-search-form__input {
+	background: var(--chidemoon-paper);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 6px;
+	min-height: 44px;
+}
+
+.ch-section {
+	text-align: start;
+}
+
+.elementor-widget-chidemoon-shop-the-look {
+	flex-shrink: 0;
+}
+
+.chidemoon-look-widget {
+	container-type: normal;
+}
+
+.chidemoon-look-widget figcaption {
+	color: var(--chidemoon-muted);
+	padding-block: 12px;
+}
+
+.chidemoon-look-widget .chidemoon-shop-the-look__tooltip {
+	border-radius: 8px;
+}
+
+.chidemoon-look-widget .chidemoon-shop-the-look__tooltip .chidemoon-button {
+	align-items: center;
+	background: var(--chidemoon-forest);
+	border-radius: 6px;
+	color: #fff;
+	justify-content: center;
+	min-height: 44px;
+	padding: 8px 12px;
+	text-decoration: none;
+}
+
+.chidemoon-look-widget .chidemoon-shop-the-look__tooltip--mobile {
+	max-width: none;
+	max-height: calc(100dvh - 24px);
+	overflow-y: auto;
+}
+
+.chidemoon-look-widget .chidemoon-shop-the-look__product-image {
+	max-height: 180px;
+	object-fit: contain;
+}
+
+.chidemoon-look-widget .chidemoon-shop-the-look__price .woocommerce-Price-currencySymbol {
+	margin-inline-end: 6px;
+}
+
+.ch-section .elementor-widget-text-editor {
+	color: var(--chidemoon-ink);
+}
+
+.ch-eyebrow p {
+	color: var(--chidemoon-clay);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0;
+}
+
+.ch-display .elementor-heading-title {
+	color: var(--chidemoon-forest);
+	font-size: 54px;
+	font-weight: 800;
+	line-height: 1.28;
+}
+
+.ch-hero .ch-intro-copy p {
+	color: var(--chidemoon-muted);
+	font-size: 18px;
+	max-inline-size: 35em;
+}
+
+.ch-hero-media img {
+	border-radius: 8px;
+	display: block;
+	inline-size: 100%;
+	max-block-size: 420px;
+	object-fit: cover;
+}
+
+.ch-section .elementor-heading-title {
+	color: var(--chidemoon-forest);
+}
+
+.ch-section .elementor-widget-button .elementor-button {
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: 6px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	min-height: 44px;
+	padding: 10px 20px;
+}
+
+.ch-section .ch-link-button .elementor-button {
+	background: transparent;
+	color: var(--chidemoon-forest);
+}
+
+.ch-section .elementor-widget-button .elementor-button:hover {
+	background: #092c25;
+	color: #fff;
+}
+
+.ch-discovery {
+	background: #e9eee8;
+}
+
+.ch-route {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 8px;
+	padding: 12px 12px 20px;
+}
+
+.ch-route-media img {
+	border-radius: 5px;
+	display: block;
+	inline-size: 100%;
+	max-block-size: 220px;
+	object-fit: cover;
+}
+
+.ch-route .elementor-heading-title {
+	font-size: 21px;
+}
+
+.ch-editorial-feed .elementor-post {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 8px;
+	break-inside: avoid;
+	overflow: hidden;
+}
+
+.ch-editorial-feed .elementor-post__text {
+	padding: 16px;
+}
+
+.ch-editorial-feed .elementor-post__title a {
+	color: var(--chidemoon-forest);
+	font-family: var(--chidemoon-font-display);
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.ch-editorial-feed .elementor-post__excerpt {
+	color: var(--chidemoon-muted);
+}
+
+.ch-editorial-feed .elementor-post__thumbnail img {
+	block-size: auto;
+	object-fit: contain;
+}
+
+.elementor-location-footer {
+	background: var(--chidemoon-forest);
+	color: #fff;
+}
+
+.ch-footer .elementor-heading-title,
+.ch-footer .elementor-widget-text-editor,
+.ch-footer :where(.elementor-heading-title a, .elementor-widget-text-editor p) {
+	color: #fff;
+}
+
+.ch-footer-about {
+	inline-size: 36%;
+}
+
+.ch-footer-links {
+	inline-size: 23%;
+}
+
+.ch-footer .ch-link-button .elementor-button {
+	border-color: transparent;
+	color: #fff;
+	min-height: 40px;
+	padding-inline: 0;
+}
+
+.ch-disclosure {
+	border-block-start: 1px solid rgba(255,255,255,.25);
+	inline-size: 100%;
+	padding-block-start: 16px;
+}
+
+.ch-article-header,
+.ch-article-section {
+	max-inline-size: 820px;
+	margin-inline: auto;
+}
+
+.ch-article-title .elementor-heading-title {
+	font-size: 46px;
+}
+
+.ch-article-media img {
+	border-radius: 8px;
+	inline-size: 100%;
+}
+
+.ch-article-body :where(h2, h3) {
+	margin-block: 1.4em .6em;
+}
+
+.ch-article-body :where(p, li) {
+	font-size: 17px;
+	line-height: 2;
+}
+
+.ch-product-media,
+.ch-product-summary {
+	inline-size: 48%;
+}
+
+.ch-product-media img {
+	border-radius: 8px;
+}
+
+.ch-product-note p {
+	color: var(--chidemoon-muted);
+	font-size: 14px;
+}
+
+.ch-product-grid li.product {
+	background: var(--chidemoon-surface);
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 8px;
+	padding: 12px;
+}
+
+.ch-product-grid li.product img {
+	object-fit: contain;
+}
+
+.ch-product-grid li.product .button {
+	min-height: 44px;
+}
+
+.ch-product-offer .chidemoon-affiliate-cta {
+	background: var(--chidemoon-forest);
+	color: #fff;
+	border-radius: 6px;
+	display: inline-flex;
+	min-height: 44px;
+	align-items: center;
+	padding: 10px 20px;
+}
+
+.ch-product-offer .chidemoon-compare-single {
+	background: var(--chidemoon-surface);
+	border-color: var(--chidemoon-line);
+	color: var(--chidemoon-forest);
+	display: flex;
+	margin-block: 16px;
+}
+.ch-product-offer .chidemoon-compare-single.is-selected {
+	background: var(--chidemoon-forest);
+	color: #fff;
+}
+.ch-product-summary .price { color: var(--chidemoon-clay); }
+.woocommerce-Price-currencySymbol { margin-inline-end: 4px; }
+.elementor-widget-chidemoon-compare-table .chidemoon-button {
+	background: var(--chidemoon-forest);
+	color: #fff;
+	border-radius: 6px;
+	display: inline-flex;
+	padding: 10px 16px;
+}
+.ch-product-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ch-product-facts dd { margin: 0; }
+
+.chidemoon-compare-bar .chidemoon-compare-bar__chip,
+.chidemoon-compare-bar .chidemoon-compare-bar__clear {
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 6px;
+	color: var(--chidemoon-forest);
+	background: var(--chidemoon-surface);
+	min-height: 44px;
+}
+
+.chidemoon-compare-bar .chidemoon-compare-bar__go {
+	background: var(--chidemoon-forest);
+	border: 1px solid var(--chidemoon-forest);
+	border-radius: 6px;
+	color: #fff;
+	min-height: 44px;
+}
+
+.ch-room-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.ch-room-filters a {
+	border: 1px solid var(--chidemoon-line);
+	border-radius: 6px;
+	color: var(--chidemoon-forest);
+	min-height: 44px;
+	padding: 8px 16px;
+}
+
+.ch-room-filters a[aria-current] {
+	background: var(--chidemoon-forest);
+	color: #fff;
+}
+
+@media (max-width: 1023px) {
+	.ch-header-search { inline-size: 100%; }
+	.ch-footer-about { inline-size: 44%; }
+	.ch-footer-links { inline-size: 25%; }
+}
+
+@media (max-width: 767px) {
+	.admin-bar .elementor-location-header { top: 46px; }
+	.ch-header { min-height: 64px; }
+	.ch-brand .elementor-heading-title { font-size: 23px; }
+	.ch-display .elementor-heading-title { font-size: 32px; }
+	.ch-article-title .elementor-heading-title { font-size: 30px; }
+	.ch-hero .ch-intro-copy p { font-size: 16px; }
+	.ch-hero-media img { max-block-size: 190px; }
+	.ch-route,
+	.ch-footer-about,
+	.ch-footer-links,
+	.ch-product-media,
+	.ch-product-summary { inline-size: 100%; }
+	.ch-route-media img { max-block-size: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ch-section *,
+	.elementor-location-header * { scroll-behavior: auto; transition-duration: 0s; animation-duration: 0s; }
+}

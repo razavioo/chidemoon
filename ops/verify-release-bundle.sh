@@ -68,7 +68,7 @@ grep -q '"format": 1' "$release_dir/release-manifest.json" || fail 'Release mani
 	sha256sum -c release-files.sha256
 ) || fail 'Extracted-file checksum mismatch.'
 
-for required_path in compose.yml .env.example standalone-init.ps1 ops plugins themes vendor; do
+for required_path in compose.yml .env.example standalone-init.ps1 ops plugins tools vendor; do
 	[[ -e "$release_dir/$required_path" ]] || fail "Release is missing required path: $required_path"
 done
 

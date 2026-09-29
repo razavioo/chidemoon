@@ -81,7 +81,7 @@ describe('standalone Chidemoon runtime', () => {
       'ops/scheduler-host.sh',
       'ops/backup-host.sh',
       'plugins/chidemoon-core/chidemoon-core.php',
-      'themes/chidemoon-blocksy-child/style.css',
+      'tools/elementor-rebuild.php',
     ]) {
       assert.equal(existsSync(join(root, path)), true, `${path} is missing`);
     }
@@ -101,7 +101,8 @@ describe('standalone Chidemoon runtime', () => {
     assert.match(builder, /archive --format=tar/);
     assert.match(builder, /status --porcelain/);
     assert.match(builder, /release-files\.sha256/);
-    assert.match(builder, /blocksy/);
+    assert.match(builder, /hello-elementor/);
+    assert.doesNotMatch(read('compose.yml'), /chidemoon-blocksy/);
     assert.match(builder, /woocommerce/);
     assert.match(builder, /tr -d/);
     assert.match(builder, /sha256sum -c -/);

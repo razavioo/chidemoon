@@ -20,13 +20,13 @@ if [[ -n "$(git -C "$ROOT_DIR" status --porcelain --untracked-files=all)" ]]; th
 	fail 'Commit or explicitly discard all worktree changes before building a release.'
 fi
 
-for required_path in compose.yml .env.example standalone-init.ps1 ops plugins themes vendor; do
+for required_path in compose.yml .env.example standalone-init.ps1 ops plugins tools vendor; do
 	[[ -e "$ROOT_DIR/$required_path" ]] || fail "Required release path is missing: $required_path"
 done
 
 # Production hosts have no package registry access. These reviewed archives are
 # part of the artifact and must be checksum-verified before they are packaged.
-for package in blocksy woocommerce; do
+for package in hello-elementor woocommerce; do
 	[[ -f "$ROOT_DIR/vendor/${package}.zip" ]] || fail "Missing offline package: vendor/${package}.zip"
 	[[ -f "$ROOT_DIR/vendor/${package}.sha256" ]] || fail "Missing offline package checksum: vendor/${package}.sha256"
 	(
@@ -70,8 +70,16 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	standalone-init.ps1 \
 	ops \
 	plugins \
-	themes \
-	vendor | tar -xf - -C "$release_dir"
+	tools/elementor-rebuild.php \
+	tools/rebuild-editorial.php \
+	tools/verify-elementor.php \
+	README.md \
+	tools/seed-images/looks \
+	vendor/README.md \
+	vendor/hello-elementor.zip \
+	vendor/hello-elementor.sha256 \
+	vendor/woocommerce.zip \
+	vendor/woocommerce.sha256 | tar -xf - -C "$release_dir"
 
 # Git for Windows can translate line endings in the archive pipeline. Normalize
 # only release shell scripts so the sealed artifact remains runnable on Linux.

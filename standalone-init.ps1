@@ -177,20 +177,33 @@ if (-not (Test-Wp plugin is-installed woocommerce)) {
     Invoke-Wp plugin activate woocommerce
 }
 
-if (-not (Test-Wp theme is-installed blocksy)) {
-    $offlineTheme = Join-Path $repositoryRoot 'vendor\blocksy.zip'
+if (-not (Test-Wp theme is-installed hello-elementor)) {
+    $offlineTheme = Join-Path $repositoryRoot 'vendor\hello-elementor.zip'
     if (Test-Path -LiteralPath $offlineTheme) {
-        Invoke-Wp theme install /packages/blocksy.zip
+        Invoke-Wp theme install /packages/hello-elementor.zip
     } elseif ($AllowNetworkThemeDownload) {
-        Invoke-Wp theme install blocksy
+        Invoke-Wp theme install hello-elementor
     } else {
-        throw 'Blocksy is required. Place its reviewed ZIP at vendor\blocksy.zip, or use -AllowNetworkThemeDownload for a disposable local preview.'
+        throw 'Hello Elementor is required. Place its reviewed ZIP at vendor\hello-elementor.zip, or use -AllowNetworkThemeDownload for a disposable local preview.'
     }
 }
 
 Invoke-Wp plugin activate chidemoon-core
 Invoke-Wp plugin activate chidemoon-ai
-Invoke-Wp theme activate chidemoon-blocksy-child
+
+foreach ($plugin in @('elementor', 'elementor-pro')) {
+    if (-not (Test-Wp plugin is-installed $plugin)) {
+        $package = Join-Path $repositoryRoot "vendor\$plugin.zip"
+        if (Test-Path -LiteralPath $package) {
+            Invoke-Wp plugin install "/packages/$plugin.zip" --activate
+        } else {
+            throw "Install the licensed Elementor Core/Pro pair before rebuilding. Missing plugin: $plugin. Put the reviewed ZIP in vendor locally; license files are never bundled."
+        }
+    } else {
+        Invoke-Wp plugin activate $plugin
+    }
+}
+Invoke-Wp theme activate hello-elementor
 
 Invoke-Wp language core install fa_IR
 Invoke-Wp language plugin install woocommerce fa_IR
@@ -200,11 +213,11 @@ Invoke-Wp option update default_comment_status closed
 Invoke-Wp option update default_ping_status closed
 Invoke-Wp rewrite structure '/%postname%/'
 
-$homePageId = Ensure-Page -Slug 'home' -Title 'Chidemoon'
-$blogPageId = Ensure-Page -Slug 'magazine' -Title 'Magazine'
-$null = Ensure-Page -Slug 'guides' -Title 'Buying guides'
-$null = Ensure-Page -Slug 'comparisons' -Title 'Comparisons'
-$null = Ensure-Page -Slug 'shop-the-look' -Title 'Shop the look'
+$homePageId = Ensure-Page -Slug 'home' -Title 'چیدمون'
+$blogPageId = Ensure-Page -Slug 'magazine' -Title 'مجله'
+$null = Ensure-Page -Slug 'guides' -Title 'راهنمای خرید'
+$null = Ensure-Page -Slug 'comparisons' -Title 'مقایسه‌ها'
+$null = Ensure-Page -Slug 'shop-the-look' -Title 'ببین و بخر'
 
 Invoke-Wp option update show_on_front page
 Invoke-Wp option update page_on_front $homePageId
@@ -223,8 +236,9 @@ if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace(($samplePageId -j
 
 Invoke-Wp rewrite flush --hard
 
+Invoke-Wp "--user=$adminUser" eval-file /tools/elementor-rebuild.php apply
 if ($Seed) {
-    Invoke-Wp eval-file /tools/seed-editorial.php
+    Invoke-Wp "--user=$adminUser" eval-file /tools/rebuild-editorial.php
 }
 
 Write-Output "Chidemoon is ready at $siteUrl"

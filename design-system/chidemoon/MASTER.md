@@ -2,7 +2,7 @@
 
 > Project-approved source of truth for Chidemoon's public WordPress and WooCommerce UI.
 > Derived from UI/UX Pro Max recommendations, then adapted for Persian typography,
-> RTL reading, Blocksy markup, the existing brand palette, and editorial commerce.
+> RTL reading, native Elementor containers, the existing brand palette, and editorial commerce.
 
 ## Product direction
 
@@ -16,7 +16,7 @@ Chidemoon is a Persian-first home-decoration magazine and curated affiliate cata
 
 ## Semantic tokens
 
-The runtime variables live in `themes/chidemoon-blocksy-child/assets/css/editorial-refresh.css`.
+The runtime baseline lives in `plugins/chidemoon-core/assets/css/public-design.css`. Brand colors are linked to Elementor's global colors; user widget/container styles take precedence. All public page composition belongs to Elementor and Hello Elementor.
 
 | Role | Token | Current value | Usage |
 |---|---|---:|---|
@@ -35,7 +35,7 @@ Do not introduce raw one-off brand colors inside components. New states must map
 
 ## Typography
 
-Fonts are local and declared in `assets/css/typography.css`; do not add remote font imports.
+Fonts are local in `plugins/chidemoon-core/assets/fonts/` and registered in Elementor's font picker; do not add remote font imports.
 
 - **Display:** Estedad variable, weights 600–800
 - **Body/UI:** Vazirmatn, weights 400–800
@@ -71,7 +71,7 @@ Use a 4/8px rhythm and fluid clamps between breakpoints.
 
 ### Editorial cards
 
-- Cards reuse `chidemoon_blocksy_render_post_card()` and its `lead`/`compact` variants.
+- Cards use native Elementor Posts / Archive Posts widgets. Their layout and styles are edited in Elementor.
 - Heading level follows page context: H2 directly below a page H1, H3 beneath a labelled H2 section.
 - Image, category, title, excerpt, date, and action retain this information order in the DOM.
 - Missing images use the reserved-ratio fallback; fabricated content is never shown.

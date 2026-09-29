@@ -67,7 +67,7 @@
 				event.stopPropagation();
 				var tooltip = tooltipFor(spot);
 				if (!tooltip) return;
-				if (active === spot) closeAll(true); else open(spot, tooltip, true);
+				if (active === spot && focusManaged) closeAll(true); else open(spot, tooltip, true);
 			});
 			spot.addEventListener('mouseenter', function () {
 				if (!window.matchMedia('(hover: hover)').matches || active === spot) return;

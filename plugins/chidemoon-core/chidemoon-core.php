@@ -33,6 +33,7 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-shop-the-look.p
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-compare.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-landing-components.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-importer.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-public-design.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 
 register_activation_hook( __FILE__, array( 'Chidemoon_Core_Activator', 'activate' ) );

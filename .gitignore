@@ -9,6 +9,8 @@ vendor/*
 !vendor/blocksy.sha256
 !vendor/woocommerce.zip
 !vendor/woocommerce.sha256
+!vendor/hello-elementor.zip
+!vendor/hello-elementor.sha256
 .DS_Store
 __pycache__/
 *.py[cod]
