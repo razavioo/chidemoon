@@ -132,8 +132,23 @@ final class Chidemoon_Core_Shop_The_Look {
 
 		foreach ( $hotspots as $index => $spot ) {
 			$product_id = absint( $spot['productId'] ?? $spot['product_id'] ?? 0 );
+			if ( ! $product_id ) {
+				$source_key = sanitize_text_field( (string) ( $spot['productSourceKey'] ?? $spot['product_source_key'] ?? '' ) );
+				if ( preg_match( '/^[a-z][a-z0-9_-]*:[a-zA-Z0-9_-]+$/', $source_key ) ) {
+					$matches = get_posts( array(
+						'post_type'      => 'product',
+						'post_status'    => 'publish',
+						'posts_per_page' => 1,
+						'fields'         => 'ids',
+						'meta_key'       => Chidemoon_Core_Affiliate::META_SOURCE_KEY,
+						'meta_value'     => $source_key,
+					) );
+					$product_id = $matches ? (int) $matches[0] : 0;
+				}
+			}
 			$x          = max( 2, min( 98, (float) ( $spot['x'] ?? 50 ) ) );
 			$y          = max( 2, min( 98, (float) ( $spot['y'] ?? 50 ) ) );
+			$hotspots[ $index ]['productId'] = $product_id;
 			$hotspots[ $index ]['x'] = $x;
 			$hotspots[ $index ]['y'] = $y;
 			if ( $product_id <= 0 || isset( $products[ $product_id ] ) ) {
@@ -148,7 +163,7 @@ final class Chidemoon_Core_Shop_The_Look {
 				'title'    => $product->get_name(),
 				'price'    => $product->get_price_html(),
 				'image_id' => $product->get_image_id(),
-				'url'      => Chidemoon_Core_Affiliate::tracking_url( $product_id ),
+				'url'      => get_permalink( $product_id ),
 				'product'  => $product,
 			);
 		}
@@ -184,7 +199,7 @@ final class Chidemoon_Core_Shop_The_Look {
 						<div class="chidemoon-shop-the-look__tooltip-body">
 							<h3><?php echo esc_html( $product['title'] ); ?></h3>
 							<div class="chidemoon-shop-the-look__price"><?php echo wp_kses_post( $product['price'] ); ?></div>
-							<a class="chidemoon-button" href="<?php echo esc_url( $product['url'] ); ?>" target="_blank" rel="nofollow sponsored noopener" data-product-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a>
+							<a class="chidemoon-button" href="<?php echo esc_url( $product['url'] ); ?>" data-product-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-core' ); ?></a>
 							<?php echo Chidemoon_Core_Compare::control( $product['product'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 					</div>
@@ -193,7 +208,7 @@ final class Chidemoon_Core_Shop_The_Look {
 			<?php if ( $caption ) : ?><figcaption><?php echo esc_html( $caption ); ?></figcaption><?php endif; ?>
 			<?php if ( ! empty( $products ) ) : ?>
 				<ol class="chidemoon-shop-the-look__fallback" aria-label="<?php esc_attr_e( 'محصولات این تصویر', 'chidemoon-core' ); ?>">
-				<?php foreach ( $products as $product ) : ?><li><span><?php echo esc_html( $product['title'] ); ?></span><span><?php echo wp_kses_post( $product['price'] ); ?></span><a href="<?php echo esc_url( $product['url'] ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a></li><?php endforeach; ?>
+				<?php foreach ( $products as $product ) : ?><li><span><?php echo esc_html( $product['title'] ); ?></span><span><?php echo wp_kses_post( $product['price'] ); ?></span><a href="<?php echo esc_url( $product['url'] ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-core' ); ?></a></li><?php endforeach; ?>
 				</ol>
 			<?php endif; ?>
 		</figure>

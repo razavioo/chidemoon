@@ -51,6 +51,7 @@ $assets = array(
 	'reading' => 'look-reading-corner.jpg',
 	'dining'  => 'look-japandi-dining.jpg',
 	'bedroom' => 'look-calm-green-bedroom.jpg',
+	'shoppable' => 'look-basalam-lamps.jpg',
 );
 foreach ( $assets as $key => $file ) {
 	$matches = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => 1, 'meta_key' => '_wp_attached_file', 'meta_value' => $file, 'meta_compare' => 'LIKE', 'fields' => 'ids' ) );
@@ -299,7 +300,55 @@ class Chidemoon_Elementor_Rebuild {
 		if ( 'comparisons' === $kind ) {
 			return array( $this->section( array( $this->text( '<p>مقایسه‌ها</p>', 'ch-eyebrow' ), $this->heading( 'دو انتخاب را کنار هم ببین', 'h1' ), $this->text( '<p>مشخصات محصولات و اطلاعات فروشنده را کنار هم ببین؛ برای انتخاب متناسب با خانهٔ خودت.</p>' ), $this->widget( 'chidemoon-compare-table', array( 'show_picker' => 'yes', 'show_status' => 'yes', 'columns' => '4', 'columns_tablet' => '2', 'columns_mobile' => '1' ) ) ), 'ch-compare-section' ), $this->section( array( $this->heading( 'مقایسه‌های منتشر شده' ), $this->posts( 'comparisons', 12 ) ), 'ch-listing' ) );
 		}
-		return array( $this->intro( 'ایده‌های چیدمان', 'چیدمان را از نزدیک ببین', 'برای هر فضا ایده بگیر و جزئیات قابل خرید را همان‌جا ببین.', 'reading' ), $this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ) );
+		return array(
+			$this->shoppable_look(),
+			$this->section( array( $this->heading( 'فضاهای خانه' ), $this->widget( 'chidemoon-room-filters' ), $this->posts( 'room-ideas', 12, 'chidemoon_looks' ) ), 'ch-listing' ),
+		);
+	}
+
+	private function shoppable_look(): array {
+		$look_image_id = $this->assets['shoppable'];
+		return $this->section( array(
+				$this->text( '<p>ایده‌های چیدمان</p>', 'ch-eyebrow' ),
+				$this->heading( 'ببین و بخر', 'h1' ),
+				$this->widget( 'chidemoon-shop-the-look', array(
+					'image' => array( 'id' => $look_image_id, 'url' => wp_get_attachment_url( $look_image_id ) ),
+					'image_alt' => 'گوشهٔ مطالعه با چراغ بازویی مشکی در چپ و چراغ شارژی سفید در راست',
+					'caption' => 'چیدمان بازسازی‌شده بر پایهٔ تصاویر محصولات',
+					'hotspots' => array(
+						array( 'product_source_key' => 'basalam:25688211', 'label' => 'چراغ بازویی کریم‌زاده', 'x' => array( 'size' => 46, 'unit' => '%' ), 'y' => array( 'size' => 24, 'unit' => '%' ) ),
+						array( 'product_source_key' => 'basalam:33684609', 'label' => 'چراغ شارژی HG 799', 'x' => array( 'size' => 80, 'unit' => '%' ), 'y' => array( 'size' => 22, 'unit' => '%' ) ),
+					),
+				) ),
+			), 'ch-look-feature' );
+	}
+
+	private function upgrade_shop_look_page( int $page_id, array $feature ): void {
+		$elements = json_decode( (string) get_post_meta( $page_id, '_elementor_data', true ), true );
+		if ( ! is_array( $elements ) || str_contains( (string) get_post_meta( $page_id, '_elementor_data', true ), 'chidemoon-shop-the-look' ) ) {
+			return;
+		}
+		if ( ! $this->replace_shop_look_hero( $elements, $feature ) ) {
+			array_unshift( $elements, $feature );
+		}
+		$document = $this->elementor->documents->get( $page_id, false );
+		if ( ! $document || ! $document->save( array( 'elements' => $elements ) ) ) {
+			WP_CLI::error( 'Could not upgrade Shop the Look page #' . $page_id );
+		}
+		WP_CLI::success( 'Upgraded Shop the Look page #' . $page_id );
+	}
+
+	private function replace_shop_look_hero( array &$elements, array $feature ): bool {
+		foreach ( $elements as &$element ) {
+			if ( 'ch-section ch-hero' === ( $element['settings']['css_classes'] ?? '' ) ) {
+				$element = $feature;
+				return true;
+			}
+			if ( ! empty( $element['elements'] ) && $this->replace_shop_look_hero( $element['elements'], $feature ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private function templates(): array {
@@ -406,7 +455,12 @@ class Chidemoon_Elementor_Rebuild {
 		}
 		$this->save( (int) get_page_by_path( 'home' )->ID, $this->home() );
 		foreach ( array( 'guides', 'comparisons', 'shop-the-look' ) as $slug ) {
-			$this->save( (int) get_page_by_path( $slug )->ID, $this->landing( $slug ) );
+			$page_id = (int) get_page_by_path( $slug )->ID;
+			$elements = $this->landing( $slug );
+			$this->save( $page_id, $elements );
+			if ( 'shop-the-look' === $slug && ! $this->force ) {
+				$this->upgrade_shop_look_page( $page_id, $elements[0] );
+			}
 		}
 		foreach ( $this->templates() as $slug => $definition ) {
 			list( $type, $conditions, $elements ) = $definition;

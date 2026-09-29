@@ -85,6 +85,12 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 			'description' => __( 'محصول باید منتشر شده، از نوع External/Affiliate و بررسی‌شده (Reviewed) باشد.', 'chidemoon-core' ),
 		) );
 
+		$repeater->add_control( 'product_source_key', array(
+			'label'       => __( 'شناسهٔ منبع محصول', 'chidemoon-core' ),
+			'type'        => \Elementor\Controls_Manager::TEXT,
+			'description' => __( 'برای محصولات در حال ورود، شناسهٔ منبع مانند basalam:25688211 را وارد کنید. انتخاب محصول در بالا اولویت دارد.', 'chidemoon-core' ),
+		) );
+
 		$repeater->add_control( 'label', array(
 			'label'       => __( 'برچسب نقطه', 'chidemoon-core' ),
 			'type'        => \Elementor\Controls_Manager::TEXT,
@@ -150,7 +156,8 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 		if ( ! empty( $settings['hotspots'] ) && is_array( $settings['hotspots'] ) ) {
 			foreach ( $settings['hotspots'] as $spot ) {
 				$pid = absint( $spot['product_id'] ?? 0 );
-				if ( $pid <= 0 ) {
+				$source_key = sanitize_text_field( (string) ( $spot['product_source_key'] ?? '' ) );
+				if ( $pid <= 0 && '' === $source_key ) {
 					continue;
 				}
 				$x = isset( $spot['x']['size'] ) ? (float) $spot['x']['size'] : ( isset( $spot['x'] ) ? (float) $spot['x'] : 50 );
@@ -159,6 +166,7 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 					'x'         => max( 2, min( 98, $x ) ),
 					'y'         => max( 2, min( 98, $y ) ),
 					'productId' => $pid,
+					'productSourceKey' => $source_key,
 					'label'     => sanitize_text_field( (string) ( $spot['label'] ?? '' ) ),
 				);
 			}

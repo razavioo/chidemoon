@@ -46,6 +46,34 @@ foreach ( $documents as $id ) {
 	$ids = array();
 	$validate( $elements, $ids );
 }
+$look_page = get_page_by_path( 'shop-the-look' );
+$look_elements = json_decode( (string) get_post_meta( $look_page->ID, '_elementor_data', true ), true );
+$find_look = static function ( array $elements ) use ( &$find_look ): array {
+	foreach ( $elements as $element ) {
+		if ( 'chidemoon-shop-the-look' === ( $element['widgetType'] ?? '' ) ) {
+			return $element['settings'] ?? array();
+		}
+		$nested = $find_look( $element['elements'] ?? array() );
+		if ( $nested ) {
+			return $nested;
+		}
+	}
+	return array();
+};
+$look_settings = $find_look( is_array( $look_elements ) ? $look_elements : array() );
+$check( wp_attachment_is_image( (int) ( $look_settings['image']['id'] ?? 0 ) ), 'Shop the Look has a scene image.' );
+foreach ( array( 'basalam:25688211', 'basalam:33684609' ) as $source_key ) {
+	$spot_found = false;
+	foreach ( $look_settings['hotspots'] ?? array() as $spot ) {
+		if ( $source_key === ( $spot['product_source_key'] ?? '' ) ) {
+			$spot_found = true;
+			break;
+		}
+	}
+	$products = get_posts( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 1, 'fields' => 'ids', 'meta_key' => Chidemoon_Core_Affiliate::META_SOURCE_KEY, 'meta_value' => $source_key ) );
+	$product = $products ? wc_get_product( (int) $products[0] ) : null;
+	$check( $spot_found && $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ), 'Shoppable product is published and reviewed: ' . $source_key );
+}
 foreach ( wc_get_products( array( 'status' => 'publish', 'limit' => -1 ) ) as $product ) {
 	$check( Chidemoon_Core_Affiliate::is_publicly_eligible( $product ), 'Reviewed external product #' . $product->get_id() );
 }

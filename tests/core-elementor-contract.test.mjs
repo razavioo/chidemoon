@@ -31,9 +31,15 @@ describe('native Elementor ownership', () => {
   it('shares Shop-the-Look rendering and provides human editing controls', () => {
     const look = read(`${core}/includes/class-chidemoon-core-shop-the-look.php`);
     const widget = read(`${core}/includes/class-chidemoon-core-elementor-shop-look-widget.php`);
+    const rebuild = read('tools/elementor-rebuild.php');
     assert.match(look, /function enqueue_assets/);
     assert.match(widget, /Chidemoon_Core_Shop_The_Look::enqueue_assets\(\)/);
     assert.match(widget, /Controls_Manager::SELECT2/);
+    assert.match(widget, /productSourceKey/);
+    assert.match(look, /'url'\s*=> get_permalink\( \$product_id \)/);
+    assert.match(rebuild, /'product_source_key' => 'basalam:25688211'/);
+    assert.match(rebuild, /'product_source_key' => 'basalam:33684609'/);
+    assert.ok(existsSync(join(root, 'tools/seed-images/looks/look-basalam-lamps.jpg')));
     const compare = read(`${core}/includes/class-chidemoon-core-elementor-compare-widget.php`);
     for (const control of ['search_label', 'search_placeholder', 'empty_title', 'columns', 'card_padding', 'button_padding']) assert.ok(compare.includes(control));
   });
