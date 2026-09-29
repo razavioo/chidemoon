@@ -78,29 +78,29 @@ body .chidemoon-compare-single.is-selected:is(:hover, :focus) { background: var(
 	align-items: center;
 	background: white;
 	border: 1px solid var(--chidemoon-line, #ccd6d0);
-	border-radius: 8px;
+	border-radius: 16px;
 	bottom: max(16px, env(safe-area-inset-bottom));
 	box-shadow: 0 8px 32px #17241f24;
 	color: var(--chidemoon-ink, #17241f);
 	display: grid;
-	gap: 12px;
-	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 12px 24px;
+	grid-template-columns: minmax(0, 1fr) auto;
 	inset-inline: 16px;
 	margin-inline: auto;
-	max-width: 960px;
-	padding: 16px;
+	max-width: 1280px;
+	padding: 16px 20px;
 	position: fixed;
 	z-index: 1000;
 }
 .chidemoon-compare-bar[hidden], .chidemoon-comparison-status[hidden] { display: none; }
-.chidemoon-compare-bar__summary { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+.chidemoon-compare-bar__summary { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 700; font-size: 14px; }
 .chidemoon-compare-bar__badge { display: grid; place-items: center; width: 28px; height: 28px; background: var(--chidemoon-forest, #123f34); color: white; border-radius: 50%; }
-.chidemoon-compare-bar__items { display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.chidemoon-compare-bar__items { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px; min-width: 0; }
 .chidemoon-compare-bar__chip {
 	align-items: center;
 	background: #f3f4f1;
 	border: 1px solid var(--chidemoon-line, #ccd6d0);
-	border-radius: 6px;
+	border-radius: 8px;
 	color: inherit;
 	cursor: pointer;
 	display: inline-flex;
@@ -108,13 +108,15 @@ body .chidemoon-compare-single.is-selected:is(:hover, :focus) { background: var(
 	font-size: 12px;
 	gap: 6px;
 	min-height: 44px;
-	max-width: 220px;
-	padding: 4px 8px;
+	min-width: 0;
+	width: 100%;
+	padding: 6px 10px;
+	text-align: start;
 }
-.chidemoon-compare-bar__chip-name { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.chidemoon-compare-bar__chip-name { min-width: 0; flex: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .chidemoon-compare-bar__chip-x { flex-shrink: 0; font-size: 20px; }
 .chidemoon-compare-bar__thumb, .chidemoon-comparison-status__chip-thumb { width: 32px; height: 32px; object-fit: contain; background: white; flex-shrink: 0; border-radius: 4px; }
-.chidemoon-compare-bar__actions { display: flex; align-items: center; gap: 8px; }
+.chidemoon-compare-bar__actions { display: flex; align-items: center; gap: 8px; grid-column: 2; grid-row: 1; }
 .chidemoon-compare-bar__go, .chidemoon-compare-bar__clear {
 	font: inherit;
 	font-size: 14px;
@@ -180,10 +182,11 @@ body :is(.chidemoon-comparison-status__chip, .chidemoon-comparison-table__remove
 .chidemoon-comparison-table .chidemoon-button, .chidemoon-comparison-status__cta { background: var(--chidemoon-forest, #123f34); color: white; }
 :where(.chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-compare-bar button, .chidemoon-comparison-status a, .chidemoon-comparison-status button, .chidemoon-comparison-table-wrap, .chidemoon-comparison-table button, .chidemoon-comparison-search__result):focus-visible { outline: 3px solid var(--chidemoon-clay, #b95d3e); outline-offset: 3px; }
 @media (max-width: 767px) {
-	.chidemoon-compare-bar { grid-template-columns: minmax(0, 1fr); inset-inline: 8px; bottom: max(8px, env(safe-area-inset-bottom)); padding: 10px 12px; gap: 8px; }
-	.chidemoon-compare-bar__summary { min-width: 0; white-space: nowrap; }
-	.chidemoon-compare-bar__items { display: none; }
-	.chidemoon-compare-bar__actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; min-width: 0; width: 100%; }
+	.chidemoon-compare-bar { grid-template-columns: minmax(0, 1fr); inset-inline: 8px; bottom: max(8px, env(safe-area-inset-bottom)); padding: 12px; gap: 10px; }
+	.chidemoon-compare-bar__summary { min-width: 0; }
+	.chidemoon-compare-bar__items { display: flex; grid-column: 1; gap: 8px; overflow-x: auto; padding-block: 2px; scroll-snap-type: inline proximity; }
+	.chidemoon-compare-bar__chip { flex: 0 0 min(72%, 240px); scroll-snap-align: start; }
+	.chidemoon-compare-bar__actions { display: grid; grid-column: 1; grid-row: auto; grid-template-columns: minmax(0, 1fr) auto; min-width: 0; width: 100%; }
 	.chidemoon-compare-bar__go, .chidemoon-compare-bar__clear { min-width: 0; padding-inline: 12px; font-size: 13px; }
 	.chidemoon-comparison-status { align-items: stretch; flex-direction: column; }
 	.chidemoon-comparison-status__chips { flex: auto; }
