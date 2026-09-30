@@ -126,6 +126,12 @@ foreach ( $collection as $item ) {
 		WP_CLI::log( 'Preserved editorial post: ' . $slug );
 		continue;
 	}
+	if ( ! class_exists( '\Elementor\Plugin' ) || ! \Elementor\Plugin::$instance ) {
+		WP_CLI::error( 'Elementor must be active before creating native editorial content.' );
+	}
+	if ( ! class_exists( 'Chidemoon_Core_Elementor_Content' ) ) {
+		require_once dirname( __DIR__ ) . '/plugins/chidemoon-core/includes/class-chidemoon-core-elementor-content.php';
+	}
 	$image_id = chidemoon_editorial_seed_image( $file, $seed_image_alts[ $file ] );
 	$term = get_category_by_slug( $category );
 	if ( ! $term ) {
@@ -139,25 +145,28 @@ foreach ( $collection as $item ) {
 	foreach ( $sections as $heading => $paragraph ) {
 		$html .= '<h2>' . esc_html( $heading ) . '</h2><p>' . esc_html( $paragraph ) . '</p>';
 	}
-	$id = wp_insert_post( array( 'post_type' => 'post', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title, 'post_excerpt' => $excerpt, 'post_content' => $html, 'post_category' => array( $term->term_id ), 'comment_status' => 'closed' ), true );
+	// Publish only after the native Elementor document has saved successfully.
+	$id = wp_insert_post( array( 'post_type' => 'post', 'post_status' => 'draft', 'post_name' => $slug, 'post_title' => $title, 'post_excerpt' => $excerpt, 'post_content' => $html, 'post_category' => array( $term->term_id ), 'comment_status' => 'closed' ), true );
 	if ( is_wp_error( $id ) ) {
 		WP_CLI::error( $id->get_error_message() );
 	}
 	set_post_thumbnail( $id, $image_id );
 	update_post_meta( $id, '_chidemoon_rebuild_editorial', '2026-09-29' );
+	$elements = Chidemoon_Core_Elementor_Content::convert_html( $html, $slug . '-body' );
 	if ( $look ) {
 		wp_set_post_tags( $id, array( 'shop-the-look' ), true );
 		wp_set_object_terms( $id, $room, Chidemoon_Core_Shop_The_Look::TAXONOMY );
-		$elements = array(
-			array( 'id' => substr( md5( $slug . '-look' ), 0, 8 ), 'elType' => 'widget', 'widgetType' => 'chidemoon-shop-the-look', 'settings' => array( 'image' => array( 'id' => $image_id, 'url' => wp_get_attachment_url( $image_id ) ), 'image_alt' => $seed_image_alts[ $file ], 'caption' => 'چیدمان مفهومی؛ محصولات این تصویر برای خرید معرفی نشده‌اند.', 'hotspots' => array() ), 'elements' => array() ),
-			array( 'id' => substr( md5( $slug . '-body' ), 0, 8 ), 'elType' => 'widget', 'widgetType' => 'text-editor', 'settings' => array( 'editor' => $html ), 'elements' => array() ),
-		);
-		update_post_meta( $id, '_elementor_edit_mode', 'builder' );
+		array_unshift( $elements, array( 'id' => substr( md5( $slug . '-look' ), 0, 8 ), 'elType' => 'widget', 'widgetType' => 'chidemoon-shop-the-look', 'settings' => array( 'image' => array( 'id' => $image_id, 'url' => wp_get_attachment_url( $image_id ) ), 'image_alt' => $seed_image_alts[ $file ], 'caption' => 'چیدمان مفهومی؛ محصولات این تصویر برای خرید معرفی نشده‌اند.', 'hotspots' => array() ), 'elements' => array() ) );
 		update_post_meta( $id, '_chidemoon_native_look', true );
-		$document = \Elementor\Plugin::$instance->documents->get( $id, false );
-		if ( ! $document || ! $document->save( array( 'elements' => array( array( 'id' => substr( md5( $slug ), 0, 8 ), 'elType' => 'container', 'settings' => array( 'content_width' => 'full', 'flex_direction' => 'column', 'padding' => array( 'unit' => 'px', 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0' ) ), 'elements' => $elements ) ) ) ) ) {
-			WP_CLI::error( 'Could not save native look #' . $id );
-		}
+	}
+	update_post_meta( $id, '_elementor_edit_mode', 'builder' );
+	$document = \Elementor\Plugin::$instance->documents->get( $id, false );
+	if ( ! $document || ! $document->save( array( 'elements' => array( array( 'id' => substr( md5( $slug ), 0, 8 ), 'elType' => 'container', 'settings' => array( 'content_width' => 'full', 'flex_direction' => 'column', 'padding' => array( 'unit' => 'px', 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0' ) ), 'elements' => $elements ) ) ) ) ) {
+		WP_CLI::error( 'Could not save native editorial body #' . $id . '; draft preserved.' );
+	}
+	$published = wp_update_post( array( 'ID' => $id, 'post_status' => 'publish' ), true );
+	if ( is_wp_error( $published ) || ! $published ) {
+		WP_CLI::error( 'Could not publish native editorial post #' . $id );
 	}
 	WP_CLI::success( 'Published editorial post #' . $id );
 }

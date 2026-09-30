@@ -12,6 +12,7 @@ final class Chidemoon_Core_Elementor_Room_Filters_Widget extends \Elementor\Widg
 	protected function register_controls(): void {
 		$this->start_controls_section( 'content', array( 'label' => 'فضاهای خانه' ) );
 		$this->add_control( 'all_label', array( 'label' => 'عنوان همهٔ فضاها', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'همهٔ فضاها' ) );
+		$this->add_control( 'nav_id', array( 'label' => 'شناسهٔ فیلتر', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'ch-room-filters', 'description' => 'در صورت استفادهٔ چندباره، برای هر فیلتر یک شناسهٔ متفاوت انتخاب کنید.' ) );
 		$this->end_controls_section();
 		$this->start_controls_section( 'style', array( 'label' => 'ظاهر', 'tab' => \Elementor\Controls_Manager::TAB_STYLE ) );
 		$this->add_control( 'text_color', array( 'label' => 'رنگ متن', 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .ch-room-filters a' => 'color: {{VALUE}};' ) ) );

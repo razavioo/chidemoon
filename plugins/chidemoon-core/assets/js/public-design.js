@@ -33,22 +33,8 @@
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
 
-	function enhanceLookFilters() {
-		const feature = document.querySelector('.ch-look-feature');
-		const filters = document.querySelector('.ch-listing #ch-room-filters');
-		const heading = feature?.querySelector('h1');
-		if (!heading || !filters?.querySelector('a')) return;
-
-		const quickFilters = filters.cloneNode(true);
-		quickFilters.id = 'ch-room-filters-quick';
-		quickFilters.classList.add('ch-room-filters--quick');
-		quickFilters.setAttribute('aria-label', 'انتخاب فضای خانه');
-		(heading.closest('.elementor-widget') || heading).after(quickFilters);
-	}
-
 	function onReady() {
 		enhanceGalleryCounter();
-		enhanceLookFilters();
 		const header = document.querySelector('.ch-header');
 		const searchQuery = window.chidemoonPublicDesign?.searchQuery || '';
 		if (searchQuery) {
@@ -59,21 +45,11 @@
 				}
 			});
 		}
-		document.querySelectorAll('.ch-page-search .e-search-input').forEach((input) => {
-			const search = input.closest('.ch-page-search');
-			if (!input.id || !search || search.querySelector('.ch-page-search-label')) return;
-			const label = Array.from(input.labels || []).find((candidate) => candidate.classList.contains('e-search-label')) || document.createElement('label');
-			label.classList.remove('e-search-label');
-			label.className = 'ch-page-search-label';
-			label.htmlFor = input.id;
-			label.textContent = 'جست‌وجو در محصولات و مطالب';
-			search.prepend(label);
-		});
 		if (!header) return;
 
 		const search = header.querySelector('.ch-header-search');
 		const input = search?.querySelector('.e-search-input');
-		const menuToggle = header.querySelector('.ch-nav .elementor-menu-toggle');
+		const menuToggle = header.querySelector('.ch-nav .e-n-menu-toggle, .ch-nav .elementor-menu-toggle');
 		const row = header.querySelector('.e-con-inner') || header;
 		if (!search || !input) return;
 		if (!input.getAttribute('aria-label')) input.setAttribute('aria-label', 'جست‌وجو در چیدمون');
@@ -120,7 +96,8 @@
 		function syncHeader() {
 			const mobile = window.matchMedia('(max-width: 767px)').matches;
 			if (!mobile) closeSearch();
-			const menuOpen = mobile && !!menuToggle && (menuToggle.classList.contains('elementor-active') || menuToggle.getAttribute('aria-expanded') === 'true');
+			const collapsedMenu = !!menuToggle && getComputedStyle(menuToggle).display !== 'none';
+			const menuOpen = collapsedMenu && (menuToggle.classList.contains('elementor-active') || menuToggle.getAttribute('aria-expanded') === 'true');
 			document.body.classList.toggle('ch-mobile-menu-open', menuOpen);
 			if (menuOpen) closeSearch();
 		}

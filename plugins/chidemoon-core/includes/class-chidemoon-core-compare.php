@@ -27,6 +27,18 @@ final class Chidemoon_Core_Compare {
 		add_shortcode( 'chidemoon_compare_table', array( __CLASS__, 'render_compare_table_shortcode' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ), 20 );
 		add_action( 'init', array( __CLASS__, 'register_elementor_compare_support' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'redirect_legacy_comparison' ) );
+	}
+
+	/** Keep previously shared product selections usable after the editorial split. */
+	public static function redirect_legacy_comparison(): void {
+		if ( ! is_page( 'comparisons' ) || ! isset( $_GET[ self::QUERY_VAR ] ) || ! is_scalar( $_GET[ self::QUERY_VAR ] ) ) { return; }
+		$page = get_page_by_path( 'product-comparison' );
+		if ( ! $page || 'publish' !== $page->post_status ) { return; }
+		$ids = self::product_ids( wp_unslash( (string) $_GET[ self::QUERY_VAR ] ) );
+		if ( ! $ids ) { return; }
+		wp_safe_redirect( self::comparison_url( $ids ) . '#chidemoon-comparison-table', 302, 'Chidemoon' );
+		exit;
 	}
 
 	public static function register_assets(): void {
@@ -34,7 +46,7 @@ final class Chidemoon_Core_Compare {
 		$style_path  = CHIDEMOON_CORE_DIR . 'assets/css/compare.css';
 		wp_register_script( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/js/compare.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
 		wp_register_style( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/css/compare.css', array( 'chidemoon-public-design' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
-		if ( is_front_page() || is_shop() || is_product_taxonomy() || is_product() || is_page( array( 'comparisons', 'shop-the-look' ) ) || is_page_template( array( 'page-comparisons.php', 'page-shop-the-look.php' ) ) || has_block( 'chidemoon/shop-the-look' ) ) {
+		if ( is_front_page() || is_shop() || is_product_taxonomy() || is_product() || is_page( array( 'product-comparison', 'shop-the-look' ) ) || is_page_template( array( 'page-comparisons.php', 'page-shop-the-look.php' ) ) || has_block( 'chidemoon/shop-the-look' ) ) {
 			self::enqueue_assets();
 		}
 	}
@@ -219,41 +231,60 @@ final class Chidemoon_Core_Compare {
 		return $product instanceof WC_Product ? self::control( $product ) : '';
 	}
 
-	public static function single_control( WC_Product $product ): string {
+	/** @param array<string, string> $labels Editable Elementor labels for this instance. */
+	public static function single_control( WC_Product $product, array $labels = array() ): string {
 		if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
 			return '';
 		}
 		self::enqueue_assets();
+		$labels += array(
+			'label' => __( 'افزودن به مقایسه', 'chidemoon-core' ),
+			'selected_label' => __( 'در فهرست مقایسه', 'chidemoon-core' ),
+			'hint' => __( 'با حداکثر چهار محصول بسنجید', 'chidemoon-core' ),
+			'selected_hint' => __( 'برای حذف از فهرست کلیک کنید', 'chidemoon-core' ),
+		);
 		return sprintf(
-			'<button type="button" class="chidemoon-compare-single" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%3$s" aria-pressed="false">' .
+			'<button type="button" class="chidemoon-compare-single" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%3$s" data-compare-label="%6$s" data-compare-selected-label="%7$s" data-compare-hint="%8$s" data-compare-selected-hint="%9$s" aria-pressed="false">' .
 				'<span class="chidemoon-compare-single__icon" aria-hidden="true">' .
 					'<svg class="chidemoon-compare-single__icon-add" viewBox="0 0 24 24"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg>' .
 					'<svg class="chidemoon-compare-single__icon-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 7"/></svg>' .
 				'</span>' .
 				'<span class="chidemoon-compare-single__text">' .
 					'<span class="chidemoon-compare-single__label">%4$s</span>' .
-					'<span class="chidemoon-compare-single__hint">%5$s</span>' .
+					'<span class="chidemoon-compare-single__hint"%10$s>%5$s</span>' .
 				'</span>' .
 			'</button>',
 			$product->get_id(),
 			esc_attr( $product->get_name() ),
 			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) ),
-			esc_html__( 'افزودن به مقایسه', 'chidemoon-core' ),
-			esc_html__( 'با حداکثر چهار محصول بسنجید', 'chidemoon-core' )
+			esc_html( $labels['label'] ),
+			esc_html( $labels['hint'] ),
+			esc_attr( $labels['label'] ),
+			esc_attr( $labels['selected_label'] ),
+			esc_attr( $labels['hint'] ),
+			esc_attr( $labels['selected_hint'] ),
+			'' === $labels['hint'] ? ' hidden' : ''
 		);
 	}
 
-	public static function control( WC_Product $product ): string {
+	/** @param array<string, string> $labels Editable Elementor labels for this instance. */
+	public static function control( WC_Product $product, array $labels = array() ): string {
 		if ( ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
 			return '';
 		}
 		self::enqueue_assets();
+		$labels += array(
+			'label' => __( 'مقایسه', 'chidemoon-core' ),
+			'selected_label' => __( 'انتخاب شده', 'chidemoon-core' ),
+		);
 		return sprintf(
-			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%4$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
+			'<button type="button" class="chidemoon-compare-control" data-compare-product="%1$d" data-compare-name="%2$s" data-compare-image="%4$s" data-compare-label="%5$s" data-compare-selected-label="%6$s" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11M12 4l3 3-3 3M20 17H9M12 14l-3 3 3 3"/></svg><span>%3$s</span></button>',
 			$product->get_id(),
 			esc_attr( $product->get_name() ),
-			esc_html__( 'مقایسه', 'chidemoon-core' ),
-			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) )
+			esc_html( $labels['label'] ),
+			esc_attr( (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_gallery_thumbnail' ) ),
+			esc_attr( $labels['label'] ),
+			esc_attr( $labels['selected_label'] )
 		);
 	}
 
@@ -328,7 +359,9 @@ final class Chidemoon_Core_Compare {
 	}
 
 	public static function comparison_url( array $ids = array() ): string {
-		$page = get_page_by_path( 'comparisons' );
+		$page = get_page_by_path( 'product-comparison' );
+		// Keep the previous destination until the new native page has been installed.
+		if ( ! $page instanceof WP_Post || 'publish' !== $page->post_status ) { $page = get_page_by_path( 'comparisons' ); }
 		$url  = $page instanceof WP_Post ? get_permalink( $page ) : home_url( '/comparisons/' );
 		if ( empty( $ids ) ) {
 			return $url;

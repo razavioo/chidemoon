@@ -835,5 +835,10 @@ if ( $ui_upgrade ) {
 	$rebuild->upgrade_ui( $apply );
 } else {
 	$rebuild->run();
+	// Fresh and repeat installations use the same preserved native-card upgrade.
+	$rebuild_args = $args;
+	$args = array( 'apply' );
+	require __DIR__ . '/elementor-editability-upgrade.php';
+	$args = $rebuild_args;
 	WP_CLI::success( 'Migration finished. Inspect every template and route before activating Hello on production.' );
 }

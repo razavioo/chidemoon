@@ -31,6 +31,7 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Compare::register();
 		Chidemoon_Core_Importer::register();
 		Chidemoon_Core_Public_Design::register();
+		Chidemoon_Core_Elementor_Workspace::register();
 		Chidemoon_Core_Search_Facets::register();
 		Chidemoon_Core_Dates::register();
 		add_action( 'init', array( 'Chidemoon_Core_Activator', 'flush_rewrite_rules_if_pending' ), 99 );

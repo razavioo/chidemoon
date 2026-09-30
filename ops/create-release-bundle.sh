@@ -71,6 +71,8 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	ops \
 	plugins \
 	tools/elementor-rebuild.php \
+	tools/elementor-editability-upgrade.php \
+	tools/editorial-elementor-upgrade.php \
 	tools/rebuild-editorial.php \
 	tools/ui-catalogue-refresh.php \
 	tools/verify-elementor.php \

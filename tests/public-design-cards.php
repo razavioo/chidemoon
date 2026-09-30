@@ -76,6 +76,8 @@ function get_posts( array $args ): array {
 }
 function absint( $value ): int { return abs( (int) $value ); }
 function sanitize_text_field( string $value ): string { return trim( $value ); }
+function sanitize_html_class( string $value ): string { return preg_replace( '/[^A-Za-z0-9_-]/', '', $value ); }
+function esc_attr( string $value ): string { return htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ); }
 function get_terms( array $args ): array { return array( (object) array( 'slug' => 'living-room', 'name' => 'نشیمن' ) ); }
 function is_wp_error( $value ): bool { return false; }
 function get_page_by_path( string $path ): object { return (object) array( 'ID' => 10 ); }
@@ -156,6 +158,8 @@ $filters = Chidemoon_Core_Public_Design::room_filters();
 check( str_contains( $filters, 'id="ch-room-filters"' ), 'Room filters have a stable target.' );
 check( str_contains( $filters, 'href="/shop-the-look/#ch-room-filters"' ), 'All rooms link returns to the filter row.' );
 check( str_contains( $filters, 'href="/shop-the-look/?room=living-room#ch-room-filters"' ), 'Room links return to the filter row.' );
+$quick_filters = Chidemoon_Core_Public_Design::room_filters( array( 'nav_id' => 'ch-room-filters-quick' ) );
+check( str_contains( $quick_filters, 'id="ch-room-filters-quick"' ) && str_contains( $quick_filters, 'href="/shop-the-look/?room=living-room#ch-room-filters"' ), 'The graphical quick filter has its own ID and links back to the listing filters.' );
 $_GET['room'] = 'living-room';
 check( str_contains( Chidemoon_Core_Public_Design::room_filters(), 'href="/shop-the-look/?room=living-room#ch-room-filters" aria-current="page"' ), 'The chosen room stays selected after navigation.' );
 unset( $_GET['room'] );

@@ -15,3 +15,6 @@ vendor/*
 __pycache__/
 *.py[cod]
 .local-dev/
+
+# Optional host-specific PHP extensions are installed outside release source.
+/runtime/

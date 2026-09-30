@@ -27,6 +27,8 @@ final class Chidemoon_Core_Public_Design {
 		add_filter( 'formatted_woocommerce_price', array( __CLASS__, 'public_price_digits' ), 100 );
 		add_filter( 'woocommerce_catalog_orderby', array( __CLASS__, 'catalog_orderby_labels' ) );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'widgets' ) );
+		add_action( 'elementor/dynamic_tags/register', array( __CLASS__, 'data_tags' ) );
+		add_action( 'elementor/query/chidemoon_related_products', array( __CLASS__, 'related_products_query' ) );
 		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
 			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
 				$query->set( 'post_type', array( 'post', 'product' ) );
@@ -40,8 +42,42 @@ final class Chidemoon_Core_Public_Design {
 	public static function widgets( $manager ): void {
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-offer-widget.php';
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-room-filters-widget.php';
+		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-actions-widget.php';
+		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-catalog-tools-widget.php';
+		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-extra-tabs-widget.php';
 		$manager->register( new Chidemoon_Core_Elementor_Product_Offer_Widget() );
 		$manager->register( new Chidemoon_Core_Elementor_Room_Filters_Widget() );
+		$manager->register( new Chidemoon_Core_Elementor_Product_Actions_Widget() );
+		$manager->register( new Chidemoon_Core_Elementor_Catalog_Tools_Widget() );
+		$manager->register( new Chidemoon_Core_Elementor_Product_Extra_Tabs_Widget() );
+	}
+
+	public static function data_tags( $manager ): void {
+		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-data-tags.php';
+		$manager->register_group( 'chidemoon', array( 'title' => 'چیدمون' ) );
+		$manager->register( new Chidemoon_Core_Elementor_Content_Label_Tag() );
+		$manager->register( new Chidemoon_Core_Elementor_Product_Field_Tag() );
+	}
+
+	public static function related_products_query( WP_Query $query ): void {
+		$id = (int) get_queried_object_id();
+		$query->set( 'post_type', 'product' );
+		$query->set( 'post_status', 'publish' );
+		if ( function_exists( 'WC' ) && WC()->query ) {
+			$query->set( 'tax_query', WC()->query->get_tax_query( (array) $query->get( 'tax_query' ) ) );
+			$query->set( 'meta_query', WC()->query->get_meta_query( (array) $query->get( 'meta_query' ) ) );
+		}
+		if ( $id && 'product' === get_post_type( $id ) ) {
+			$query->set( 'post__not_in', array_values( array_unique( array_merge( (array) $query->get( 'post__not_in' ), array( $id ) ) ) ) );
+			if ( $query->get( 'post__in' ) ) {
+				$included = array_values( array_diff( (array) $query->get( 'post__in' ), (array) $query->get( 'post__not_in' ) ) );
+				$query->set( 'post__in', $included ?: array( 0 ) );
+			}
+			$categories = wp_get_post_terms( $id, 'product_cat', array( 'fields' => 'ids' ) );
+			if ( ! is_wp_error( $categories ) && $categories ) {
+				$query->set( 'tax_query', array( 'relation' => 'AND', (array) $query->get( 'tax_query' ), array( 'taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $categories ) ) );
+			}
+		}
 	}
 
 	public static function featured_image( string $content, $widget ): string {
@@ -198,7 +234,7 @@ final class Chidemoon_Core_Public_Design {
 		return $result;
 	}
 
-	private static function post_card_label( int $post_id ): string {
+	public static function post_card_label( int $post_id ): string {
 		if ( get_post_meta( $post_id, '_chidemoon_native_look', true ) ) {
 			$elements = json_decode( (string) get_post_meta( $post_id, '_elementor_data', true ), true );
 			$stack = is_array( $elements ) ? $elements : array();
@@ -286,7 +322,8 @@ final class Chidemoon_Core_Public_Design {
 		$url = $page ? get_permalink( $page ) : home_url( '/shop-the-look/' );
 		$selected = isset( $_GET['room'] ) ? sanitize_title( wp_unslash( (string) $_GET['room'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$fragment = '#ch-room-filters';
-		$html = '<nav id="ch-room-filters" class="ch-room-filters" aria-label="فضای خانه"><a href="' . esc_url( $url . $fragment ) . '"' . ( '' === $selected ? ' aria-current="page"' : '' ) . '>' . esc_html( $attributes['all_label'] ?? 'همهٔ فضاها' ) . '</a>';
+		$nav_id = sanitize_html_class( $attributes['nav_id'] ?? 'ch-room-filters' ) ?: 'ch-room-filters';
+		$html = '<nav id="' . esc_attr( $nav_id ) . '" class="ch-room-filters" aria-label="فضای خانه"><a href="' . esc_url( $url . $fragment ) . '"' . ( '' === $selected ? ' aria-current="page"' : '' ) . '>' . esc_html( $attributes['all_label'] ?? 'همهٔ فضاها' ) . '</a>';
 		foreach ( $terms as $term ) {
 			$html .= '<a href="' . esc_url( add_query_arg( 'room', $term->slug, $url ) . $fragment ) . '"' . ( $selected === $term->slug ? ' aria-current="page"' : '' ) . '>' . esc_html( $term->name ) . '</a>';
 		}

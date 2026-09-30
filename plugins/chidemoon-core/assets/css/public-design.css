@@ -597,6 +597,48 @@ body.wp-theme-hello-elementor .ch-product-grid.elementor-wc-products ul.products
 	color: #fff;
 }
 
+/* Baselines for native Loop elements. Elementor's saved Style controls win. */
+:where(.ch-native-feed .e-loop-item) { min-inline-size: 0; }
+:where(.ch-native-card) { overflow: hidden; block-size: 100%; transition: box-shadow .18s ease; }
+:where(.ch-native-card:hover, .ch-native-card:focus-within) { box-shadow: 0 8px 24px #17241f12; }
+:where(.ch-native-card-media) { inline-size: 100%; }
+:where(.ch-native-card-media a) { display: block; }
+:where(.ch-native-card-media img) { display: block; inline-size: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+:where(.ch-native-card--product .ch-native-card-media img) { aspect-ratio: 1; object-fit: contain; padding: 16px; background: #fafbf9; }
+:where(.ch-native-card-body) { flex: 1; min-inline-size: 0; }
+:where(.ch-native-card-title .elementor-heading-title) { color: var(--chidemoon-ink); font-size: 18px; font-weight: 700; line-height: 1.65; }
+:where(.ch-native-card-title a) { color: inherit; text-decoration: none; }
+:where(.ch-native-card-kind .elementor-heading-title) { color: var(--chidemoon-clay); font-size: 12px; font-weight: 600; }
+:where(.ch-native-card-excerpt) { color: var(--chidemoon-muted); font-size: 14px; }
+:where(.ch-native-card-excerpt p, .ch-native-card-merchant p) { margin: 0; }
+:where(.ch-native-card-excerpt .elementor-widget-container) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+:where(.ch-native-card-price .elementor-heading-title) { color: var(--chidemoon-forest); font-size: 19px; font-weight: 700; }
+:where(.ch-native-card-merchant) { color: var(--chidemoon-muted); font-size: 12px; }
+:where(.ch-native-card-action, .elementor-widget-chidemoon-product-actions) { margin-block-start: auto; }
+:where(.ch-native-card-action .elementor-button, .ch-product-card-details) { display: inline-flex; align-items: center; justify-content: center; min-block-size: 44px; padding: 10px 16px; border-radius: 6px; background: var(--chidemoon-forest); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; }
+:where(.ch-native-card-action .elementor-button:hover, .ch-product-card-details:hover) { background: var(--chidemoon-forest-deep); color: #fff; }
+:where(.ch-product-card-actions) { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+:where(.ch-product-card-actions > a, .ch-product-card-actions > button) { flex: 1; }
+:where(.ch-product-card-disclosure, .ch-product-card-empty) { color: var(--chidemoon-muted); font-size: 12px; margin-block: 8px 0; }
+:where(.ch-category-panel) { padding: 20px; }
+:where(.ch-category-panel > .elementor-widget-heading .elementor-heading-title) { font-size: 17px; }
+:where(.ch-category-panel .ch-native-card-title .elementor-heading-title) { font-size: 16px; }
+:where(.ch-native-card--product_taxonomy .ch-native-card-media img) { aspect-ratio: 3 / 2; object-fit: contain; max-block-size: 160px; }
+:where(.ch-category-panel .ch-native-card-body) { padding: 12px; }
+:where(.ch-mega-nav) { --n-menu-title-font-size: 14px; --n-menu-title-color-normal: var(--chidemoon-ink); --n-menu-title-color-hover: var(--chidemoon-forest); --n-menu-title-color-active: var(--chidemoon-forest); }
+:where(.ch-mega-nav .e-n-menu-title) { min-block-size: 44px; }
+:where(.ch-mega-nav .e-n-menu-toggle) { min-block-size: 44px; min-inline-size: 44px; }
+:where(.ch-mega-nav .e-n-menu-content > .e-con) { border: 1px solid var(--chidemoon-line); border-radius: 12px; background: #fff; box-shadow: 0 12px 32px #17241f1f; max-block-size: 70vh; overflow: auto; }
+:where(.ch-room-filters-quick-widget .ch-room-filters) { margin-block: 0 8px; }
+:where(.ch-room-filters-quick-widget .ch-room-filters a) { background: var(--chidemoon-surface); }
+:where(.ch-page-search-caption .elementor-heading-title) { font-size: 14px; font-weight: 700; }
+:where(.ch-product-description) { padding-block: 24px; border-block-start: 1px solid var(--chidemoon-line); }
+:where(.ch-product-description .elementor-widget-theme-post-content) { max-inline-size: 900px; }
+:where(.ch-catalog-tools) { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+:where(.ch-catalog-tools .woocommerce-result-count, .ch-catalog-tools .woocommerce-ordering) { float: none; margin: 0; }
+:where(.ch-catalog-tools .woocommerce-ordering) { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+:where(.ch-catalog-tools select) { min-block-size: 44px; max-inline-size: 100%; background: #fff; color: var(--chidemoon-ink); border: 1px solid var(--chidemoon-line); border-radius: 6px; padding: 8px 12px; }
+
 @media (max-width: 1023px) {
 	.ch-header-search { inline-size: 100%; }
 	.ch-footer-about { inline-size: 44%; }

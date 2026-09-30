@@ -15,8 +15,17 @@ $check( class_exists( '\\ElementorPro\\Plugin' ), 'Elementor Pro is active.' );
 $check( class_exists( IntlDateFormatter::class ), 'ICU Persian calendar is available.' );
 $check( 'Asia/Tehran' === wp_timezone_string(), 'Display dates use the Tehran timezone.' );
 $widgets = \Elementor\Plugin::$instance->widgets_manager;
+$native = in_array( 'native', $args ?? array(), true ) || (bool) get_page_by_path( 'chidemoon-article-card', OBJECT, 'elementor_library' );
+$flatten = static function ( array $elements ) use ( &$flatten ): array {
+	$all = array();
+	foreach ( $elements as $element ) {
+		$all[] = $element;
+		$all = array_merge( $all, $flatten( $element['elements'] ?? array() ) );
+	}
+	return $all;
+};
 $types = array();
-$validate = static function ( array $elements, array &$ids ) use ( &$validate, &$types, $widgets, $check ): void {
+$validate = static function ( array $elements, array &$ids ) use ( &$validate, &$types, $widgets, $check, $native ): void {
 	foreach ( $elements as $element ) {
 		$check( ! empty( $element['id'] ) && ! isset( $ids[ $element['id'] ] ), 'Unique element ' . ( $element['id'] ?? '(missing)' ) );
 		$ids[ $element['id'] ] = true;
@@ -24,6 +33,10 @@ $validate = static function ( array $elements, array &$ids ) use ( &$validate, &
 			$type = $element['widgetType'];
 			$check( 'html' !== $type && (bool) $widgets->get_widget_types( $type ), 'Native/registered editable widget ' . $type );
 			$types[ $type ] = ( $types[ $type ] ?? 0 ) + 1;
+			if ( $native && 'loop-grid' === $type ) {
+				$template_id = (int) ( $element['settings']['template_id'] ?? 0 );
+				$check( 'publish' === get_post_status( $template_id ) && 'loop-item' === get_post_meta( $template_id, '_elementor_template_type', true ), 'Loop Grid references a published editable Loop Item #' . $template_id );
+			}
 		}
 		$validate( $element['elements'] ?? array(), $ids );
 	}
@@ -39,6 +52,60 @@ foreach ( array( 'site-header' => 'header', 'site-footer' => 'footer', 'post-sin
 	$check( $template instanceof WP_Post && 'publish' === $template->post_status, 'Published template ' . $slug );
 	$check( $type === get_post_meta( $template->ID, '_elementor_template_type', true ) && (bool) get_post_meta( $template->ID, '_elementor_conditions', true ), 'Theme Builder type and conditions: ' . $slug );
 	$documents[] = $template->ID;
+}
+if ( $native ) {
+	foreach ( array( 'article-card' => 'post', 'product-card' => 'product', 'search-card' => 'post', 'product-category-card' => 'product_taxonomy', 'post-category-card' => 'post_taxonomy', 'category-cards' => '' ) as $slug => $source ) {
+		$template = get_page_by_path( 'chidemoon-' . $slug, OBJECT, 'elementor_library' );
+		$check( $template instanceof WP_Post && 'publish' === $template->post_status, 'Published native template ' . $slug );
+		$check( ( $source ? 'loop-item' : 'section' ) === get_post_meta( $template->ID, '_elementor_template_type', true ), 'Native template type ' . $slug );
+		if ( $source ) {
+			$document = \Elementor\Plugin::$instance->documents->get( $template->ID, false );
+			$check( $source === $document->get_settings( 'source' ), 'Loop Item data source ' . $slug );
+			foreach ( $flatten( json_decode( (string) get_post_meta( $template->ID, '_elementor_data', true ), true ) ?: array() ) as $element ) {
+				if ( ! in_array( $element['widgetType'] ?? '', array( 'image', 'heading', 'button' ), true ) ) { continue; }
+				$binding = $element['settings']['__dynamic__']['link'] ?? '';
+				if ( $binding ) { $check( str_contains( $binding, $source && str_contains( $source, 'taxonomy' ) ? 'name="archive-url"' : 'name="post-url"' ), 'Card link uses the current record: ' . $slug ); }
+			}
+		}
+		$documents[] = $template->ID;
+	}
+	foreach ( array( 'categories', 'product-comparison' ) as $slug ) {
+		$page = get_page_by_path( $slug );
+		$check( $page instanceof WP_Post && 'publish' === $page->post_status, 'Published native page ' . $slug );
+		$documents[] = $page->ID;
+	}
+	$comparison = get_page_by_path( 'comparisons' );
+	$comparison_elements = $flatten( json_decode( (string) get_post_meta( $comparison->ID, '_elementor_data', true ), true ) ?: array() );
+	$has_articles = false;
+	foreach ( $comparison_elements as $element ) {
+		$type = $element['widgetType'] ?? '';
+		$check( ! in_array( $type, array( 'chidemoon-compare-table', 'woocommerce-products', 'woocommerce-archive-products' ), true ), 'Comparison editorial page has no product picker.' );
+		if ( 'loop-grid' === $type ) {
+			$has_articles = true;
+			$card = get_page_by_path( 'chidemoon-article-card', OBJECT, 'elementor_library' );
+			$check( (int) $element['settings']['template_id'] === (int) $card->ID && 'post' === ( $element['settings']['post_query_post_type'] ?? '' ), 'Comparison feed uses the article Loop Item.' );
+		}
+	}
+	$check( $has_articles, 'Comparison editorial page has article cards.' );
+	$header = get_page_by_path( 'chidemoon-site-header', OBJECT, 'elementor_library' );
+	$has_categories = false;
+	foreach ( $flatten( json_decode( (string) get_post_meta( $header->ID, '_elementor_data', true ), true ) ?: array() ) as $element ) {
+		if ( 'mega-menu' !== ( $element['widgetType'] ?? '' ) ) { continue; }
+		foreach ( $element['settings']['menu_items'] ?? array() as $index => $item ) {
+			$label = trim( (string) ( $item['item_title'] ?? '' ) );
+			$check( ! empty( $item['item_link']['url'] ), 'Header menu has a destination: ' . $label );
+			if ( in_array( $label, array( 'دسته‌بندی', 'دسته بندی' ), true ) ) {
+				$has_categories = 'yes' === ( $item['item_dropdown_content'] ?? '' ) && ! empty( $element['elements'][ $index ]['elements'] );
+			}
+		}
+	}
+	$check( $has_categories, 'Header has an editable category panel.' );
+	$check( in_array( 'product', (array) get_option( 'elementor_cpt_support' ), true ), 'Product descriptions support the Elementor editor.' );
+	foreach ( get_posts( array( 'post_type' => array( 'post', 'product' ), 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		if ( 'post' === $post->post_type && ! has_category( array( 'guides', 'comparisons', 'room-ideas' ), $post ) ) { continue; }
+		$check( 'builder' === get_post_meta( $post->ID, '_elementor_edit_mode', true ), 'Published content has a native editor body #' . $post->ID );
+		$documents[] = $post->ID;
+	}
 }
 foreach ( $documents as $id ) {
 	$elements = json_decode( get_post_meta( $id, '_elementor_data', true ), true );

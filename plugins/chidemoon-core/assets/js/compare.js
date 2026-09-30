@@ -78,13 +78,23 @@
 			if (control.classList.contains('chidemoon-compare-control')) {
 				control.setAttribute('aria-pressed', active ? 'true' : 'false');
 				var label = control.querySelector('span');
-				if (label) label.textContent = active ? config.labels.removed : config.labels.added;
+				if (label) label.textContent = active
+					? (control.dataset.compareSelectedLabel !== undefined ? control.dataset.compareSelectedLabel : config.labels.removed)
+					: (control.dataset.compareLabel !== undefined ? control.dataset.compareLabel : config.labels.added);
 			} else if (control.classList.contains('chidemoon-compare-single')) {
 				control.setAttribute('aria-pressed', active ? 'true' : 'false');
 				var singleLabel = control.querySelector('.chidemoon-compare-single__label');
 				var singleHint = control.querySelector('.chidemoon-compare-single__hint');
-				if (singleLabel) singleLabel.textContent = active ? config.labels.singleIn : config.labels.singleAdd;
-				if (singleHint) singleHint.textContent = active ? config.labels.singleRemoveHint : config.labels.singleHint;
+				if (singleLabel) singleLabel.textContent = active
+					? (control.dataset.compareSelectedLabel !== undefined ? control.dataset.compareSelectedLabel : config.labels.singleIn)
+					: (control.dataset.compareLabel !== undefined ? control.dataset.compareLabel : config.labels.singleAdd);
+				if (singleHint) {
+					var hint = active
+						? (control.dataset.compareSelectedHint !== undefined ? control.dataset.compareSelectedHint : config.labels.singleRemoveHint)
+						: (control.dataset.compareHint !== undefined ? control.dataset.compareHint : config.labels.singleHint);
+					singleHint.textContent = hint;
+					singleHint.hidden = !hint;
+				}
 			} else if (control.classList.contains('chidemoon-comparison-search__result')) {
 				var action = control.querySelector('small');
 				if (action) action.textContent = active ? config.labels.removed : config.labels.added;
