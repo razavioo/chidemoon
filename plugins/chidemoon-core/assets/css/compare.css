@@ -141,7 +141,7 @@ body .chidemoon-compare-bar :is(.chidemoon-compare-bar__summary, .chidemoon-comp
 .chidemoon-comparison-status { align-items: center; background: #edf3ee; border-block: 2px solid var(--chidemoon-forest, #123f34); display: flex; flex-wrap: wrap; gap: 12px 16px; margin-block: 32px; padding: 20px 24px; }
 .chidemoon-comparison-status__count { color: var(--chidemoon-forest, #123f34); font-size: 18px; font-weight: 800; margin: 0; }
 .chidemoon-comparison-status__chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; min-width: 0; }
-.chidemoon-comparison-status__chip { background: white; font-size: 13px; padding: 6px 10px; max-width: 100%; white-space: normal; }
+body .chidemoon-comparison-status__chip { background: white; font-size: 13px; padding: 6px 10px; max-width: 100%; white-space: normal; }
 .chidemoon-comparison-status__chip span[dir] { min-inline-size: 0; overflow-wrap: anywhere; }
 .chidemoon-comparison-status__cta { font-weight: 700; margin-inline-start: auto; min-inline-size: 180px; }
 .chidemoon-comparison-status__cta[hidden] { display: none; }
@@ -185,7 +185,7 @@ body .chidemoon-comparison-search__result:is(:hover, :focus) { background: #f3f4
 .chidemoon-comparison-table thead img { aspect-ratio: 1; block-size: 120px; inline-size: 120px; justify-self: center; max-inline-size: 100%; object-fit: contain; }
 .chidemoon-comparison-table__remove { color: var(--chidemoon-clay, #b95d3e); margin-block-start: 12px; font-size: 12px; }
 body :is(.chidemoon-comparison-status__chip, .chidemoon-comparison-table__remove):is(:hover, :focus) { background: #f3f4f1; color: var(--chidemoon-forest, #123f34); }
-.chidemoon-comparison-table .chidemoon-button, .chidemoon-comparison-status__cta { background: var(--chidemoon-forest, #123f34); color: white; }
+body .chidemoon-comparison-table .chidemoon-button, body .chidemoon-comparison-status__cta { background: var(--chidemoon-forest, #123f34); border-color: var(--chidemoon-forest, #123f34); color: white; font-weight: 700; }
 :where(.chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-compare-bar button, .chidemoon-comparison-status a, .chidemoon-comparison-status button, .chidemoon-comparison-table-wrap, .chidemoon-comparison-table button, .chidemoon-comparison-search__result):focus-visible { outline: 3px solid var(--chidemoon-clay, #b95d3e); outline-offset: 3px; }
 @media (max-width: 767px) {
 	.chidemoon-compare-bar { bottom: max(8px, env(safe-area-inset-bottom)); inset-inline: 8px; padding: 6px 8px; }
