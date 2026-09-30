@@ -138,12 +138,12 @@ body .chidemoon-compare-bar__go:is(:hover, :focus) { background: var(--chidemoon
 body .chidemoon-compare-bar :is(.chidemoon-compare-bar__summary, .chidemoon-compare-bar__chip, .chidemoon-compare-bar__clear):is(:hover, :focus) { background: #edf1ed; border-color: var(--chidemoon-line, #ccd6d0); color: var(--chidemoon-forest, #123f34); }
 .chidemoon-compare-bar__hint { color: var(--chidemoon-muted, #607069); flex: 1 1 180px; font-size: 12px; margin: 0; }
 .chidemoon-comparison-status, .chidemoon-comparison-picker, .chidemoon-comparison-table-section { scroll-margin-block-start: 140px; }
-.chidemoon-comparison-status { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; padding-block: 20px; border-block: 1px solid var(--chidemoon-line, #ccd6d0); margin-block: 24px; }
-.chidemoon-comparison-status__count { margin: 0; font-weight: 700; }
+.chidemoon-comparison-status { align-items: center; background: #edf3ee; border-block: 2px solid var(--chidemoon-forest, #123f34); display: flex; flex-wrap: wrap; gap: 12px 16px; margin-block: 32px; padding: 20px 24px; }
+.chidemoon-comparison-status__count { color: var(--chidemoon-forest, #123f34); font-size: 18px; font-weight: 800; margin: 0; }
 .chidemoon-comparison-status__chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; min-width: 0; }
-.chidemoon-comparison-status__chip { font-size: 12px; padding: 4px 8px; max-width: 100%; white-space: normal; }
+.chidemoon-comparison-status__chip { background: white; font-size: 13px; padding: 6px 10px; max-width: 100%; white-space: normal; }
 .chidemoon-comparison-status__chip span[dir] { min-inline-size: 0; overflow-wrap: anywhere; }
-.chidemoon-comparison-status__cta { margin-inline-start: auto; }
+.chidemoon-comparison-status__cta { font-weight: 700; margin-inline-start: auto; min-inline-size: 180px; }
 .chidemoon-comparison-status__cta[hidden] { display: none; }
 .chidemoon-comparison-picker { display: grid; gap: 24px; }
 .chidemoon-comparison-search { max-inline-size: 680px; width: 100%; }
@@ -201,8 +201,10 @@ body :is(.chidemoon-comparison-status__chip, .chidemoon-comparison-table__remove
 	.chidemoon-core-product-card .chidemoon-compare-control { font-size: 13px; padding: 8px; }
 	.chidemoon-comparison-status { align-items: stretch; flex-direction: column; }
 	.chidemoon-comparison-status__chips { flex: auto; }
-	.chidemoon-comparison-status__cta { margin: 0; }
-	.chidemoon-comparison-table thead th { min-width: 190px; }
+	.chidemoon-comparison-status__cta { inline-size: 100%; margin: 0; }
+	.chidemoon-comparison-table { min-width: 0; width: max-content; }
+	.chidemoon-comparison-table thead th, .chidemoon-comparison-table tbody td { max-width: 220px; min-width: 220px; width: 220px; overflow-wrap: anywhere; }
+	.chidemoon-comparison-table tbody th, .chidemoon-comparison-table thead th:first-child { max-width: 108px; min-width: 108px; width: 108px; }
 	.chidemoon-comparison-table :where(th, td) { padding: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {

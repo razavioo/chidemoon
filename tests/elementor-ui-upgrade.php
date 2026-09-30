@@ -107,6 +107,23 @@ namespace {
 	check( stripslashes( $GLOBALS['post_meta'][101]['_chidemoon_pre_ui_upgrade_20260929_elementor_data'] ) === $before, 'original document not backed up' );
 	check( ! upgrade( 101, 'home' ) && $GLOBALS['document_saves'][101] === 1, 'upgrade must be idempotent' );
 
+	$footer = array(
+		box( 'ch-section ch-footer', array(
+			box( 'ch-footer-about', array(
+				widget( 'text-editor', array( 'editor' => '<p>قیمت‌ها مربوط به زمان بررسی منبع‌اند. قیمت نهایی و شرایط ارسال را در فروشگاه ببین.</p>' ) ),
+				widget( 'text-editor', array( 'editor' => '<p>یادداشت ویرایشگر</p>' ) ),
+			) ),
+		) ),
+		box( 'ch-section ch-footer-bottom', array( widget( 'text-editor', array( 'editor' => '<p>چیدمون ممکن است از بعضی لینک‌های فروشنده کارمزد دریافت کند.</p>' ) ) ) ),
+	);
+	fixture( 109, $footer );
+	check( upgrade( 109, 'site-footer' ), 'expected footer cleanup' );
+	$after = json_decode( $GLOBALS['post_meta'][109]['_elementor_data'], true );
+	check( count( $after ) === 1, 'footer bottom strip remains' );
+	$about = $after[0]['elements'][0]['elements'];
+	check( count( $about ) === 1 && $about[0]['settings']['editor'] === '<p>یادداشت ویرایشگر</p>', 'footer cleanup changed editor content' );
+	check( ! upgrade( 109, 'site-footer' ) && $GLOBALS['document_saves'][109] === 1, 'footer cleanup repeated' );
+
 	$search = array( box( 'ch-main', array( box( 'ch-section ch-search', array(
 		widget( 'search', array( '_css_classes' => 'ch-page-search' ) ),
 		widget( 'archive-posts', array( '_css_classes' => 'ch-editorial-feed', 'archive_classic_masonry' => 'yes', 'archive_classic_read_more_text' => 'مشاهده', 'nothing_found_message' => 'نتیجه‌ای پیدا نشد. عبارت دیگری را جست‌وجو کن.' ) ),

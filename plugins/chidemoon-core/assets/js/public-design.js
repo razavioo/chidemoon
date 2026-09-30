@@ -93,6 +93,7 @@
 			shortcut.textContent = 'جست‌وجو';
 		}
 		row.appendChild(shortcut);
+		header.classList.add('ch-header-enhanced');
 
 		function closeSearch() {
 			search.classList.remove('is-open');
@@ -112,17 +113,17 @@
 				shortcut.focus();
 			}
 		});
+		document.addEventListener('click', (event) => {
+			if (search.classList.contains('is-open') && !search.contains(event.target) && !shortcut.contains(event.target)) closeSearch();
+		});
 
 		function syncHeader() {
 			const mobile = window.matchMedia('(max-width: 767px)').matches;
-			const scrolled = mobile && window.scrollY > 120;
-			document.body.classList.toggle('ch-header-scrolled', scrolled);
-			if (!scrolled) closeSearch();
+			if (!mobile) closeSearch();
 			const menuOpen = mobile && !!menuToggle && (menuToggle.classList.contains('elementor-active') || menuToggle.getAttribute('aria-expanded') === 'true');
 			document.body.classList.toggle('ch-mobile-menu-open', menuOpen);
 			if (menuOpen) closeSearch();
 		}
-		window.addEventListener('scroll', syncHeader, { passive: true });
 		window.addEventListener('resize', syncHeader, { passive: true });
 		if (menuToggle) {
 			new MutationObserver(syncHeader).observe(menuToggle, { attributes: true, attributeFilter: ['class', 'aria-expanded'] });

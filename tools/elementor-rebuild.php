@@ -431,10 +431,6 @@ class Chidemoon_Elementor_Rebuild {
 					$this->box( array( $this->heading( 'کشف چیدمون', 'h3' ), $this->links( array( '/shop-the-look/' => 'ایده‌های چیدمان', '/guides/' => 'راهنمای خرید', '/comparisons/' => 'مقایسهٔ محصولات', '/magazine/' => 'مجلهٔ چیدمون' ) ) ), 'ch-footer-links' ),
 					$this->box( array( $this->heading( 'محصولات', 'h3' ), $this->links( array( '/shop/' => 'فروشگاه', '/product-category/desk-lamps/' => 'چراغ مطالعه' ) ) ), 'ch-footer-links' ),
 				), 'ch-footer', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_wrap' => 'wrap', 'flex_justify_content' => 'space-between' ) ),
-				$this->section( array(
-					$this->text( '<p>چیدمون ممکن است از بعضی لینک‌های فروشنده کارمزد دریافت کند.</p>', 'ch-disclosure' ),
-					$this->text( '<p>با دقت انتخاب کن، با سلیقه بچین.</p>', 'ch-footer-signoff' ),
-				), 'ch-footer-bottom', array( 'flex_direction' => 'row', 'flex_direction_mobile' => 'column', 'flex_justify_content' => 'space-between', 'padding' => array( 'unit' => 'px', 'top' => '20', 'right' => '24', 'bottom' => '20', 'left' => '24', 'isLinked' => false ) ) ),
 			) ),
 			'post-single' => array( 'single-post', array( array( 'type' => 'include', 'name' => 'singular', 'sub_name' => 'post' ) ), array(
 				$this->section( array( $this->widget( 'theme-post-title', array( 'header_size' => 'h1', '_css_classes' => 'ch-article-title' ) ), $this->widget( 'post-info', array( 'icon_list' => array( array( '_id' => 'chdate', 'type' => 'date', 'date_format' => 'custom', 'custom_date_format' => 'j F Y', 'link' => '', 'show_icon' => 'none' ) ), '_css_classes' => 'ch-article-meta' ) ), $this->widget( 'theme-post-featured-image', array( 'image_size' => 'full', '_css_classes' => 'ch-article-media' ) ) ), 'ch-article-header' ),
@@ -481,6 +477,18 @@ class Chidemoon_Elementor_Rebuild {
 	}
 
 	private function patch_ui_elements( array &$elements, string $target, array &$changes ): void {
+		if ( 'site-footer' === $target ) {
+			foreach ( $elements as $index => $element ) {
+				if ( $this->has_class( $element, 'ch-footer-bottom' ) ) {
+					unset( $elements[ $index ] );
+					$changes[] = 'footer bottom strip removed';
+				} elseif ( 'text-editor' === ( $element['widgetType'] ?? '' ) && str_contains( (string) ( $element['settings']['editor'] ?? '' ), 'قیمت‌ها مربوط به زمان بررسی منبع‌اند' ) ) {
+					unset( $elements[ $index ] );
+					$changes[] = 'footer price notice removed';
+				}
+			}
+			$elements = array_values( $elements );
+		}
 		foreach ( $elements as &$element ) {
 			if ( in_array( $element['widgetType'] ?? '', array( 'posts', 'archive-posts' ), true ) && $this->has_class( $element, 'ch-editorial-feed' ) ) {
 				$key = 'posts' === $element['widgetType'] ? 'classic_masonry' : 'archive_classic_masonry';
@@ -704,7 +712,7 @@ class Chidemoon_Elementor_Rebuild {
 				++$count;
 			}
 		}
-		foreach ( array( 'search-results', 'post-single', 'post-archive', 'product-single', 'product-archive' ) as $slug ) {
+		foreach ( array( 'site-footer', 'search-results', 'post-single', 'post-archive', 'product-single', 'product-archive' ) as $slug ) {
 			$templates = get_posts( array( 'post_type' => 'elementor_library', 'post_status' => 'publish', 'name' => 'chidemoon-' . $slug, 'posts_per_page' => 1 ) );
 			if ( $templates && $this->upgrade_ui_document( (int) $templates[0]->ID, $slug, $apply ) ) {
 				++$count;

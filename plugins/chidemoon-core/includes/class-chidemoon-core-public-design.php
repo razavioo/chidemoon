@@ -25,6 +25,7 @@ final class Chidemoon_Core_Public_Design {
 		add_filter( 'woocommerce_product_add_to_cart_text', array( __CLASS__, 'loop_offer_text' ), 110, 2 );
 		add_filter( 'woocommerce_loop_add_to_cart_args', array( __CLASS__, 'loop_offer_label' ), 110, 2 );
 		add_filter( 'formatted_woocommerce_price', array( __CLASS__, 'public_price_digits' ), 100 );
+		add_filter( 'woocommerce_catalog_orderby', array( __CLASS__, 'catalog_orderby_labels' ) );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'widgets' ) );
 		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
 			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
@@ -99,6 +100,23 @@ final class Chidemoon_Core_Public_Design {
 
 	public static function public_price_digits( string $price ): string {
 		return is_admin() ? $price : self::persian_digits( $price );
+	}
+
+	public static function catalog_orderby_labels( array $options ): array {
+		$labels = array(
+			'menu_order' => 'مرتب‌سازی: پیشنهادی',
+			'popularity' => 'پرفروش‌ترین',
+			'rating'     => 'بالاترین امتیاز',
+			'date'       => 'جدیدترین',
+			'price'      => 'ارزان‌ترین',
+			'price-desc' => 'گران‌ترین',
+		);
+		foreach ( $labels as $key => $label ) {
+			if ( isset( $options[ $key ] ) ) {
+				$options[ $key ] = $label;
+			}
+		}
+		return $options;
 	}
 
 	public static function content_card_details( string $content, $widget ): string {
