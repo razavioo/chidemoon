@@ -126,4 +126,12 @@ foreach ( $expected as $index => list( $label, $count, $url, $current ) ) {
 	check( ( $link->getAttribute( 'aria-current' ) === 'page' ) === $current, "Facet $index marks current state accurately." );
 }
 
+$query_count = count( WP_Query::$count_queries );
+$custom = Chidemoon_Core_Search_Facets::render( array( 'all_label' => 'همهٔ نتایج', 'product_label' => '<کالا>', 'hide_counts' => 'yes' ) );
+check( str_contains( $custom, 'همهٔ نتایج' ) && str_contains( $custom, '&lt;کالا&gt;' ), 'Editor labels are applied and escaped.' );
+check( ! str_contains( $custom, 'ch-search-facets__count' ) && count( WP_Query::$count_queries ) === $query_count, 'Hidden counters skip count queries.' );
+$GLOBALS['is_search'] = false;
+$preview = Chidemoon_Core_Search_Facets::render( array( 'post_label' => 'مقاله‌ها' ), true );
+check( str_contains( $preview, 'مقاله‌ها' ) && ! str_contains( $preview, 'ch-search-facets__count' ) && count( WP_Query::$count_queries ) === $query_count, 'Editor preview shows labels without querying or inventing counts.' );
+
 echo "Search facets query and render checks passed.\n";

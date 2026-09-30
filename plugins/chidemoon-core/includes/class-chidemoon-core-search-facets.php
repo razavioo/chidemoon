@@ -34,31 +34,39 @@ final class Chidemoon_Core_Search_Facets {
 		}
 	}
 
-	public static function render(): string {
-		if ( ! is_search() ) {
+	public static function render( array $settings = array(), bool $preview = false ): string {
+		if ( ! is_search() && ! $preview ) {
 			return '';
 		}
-		$term = get_search_query( false );
-		$counts = array();
-		foreach ( array( 'product', 'post' ) as $type ) {
-			$results = new WP_Query( array(
-				'post_type' => $type,
-				'post_status' => 'publish',
-				's' => $term,
-				'posts_per_page' => 1,
-				'fields' => 'ids',
-				'ignore_sticky_posts' => true,
-			) );
-			$counts[ $type ] = (int) $results->found_posts;
+		$term = is_search() ? get_search_query( false ) : '';
+		$counts = array( '' => 0, 'product' => 0, 'post' => 0 );
+		if ( is_search() && 'yes' !== ( $settings['hide_counts'] ?? '' ) ) {
+			foreach ( array( 'product', 'post' ) as $type ) {
+				$results = new WP_Query( array(
+					'post_type' => $type,
+					'post_status' => 'publish',
+					's' => $term,
+					'posts_per_page' => 1,
+					'fields' => 'ids',
+					'ignore_sticky_posts' => true,
+				) );
+				$counts[ $type ] = (int) $results->found_posts;
+			}
 		}
 		$counts[''] = $counts['product'] + $counts['post'];
-		$selected = self::selected_type();
-		$url = get_search_link( $term );
+		$selected = is_search() ? self::selected_type() : '';
+		$url = is_search() ? get_search_link( $term ) : '#';
 		$html = '<nav class="ch-search-facets" aria-label="نوع نتایج جست‌وجو">';
-		foreach ( array( '' => 'همه', 'product' => 'محصولات', 'post' => 'مطالب' ) as $type => $label ) {
-			$link = $type ? add_query_arg( 'content_type', $type, $url ) : $url;
+		$defaults = array( 'all_label' => 'همه', 'product_label' => 'محصولات', 'post_label' => 'مطالب' );
+		foreach ( array( '' => 'all_label', 'product' => 'product_label', 'post' => 'post_label' ) as $type => $key ) {
+			$label = trim( (string) ( $settings[ $key ] ?? '' ) ) ?: $defaults[ $key ];
+			$link = $type && ! $preview ? add_query_arg( 'content_type', $type, $url ) : $url;
 			$current = $selected === $type ? ' aria-current="page"' : '';
-			$html .= '<a href="' . esc_url( $link ) . '"' . $current . '><span>' . esc_html( $label ) . '</span><span class="ch-search-facets__count">' . esc_html( self::persian_digits( (string) $counts[ $type ] ) ) . '</span></a>';
+			$html .= '<a href="' . esc_url( $link ) . '"' . $current . '><span>' . esc_html( $label ) . '</span>';
+			if ( 'yes' !== ( $settings['hide_counts'] ?? '' ) && ! $preview ) {
+				$html .= '<span class="ch-search-facets__count">' . esc_html( self::persian_digits( (string) $counts[ $type ] ) ) . '</span>';
+			}
+			$html .= '</a>';
 		}
 		return $html . '</nav>';
 	}
