@@ -33,9 +33,9 @@
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
 
-	function onReady() {
-		enhanceGalleryCounter();
+	function enhanceHeader() {
 		const header = document.querySelector('.ch-header');
+		if (!header || header.querySelector('.ch-header-search-shortcut')) return;
 		const searchQuery = window.chidemoonPublicDesign?.searchQuery || '';
 		if (searchQuery) {
 			document.querySelectorAll('.ch-header-search .e-search-input, .ch-page-search .e-search-input').forEach((input) => {
@@ -45,8 +45,6 @@
 				}
 			});
 		}
-		if (!header) return;
-
 		const search = header.querySelector('.ch-header-search');
 		const input = search?.querySelector('.e-search-input');
 		const menuToggle = header.querySelector('.ch-nav .e-n-menu-toggle, .ch-nav .elementor-menu-toggle');
@@ -81,7 +79,10 @@
 			search.classList.toggle('is-open', open);
 			shortcut.setAttribute('aria-expanded', String(open));
 			shortcut.setAttribute('aria-label', open ? 'بستن جست‌وجو' : 'نمایش جست‌وجو');
-			if (open) input.focus({ preventScroll: true });
+			if (open) {
+				if (menuToggle?.getAttribute('aria-expanded') === 'true') menuToggle.click();
+				input.focus({ preventScroll: true });
+			}
 		});
 		input.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape' && search.classList.contains('is-open')) {
@@ -94,7 +95,7 @@
 		});
 
 		function syncHeader() {
-			const mobile = window.matchMedia('(max-width: 767px)').matches;
+			const mobile = window.matchMedia('(max-width: 1024px)').matches;
 			if (!mobile) closeSearch();
 			const collapsedMenu = !!menuToggle && getComputedStyle(menuToggle).display !== 'none';
 			const menuOpen = collapsedMenu && (menuToggle.classList.contains('elementor-active') || menuToggle.getAttribute('aria-expanded') === 'true');
@@ -106,6 +107,21 @@
 			new MutationObserver(syncHeader).observe(menuToggle, { attributes: true, attributeFilter: ['class', 'aria-expanded'] });
 		}
 		syncHeader();
+	}
+
+	function onReady() {
+		enhanceGalleryCounter();
+		const adminBar = document.getElementById('wpadminbar');
+		if (adminBar) {
+			const syncAdminOffset = () => document.documentElement.style.setProperty('--ch-admin-bar-offset', `${Math.max(0, adminBar.getBoundingClientRect().bottom)}px`);
+			window.addEventListener('scroll', syncAdminOffset, { passive: true });
+			window.addEventListener('resize', syncAdminOffset, { passive: true });
+			syncAdminOffset();
+		}
+
+		enhanceHeader();
+		// Elementor replaces widget markup while editing; enhance each new header once.
+		new MutationObserver(enhanceHeader).observe(document.body, { childList: true, subtree: true });
 	}
 
 	if (document.readyState === 'loading') {
