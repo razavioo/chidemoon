@@ -96,7 +96,10 @@ if (command[0] === 'run') {
  const action = wp.join(' ');
  if (action.includes('option get stylesheet')) { process.stdout.write('hello-elementor\\n'); process.exit(0); }
  if (action.includes('maintenance-mode activate')) { fs.writeFileSync(maintenance, 'active'); process.exit(0); }
- if (action.includes('maintenance-mode deactivate')) { fs.rmSync(maintenance, {force:true}); process.exit(0); }
+ if (action.includes('maintenance-mode deactivate')) {
+  if (fs.readFileSync(maintenance, 'utf8').includes('upgrading = time();')) process.exit(1);
+  fs.rmSync(maintenance, {force:true}); process.exit(0);
+ }
  if (action.includes('elementor-editability-upgrade.php apply')) {
   fs.writeFileSync(path.join(base, 'database-state'), 'changed');
   fs.writeFileSync(path.join(uploads, 'generated.css'), 'new');
@@ -175,7 +178,7 @@ for (const mode of ['disk-after-backup', 'dump', 'migration', 'late-health', 'su
         assert.equal(realpathSync(join(deploy, 'current')), realpathSync(join(deploy, 'releases', 'chidemoon-release-fixture')));
         assert.equal(readFileSync(join(scratch, 'database-state'), 'utf8'), 'changed');
         assert.match(log, /editorial-elementor-upgrade\.php apply products/);
-        assert.ok(log.indexOf('/tools/verify-elementor.php native') < log.indexOf('maintenance-mode deactivate'));
+        assert.ok(log.indexOf('/tools/verify-elementor.php native') < log.indexOf('wordpress rm -f /var/www/html/.maintenance'));
       } else {
         assert.notEqual(result.status, 0, `${mode} should fail`);
         assert.equal(realpathSync(join(deploy, 'current')), realpathSync(previous), result.stderr);

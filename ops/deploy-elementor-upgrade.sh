@@ -148,7 +148,9 @@ wp --user="$editor_id" eval-file /tools/elementor-editability-upgrade.php apply
 wp --user="$editor_id" eval-file /tools/editorial-elementor-upgrade.php apply products
 wp --user="$editor_id" eval-file /tools/verify-elementor.php native
 wp rewrite flush --hard
-wp --skip-plugins --skip-themes maintenance-mode deactivate
+# WP-CLI parses only a literal timestamp; this request-time marker is removed
+# through the same container filesystem operation used by recovery.
+compose "$release_dir" exec -T wordpress rm -f /var/www/html/.maintenance
 maintenance_created=0
 compose "$release_dir" up -d --wait --no-deps --pull never wordpress
 compose "$release_dir" exec -T wordpress php -r '$body=@file_get_contents("http://localhost/"); if ($body === false || strlen($body)<100 || str_contains($body,"There has been a critical error")) { exit(1); }'
