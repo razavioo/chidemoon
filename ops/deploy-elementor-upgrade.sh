@@ -146,6 +146,10 @@ wp core is-installed
 for plugin in woocommerce elementor elementor-pro chidemoon-core chidemoon-ai; do wp plugin is-active "$plugin"; done
 wp --user="$editor_id" eval-file /tools/elementor-editability-upgrade.php apply
 wp --user="$editor_id" eval-file /tools/editorial-elementor-upgrade.php apply products
+if [[ "${CHIDEMOON_REPAIR_PUBLIC_AUDIT:-0}" = 1 ]]; then
+	wp --user="$editor_id" eval-file /tools/repair-product-categories.php apply
+	wp --user="$editor_id" eval-file /tools/repair-search-conditions.php apply
+fi
 wp --user="$editor_id" eval-file /tools/verify-elementor.php native
 wp rewrite flush --hard
 # WP-CLI parses only a literal timestamp; this request-time marker is removed
