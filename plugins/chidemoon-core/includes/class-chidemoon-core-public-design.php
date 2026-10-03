@@ -29,6 +29,8 @@ final class Chidemoon_Core_Public_Design {
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'widgets' ) );
 		add_action( 'elementor/dynamic_tags/register', array( __CLASS__, 'data_tags' ) );
 		add_action( 'elementor/query/chidemoon_related_products', array( __CLASS__, 'related_products_query' ) );
+		add_filter( 'elementor/query/get_query_args/current_query', array( __CLASS__, 'catalog_query_args' ) );
+		add_filter( 'posts_clauses', array( __CLASS__, 'catalog_ordering_clauses' ), 100, 2 );
 		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
 			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
 				$query->set( 'post_type', array( 'post', 'product' ) );
@@ -37,6 +39,23 @@ final class Chidemoon_Core_Public_Design {
 		add_filter( 'gettext', static function ( string $translation, string $text, string $domain ): string {
 			return 'hello-elementor' === $domain && 'Skip to content' === $text && is_rtl() ? 'رفتن به محتوا' : $translation;
 		}, 10, 3 );
+	}
+
+	public static function catalog_query_args( array $args ): array {
+		$order = $_GET['orderby'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( 'product_query' === ( $args['wc_query'] ?? '' ) && is_string( $order ) && in_array( $order, array( 'price', 'price-desc', 'popularity', 'rating' ), true ) ) {
+			// Woo removes its SQL ordering filters after the main query. Elementor
+			// clones the query vars, so remember the sort for this clone only.
+			$args['_chidemoon_catalog_orderby'] = $order;
+		}
+		return $args;
+	}
+
+	public static function catalog_ordering_clauses( array $clauses, WP_Query $query ): array {
+		if ( is_admin() || 'product_query' !== $query->get( 'wc_query' ) || ! function_exists( 'WC' ) ) { return $clauses; }
+		$methods = array( 'price' => 'order_by_price_asc_post_clauses', 'price-desc' => 'order_by_price_desc_post_clauses', 'popularity' => 'order_by_popularity_post_clauses', 'rating' => 'order_by_rating_post_clauses' );
+		$method = $methods[ $query->get( '_chidemoon_catalog_orderby' ) ] ?? '';
+		return $method && is_callable( array( WC()->query, $method ) ) ? WC()->query->$method( $clauses ) : $clauses;
 	}
 
 	public static function widgets( $manager ): void {

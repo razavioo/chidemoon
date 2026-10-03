@@ -208,6 +208,19 @@ try {
 		ch_native_check( 2 === (int) $query->found_posts && 2 === (int) $query->max_num_pages && 1 === (int) $query->get( 'posts_per_page' ), 'Current Query loses native pagination totals: ' . $page );
 	}
 
+	// Numeric price order must survive Woo removing its main-query SQL filters.
+	foreach ( array( 'price' => array( 'first', 'second' ), 'price-desc' => array( 'second', 'first' ) ) as $ordering => $names ) {
+		$_GET['orderby'] = $ordering;
+		$main = new WP_Query( array_merge( $catalog_args, array( 'posts_per_page' => 12, 'wc_query' => 'product_query' ) ) );
+		$GLOBALS['wp_query'] = $main;
+		$GLOBALS['wp_the_query'] = $main;
+		WC()->query->remove_ordering_args();
+		$grid = ch_native_widget( 'loop-grid', array( '_skin' => 'product', 'template_id' => (string) $product_template->ID, 'product_query_post_type' => 'current_query' ) );
+		$grid->query_posts();
+		$expected = array_map( static fn( $name ) => $products[ $name ]->get_id(), $names );
+		ch_native_check( $expected === array_map( 'intval', wp_list_pluck( $grid->get_query()->posts, 'ID' ) ), 'Current Query loses numeric price ordering: ' . $ordering );
+	}
+
 	// Archive controls must use Woo's real counts/options and keep filters intact.
 	wc_setup_loop( array( 'is_paginated' => true, 'total' => 2, 'per_page' => 1, 'current_page' => 2, 'is_search' => false ) );
 	$_GET = array( 'orderby' => 'date', 'filter_feature' => 'bright', 'e-page-nativegrid' => '2' );
@@ -261,7 +274,11 @@ try {
 	$url = Chidemoon_Core_Compare::comparison_url( array( $products['second']->get_id(), $products['unreviewed']->get_id(), $products['first']->get_id() ) );
 	parse_str( (string) wp_parse_url( $url, PHP_URL_QUERY ), $selection );
 	ch_native_check( '/product-comparison/' === wp_parse_url( $url, PHP_URL_PATH ) && $selection['products'] === $products['second']->get_id() . ',' . $products['first']->get_id(), 'New comparison URLs lose eligibility filtering or selection order.' );
-	$legacy = wp_remote_get( add_query_arg( 'products', $products['second']->get_id() . ',' . $products['first']->get_id(), home_url( '/comparisons/' ) ), array( 'redirection' => 0, 'timeout' => 10 ) );
+	// Containers can reach WordPress through its service hostname even when the
+	// public development URL points at the operator's localhost port.
+	$http_origin = getenv( 'CHIDEMOON_ACCEPTANCE_HTTP_ORIGIN' );
+	$legacy_url = $http_origin ? rtrim( $http_origin, '/' ) . '/comparisons/' : home_url( '/comparisons/' );
+	$legacy = wp_remote_get( add_query_arg( 'products', $products['second']->get_id() . ',' . $products['first']->get_id(), $legacy_url ), array( 'redirection' => 0, 'timeout' => 10 ) );
 	if ( is_wp_error( $legacy ) ) { ch_native_check( false, 'Local legacy shared-link request failed: ' . $legacy->get_error_message() ); }
 	else {
 		$destination = wp_remote_retrieve_header( $legacy, 'location' );
