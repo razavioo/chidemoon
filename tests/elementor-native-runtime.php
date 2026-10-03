@@ -278,7 +278,12 @@ try {
 	// public development URL points at the operator's localhost port.
 	$http_origin = getenv( 'CHIDEMOON_ACCEPTANCE_HTTP_ORIGIN' );
 	$legacy_url = $http_origin ? rtrim( $http_origin, '/' ) . '/comparisons/' : home_url( '/comparisons/' );
-	$legacy = wp_remote_get( add_query_arg( 'products', $products['second']->get_id() . ',' . $products['first']->get_id(), $legacy_url ), array( 'redirection' => 0, 'timeout' => 10 ) );
+	$http_options = array( 'redirection' => 0, 'timeout' => 10 );
+	if ( $http_origin ) {
+		$home_port = wp_parse_url( home_url(), PHP_URL_PORT );
+		$http_options['headers']['Host'] = wp_parse_url( home_url(), PHP_URL_HOST ) . ( $home_port ? ':' . $home_port : '' );
+	}
+	$legacy = wp_remote_get( add_query_arg( 'products', $products['second']->get_id() . ',' . $products['first']->get_id(), $legacy_url ), $http_options );
 	if ( is_wp_error( $legacy ) ) { ch_native_check( false, 'Local legacy shared-link request failed: ' . $legacy->get_error_message() ); }
 	else {
 		$destination = wp_remote_retrieve_header( $legacy, 'location' );
