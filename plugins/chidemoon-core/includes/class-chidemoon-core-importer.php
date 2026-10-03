@@ -271,6 +271,14 @@ final class Chidemoon_Core_Importer {
 		if ( '' !== $image['url'] && ! self::is_safe_https_image_url( $image['url'] ) ) {
 			$issues[] = 'unsafe_image_url';
 		}
+		$gallery = array();
+		foreach ( array_slice( (array) ( $record['gallery'] ?? array() ), 0, 12 ) as $url ) {
+			if ( ! is_string( $url ) || ! self::is_safe_https_image_url( $url ) ) {
+				$issues[] = 'unsafe_gallery_image_url';
+			} elseif ( $url !== $image['url'] ) {
+				$gallery[] = $url;
+			}
+		}
 
 		$review_state = self::normalize_review_state( $record['status'] ?? 'draft' );
 		if ( 'quarantine' === $review_state ) {
@@ -292,13 +300,14 @@ final class Chidemoon_Core_Importer {
 			'sourceKey'       => $source_key,
 			'title'           => $title,
 			'description'     => wp_kses_post( (string) ( $record['description'] ?? '' ) ),
-			'shortDescription'=> '',
+			'shortDescription'=> wp_kses_post( (string) ( $record['shortDescription'] ?? '' ) ),
 			'affiliateUrl'    => $affiliate_url,
 			'merchantName'    => self::clean_text( $merchant['sellerName'] ?? $merchant['platform'] ?? '', 160 ),
 			'sourceUrl'       => $source_url,
 			'sourceCheckedAt' => $source_checked_at,
 			'categories'      => $categories,
 			'image'           => $image,
+			'gallery'         => array_values( array_unique( $gallery ) ),
 			'reviewState'     => $review_state,
 			'facts'           => $facts,
 			'price'           => $price,
@@ -370,12 +379,13 @@ final class Chidemoon_Core_Importer {
 		}
 
 		$eligible = 'reviewed' === $record['reviewState'] && has_post_thumbnail( (int) $product_id );
+		$gallery_issues = self::ensure_gallery( (int) $product_id, $record['gallery'], $record['title'] );
 		self::set_product_state( (int) $product_id, $eligible ? 'reviewed' : 'draft', $eligible ? 'publish' : 'draft' );
 
 		return array(
 			'action'        => empty( $existing_ids ) ? 'created' : 'updated',
 			'state'         => $eligible ? 'published' : 'draft',
-			'issues'        => is_wp_error( $image_result ) ? array( $image_result->get_error_code() ) : array(),
+			'issues'        => array_merge( is_wp_error( $image_result ) ? array( $image_result->get_error_code() ) : array(), $gallery_issues ),
 			'productId'     => (int) $product_id,
 			'imageImported' => is_int( $image_result ) && $image_result > 0,
 		);
@@ -502,10 +512,30 @@ final class Chidemoon_Core_Importer {
 			return 0;
 		}
 
-		return self::download_image( $url, $product_id, $image['alt'] );
+		return self::download_image( $url, $product_id, $image['alt'] ?: get_the_title( $product_id ) );
 	}
 
-	private static function download_image( string $url, int $product_id, string $alt ) {
+	private static function ensure_gallery( int $product_id, array $urls, string $alt ): array {
+		$ids = array();
+		$issues = array();
+		foreach ( $urls as $url ) {
+			$existing = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'post_parent' => $product_id, 'meta_key' => '_chidemoon_import_image_url', 'meta_value' => $url, 'fields' => 'ids', 'posts_per_page' => 1 ) );
+			$id = $existing ? (int) $existing[0] : self::download_image( $url, $product_id, $alt, false );
+			if ( is_wp_error( $id ) ) {
+				$issues[] = 'gallery_' . $id->get_error_code();
+			} else {
+				$ids[] = $id;
+			}
+		}
+		if ( $urls && ! $issues ) {
+			$product = wc_get_product( $product_id );
+			$product->set_gallery_image_ids( $ids );
+			$product->save();
+		}
+		return array_values( array_unique( $issues ) );
+	}
+
+	private static function download_image( string $url, int $product_id, string $alt, bool $featured = true ) {
 		if ( ! self::is_safe_https_image_url( $url ) ) {
 			return new WP_Error( 'unsafe_image_url' );
 		}
@@ -534,7 +564,7 @@ final class Chidemoon_Core_Importer {
 		}
 
 		$content_type = strtolower( trim( explode( ';', (string) wp_remote_retrieve_header( $response, 'content-type' ) )[0] ) );
-		if ( ! in_array( $content_type, array( 'image/jpeg', 'image/png', 'image/webp' ), true ) ) {
+		if ( ! in_array( $content_type, array( 'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/octet-stream', 'binary/octet-stream' ), true ) ) {
 			return new WP_Error( 'unsupported_image_type' );
 		}
 
@@ -548,6 +578,7 @@ final class Chidemoon_Core_Importer {
 			@unlink( $tmp_file );
 			return new WP_Error( 'invalid_image_content' );
 		}
+		$content_type = $image_info['mime'];
 
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -557,6 +588,8 @@ final class Chidemoon_Core_Importer {
 		$filename = is_string( $path ) ? sanitize_file_name( basename( $path ) ) : '';
 		if ( '' === $filename ) {
 			$filename = 'product-' . $product_id . '.' . self::extension_for_mime_type( $content_type );
+		} else {
+			$filename = pathinfo( $filename, PATHINFO_FILENAME ) . '.' . self::extension_for_mime_type( $content_type );
 		}
 
 		$attachment_id = media_handle_sideload(
@@ -576,7 +609,9 @@ final class Chidemoon_Core_Importer {
 		if ( '' !== $alt ) {
 			update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt ) );
 		}
-		set_post_thumbnail( $product_id, $attachment_id );
+		if ( $featured ) {
+			set_post_thumbnail( $product_id, $attachment_id );
+		}
 
 		return (int) $attachment_id;
 	}
@@ -779,14 +814,14 @@ final class Chidemoon_Core_Importer {
 		}
 		$transient_key = 'chidemoon_img_host_' . substr( hash( 'sha256', $host ), 0, 40 );
 		$cached        = get_transient( $transient_key );
-		if ( true === $cached || false === $cached ) {
-			$memory_cache[ $host ] = $cached;
-			return $cached;
+		if ( is_array( $cached ) && isset( $cached['safe'] ) ) {
+			$memory_cache[ $host ] = (bool) $cached['safe'];
+			return $memory_cache[ $host ];
 		}
 		$records = dns_get_record( $host, DNS_A | DNS_AAAA );
 		if ( ! is_array( $records ) || empty( $records ) ) {
 			$memory_cache[ $host ] = false;
-			set_transient( $transient_key, false, 10 * MINUTE_IN_SECONDS );
+			set_transient( $transient_key, array( 'safe' => false ), 10 * MINUTE_IN_SECONDS );
 			return false;
 		}
 
@@ -798,14 +833,14 @@ final class Chidemoon_Core_Importer {
 			}
 			if ( false === filter_var( $address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
 				$memory_cache[ $host ] = false;
-				set_transient( $transient_key, false, 10 * MINUTE_IN_SECONDS );
+				set_transient( $transient_key, array( 'safe' => false ), 10 * MINUTE_IN_SECONDS );
 				return false;
 			}
 			$has_public_address = true;
 		}
 
 		$memory_cache[ $host ] = $has_public_address;
-		set_transient( $transient_key, $has_public_address, HOUR_IN_SECONDS );
+		set_transient( $transient_key, array( 'safe' => $has_public_address ), HOUR_IN_SECONDS );
 		return $has_public_address;
 	}
 

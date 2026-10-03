@@ -71,19 +71,24 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 
 		$this->add_control( 'hotspots_help', array(
 			'type'            => \Elementor\Controls_Manager::RAW_HTML,
-			'raw'             => '<p style="font-size:12px;color:#555">' . esc_html__( 'هر نقطه جایگاه یک محصول را روی تصویر نشان می‌دهد. X و Y بر حسب درصد از گوشه بالا-چپ تصویر هستند. برای انتخاب محصول، شناسه (ID) محصول ووکامرس را وارد کنید — می‌توانید در پیشخوان → محصولات → جستجو کنید.', 'chidemoon-core' ) . '</p>',
+			'raw'             => esc_html__( 'محصول را با نام جست‌وجو کنید. جایگاه افقی و عمودی از گوشهٔ بالا و چپ تصویر محاسبه می‌شود. فقط نقاط محصولات بررسی‌شده در خروجی عمومی فعال می‌شوند.', 'chidemoon-core' ),
 			'content_classes' => 'elementor-descriptor',
 		) );
 
 		$repeater = new \Elementor\Repeater();
 
 		$repeater->add_control( 'product_id', array(
-			'label'       => __( 'شناسه محصول', 'chidemoon-core' ),
-			'type'        => \Elementor\Controls_Manager::NUMBER,
-			'min'         => 1,
-			'step'        => 1,
-			'placeholder' => __( 'مثال: 123', 'chidemoon-core' ),
+			'label'       => __( 'محصول', 'chidemoon-core' ),
+			'type'        => \Elementor\Controls_Manager::SELECT2,
+			'options'     => Chidemoon_Core_Public_Design::product_options(),
+			'label_block' => true,
 			'description' => __( 'محصول باید منتشر شده، از نوع External/Affiliate و بررسی‌شده (Reviewed) باشد.', 'chidemoon-core' ),
+		) );
+
+		$repeater->add_control( 'product_source_key', array(
+			'label'       => __( 'شناسهٔ منبع محصول', 'chidemoon-core' ),
+			'type'        => \Elementor\Controls_Manager::TEXT,
+			'description' => __( 'برای محصولات در حال ورود، شناسهٔ منبع مانند basalam:25688211 را وارد کنید. انتخاب محصول در بالا اولویت دارد.', 'chidemoon-core' ),
 		) );
 
 		$repeater->add_control( 'label', array(
@@ -112,7 +117,7 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 			'label'       => __( 'نقاط', 'chidemoon-core' ),
 			'type'        => \Elementor\Controls_Manager::REPEATER,
 			'fields'      => $repeater->get_controls(),
-			'title_field' => '{{{ label || "نقطه #" + (_index+1) }}} — محصول #{{ product_id }} ({{ x.size }}%, {{ y.size }}%)',
+			'title_field' => '{{{ label || "نقطهٔ محصول" }}}',
 			'prevent_empty' => false,
 		) );
 
@@ -123,10 +128,18 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 		) );
 
-		$this->add_control( 'hotspot_note', array(
-			'type' => \Elementor\Controls_Manager::RAW_HTML,
-			'raw'  => '<p style="font-size:12px;color:#555">' . esc_html__( 'رنگ و اندازه نقاط از متغیرهای قالب (--chidemoon-forest, --chidemoon-clay) می‌آید تا با دیزاین سیستم هماهنگ بماند. برای سفارشی‌سازی بیشتر از CSS اضافی استفاده کنید.', 'chidemoon-core' ) . '</p>',
-		) );
+		$this->add_control( 'point_color', array( 'label' => __( 'رنگ نقطه', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__hotspot' => 'color: {{VALUE}}; border-color: {{VALUE}};' ) ) );
+		$this->add_control( 'point_background', array( 'label' => __( 'پس‌زمینهٔ نقطه', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__hotspot' => 'background: {{VALUE}};' ) ) );
+		$this->add_responsive_control( 'point_size', array( 'label' => __( 'اندازهٔ نقطه', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => array( 'px' => array( 'min' => 44, 'max' => 72 ) ), 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__hotspot' => 'width: {{SIZE}}px; height: {{SIZE}}px;' ) ) );
+		$this->add_control( 'panel_background', array( 'label' => __( 'پس‌زمینهٔ اطلاعات محصول', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__tooltip' => 'background: {{VALUE}};' ) ) );
+		$this->add_control( 'panel_border', array( 'label' => __( 'رنگ کادر اطلاعات محصول', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__tooltip' => 'border-color: {{VALUE}};' ) ) );
+		$this->add_responsive_control( 'panel_width', array( 'label' => __( 'عرض پنل اطلاعات', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => array( 'px' => array( 'min' => 220, 'max' => 480 ) ), 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look' => '--ch-look-panel-width: {{SIZE}}{{UNIT}};' ) ) );
+		$this->add_responsive_control( 'panel_radius', array( 'label' => __( 'گردی پنل اطلاعات', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => array( 'px' => array( 'min' => 0, 'max' => 32 ) ), 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__tooltip' => 'border-radius: {{SIZE}}{{UNIT}};' ) ) );
+		$this->add_control( 'panel_text', array( 'label' => __( 'رنگ عنوان و قیمت', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__tooltip-body h3, {{WRAPPER}} .chidemoon-shop-the-look__price' => 'color: {{VALUE}};' ) ) );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array( 'name' => 'panel_typography', 'selector' => '{{WRAPPER}} .chidemoon-shop-the-look__tooltip-body' ) );
+		$this->add_responsive_control( 'image_radius', array( 'label' => __( 'گردی تصویر', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => array( 'px' => array( 'min' => 0, 'max' => 40 ) ), 'selectors' => array( '{{WRAPPER}} .chidemoon-shop-the-look__image' => 'border-radius: {{SIZE}}px;' ) ) );
+		$this->add_control( 'caption_color', array( 'label' => __( 'رنگ زیرنویس', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} figcaption' => 'color: {{VALUE}};' ) ) );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array( 'name' => 'caption_typography', 'selector' => '{{WRAPPER}} figcaption' ) );
 
 		$this->end_controls_section();
 	}
@@ -146,7 +159,8 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 		if ( ! empty( $settings['hotspots'] ) && is_array( $settings['hotspots'] ) ) {
 			foreach ( $settings['hotspots'] as $spot ) {
 				$pid = absint( $spot['product_id'] ?? 0 );
-				if ( $pid <= 0 ) {
+				$source_key = sanitize_text_field( (string) ( $spot['product_source_key'] ?? '' ) );
+				if ( $pid <= 0 && '' === $source_key ) {
 					continue;
 				}
 				$x = isset( $spot['x']['size'] ) ? (float) $spot['x']['size'] : ( isset( $spot['x'] ) ? (float) $spot['x'] : 50 );
@@ -155,6 +169,7 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 					'x'         => max( 2, min( 98, $x ) ),
 					'y'         => max( 2, min( 98, $y ) ),
 					'productId' => $pid,
+					'productSourceKey' => $source_key,
 					'label'     => sanitize_text_field( (string) ( $spot['label'] ?? '' ) ),
 				);
 			}
@@ -169,24 +184,7 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 
 		Chidemoon_Core_Shop_The_Look::enqueue_assets();
 
-		echo Chidemoon_Core_Shop_The_Look::render_look( $attrs, 'elementor-widget' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Chidemoon_Core_Shop_The_Look::render_look( $attrs, 'chidemoon-look-widget' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
-	protected function content_template(): void {
-		?>
-		<# if ( ! settings.image || ! settings.image.url ) { #>
-			<div class="elementor-alert elementor-alert-info"><?php esc_html_e( 'یک تصویر انتخاب کنید.', 'chidemoon-core' ); ?></div>
-		<# } else { #>
-			<div class="chidemoon-shop-the-look elementor-preview">
-				<div class="chidemoon-shop-the-look__canvas" style="position:relative;border:2px dashed #ccc;border-radius:8px;overflow:hidden;">
-					<img src="{{ settings.image.url }}" style="display:block;width:100%;height:auto;" alt="">
-					<# _.each(settings.hotspots, function(spot, idx){ #>
-						<span class="chidemoon-shop-the-look__hotspot" style="left:{{ spot.x.size || spot.x || 50 }}%;top:{{ spot.y.size || spot.y || 50 }}%;position:absolute;transform:translate(-50%,-50%);background:#fff;border:2px solid #173f35;border-radius:50%;width:2.2rem;height:2.2rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">{{ idx+1 }}</span>
-					<# }); #>
-				</div>
-				<# if ( settings.caption ) { #><figcaption style="font-size:12px;color:#666;margin-top:6px;">{{ settings.caption }}</figcaption><# } #>
-			</div>
-		<# } #>
-		<?php
-	}
 }

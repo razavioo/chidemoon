@@ -28,11 +28,16 @@
 			var spotRect = spot.getBoundingClientRect();
 			var width = tooltip.offsetWidth || 288;
 			var height = tooltip.offsetHeight || 240;
-			var left = spotRect.left - canvasRect.left + (spotRect.width / 2) - (width / 2);
-			var top = spotRect.top - canvasRect.top + spotRect.height + 12;
-			if (top + height > canvasRect.height - 12) top = spotRect.top - canvasRect.top - height - 12;
+			var centerX = spotRect.left - canvasRect.left + spotRect.width / 2;
+			var centerY = spotRect.top - canvasRect.top + spotRect.height / 2;
+			var left = centerX + 12;
+			if (left + width > canvasRect.width - 12) left = centerX - width - 12;
+			if (left < 12) left = (canvasRect.width - width) / 2;
+			var header = document.querySelector('.elementor-location-header');
+			var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+			var minTop = Math.max(12, headerBottom + 12 - canvasRect.top);
 			tooltip.style.left = Math.max(12, Math.min(left, canvasRect.width - width - 12)) + 'px';
-			tooltip.style.top = Math.max(12, top) + 'px';
+			tooltip.style.top = Math.max(minTop, Math.min(centerY - height / 2, canvasRect.height - height - 12)) + 'px';
 		}
 
 		function closeAll(restore) {
@@ -67,21 +72,13 @@
 				event.stopPropagation();
 				var tooltip = tooltipFor(spot);
 				if (!tooltip) return;
-				if (active === spot) closeAll(true); else open(spot, tooltip, true);
-			});
-			spot.addEventListener('mouseenter', function () {
-				if (!window.matchMedia('(hover: hover)').matches || active === spot) return;
-				var tooltip = tooltipFor(spot);
-				if (tooltip) open(spot, tooltip, false);
+				if (active === spot && focusManaged) closeAll(true); else open(spot, tooltip, true);
 			});
 		});
 
 		tooltips.forEach(function (tooltip) {
 			var close = tooltip.querySelector('.chidemoon-shop-the-look__close');
 			if (close) close.addEventListener('click', function () { closeAll(true); });
-			tooltip.addEventListener('mouseleave', function () {
-				if (window.matchMedia('(hover: hover)').matches && !focusManaged) closeAll(false);
-			});
 		});
 
 		root.addEventListener('keydown', function (event) {

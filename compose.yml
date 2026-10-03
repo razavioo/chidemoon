@@ -69,13 +69,15 @@ services:
         condition: service_healthy
     ports:
       - "${CHIDEMOON_HTTP_PORT:-18098}:80"
-    environment: *wordpress-environment
+    environment:
+      <<: *wordpress-environment
+      PHP_INI_SCAN_DIR: /opt/chidemoon-ioncube/glibc/conf.d:/usr/local/etc/php/conf.d
     volumes:
       - chidemoon_wordpress:/var/www/html
       - chidemoon_uploads:/var/www/html/wp-content/uploads
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
-      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
+      - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
     healthcheck:
       # Homepage (not wp-login.php, which can redirect/brand differently per
       # setup). Accept any 2xx/3xx as healthy; fail on 4xx/5xx or connection error.
@@ -96,15 +98,17 @@ services:
         condition: service_healthy
     working_dir: /var/www/html
     entrypoint: ["wp"]
-    environment: *wordpress-environment
+    environment:
+      <<: *wordpress-environment
+      PHP_INI_SCAN_DIR: /opt/chidemoon-ioncube/musl/conf.d:/usr/local/etc/php/conf.d
     volumes:
       - chidemoon_wordpress:/var/www/html
       - chidemoon_uploads:/var/www/html/wp-content/uploads
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
-      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
       - ./tools:/tools:ro
       - ./vendor:/packages:ro
+      - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
 
   scheduler:
     image: wordpress:cli-2.10.0-php8.2
@@ -115,14 +119,16 @@ services:
         condition: service_healthy
     working_dir: /var/www/html
     entrypoint: ["sh", "/runner/run-scheduler.sh"]
-    environment: *wordpress-environment
+    environment:
+      <<: *wordpress-environment
+      PHP_INI_SCAN_DIR: /opt/chidemoon-ioncube/musl/conf.d:/usr/local/etc/php/conf.d
     volumes:
       - chidemoon_wordpress:/var/www/html
       - chidemoon_uploads:/var/www/html/wp-content/uploads
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
-      - ./themes/chidemoon-blocksy-child:/var/www/html/wp-content/themes/chidemoon-blocksy-child:ro
       - ./ops/run-scheduler.sh:/runner/run-scheduler.sh:ro
+      - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
 
   backup:
     image: mariadb:11.4

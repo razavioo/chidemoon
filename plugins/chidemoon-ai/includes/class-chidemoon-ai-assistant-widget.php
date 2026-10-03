@@ -35,7 +35,7 @@ class Chidemoon_AI_Assistant_Widget {
 		?>
 		<section id="<?php echo esc_attr( $instance_id ); ?>" class="chidemoon-ai-assistant" data-chidemoon-ai-assistant dir="rtl">
 			<?php if ( '' !== trim( (string) $attributes['title'] ) ) : ?><h2><?php echo esc_html( (string) $attributes['title'] ); ?></h2><?php endif; ?>
-			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'این بخش فقط مطالب منتشرشدهٔ چیدمون را پیدا می‌کند و قیمت لحظه‌ای یا امکان خرید ارائه نمی‌دهد.', 'chidemoon-ai' ); ?></p>
+			<p class="chidemoon-ai-assistant__disclosure"><?php esc_html_e( 'این بخش فقط مطالب منتشر شدهٔ چیدمون را پیدا می‌کند و قیمت لحظه‌ای یا امکان خرید ارائه نمی‌دهد.', 'chidemoon-ai' ); ?></p>
 			<form class="chidemoon-ai-assistant__form">
 				<label for="<?php echo esc_attr( $instance_id ); ?>-question"><?php esc_html_e( 'موضوع یا پرسش خود را بنویسید', 'chidemoon-ai' ); ?></label>
 				<textarea id="<?php echo esc_attr( $instance_id ); ?>-question" name="question" maxlength="500" placeholder="<?php esc_attr_e( 'مثلاً: مبل مناسب نشیمن کوچک', 'chidemoon-ai' ); ?>" required></textarea>

@@ -288,7 +288,7 @@ final class Chidemoon_Core_Affiliate {
 			return $url;
 		}
 
-		return self::tracking_url( $product->get_id() );
+		return self::is_publicly_eligible( $product ) ? self::tracking_url( $product->get_id() ) : get_permalink( $product->get_id() );
 	}
 
 	/**
@@ -297,7 +297,7 @@ final class Chidemoon_Core_Affiliate {
 	 * @return array<string, mixed>
 	 */
 	public static function open_product_cta_in_new_tab( array $args, WC_Product $product ): array {
-		if ( ! $product->is_type( 'external' ) || '' === self::get_affiliate_url( $product ) ) {
+		if ( ! self::is_publicly_eligible( $product ) ) {
 			return $args;
 		}
 

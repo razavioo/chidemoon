@@ -69,7 +69,7 @@
 			}
 
 			setPending(true);
-			setMessage(result, 'در حال جست‌وجو در مطالب منتشرشدهٔ چیدمون…');
+			setMessage(result, 'در حال جست‌وجو در مطالب منتشر شدهٔ چیدمون…');
 			fetch(window.ChidemoonAiAssistant.endpoint, {
 				method: 'POST',
 				credentials: 'same-origin',

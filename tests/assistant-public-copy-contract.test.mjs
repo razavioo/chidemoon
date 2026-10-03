@@ -15,8 +15,8 @@ describe('published-content search UI', () => {
     assert.match(widget, /'title' => ''/);
     assert.match(widget, /trim\( \(string\) \$attributes\['title'\] \)/);
     assert.match(widget, /موضوع یا پرسش خود را بنویسید/);
-    assert.match(widget, /این بخش فقط مطالب منتشرشده/);
-    assert.match(assistant, /برای این پرسش، مطلب منتشرشده‌ای پیدا نشد/);
+    assert.match(widget, /این بخش فقط مطالب منتشر شده/);
+    assert.match(assistant, /برای این پرسش، مطلب منتشر شده‌ای پیدا نشد/);
     assert.match(assistant, /تعداد جست‌وجوها در این چند دقیقه زیاد بوده است/);
     assert.doesNotMatch(widget, /Search published sources|Keyword search|Your question/);
   });
@@ -26,7 +26,7 @@ describe('published-content search UI', () => {
 
     assert.match(client, /aria-busy/);
     assert.match(client, /button\.disabled = pending/);
-    assert.match(client, /در حال جست‌وجو در مطالب منتشرشدهٔ چیدمون/);
+    assert.match(client, /در حال جست‌وجو در مطالب منتشر شدهٔ چیدمون/);
     assert.match(client, /text\(error\.message\)/);
     assert.match(client, /finally\(function \(\) \{\s*setPending\(false\)/);
   });

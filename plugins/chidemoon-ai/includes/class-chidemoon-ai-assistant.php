@@ -74,7 +74,7 @@ class Chidemoon_AI_Assistant {
 
 		if ( empty( $sources ) ) {
 			$response = array(
-				'answer'  => __( 'برای این پرسش، مطلب منتشرشده‌ای پیدا نشد. عبارت دیگری را امتحان کنید.', 'chidemoon-ai' ),
+				'answer'  => __( 'برای این پرسش، مطلب منتشر شده‌ای پیدا نشد. عبارت دیگری را امتحان کنید.', 'chidemoon-ai' ),
 				'sources' => array(),
 				'mode'    => 'published-retrieval-only',
 			);
@@ -83,7 +83,7 @@ class Chidemoon_AI_Assistant {
 		}
 
 		$response = array(
-			'answer'  => __( 'این مطالب منتشرشده به پرسش شما نزدیک‌ترند. برای جزئیات، منبع را باز کنید.', 'chidemoon-ai' ),
+			'answer'  => __( 'این مطالب منتشر شده به پرسش شما نزدیک‌ترند. برای جزئیات، منبع را باز کنید.', 'chidemoon-ai' ),
 			'sources' => $sources,
 			'mode'    => 'published-retrieval-only',
 		);
