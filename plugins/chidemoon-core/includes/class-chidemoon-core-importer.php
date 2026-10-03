@@ -482,17 +482,19 @@ final class Chidemoon_Core_Importer {
 			$product->update_meta_data( '_chidemoon_currency', $record['currency'] );
 		}
 
+		$category_ids = self::ensure_categories( $record['categories'] );
+		if ( is_wp_error( $category_ids ) ) {
+			return $category_ids;
+		}
+		// Keep WooCommerce's object/cache and taxonomy relationships in sync.
+		// A later state/gallery save must not restore stale default categories.
+		$product->set_category_ids( $category_ids );
 		$product_id = $product->save();
 		if ( $product_id <= 0 ) {
 			return new WP_Error( 'product_save_failed' );
 		}
 
 		wp_set_object_terms( $product_id, 'external', 'product_type', false );
-		$category_ids = self::ensure_categories( $record['categories'] );
-		if ( is_wp_error( $category_ids ) ) {
-			return $category_ids;
-		}
-		wp_set_object_terms( $product_id, $category_ids, 'product_cat', false );
 
 		return $product_id;
 	}

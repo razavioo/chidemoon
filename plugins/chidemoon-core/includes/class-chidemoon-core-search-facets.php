@@ -11,6 +11,28 @@ final class Chidemoon_Core_Search_Facets {
 	public static function register(): void {
 		add_action( 'pre_get_posts', array( __CLASS__, 'filter_query' ), 20 );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'register_elementor_widget' ), 10 );
+		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'global_search_form' ), 30, 2 );
+		add_action( 'template_redirect', array( __CLASS__, 'canonical_search' ), 0 );
+	}
+
+	public static function global_search_form( string $html, $widget ): string {
+		if ( 'search' !== $widget->get_name() ) { return $html; }
+		// The public search uses Core's post/product query, not a widget-bound
+		// query whose template ID can become stale after native migrations.
+		$tags = new WP_HTML_Tag_Processor( $html );
+		while ( $tags->next_tag( 'INPUT' ) ) {
+			if ( 'e_search_props' === $tags->get_attribute( 'name' ) ) {
+				$tags->set_attribute( 'disabled', true );
+			}
+		}
+		return $tags->get_updated_html();
+	}
+
+	public static function canonical_search(): void {
+		if ( is_admin() || wp_doing_ajax() || ! isset( $_GET['e_search_props'], $_GET['s'] ) || ! is_string( $_GET['s'] ) || '' === trim( $_GET['s'] ) ) { return; }
+		// Also recover old bookmarks that Elementor has already marked 404.
+		wp_safe_redirect( remove_query_arg( 'e_search_props' ), 302, 'Chidemoon Search' );
+		exit;
 	}
 
 	public static function register_elementor_widget( $manager ): void {

@@ -40,6 +40,7 @@ function add_query_arg( string $key, string $value, string $url ): string { retu
 function esc_url( string $url ): string { return htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' ); }
 function esc_html( string $text ): string { return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' ); }
 function add_action( string $hook, callable $callback, int $priority ): void { $GLOBALS['registered_hooks'][] = array( $hook, $callback, $priority ); }
+function add_filter( string $hook, callable $callback, int $priority, int $accepted_args = 1 ): void { add_action( $hook, $callback, $priority ); }
 
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-search-facets.php';
 

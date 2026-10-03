@@ -79,9 +79,9 @@ services:
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
     healthcheck:
-      # Homepage (not wp-login.php, which can redirect/brand differently per
-      # setup). Accept any 2xx/3xx as healthy; fail on 4xx/5xx or connection error.
-      test: ["CMD-SHELL", "php -r '$$c=@file_get_contents(\"http://localhost/\"); exit($$c === false ? 1 : 0);'"]
+      # Check HTTP status without following WordPress's canonical redirect to
+      # the public domain, which can require an unavailable external route.
+      test: ["CMD", "curl", "--fail", "--silent", "--output", "/dev/null", "http://localhost/"]
       interval: 15s
       timeout: 20s
       retries: 6

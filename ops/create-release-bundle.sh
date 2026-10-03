@@ -75,6 +75,8 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	tools/editorial-elementor-upgrade.php \
 	tools/rebuild-editorial.php \
 	tools/ui-catalogue-refresh.php \
+	tools/repair-product-categories.php \
+	tools/repair-search-conditions.php \
 	tools/verify-elementor.php \
 	tools/catalogue \
 	README.md \
