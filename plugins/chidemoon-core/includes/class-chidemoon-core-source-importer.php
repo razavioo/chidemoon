@@ -132,6 +132,10 @@ final class Chidemoon_Core_Source_Importer {
   $issues = array();
   if ( ! $id ) { $product->set_status( 'draft' ); $product->set_catalog_visibility( 'hidden' ); $product->update_meta_data( Chidemoon_Core_Affiliate::META_REVIEW_STATE, 'draft' ); }
   $content_changed = $record['contentRevision'] !== (int) $product->get_meta( self::META_CONTENT_REVISION, true );
+  if ( $id && ( $content_changed || in_array( 'description', $record['removals'], true ) ) ) {
+   $prior_description = (string) $product->get_meta( self::META_DESCRIPTION, true );
+   Chidemoon_Core_Reconciliation::prepare_source_description( $product, $prior_description ?: wp_kses_post( $content['description'] ?? '' ) );
+  }
   if ( $content_changed ) {
    $product->update_meta_data( '_chidemoon_source_content', wp_json_encode( $content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
    $product->set_name( $content['title'] );

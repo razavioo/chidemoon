@@ -179,6 +179,18 @@ final class Chidemoon_Core_Reconciliation {
  private static function backup( WP_Post $post ): void {
   if ( ! metadata_exists( 'post', $post->ID, self::BACKUP ) && ! add_post_meta( $post->ID, self::BACKUP, wp_slash( array( 'content' => $post->post_content, 'elementor' => get_post_meta( $post->ID, '_elementor_data', true ), 'createdAt' => gmdate( 'c' ) ) ), true ) ) { throw new RuntimeException( 'Migration backup failed' ); }
  }
+ public static function prepare_source_description( WC_Product $product, string $description ): void {
+  if ( ! $product->get_id() || '' === trim( $description ) ) { return; }
+  $id = $product->get_id();
+  $copy = trim( $product->get_description() ) === trim( $description );
+  $elements = json_decode( (string) get_post_meta( $id, '_elementor_data', true ), true );
+  $issues = array();
+  $updated = is_array( $elements ) ? self::source_elements( $elements, $description, $issues ) : $elements;
+  if ( ! $copy && $updated === $elements ) { return; }
+  self::backup( get_post( $id ) );
+  if ( is_array( $updated ) && $updated !== $elements ) { self::save_elements( $id, $updated ); }
+  if ( $copy ) { $product->set_description( '[chidemoon_source_description]' ); }
+ }
  private static function save_elements( int $id, array $elements ): void {
   if ( ! class_exists( '\\Elementor\\Plugin' ) ) { throw new RuntimeException( 'Elementor must be active to migrate its documents' ); }
   $document = \Elementor\Plugin::$instance->documents->get( $id );
