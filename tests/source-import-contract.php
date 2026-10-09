@@ -24,6 +24,7 @@ class WC_Product {
  public function delete_meta_data( $key ) { unset( $this->meta[ $key ] ); }
  public function is_type( $type ) { return 'external' === $type; }
  public function get_id() { return 123; }
+ public function get_description() { return $this->values['description']; }
  public function save() { return 123; }
  public function __call( $method, $args ) { $this->values[ substr( $method, 4 ) ] = $args[0] ?? null; }
 }
@@ -44,6 +45,7 @@ require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-affi
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-importer.php';
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-source-contract.php';
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-source-importer.php';
+require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-reconciliation.php';
 function check( $condition, $message ) { if ( ! $condition ) { throw new RuntimeException( $message ); } }
 $fixture = json_decode( file_get_contents( __DIR__ . '/fixtures/source-v2.json' ), true, 512, JSON_THROW_ON_ERROR );
 $GLOBALS['fixture'] = $fixture;
