@@ -42,20 +42,22 @@ final class Chidemoon_Core_Compare {
 	}
 
 	public static function register_assets(): void {
-		$script_path = CHIDEMOON_CORE_DIR . 'assets/js/compare.js';
-		$style_path  = CHIDEMOON_CORE_DIR . 'assets/css/compare.css';
-		wp_register_script( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/js/compare.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
-		wp_register_style( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/css/compare.css', array( 'chidemoon-public-design' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
-		if ( is_front_page() || is_shop() || is_product_taxonomy() || is_product() || is_page( array( 'product-comparison', 'shop-the-look' ) ) || is_page_template( array( 'page-comparisons.php', 'page-shop-the-look.php' ) ) || has_block( 'chidemoon/shop-the-look' ) ) {
+		self::register_asset_handles();
+		if ( is_front_page() || is_shop() || is_product_taxonomy() || is_product() || is_singular( Chidemoon_Core_Looks::POST_TYPE ) || is_page( array( 'product-comparison', 'shop-the-look' ) ) || is_page_template( array( 'page-comparisons.php', 'page-shop-the-look.php' ) ) || has_block( 'chidemoon/shop-the-look' ) ) {
 			self::enqueue_assets();
 		}
 	}
 
+	private static function register_asset_handles(): void {
+		$script_path = CHIDEMOON_CORE_DIR . 'assets/js/compare.js';
+		$style_path  = CHIDEMOON_CORE_DIR . 'assets/css/compare.css';
+		wp_register_script( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/js/compare.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
+		wp_register_style( 'chidemoon-core-compare', CHIDEMOON_CORE_URL . 'assets/css/compare.css', array( 'chidemoon-public-design' ), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
+	}
+
 	public static function enqueue_assets(): void {
 		static $configured = false;
-		if ( ! wp_script_is( 'chidemoon-core-compare', 'registered' ) ) {
-			return;
-		}
+		self::register_asset_handles();
 		wp_enqueue_script( 'chidemoon-core-compare' );
 		wp_enqueue_style( 'chidemoon-core-compare' );
 		if ( $configured ) {
@@ -324,6 +326,22 @@ final class Chidemoon_Core_Compare {
 
 	/** @return array<string, string> */
 	public static function facts( WC_Product $product ): array {
+		if ( class_exists( 'Chidemoon_Core_Enrichment' ) && get_post_meta( $product->get_id(), Chidemoon_Core_Enrichment::META, true ) ) {
+			$facts = array(); $fields = Chidemoon_Core_Enrichment::read( $product->get_id() );
+			foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) {
+				$labels = array();
+				foreach ( $fields[ $field ]['value'] ?? array() as $id ) { $term = get_term( $id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $labels[] = $term->name; } }
+				$facts[ Chidemoon_Core_Enrichment::field_label( $field ) ] = $labels ? implode( ', ', $labels ) : __( 'not_applicable' === ( $fields[ $field ]['state'] ?? '' ) ? 'Not applicable' : 'Unknown', 'chidemoon-core' );
+			}
+			foreach ( array( 'length', 'width', 'height', 'depth' ) as $axis ) { $value = $fields['dimensions']['value'][ $axis ] ?? null; $facts[ Chidemoon_Core_Enrichment::field_label( $axis ) . ' (cm)' ] = null === $value ? __( 'Unknown', 'chidemoon-core' ) : (string) $value; }
+			$observations = Chidemoon_Core_Commercial::observations( $product );
+			$facts[ __( 'Availability', 'chidemoon-core' ) ] = Chidemoon_Core_Commercial::availability_label( $product );
+			$facts[ __( 'Availability observed', 'chidemoon-core' ) ] = $observations['availability']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
+			$facts[ __( 'Price observed', 'chidemoon-core' ) ] = $observations['price']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
+			$rating = $observations['rating'] ?? null;
+			$facts[ __( 'Merchant rating', 'chidemoon-core' ) ] = $rating ? $rating['value'] . '/' . $rating['scale'] . ' (' . $rating['count'] . ') ' . $rating['provider'] . ' — ' . $rating['observedAt'] : __( 'Unavailable', 'chidemoon-core' );
+			return $facts;
+		}
 		$raw = $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS, true );
 		$data = is_string( $raw ) ? json_decode( $raw, true ) : array();
 		if ( ! is_array( $data ) ) {
@@ -579,7 +597,7 @@ final class Chidemoon_Core_Compare {
 			return '<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">' . ( ( $settings['show_empty'] ?? true ) ? '<p class="chidemoon-compare-empty">' . esc_html( $settings['empty_text'] ?? 'دو محصول انتخاب کن تا ویژگی‌ها را کنار هم ببینی.' ) . '</p>' : '' ) . '</div>';
 		}
 		self::enqueue_assets();
-		$labels = self::fact_labels( $products );
+		$labels = array_values( array_filter( self::fact_labels( $products ), static fn( $label ) => $label !== Chidemoon_Core_Enrichment::field_label( 'category' ) ) );
 		ob_start();
 		?>
 		<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">
@@ -592,7 +610,7 @@ final class Chidemoon_Core_Compare {
 						<tr><th scope="row"><?php esc_html_e( 'فروشنده', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME, true ) ?: '—' ); ?></td><?php endforeach; ?></tr>
 						<tr><th scope="row"><?php esc_html_e( 'دسته‌بندی', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php $categories = wc_get_product_category_list( $product->get_id(), '، ' ); echo esc_html( $categories ? wp_strip_all_tags( $categories ) : '—' ); ?></td><?php endforeach; ?></tr>
 						<?php foreach ( $labels as $label ) : ?><tr><th scope="row"><?php echo esc_html( $label ); ?></th><?php foreach ( $products as $product ) : $facts = self::facts( $product ); ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( $facts[ $label ] ?? '—' ); ?></td><?php endforeach; ?></tr><?php endforeach; ?>
-						<tr><th scope="row"><?php esc_html_e( 'خرید', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a></td><?php endforeach; ?></tr>
+						<tr><th scope="row"><?php esc_html_e( 'خرید', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php if ( Chidemoon_Core_Affiliate::is_offer_available( $product ) ) : ?><a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a><?php else : ?><span aria-disabled="true"><?php esc_html_e( 'Offer unavailable', 'chidemoon-core' ); ?></span><?php endif; ?></td><?php endforeach; ?></tr>
 					</tbody>
 				</table>
 			</div>

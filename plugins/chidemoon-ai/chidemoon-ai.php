@@ -3,7 +3,7 @@
  * Plugin Name: Chidemoon AI
  * Plugin URI: https://chidemoon.com/
  * Description: Independent, review-gated editorial AI for Chidemoon.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Chidemoon
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CHIDEMOON_AI_VERSION', '0.2.0' );
+define( 'CHIDEMOON_AI_VERSION', '0.3.0' );
 define( 'CHIDEMOON_AI_FILE', __FILE__ );
 define( 'CHIDEMOON_AI_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CHIDEMOON_AI_URL', plugin_dir_url( __FILE__ ) );

@@ -1,0 +1,19 @@
+{
+  "Every 15 minutes": "هر ۱۵ دقیقه",
+  "Source synchronization": "همگام‌سازی اطلاعات مبدأ",
+  "Forbidden": "دسترسی مجاز نیست",
+  "Import approved source offers every 15 minutes. Chidemoon retains editorial facts, Looks and publication approval.": "اطلاعات تأیید شدهٔ مبدأ هر ۱۵ دقیقه دریافت می‌شوند. اطلاعات تحریریه، چیدمان‌ها و تأیید انتشار در اختیار چیدمون می‌مانند.",
+  "Kalahamoon HTTPS origin": "نشانی امن کالاهامون",
+  "Client ID": "شناسهٔ اتصال",
+  "Organization ID": "شناسهٔ سازمان",
+  "Organization slug": "نام کوتاه سازمان",
+  "Origin proof challenge": "کد تأیید مالکیت وب‌سایت",
+  "Enable automatic synchronization": "فعال‌سازی همگام‌سازی خودکار",
+  "Configure CHIDEMOON_CATALOG_CLIENT_SECRET in the host environment. Tokens are encrypted with WordPress salts.": "کلید محرمانهٔ اتصال را در محیط میزبان تنظیم کنید. توکن‌ها با کلید‌های وردپرس رمزگذاری می‌شوند.",
+  "OAuth callback:": "نشانی بازگشت اتصال:",
+  "Authorize source access": "تأیید دسترسی به مبدأ",
+  "Refresh / retry in background": "به‌روزرسانی / تلاش دوباره در پس‌زمینه",
+  "Import status": "وضعیت دریافت اطلاعات",
+  "Pending receipt batches:": "گزارش‌های دریافت در انتظار ارسال:",
+  "Deliver the pending receipt before changing the connector.": "پیش از تغییر اتصال، گزارش دریافت در انتظار را ارسال کنید."
+}

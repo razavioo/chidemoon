@@ -31,7 +31,8 @@ final class Chidemoon_Core_Blocks {
 	public static function register_shop_the_look_block(): void {
 		$directory = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look';
 		if ( function_exists( 'register_block_type' ) && file_exists( $directory . '/block.json' ) ) {
-			register_block_type( $directory );
+			$block = register_block_type( $directory );
+			foreach ( $block->editor_script_handles as $handle ) { wp_set_script_translations( $handle, 'chidemoon-core', CHIDEMOON_CORE_DIR . 'languages' ); }
 		}
 	}
 

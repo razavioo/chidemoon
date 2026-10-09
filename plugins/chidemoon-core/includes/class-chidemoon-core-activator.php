@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Chidemoon_Core_Activator {
-	public const DB_VERSION = '1';
+	public const DB_VERSION = '3';
 	private const REWRITE_VERSION_OPTION = 'chidemoon_core_rewrite_version';
 	private const REWRITE_PENDING_OPTION = 'chidemoon_core_rewrite_flush_pending';
 
@@ -136,6 +136,8 @@ final class Chidemoon_Core_Activator {
 		) {$charset_collate};";
 		dbDelta( $sql );
 
+		Chidemoon_Core_Source_Importer::install();
+		Chidemoon_Core_Looks::install();
 		update_option( 'chidemoon_core_db_version', self::DB_VERSION, false );
 	}
 

@@ -42,6 +42,9 @@ namespace {
 			return '<button>' . esc_html( $labels['label'] ?? 'مقایسه' ) . '</button>';
 		}
 	}
+	class Chidemoon_Core_Enrichment {
+		public static function read( int $id ): array { return array(); }
+	}
 
 	$product = new WC_Product( array(
 		Chidemoon_Core_Affiliate::META_MERCHANT_NAME => 'فروشگاه نمونه',

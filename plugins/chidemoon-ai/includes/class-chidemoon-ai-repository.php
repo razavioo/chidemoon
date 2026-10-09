@@ -148,7 +148,7 @@ class Chidemoon_AI_Repository {
 		);
 	}
 
-	public static function approve( int $id, int $reviewer_id ): bool {
+	public static function approve( int $id, int $reviewer_id, ?array $result = null ): bool {
 		return self::transition(
 			$id,
 			Chidemoon_AI_State_Machine::REVIEW_REQUIRED,
@@ -156,6 +156,7 @@ class Chidemoon_AI_Repository {
 			array(
 				'reviewed_by' => $reviewer_id,
 				'reviewed_at' => current_time( 'mysql', true ),
+				...( null !== $result ? array( 'result_payload' => wp_json_encode( $result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) ) : array() ),
 			)
 		);
 	}

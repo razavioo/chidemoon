@@ -135,7 +135,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 	}
 
 	private function facts_markup( WC_Product $product, string $empty_text ): string {
-		$facts = json_decode( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS ), true );
+		$facts = Chidemoon_Core_Enrichment::read( $product->get_id() ) ? Chidemoon_Core_Compare::facts( $product ) : json_decode( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS ), true );
 		$rows = '';
 		foreach ( is_array( $facts ) ? $facts : array() as $key => $value ) {
 			$label = is_array( $value ) ? ( $value['label'] ?? '' ) : $key;

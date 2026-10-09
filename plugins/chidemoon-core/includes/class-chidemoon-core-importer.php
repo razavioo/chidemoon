@@ -110,13 +110,14 @@ final class Chidemoon_Core_Importer {
 			WP_CLI::error( 'The export root must be a JSON object.' );
 		}
 
-		if ( self::EXPORT_SCHEMA !== (int) ( $export['schemaVersion'] ?? 0 ) ) {
+		$is_source = 'v2' === ( $export['version'] ?? '' );
+		if ( ! $is_source && self::EXPORT_SCHEMA !== (int) ( $export['schemaVersion'] ?? 0 ) ) {
 			WP_CLI::error( 'The export schema is not supported.' );
 		}
 		if ( ! isset( $export['organization'] ) || ! is_array( $export['organization'] ) || $organization_slug !== (string) ( $export['organization']['slug'] ?? '' ) ) {
 			WP_CLI::error( 'The export is not scoped to the selected Chidemoon source organization.' );
 		}
-		if ( ! isset( $export['items'] ) || ! is_array( $export['items'] ) || ! isset( $export['skipped'] ) || ! is_array( $export['skipped'] ) ) {
+		if ( ! isset( $export['items'] ) || ! is_array( $export['items'] ) || ( ! $is_source && ( ! isset( $export['skipped'] ) || ! is_array( $export['skipped'] ) ) ) ) {
 			WP_CLI::error( 'The export must contain items and skipped arrays.' );
 		}
 
@@ -140,6 +141,7 @@ final class Chidemoon_Core_Importer {
 	 * @return array<string, mixed>
 	 */
 	private static function import_export( array $export, bool $dry_run, string $organization_slug ): array {
+		if ( 'v2' === ( $export['version'] ?? '' ) ) { return Chidemoon_Core_Source_Importer::import_snapshot( $export, $dry_run, $organization_slug ); }
 		$report = array(
 			'schemaVersion'  => self::EXPORT_SCHEMA,
 			'organizationSlug'=> $organization_slug,
@@ -450,6 +452,9 @@ final class Chidemoon_Core_Importer {
 		if ( ! $product instanceof WC_Product ) {
 			return new WP_Error( 'product_load_failed' );
 		}
+		if ( class_exists( 'Chidemoon_Core_Source_Importer' ) && $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) {
+			return new WP_Error( 'source_profile_required', __( 'Use the v2 source profile to update this product. Editorial content is protected.', 'chidemoon-core' ) );
+		}
 
 		$product->set_name( '' !== $record['title'] ? $record['title'] : sprintf( 'Quarantined source %s', $record['sourceKey'] ) );
 		$product->set_status( 'draft' );
@@ -503,7 +508,7 @@ final class Chidemoon_Core_Importer {
 	 * @param array<string, string> $image
 	 * @return int|WP_Error
 	 */
-	private static function ensure_product_image( int $product_id, array $image ) {
+	public static function ensure_product_image( int $product_id, array $image ) {
 		$url = $image['url'];
 		if ( '' === $url ) {
 			return has_post_thumbnail( $product_id ) ? 0 : new WP_Error( 'missing_image' );
@@ -517,7 +522,7 @@ final class Chidemoon_Core_Importer {
 		return self::download_image( $url, $product_id, $image['alt'] ?: get_the_title( $product_id ) );
 	}
 
-	private static function ensure_gallery( int $product_id, array $urls, string $alt ): array {
+	public static function ensure_gallery( int $product_id, array $urls, string $alt ): array {
 		$ids = array();
 		$issues = array();
 		foreach ( $urls as $url ) {
@@ -658,7 +663,7 @@ final class Chidemoon_Core_Importer {
 	/**
 	 * @return int[]
 	 */
-	private static function find_product_ids( string $source_key ): array {
+	public static function find_product_ids( string $source_key ): array {
 		$ids = get_posts(
 			array(
 				'post_type'              => 'product',
@@ -862,12 +867,12 @@ final class Chidemoon_Core_Importer {
 	 *
 	 * @param mixed $value
 	 */
-	private static function canonical_json( $value ): string {
+	public static function canonical_json( $value ): string {
 		if ( is_float( $value ) && ! is_finite( $value ) ) {
 			return 'null';
 		}
 		if ( null === $value || is_bool( $value ) || is_int( $value ) || is_float( $value ) || is_string( $value ) ) {
-			return (string) wp_json_encode( $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			return (string) wp_json_encode( $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS );
 		}
 		if ( is_array( $value ) ) {
 			return '[' . implode( ',', array_map( array( __CLASS__, 'canonical_json' ), $value ) ) . ']';
@@ -877,7 +882,7 @@ final class Chidemoon_Core_Importer {
 			ksort( $properties, SORT_STRING );
 			$serialized = array();
 			foreach ( $properties as $key => $property ) {
-				$serialized[] = wp_json_encode( (string) $key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . ':' . self::canonical_json( $property );
+				$serialized[] = wp_json_encode( (string) $key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS ) . ':' . self::canonical_json( $property );
 			}
 			return '{' . implode( ',', $serialized ) . '}';
 		}

@@ -10,6 +10,7 @@
   "keywords": ["shop", "look", "hotspot", "image", "اتاق", "خرید"],
   "supports": { "html": false, "anchor": true, "align": ["wide", "full"], "spacing": { "margin": true }, "shadow": true },
   "attributes": {
+    "lookId": { "type": "integer", "default": 0 },
     "imageId": { "type": "integer", "default": 0 },
     "imageAlt": { "type": "string", "default": "" },
     "caption": { "type": "string", "default": "" },

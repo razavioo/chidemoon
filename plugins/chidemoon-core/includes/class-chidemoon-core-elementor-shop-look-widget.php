@@ -45,18 +45,21 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 		) );
 
 		$this->add_control( 'image', array(
+			'condition' => array( 'look_id' => '' ),
 			'label'   => __( 'تصویر', 'chidemoon-core' ),
 			'type'    => \Elementor\Controls_Manager::MEDIA,
 			'default' => array( 'url' => \Elementor\Utils::get_placeholder_image_src() ),
 		) );
 
 		$this->add_control( 'image_alt', array(
+			'condition' => array( 'look_id' => '' ),
 			'label'       => __( 'متن جایگزین', 'chidemoon-core' ),
 			'type'        => \Elementor\Controls_Manager::TEXT,
 			'placeholder' => __( 'توضیح کوتاه تصویر برای دسترس‌پذیری', 'chidemoon-core' ),
 		) );
 
 		$this->add_control( 'caption', array(
+			'condition' => array( 'look_id' => '' ),
 			'label'       => __( 'توضیح تصویر', 'chidemoon-core' ),
 			'type'        => \Elementor\Controls_Manager::TEXT,
 			'placeholder' => __( 'مثال: نشیمن مینیمال با چوب روشن', 'chidemoon-core' ),
@@ -64,7 +67,14 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
+		$this->start_controls_section( 'section_look_record', array( 'label' => __( 'Independent Look record', 'chidemoon-core' ) ) );
+		$options = array( '' => __( 'Select a Look', 'chidemoon-core' ) );
+		foreach ( get_posts( array( 'post_type' => Chidemoon_Core_Looks::POST_TYPE, 'post_status' => array( 'publish', 'draft', 'pending' ), 'posts_per_page' => 200, 'orderby' => 'title', 'order' => 'ASC' ) ) as $look ) { $options[ $look->ID ] = $look->post_title; }
+		$this->add_control( 'look_id', array( 'label' => __( 'Look', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SELECT2, 'options' => $options, 'label_block' => true, 'description' => __( 'Edit products, roles, cover and approved hotspots in the Look editor.', 'chidemoon-core' ) ) );
+		$this->end_controls_section();
+
 		$this->start_controls_section( 'section_hotspots', array(
+			'condition' => array( 'look_id' => '' ),
 			'label' => __( 'نقاط محصولات (Hotspots)', 'chidemoon-core' ),
 			'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 		) );
@@ -146,6 +156,7 @@ class Chidemoon_Core_Elementor_Shop_Look_Widget extends \Elementor\Widget_Base {
 
 	protected function render(): void {
 		$settings = $this->get_settings_for_display();
+		if ( ! empty( $settings['look_id'] ) ) { echo Chidemoon_Core_Looks::render( (int) $settings['look_id'] ); return; }
 		$image_id = absint( $settings['image']['id'] ?? 0 );
 		if ( ! $image_id && ! empty( $settings['image']['url'] ) ) {
 			// If user picked placeholder URL without media id, try to find by url? Fallback to 0.
