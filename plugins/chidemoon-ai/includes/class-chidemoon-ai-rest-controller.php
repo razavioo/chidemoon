@@ -338,6 +338,7 @@ class Chidemoon_AI_REST_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function create_enrich_job( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		if ( ! class_exists( 'Chidemoon_Core_Enrichment' ) ) { return self::error( 'chidemoon_ai_enrich_model', __( 'The structured editorial model is unavailable.', 'chidemoon-ai' ), 409 ); }
 		$data       = self::data( $request );
 		$product_id = self::input_id( $data['product_id'] ?? ( $data['target_post_id'] ?? null ) );
 		if ( ! $product_id || 'product' !== get_post_type( $product_id ) || ! current_user_can( 'edit_post', $product_id ) ) {
@@ -353,6 +354,7 @@ class Chidemoon_AI_REST_Controller {
 			array( $product_id ),
 			array(
 				'kind'            => 'enrich_product',
+				'enrichment_revision' => Chidemoon_Core_Enrichment::token( $product_id ),
 				'product_id'      => $product_id,
 				'use_source_url'  => $use_source,
 				'use_web'         => $use_web,
@@ -444,7 +446,17 @@ class Chidemoon_AI_REST_Controller {
 		if ( is_wp_error( $job ) ) {
 			return $job;
 		}
-		if ( ! Chidemoon_AI_Repository::approve( (int) $job['id'], get_current_user_id() ) ) {
+		$result = null;
+		if ( 'enrich' === $job['job_type'] ) {
+			$validated = Chidemoon_AI_Enrich::validate_result( $job['result_payload'], Chidemoon_AI_Evidence::source_ids( Chidemoon_AI_Evidence::for_job( (int) $job['id'] ) ) );
+			if ( is_wp_error( $validated ) ) { return self::error( 'chidemoon_ai_enrich_invalid', $validated->get_error_message(), 422 ); }
+			$selected = $request->get_param( 'approvedFields' );
+			$proposed = array_column( (array) ( $job['result_payload']['fields'] ?? array() ), 'field' );
+			if ( ! is_array( $selected ) || ! $selected || array_diff( $selected, $proposed ) || ! current_user_can( 'chidemoon_manage_affiliate' ) || ! current_user_can( 'edit_post', (int) $job['target_post_id'] ) ) { return self::error( 'chidemoon_ai_enrich_selection', __( 'Select the individual fields you reviewed.', 'chidemoon-ai' ), 422 ); }
+			if ( ( $job['request_payload']['enrichment_revision'] ?? '' ) !== Chidemoon_Core_Enrichment::token( (int) $job['target_post_id'] ) ) { return self::error( 'chidemoon_ai_enrich_stale', __( 'Product facts changed. Generate and review another proposal.', 'chidemoon-ai' ), 409 ); }
+			$result = $job['result_payload']; $result['approvedFields'] = array_values( array_unique( $selected ) );
+		}
+		if ( ! Chidemoon_AI_Repository::approve( (int) $job['id'], get_current_user_id(), $result ) ) {
 			return self::error( 'chidemoon_ai_state_conflict', __( 'This AI job is no longer awaiting review.', 'chidemoon-ai' ), 409 );
 		}
 		if ( 'image' === $job['job_type'] ) {

@@ -20,16 +20,21 @@ final class Chidemoon_Core_Shop_The_Look {
 	}
 
 	public static function register_assets(): void {
-		$style_path  = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look/style.css';
-		$script_path = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look/view.js';
-		wp_register_style( 'chidemoon-shop-the-look', CHIDEMOON_CORE_URL . 'blocks/shop-the-look/style.css', array(), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
-		wp_register_script( 'chidemoon-shop-the-look-view', CHIDEMOON_CORE_URL . 'blocks/shop-the-look/view.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
-		if ( is_page( 'shop-the-look' ) || has_block( 'chidemoon/shop-the-look' ) ) {
+		self::register_asset_handles();
+		if ( is_page( 'shop-the-look' ) || is_singular( Chidemoon_Core_Looks::POST_TYPE ) || has_block( 'chidemoon/shop-the-look' ) ) {
 			self::enqueue_assets();
 		}
 	}
 
+	private static function register_asset_handles(): void {
+		$style_path  = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look/style.css';
+		$script_path = CHIDEMOON_CORE_DIR . 'blocks/shop-the-look/view.js';
+		wp_register_style( 'chidemoon-shop-the-look', CHIDEMOON_CORE_URL . 'blocks/shop-the-look/style.css', array(), file_exists( $style_path ) ? (string) filemtime( $style_path ) : CHIDEMOON_CORE_VERSION );
+		wp_register_script( 'chidemoon-shop-the-look-view', CHIDEMOON_CORE_URL . 'blocks/shop-the-look/view.js', array(), file_exists( $script_path ) ? (string) filemtime( $script_path ) : CHIDEMOON_CORE_VERSION, true );
+	}
+
 	public static function enqueue_assets(): void {
+		self::register_asset_handles();
 		if ( wp_style_is( 'chidemoon-shop-the-look', 'registered' ) ) {
 			wp_enqueue_style( 'chidemoon-shop-the-look' );
 		}
@@ -77,6 +82,7 @@ final class Chidemoon_Core_Shop_The_Look {
 	 */
 	public static function render_shortcode( $atts = array(), $content = null ): string {
 		$atts = shortcode_atts( array(
+			'look_id' => '0',
 			'image_id'  => '0',
 			'imageId'   => '0',
 			'image_alt' => '',
@@ -85,6 +91,7 @@ final class Chidemoon_Core_Shop_The_Look {
 			'hotspots'  => '[]',
 		), $atts, 'chidemoon_shop_the_look' );
 
+		if ( ! empty( $atts['look_id'] ) ) { return Chidemoon_Core_Looks::render( (int) $atts['look_id'] ); }
 		$image_id = absint( $atts['image_id'] ) ?: absint( $atts['imageId'] );
 		$caption  = sanitize_text_field( (string) $atts['caption'] );
 		$alt      = sanitize_text_field( (string) ( $atts['image_alt'] ?: $atts['imageAlt'] ) );
@@ -118,6 +125,7 @@ final class Chidemoon_Core_Shop_The_Look {
 	 * @param array<string, mixed> $attributes
 	 */
 	public static function render_look( array $attributes, string $wrapper_extra_class = '' ): string {
+		if ( ! empty( $attributes['lookId'] ) || ! empty( $attributes['look_id'] ) ) { return Chidemoon_Core_Looks::render( (int) ( $attributes['lookId'] ?? $attributes['look_id'] ), $wrapper_extra_class ); }
 		self::enqueue_assets();
 		$image_id = absint( $attributes['imageId'] ?? $attributes['image_id'] ?? 0 );
 		if ( $image_id <= 0 ) {
@@ -134,20 +142,13 @@ final class Chidemoon_Core_Shop_The_Look {
 			$product_id = absint( $spot['productId'] ?? $spot['product_id'] ?? 0 );
 			if ( ! $product_id ) {
 				$source_key = sanitize_text_field( (string) ( $spot['productSourceKey'] ?? $spot['product_source_key'] ?? '' ) );
-				if ( preg_match( '/^[a-z][a-z0-9_-]*:[a-zA-Z0-9_-]+$/', $source_key ) ) {
-					$matches = get_posts( array(
-						'post_type'      => 'product',
-						'post_status'    => 'publish',
-						'posts_per_page' => 1,
-						'fields'         => 'ids',
-						'meta_key'       => Chidemoon_Core_Affiliate::META_SOURCE_KEY,
-						'meta_value'     => $source_key,
-					) );
-					$product_id = $matches ? (int) $matches[0] : 0;
+				if ( preg_match( '/^[A-Za-z0-9._:-]{1,190}$/D', $source_key ) ) {
+					$matches = Chidemoon_Core_Source_Importer::find_reference_ids( $source_key );
+					$product_id = 1 === count( $matches ) ? (int) $matches[0] : 0;
 				}
 			}
-			$x          = max( 2, min( 98, (float) ( $spot['x'] ?? 50 ) ) );
-			$y          = max( 2, min( 98, (float) ( $spot['y'] ?? 50 ) ) );
+			$x          = max( 0, min( 100, (float) ( $spot['x'] ?? 50 ) ) );
+			$y          = max( 0, min( 100, (float) ( $spot['y'] ?? 50 ) ) );
 			$hotspots[ $index ]['productId'] = $product_id;
 			$hotspots[ $index ]['x'] = $x;
 			$hotspots[ $index ]['y'] = $y;
@@ -219,7 +220,7 @@ final class Chidemoon_Core_Shop_The_Look {
 	public static function register_taxonomy(): void {
 		register_taxonomy(
 			self::TAXONOMY,
-			array( 'post' ),
+			array( 'post', 'product', 'chidemoon_look' ),
 			array(
 				'labels' => array(
 					'name'          => __( 'فضاها', 'chidemoon-core' ),

@@ -7,6 +7,7 @@ x-wordpress-environment: &wordpress-environment
   WORDPRESS_DB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
   CHIDEMOON_ENVIRONMENT: ${CHIDEMOON_ENVIRONMENT:-production}
   CHIDEMOON_WP_DEBUG: ${CHIDEMOON_WP_DEBUG:-0}
+  CHIDEMOON_CATALOG_CLIENT_SECRET: ${CHIDEMOON_CATALOG_CLIENT_SECRET:-}
   CHIDEMOON_AI_PROVIDER_BASE_URL: ${CHIDEMOON_AI_PROVIDER_BASE_URL:-}
   CHIDEMOON_AI_API_KEY: ${CHIDEMOON_AI_API_KEY:-}
   CHIDEMOON_AI_TEXT_MODEL: ${CHIDEMOON_AI_TEXT_MODEL:-gpt-4.1-mini}
@@ -77,6 +78,7 @@ services:
       - chidemoon_uploads:/var/www/html/wp-content/uploads
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
+      - ./plugins/chidemoon-catalog-sync:/var/www/html/wp-content/plugins/chidemoon-catalog-sync:ro
       - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
     healthcheck:
       # Check HTTP status without following WordPress's canonical redirect to
@@ -107,6 +109,7 @@ services:
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./tools:/tools:ro
+      - ./plugins/chidemoon-catalog-sync:/var/www/html/wp-content/plugins/chidemoon-catalog-sync:ro
       - ./vendor:/packages:ro
       - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
 
@@ -128,6 +131,7 @@ services:
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./ops/run-scheduler.sh:/runner/run-scheduler.sh:ro
+      - ./plugins/chidemoon-catalog-sync:/var/www/html/wp-content/plugins/chidemoon-catalog-sync:ro
       - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
 
   backup:

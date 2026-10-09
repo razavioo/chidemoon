@@ -131,6 +131,9 @@
 			var action = button.getAttribute('data-chidemoon-ai-review');
 			var jobId = button.getAttribute('data-job-id');
 			var payload = {};
+			if (action === 'approve' && button.closest('tr').querySelector('[data-ch-enrichment-field]')) {
+				payload.approvedFields = Array.from(button.closest('tr').querySelectorAll('[data-ch-enrichment-field]:checked')).map(function (field) { return field.value; });
+			}
 			if (action === 'reject') {
 				var reason = window.prompt('Optional rejection reason:');
 				if (reason === null) {

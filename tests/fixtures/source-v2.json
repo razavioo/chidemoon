@@ -1,0 +1,23 @@
+{
+  "sourceKey": "src:v2:ba9fb93276f0fcae9c5155825e5a04e01fd7ebf0b2e25f43d0a3a14062cace69",
+  "identity": { "provider": "generic", "store": "store-a.example", "product": "000123", "variant": null },
+  "aliases": ["kalahamoon:crm-product:base", "generic:000123"],
+  "revision": 1,
+  "contentRevision": 1,
+  "content": {
+    "title": "Source chair",
+    "description": "<p>Source description</p>",
+    "sourceUrl": "https://store-a.example/products/000123",
+    "affiliateUrl": "https://store-a.example/products/000123?affiliate=chidemoon",
+    "images": ["https://cdn.store-a.example/chair.jpg"],
+    "specifications": [{ "label": "Width", "value": "45 cm" }],
+    "brand": "Source brand",
+    "seller": "Source seller"
+  },
+  "observations": {
+    "price": { "current": "1250000", "previous": "1500000", "currency": "IRR", "observedAt": "2026-10-09T08:00:00.000Z" },
+    "availability": { "status": "in_stock", "observedAt": "2026-10-09T08:00:00.000Z" },
+    "rating": { "value": "4.5", "scale": "5", "count": 13, "provider": "Source seller", "sourceUrl": "https://store-a.example/products/000123", "observedAt": "2026-10-09T08:00:00.000Z" }
+  },
+  "removals": []
+}

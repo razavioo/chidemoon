@@ -264,7 +264,7 @@ final class Chidemoon_Core_Affiliate {
 	 * @param WC_Product $product     Current product.
 	 */
 	public static function only_external_products_are_purchasable( bool $purchasable, WC_Product $product ): bool {
-		return $purchasable && self::is_publicly_eligible( $product );
+    return $purchasable && self::is_offer_available( $product );
 	}
 
 	/**
@@ -288,7 +288,7 @@ final class Chidemoon_Core_Affiliate {
 			return $url;
 		}
 
-		return self::is_publicly_eligible( $product ) ? self::tracking_url( $product->get_id() ) : get_permalink( $product->get_id() );
+		return self::is_offer_available( $product ) ? self::tracking_url( $product->get_id() ) : get_permalink( $product->get_id() );
 	}
 
 	/**
@@ -297,7 +297,7 @@ final class Chidemoon_Core_Affiliate {
 	 * @return array<string, mixed>
 	 */
 	public static function open_product_cta_in_new_tab( array $args, WC_Product $product ): array {
-		if ( ! self::is_publicly_eligible( $product ) ) {
+		if ( ! self::is_offer_available( $product ) ) {
 			return $args;
 		}
 
@@ -352,7 +352,7 @@ final class Chidemoon_Core_Affiliate {
 
 		$product_id = absint( $attributes['product_id'] );
 		$product    = $product_id > 0 ? wc_get_product( $product_id ) : false;
-		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
+		if ( ! $product instanceof WC_Product || ! self::is_offer_available( $product ) ) {
 			return '';
 		}
 
@@ -368,6 +368,12 @@ final class Chidemoon_Core_Affiliate {
 			&& 'reviewed' === (string) $product->get_meta( self::META_REVIEW_STATE, true )
 			&& $product->is_type( 'external' )
 			&& '' !== self::get_affiliate_url( $product );
+	}
+
+	public static function is_offer_available( WC_Product $product ): bool {
+		if ( ! self::is_publicly_eligible( $product ) || '1' === (string) $product->get_meta( '_chidemoon_source_withdrawn', true ) ) { return false; }
+		$observations = json_decode( (string) $product->get_meta( '_chidemoon_source_observations', true ), true );
+		return 'out_of_stock' !== ( $observations['availability']['status'] ?? 'unknown' );
 	}
 
 	public static function tracking_url( int $product_id ): string {
@@ -415,7 +421,7 @@ final class Chidemoon_Core_Affiliate {
 		// require is_publicly_eligible() (publish + external + reviewed + valid
 		// URL). The redirect must enforce the same gate, otherwise an
 		// unreviewed / quarantined product stays reachable via a direct /go/ ID.
-		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
+		if ( ! $product instanceof WC_Product || ! self::is_offer_available( $product ) ) {
 			self::render_not_found();
 			return;
 		}

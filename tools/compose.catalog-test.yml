@@ -1,0 +1,51 @@
+name: chidemoon-catalog-test
+services:
+  database:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: catalog_test
+      MARIADB_USER: catalog_test
+      MARIADB_PASSWORD: isolated_test_only
+      MARIADB_ROOT_PASSWORD: isolated_root_test_only
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - catalog_database:/var/lib/mysql
+  wordpress:
+    image: wordpress:7.1-php8.2-apache
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18881:80"
+    environment: &wp_environment
+      WORDPRESS_DB_HOST: database
+      WORDPRESS_DB_NAME: catalog_test
+      WORDPRESS_DB_USER: catalog_test
+      WORDPRESS_DB_PASSWORD: isolated_test_only
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'local');
+        if (!defined('WP_DEBUG')) { define('WP_DEBUG', true); }
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        define('DISABLE_WP_CRON', true);
+    volumes: &wp_volumes
+      - catalog_wordpress:/var/www/html
+      - ../plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
+      - ../plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
+      - ../plugins/chidemoon-catalog-sync:/var/www/html/wp-content/plugins/chidemoon-catalog-sync:ro
+      - ../tests:/tests:ro
+      - ../tools:/tools:ro
+      - ${CHIDEMOON_TEST_VENDOR_DIR:-../../chidemoon/vendor}:/packages:ro
+  wpcli:
+    image: wordpress:cli-2.10.0-php8.2
+    user: "33:33"
+    entrypoint: [wp]
+    environment: *wp_environment
+    volumes: *wp_volumes
+volumes:
+  catalog_database:
+  catalog_wordpress:

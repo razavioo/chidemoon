@@ -125,7 +125,7 @@ class Chidemoon_AI_Admin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Enrich Product', 'chidemoon-ai' ); ?></h1>
-			<p><?php esc_html_e( 'Enrich a WooCommerce product from its saved source URL plus free web search (DuckDuckGo, no key required). The proposal waits in the Review Queue and is applied to a draft only. The affiliate destination is never changed automatically.', 'chidemoon-ai' ); ?></p>
+			<p><?php esc_html_e( 'Propose structured editorial fields using saved source evidence and web research. Review evidence and differences, then approve individual fields. Applying enrichment preserves source data and publication status.', 'chidemoon-ai' ); ?></p>
 			<form class="chidemoon-ai-job-form" data-chidemoon-ai-job="enrich">
 				<p><label for="chidemoon-ai-enrich-product"><?php esc_html_e( 'Product ID', 'chidemoon-ai' ); ?></label><br>
 				<input id="chidemoon-ai-enrich-product" name="product_id" type="number" min="1" step="1" required>
@@ -152,7 +152,7 @@ class Chidemoon_AI_Admin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AI Review Queue', 'chidemoon-ai' ); ?></h1>
-			<p><?php esc_html_e( 'Approval only makes an output eligible for draft application. It never publishes or changes an affiliate destination.', 'chidemoon-ai' ); ?></p>
+			<p><?php esc_html_e( 'Approval makes an output eligible for application. Editorial enrichment can update approved fields; text and Looks remain drafts. Applying an output never publishes or changes source data.', 'chidemoon-ai' ); ?></p>
 			<table class="widefat striped">
 				<thead><tr><th><?php esc_html_e( 'Job', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Type', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Target', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Preview', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Created', 'chidemoon-ai' ); ?></th><th><?php esc_html_e( 'Actions', 'chidemoon-ai' ); ?></th></tr></thead>
 				<tbody>
@@ -164,11 +164,16 @@ class Chidemoon_AI_Admin {
 							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
 							<td><?php echo esc_html( (string) ( $job['target_post_id'] ?: '—' ) ); ?></td>
-							<td style="max-width:420px"><?php echo wp_kses_post( self::job_preview( $job ) ); ?></td>
+							<td style="max-width:420px"><?php echo wp_kses_post( self::job_preview( $job ) ); ?>
+							<?php if ( 'enrich' === $job['job_type'] && Chidemoon_AI_State_Machine::REVIEW_REQUIRED === $job['state'] ) : ?>
+								<?php foreach ( (array) ( $job['result_payload']['fields'] ?? array() ) as $proposal ) : ?>
+									<label><input type="checkbox" data-ch-enrichment-field value="<?php echo esc_attr( $proposal['field'] ?? '' ); ?>"> <?php echo esc_html( Chidemoon_Core_Enrichment::field_label( $proposal['field'] ?? '' ) ); ?></label>
+								<?php endforeach; ?>
+							<?php endif; ?></td>
 							<td><?php echo esc_html( wp_date( 'j F Y، H:i', strtotime( $job['created_at'] . ' UTC' ) ) ); ?></td>
 							<td>
 								<?php if ( Chidemoon_AI_State_Machine::APPROVED === $job['state'] ) : ?>
-									<button type="button" class="button button-primary" data-chidemoon-ai-review="apply" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php echo esc_html( 'look' === $job['job_type'] ? __( 'Create look draft', 'chidemoon-ai' ) : __( 'Apply to draft', 'chidemoon-ai' ) ); ?></button>
+									<button type="button" class="button button-primary" data-chidemoon-ai-review="apply" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php echo esc_html( 'look' === $job['job_type'] ? __( 'Create look draft', 'chidemoon-ai' ) : ( 'enrich' === $job['job_type'] ? __( 'Apply selected fields', 'chidemoon-ai' ) : __( 'Apply to draft', 'chidemoon-ai' ) ) ); ?></button>
 								<?php else : ?>
 									<button type="button" class="button" data-chidemoon-ai-review="approve" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Approve', 'chidemoon-ai' ); ?></button>
 								<?php endif; ?>
@@ -233,6 +238,16 @@ class Chidemoon_AI_Admin {
 			return $html;
 		}
 		if ( 'enrich' === $type ) {
+			if ( isset( $result['fields'] ) && class_exists( 'Chidemoon_Core_Enrichment' ) ) {
+				$current = Chidemoon_Core_Enrichment::read( (int) $job['target_post_id'] );
+				$html = '<dl>';
+				foreach ( $result['fields'] as $proposal ) {
+					$field = $proposal['field'] ?? '';
+					$value = 'dimensions' === $field ? $proposal['measurements'] ?? array() : $proposal['termIds'] ?? array();
+					$html .= '<dt><strong>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</strong></dt><dd>' . esc_html__( 'Current:', 'chidemoon-ai' ) . ' ' . esc_html( Chidemoon_Core_Enrichment::display_field( $field, $current[ $field ] ?? null ) ) . '<br>' . esc_html__( 'Proposed:', 'chidemoon-ai' ) . ' ' . esc_html( Chidemoon_Core_Enrichment::display_field( $field, $proposal ) ) . '<br>' . esc_html__( 'Confidence / evidence:', 'chidemoon-ai' ) . ' ' . esc_html( (string) ( $proposal['confidence'] ?? '' ) . ' / ' . implode( ', ', $proposal['evidence'] ?? array() ) ) . '</dd>';
+				}
+				return $html . '</dl>';
+			}
 			$html = '<p><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong></p>';
 			$html .= '<p>' . esc_html( (string) ( $result['short_description'] ?? '' ) ) . '</p>';
 			if ( ! empty( $result['needs_price_check'] ) ) {

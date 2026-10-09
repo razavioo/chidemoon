@@ -30,6 +30,11 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Shop_The_Look::register();
 		Chidemoon_Core_Compare::register();
 		Chidemoon_Core_Importer::register();
+		Chidemoon_Core_Enrichment::register();
+		Chidemoon_Core_Commercial::register();
+		Chidemoon_Core_Looks::register();
+		Chidemoon_Core_Reconciliation::register();
+		Chidemoon_Core_Discovery::register();
 		Chidemoon_Core_Public_Design::register();
 		Chidemoon_Core_Elementor_Workspace::register();
 		Chidemoon_Core_Search_Facets::register();

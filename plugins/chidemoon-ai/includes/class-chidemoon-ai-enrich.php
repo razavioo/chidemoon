@@ -2,9 +2,7 @@
 /**
  * Product enrichment: local facts + free web evidence -> structured proposal.
  *
- * Output is ALWAYS a review-gated proposal. Apply only writes to drafts and
- * never overwrites the affiliate destination without an explicit reviewer
- * confirmation.
+	 * Proposals only target editorial classification and verified measurements.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -37,10 +35,19 @@ class Chidemoon_AI_Enrich {
 					$context['merchant']   = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME, true );
 					$context['source_url'] = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_SOURCE_URL, true );
 					$context['facts']      = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS, true );
+					$context['source_description'] = wp_strip_all_tags( (string) $product->get_meta( '_chidemoon_source_description', true ) );
+					$context['source_specifications'] = (string) $product->get_meta( '_chidemoon_source_specifications', true );
 				}
 			}
 		}
 
+		if ( class_exists( 'Chidemoon_Core_Enrichment' ) ) {
+			$context['approved_fields'] = Chidemoon_Core_Enrichment::read( $product_id );
+			foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) {
+				$terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false, 'number' => 300 ) );
+				$context['vocabulary'][ $field ] = is_wp_error( $terms ) ? array() : array_map( static fn( $term ) => array( 'id' => $term->term_id, 'label' => $term->name ), $terms );
+			}
+		}
 		return $context;
 	}
 
@@ -51,25 +58,18 @@ class Chidemoon_AI_Enrich {
 	 * @return array<string, mixed>
 	 */
 	public static function json_schema( array $citation_ids ): array {
-		return array(
-			'type'                 => 'object',
-			'additionalProperties' => false,
-			'properties'           => array(
-				'title'              => array( 'type' => 'string' ),
-				'short_description'  => array( 'type' => 'string' ),
-				'description'        => array( 'type' => 'string' ),
-				'facts'              => array(
-					'type'  => 'object',
-					'additionalProperties' => array( 'type' => 'string' ),
-				),
-				'price_hint'         => array( 'type' => 'string' ),
-				'price_currency'     => array( 'type' => 'string' ),
-				'needs_price_check'  => array( 'type' => 'boolean' ),
-				'facts_needing_review' => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ),
-				'citation_source_ids' => array( 'type' => 'array', 'items' => array( 'type' => 'string', 'enum' => $citation_ids ) ),
-			),
-			'required'             => array( 'title', 'short_description', 'description', 'facts', 'facts_needing_review', 'citation_source_ids' ),
-		);
+		$dimensions = array_fill_keys( array( 'length', 'width', 'height', 'depth' ), array( 'type' => array( 'number', 'null' ) ) );
+		$proposal = array( 'type' => 'object', 'additionalProperties' => false, 'properties' => array(
+			'field' => array( 'type' => 'string', 'enum' => array( 'category', 'style', 'room', 'color', 'material', 'dimensions', 'features', 'suitability', 'tags' ) ),
+			'state' => array( 'type' => 'string', 'enum' => array( 'value', 'unknown', 'not_applicable' ) ),
+			'termIds' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ) ),
+			'measurements' => array( 'type' => 'object', 'additionalProperties' => false, 'properties' => $dimensions, 'required' => array_keys( $dimensions ) ),
+			'unit' => array( 'type' => 'string', 'enum' => array( 'cm', 'mm', 'm', 'in' ) ),
+			'confidence' => array( 'type' => 'number', 'minimum' => 0, 'maximum' => 1 ),
+			'evidence' => array( 'type' => 'array', 'items' => array( 'type' => 'string', 'enum' => $citation_ids ) ),
+			'judgment' => array( 'type' => 'string', 'enum' => array( 'factual', 'editorial' ) ),
+		), 'required' => array( 'field', 'state', 'termIds', 'measurements', 'unit', 'confidence', 'evidence', 'judgment' ) );
+		return array( 'type' => 'object', 'additionalProperties' => false, 'properties' => array( 'fields' => array( 'type' => 'array', 'items' => $proposal ), 'citation_source_ids' => array( 'type' => 'array', 'items' => array( 'type' => 'string', 'enum' => $citation_ids ) ) ), 'required' => array( 'fields', 'citation_source_ids' ) );
 	}
 
 	/**
@@ -78,114 +78,58 @@ class Chidemoon_AI_Enrich {
 	 * @return array<string, mixed>|WP_Error
 	 */
 	public static function validate_result( array $result, array $allowed_sources ): array|WP_Error {
-		$title = sanitize_text_field( (string) ( $result['title'] ?? '' ) );
-		$short = sanitize_textarea_field( (string) ( $result['short_description'] ?? '' ) );
-		$desc  = wp_kses_post( (string) ( $result['description'] ?? '' ) );
-		if ( '' === $title || '' === trim( wp_strip_all_tags( $desc ) ) ) {
-			return new WP_Error( 'chidemoon_ai_enrich_invalid', __( 'The enrichment output did not match the required format.', 'chidemoon-ai' ) );
+		if ( ! class_exists( 'Chidemoon_Core_Enrichment' ) || array_diff( array_keys( $result ), array( 'fields', 'citation_source_ids', '_usage', 'approvedFields' ) ) || ! is_array( $result['fields'] ?? null ) || count( $result['fields'] ) > 9 || ! is_array( $result['citation_source_ids'] ?? null ) || array_diff( $result['citation_source_ids'], $allowed_sources ) ) { return new WP_Error( 'chidemoon_ai_enrich_invalid', __( 'The enrichment proposal requires the structured editorial schema.', 'chidemoon-ai' ) ); }
+		$seen = array();
+		foreach ( $result['fields'] as $proposal ) {
+			try {
+				if ( ! is_array( $proposal ) || array_diff( array_keys( $proposal ), array( 'field', 'state', 'termIds', 'measurements', 'unit', 'confidence', 'evidence', 'judgment' ) ) || isset( $seen[ $proposal['field'] ?? '' ] ) || ! is_array( $proposal['evidence'] ?? null ) || array_diff( $proposal['evidence'], $allowed_sources ) || ! is_numeric( $proposal['confidence'] ?? null ) || $proposal['confidence'] < 0 || $proposal['confidence'] > 1 ) { throw new InvalidArgumentException( 'Invalid field evidence or confidence' ); }
+				$clean = self::proposal( $proposal );
+				if ( 'value' === $clean['state'] && 'factual' === $clean['judgment'] && ! $clean['evidence'] ) { throw new InvalidArgumentException( 'Factual values require evidence' ); }
+				if ( $proposal['judgment'] !== $clean['judgment'] ) { throw new InvalidArgumentException( 'Stylistic judgments must be labeled editorial' ); }
+				$seen[ $proposal['field'] ] = true;
+			} catch ( Throwable $exception ) { return new WP_Error( 'chidemoon_ai_enrich_invalid', $exception->getMessage() ); }
 		}
-		$len = static function ( string $v ): int {
-			return function_exists( 'mb_strlen' ) ? mb_strlen( $v ) : strlen( $v );
-		};
-		if ( $len( $title ) > 220 || $len( $short ) > 900 || $len( $desc ) > 12000 ) {
-			return new WP_Error( 'chidemoon_ai_enrich_bounds', __( 'The enrichment output exceeded the safe bounds.', 'chidemoon-ai' ) );
-		}
-		$facts = $result['facts'] ?? null;
-		if ( ! is_array( $facts ) || count( $facts ) > 30 ) {
-			return new WP_Error( 'chidemoon_ai_enrich_invalid', __( 'The enrichment facts did not match the required format.', 'chidemoon-ai' ) );
-		}
-		$clean_facts = array();
-		foreach ( $facts as $label => $value ) {
-			$label = sanitize_text_field( (string) $label );
-			$value = sanitize_text_field( (string) $value );
-			if ( '' === $label || '' === $value || $len( $label ) > 120 || $len( $value ) > 500 ) {
-				continue;
-			}
-			$clean_facts[ $label ] = $value;
-		}
-		$flags = $result['facts_needing_review'] ?? null;
-		if ( ! is_array( $flags ) ) {
-			return new WP_Error( 'chidemoon_ai_enrich_invalid', __( 'The enrichment output needs review flags.', 'chidemoon-ai' ) );
-		}
-		$clean_flags = array();
-		foreach ( array_slice( $flags, 0, 20 ) as $flag ) {
-			if ( ! is_string( $flag ) || $len( $flag ) > 500 ) {
-				continue;
-			}
-			$clean_flags[] = sanitize_text_field( $flag );
-		}
-		$citations = $result['citation_source_ids'] ?? null;
-		if ( ! is_array( $citations ) ) {
-			return new WP_Error( 'chidemoon_ai_enrich_invalid', __( 'The enrichment output needs citations.', 'chidemoon-ai' ) );
-		}
-		$clean_citations = array();
-		foreach ( $citations as $citation ) {
-			$citation = sanitize_text_field( (string) $citation );
-			if ( ! in_array( $citation, $allowed_sources, true ) ) {
-				return new WP_Error( 'chidemoon_ai_enrich_citation', __( 'The enrichment output cited a source outside the reviewed evidence.', 'chidemoon-ai' ) );
-			}
-			$clean_citations[] = $citation;
-		}
+		return array( 'fields' => $result['fields'], 'citation_source_ids' => array_values( array_unique( $result['citation_source_ids'] ) ) );
+	}
 
-		return array(
-			'title'                => $title,
-			'short_description'    => $short,
-			'description'          => $desc,
-			'facts'                => $clean_facts,
-			'price_hint'           => sanitize_text_field( (string) ( $result['price_hint'] ?? '' ) ),
-			'price_currency'       => sanitize_text_field( (string) ( $result['price_currency'] ?? '' ) ),
-			'needs_price_check'    => ! empty( $result['needs_price_check'] ),
-			'facts_needing_review' => array_values( array_unique( $clean_flags ) ),
-			'citation_source_ids'  => array_values( array_unique( $clean_citations ) ),
-		);
+	public static function proposal( array $value ): array {
+		return Chidemoon_Core_Enrichment::validate_field( (string) ( $value['field'] ?? '' ), array( 'state' => $value['state'] ?? '', 'value' => 'dimensions' === ( $value['field'] ?? '' ) ? $value['measurements'] ?? null : $value['termIds'] ?? null, 'unit' => $value['unit'] ?? 'cm', 'measurementType' => 'product', 'evidence' => $value['evidence'] ?? array() ) ) + array( 'confidence' => $value['confidence'] ?? 0 );
 	}
 
 	/**
-	 * Applies an APPROVED enrichment to a product draft. Never publishes,
-	 * never touches the affiliate destination unless explicitly confirmed.
+	 * Applies only selected approved fields against the captured editorial revision.
 	 *
 	 * @param array<string, mixed> $job
 	 * @return int|WP_Error Product ID.
 	 */
 	public static function apply( array $job, int $actor_id, bool $confirm_affiliate_change = false ): int|WP_Error {
-		$result = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array();
+		global $wpdb;
+		unset( $confirm_affiliate_change );
 		$product_id = absint( $job['target_post_id'] ?? 0 );
 		if ( ! $product_id || 'product' !== get_post_type( $product_id ) ) {
 			return new WP_Error( 'chidemoon_ai_enrich_target', __( 'The enrichment target product is unavailable.', 'chidemoon-ai' ) );
 		}
-		if ( ! current_user_can( 'edit_post', $product_id ) ) {
+		if ( ! current_user_can( 'edit_post', $product_id ) || ! current_user_can( 'chidemoon_manage_affiliate' ) ) {
 			return new WP_Error( 'chidemoon_ai_enrich_forbidden', __( 'You cannot edit this product.', 'chidemoon-ai' ), array( 'status' => 403 ) );
 		}
-		unset( $actor_id );
-
-		$validated = self::validate_result( $result, Chidemoon_AI_Evidence::source_ids( Chidemoon_AI_Evidence::for_job( (int) $job['id'] ) ) );
-		if ( is_wp_error( $validated ) ) {
-			return $validated;
-		}
-
-		$post_data = array(
-			'ID'              => $product_id,
-			'post_title'      => $validated['title'],
-			'post_content'    => $validated['description'],
-			'post_excerpt'    => $validated['short_description'],
-			'post_status'     => 'draft',
-		);
-		$updated = wp_update_post( wp_slash( $post_data ), true );
-		if ( is_wp_error( $updated ) || ! $updated ) {
-			return new WP_Error( 'chidemoon_ai_enrich_apply_failed', __( 'The enrichment could not be saved to the product draft.', 'chidemoon-ai' ) );
-		}
-		if ( class_exists( 'Chidemoon_Core_Affiliate' ) ) {
-			update_post_meta( $product_id, Chidemoon_Core_Affiliate::META_FACTS, wp_json_encode( $validated['facts'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
-			update_post_meta( $product_id, Chidemoon_Core_Affiliate::META_SOURCE_CHECKED, gmdate( DATE_ATOM ) );
-			unset( $confirm_affiliate_change );
-		}
-		update_post_meta( $product_id, '_chidemoon_ai_last_job_id', (int) $job['id'] );
-		update_post_meta( $product_id, '_chidemoon_ai_provenance', wp_json_encode( $job['provenance'] ?? array(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
-
-		if ( ! Chidemoon_AI_Repository::mark_applied( (int) $job['id'], $product_id ) ) {
-			return new WP_Error( 'chidemoon_ai_apply_state_conflict', __( 'The enrichment job changed while it was being saved.', 'chidemoon-ai' ), array( 'status' => 409 ) );
-		}
-
-		return $product_id;
+		if ( ! Chidemoon_Core_Source_Importer::acquire_lock() ) { return new WP_Error( 'chidemoon_ai_enrich_busy', __( 'Source import is running. Retry this application.', 'chidemoon-ai' ), array( 'status' => 409 ) ); }
+		try {
+			$wpdb->query( 'START TRANSACTION' );
+			$wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}chidemoon_ai_jobs WHERE id = %d FOR UPDATE", (int) $job['id'] ) );
+			$job = Chidemoon_AI_Repository::find( (int) $job['id'] );
+			if ( ! $job || Chidemoon_AI_State_Machine::APPROVED !== $job['state'] || empty( $job['result_payload']['approvedFields'] ) ) { throw new RuntimeException( 'Selective reviewer approval is required' ); }
+			$result = $job['result_payload'];
+			$validated = self::validate_result( $result, Chidemoon_AI_Evidence::source_ids( Chidemoon_AI_Evidence::for_job( (int) $job['id'] ) ) );
+			if ( is_wp_error( $validated ) ) { throw new RuntimeException( $validated->get_error_message() ); }
+			$fields = array();
+			foreach ( $validated['fields'] as $proposal ) { if ( in_array( $proposal['field'], $result['approvedFields'], true ) ) { $fields[ $proposal['field'] ] = self::proposal( $proposal ); } }
+			Chidemoon_Core_Enrichment::apply( $product_id, $fields, (string) ( $job['request_payload']['enrichment_revision'] ?? '' ), $actor_id, false );
+			update_post_meta( $product_id, '_chidemoon_ai_last_job_id', (int) $job['id'] );
+			update_post_meta( $product_id, '_chidemoon_ai_provenance', wp_json_encode( $job['provenance'] ?? array(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
+			if ( ! Chidemoon_AI_Repository::mark_applied( (int) $job['id'], $product_id ) ) { throw new RuntimeException( 'The enrichment job changed concurrently' ); }
+			$wpdb->query( 'COMMIT' );
+			return $product_id;
+		} catch ( Throwable $exception ) { $wpdb->query( 'ROLLBACK' ); wp_cache_delete( $product_id, 'post_meta' ); clean_post_cache( $product_id ); wc_delete_product_transients( $product_id ); return new WP_Error( 'chidemoon_ai_enrich_rejected', $exception->getMessage(), array( 'status' => 409 ) ); }
+		finally { Chidemoon_Core_Source_Importer::release_lock(); }
 	}
 }

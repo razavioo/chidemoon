@@ -92,7 +92,7 @@ class Chidemoon_AI_Runner {
 		}
 
 		if ( 'look' === $job['job_type'] ) {
-			return self::apply_look( $job );
+			return self::apply_look( $job, $actor_id );
 		}
 
 		if ( 'enrich' === $job['job_type'] ) {
@@ -223,7 +223,7 @@ class Chidemoon_AI_Runner {
 			array(
 				'title'                => (string) ( $validated['title'] ?? '' ),
 				'excerpt'              => (string) ( $validated['short_description'] ?? '' ),
-				'content'              => (string) ( $validated['description'] ?? '' ),
+				'content'              => wp_json_encode( $validated['fields'] ?? array(), JSON_UNESCAPED_UNICODE ),
 				'facts_needing_review' => $validated['facts_needing_review'] ?? array(),
 			)
 		);
@@ -474,14 +474,28 @@ class Chidemoon_AI_Runner {
 	 * @param array<string, mixed> $job
 	 * @return int|WP_Error New look draft post ID.
 	 */
-	private static function apply_look( array $job ): int|WP_Error {
+	private static function apply_look( array $job, int $actor_id ): int|WP_Error {
+		global $wpdb;
+		if ( ! user_can( $actor_id, 'chidemoon_manage_affiliate' ) || ! class_exists( 'Chidemoon_Core_Looks' ) ) {
+			return new WP_Error( 'chidemoon_ai_look_forbidden', __( 'The Look editor is unavailable or access was denied.', 'chidemoon-ai' ), array( 'status' => 403 ) );
+		}
+		$lock = 'ch_ai_apply_' . (int) $job['id'];
+		if ( '1' !== (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s,0)', $lock ) ) ) {
+			return new WP_Error( 'chidemoon_ai_apply_state_conflict', __( 'The Look is being saved.', 'chidemoon-ai' ), array( 'status' => 409 ) );
+		}
+		$post_id = 0;
+		$wpdb->query( 'START TRANSACTION' );
+		try {
+		$wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}chidemoon_ai_jobs WHERE id = %d FOR UPDATE", (int) $job['id'] ) );
+		$job = Chidemoon_AI_Repository::find( (int) $job['id'] );
+		if ( ! $job || Chidemoon_AI_State_Machine::APPROVED !== $job['state'] ) { throw new RuntimeException( 'Look approval changed' ); }
 		$result        = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array();
 		$attachment_id = absint( $result['attachment_id'] ?? 0 );
 		if ( ! $attachment_id || 'attachment' !== get_post_type( $attachment_id ) ) {
-			return new WP_Error( 'chidemoon_ai_look_missing', __( 'The approved look image is unavailable.', 'chidemoon-ai' ) );
+			throw new RuntimeException( 'The approved Look image is unavailable' );
 		}
 		if ( ! class_exists( 'Chidemoon_AI_Look' ) ) {
-			return new WP_Error( 'chidemoon_ai_look_missing', __( 'The look builder is unavailable.', 'chidemoon-ai' ) );
+			throw new RuntimeException( 'The Look builder is unavailable' );
 		}
 
 		update_post_meta( $attachment_id, '_chidemoon_ai_review_state', Chidemoon_AI_State_Machine::APPROVED );
@@ -495,28 +509,42 @@ class Chidemoon_AI_Runner {
 			array(
 				'post_author'  => (int) ( $job['requested_by'] ?? get_current_user_id() ),
 				'post_status'  => 'draft',
-				'post_type'    => 'post',
+				'post_type'    => Chidemoon_Core_Looks::POST_TYPE,
 				'post_title'   => '' !== $caption ? $caption : __( 'AI styled look', 'chidemoon-ai' ),
-				'post_content' => Chidemoon_AI_Look::block_markup( $attachment_id, $caption, $hotspots ),
+				'post_content' => '',
 				'post_excerpt' => $caption,
-				'tags_input'   => array( 'shop-the-look' ),
 			),
 			true
 		);
 		if ( is_wp_error( $post_id ) || ! $post_id ) {
-			return new WP_Error( 'chidemoon_ai_look_draft_failed', __( 'The look draft could not be created.', 'chidemoon-ai' ) );
+			throw new RuntimeException( 'The Look draft could not be created' );
 		}
+		set_post_thumbnail( (int) $post_id, $attachment_id );
+		$relationships = array();
+		foreach ( $product_ids as $position => $product_id ) {
+			$spot = null;
+			foreach ( $hotspots as $candidate ) { if ( (int) ( $candidate['productId'] ?? 0 ) === $product_id ) { $spot = $candidate; break; } }
+			$relationships[] = array( 'productId' => $product_id, 'role' => 0 === $position ? 'main' : 'secondary', 'position' => $position, 'x' => isset( $spot['x'] ) ? (float) $spot['x'] : null, 'y' => isset( $spot['y'] ) ? (float) $spot['y'] : null );
+		}
+		Chidemoon_Core_Looks::set_relationships( (int) $post_id, $relationships, '0', false, false );
 		if ( '' !== $room && taxonomy_exists( 'chidemoon_room' ) ) {
-			wp_set_object_terms( (int) $post_id, $room, 'chidemoon_room', false );
+			$term = get_term_by( 'slug', $room, 'chidemoon_room' );
+			if ( $term && ! is_wp_error( $term ) ) { wp_set_object_terms( (int) $post_id, array( (int) $term->term_id ), 'chidemoon_room', false ); }
 		}
 		update_post_meta( (int) $post_id, '_chidemoon_ai_last_job_id', (int) $job['id'] );
 		update_post_meta( (int) $post_id, '_chidemoon_ai_provenance', wp_json_encode( $job['provenance'] ?? array(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
 
 		if ( ! Chidemoon_AI_Repository::mark_applied( (int) $job['id'], (int) $post_id ) ) {
-			return new WP_Error( 'chidemoon_ai_apply_state_conflict', __( 'The look job changed while it was being saved.', 'chidemoon-ai' ), array( 'status' => 409 ) );
+			throw new RuntimeException( 'Look approval changed' );
 		}
-
+		$wpdb->query( 'COMMIT' );
 		return (int) $post_id;
+		} catch ( Throwable $exception ) {
+			$wpdb->query( 'ROLLBACK' );
+			if ( is_int( $post_id ) && $post_id ) { clean_post_cache( $post_id ); }
+			clean_post_cache( $attachment_id ?? 0 );
+			return new WP_Error( 'chidemoon_ai_look_apply_rejected', __( 'The Look could not be saved. Review it and retry.', 'chidemoon-ai' ), array( 'status' => 409 ) );
+		} finally { $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock ) ); }
 	}
 
 	/**

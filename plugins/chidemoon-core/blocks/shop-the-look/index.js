@@ -26,7 +26,7 @@
 	function clamp(value) {
 		var num = parseFloat(value);
 		if (isNaN(num)) return 50;
-		return Math.max(2, Math.min(98, Math.round(num * 10) / 10));
+		return Math.max(0, Math.min(100, Math.round(num * 10) / 10));
 	}
 
 	function clampInt(value) {
@@ -233,6 +233,9 @@
 
 		return el('div', blockProps,
 			el(InspectorControls, null,
+				el(PanelBody, { title: __('Independent Look record', 'chidemoon-core'), initialOpen: true },
+					el(TextControl, { type: 'number', label: __('Look ID', 'chidemoon-core'), value: attributes.lookId || '', onChange: function (value) { setAttributes({ lookId: Number(value) || 0 }); }, help: __('Edit the cover, products and approved hotspots in the Look editor.', 'chidemoon-core') })
+				),
 				el(PanelBody, { title: __('تنظیمات تصویر', 'chidemoon-core'), initialOpen: true },
 					el(MediaUploadCheck, null, el(MediaUpload, { onSelect: selectImage, allowedTypes: ['image'], value: attributes.imageId, render: function (open) { return el(Button, { variant: 'secondary', onClick: open.open }, __('تعویض تصویر', 'chidemoon-core')); } })),
 					el(TextControl, { label: __('متن جایگزین', 'chidemoon-core'), value: attributes.imageAlt, onChange: function (value) { setAttributes({ imageAlt: value }); } }),
@@ -300,5 +303,42 @@
 		);
 	}
 
-	registerBlockType('chidemoon/shop-the-look', { edit: ShopTheLookEditor, save: function () { return null; } });
+	function LookRecordEditor(props) {
+		var id = props.attributes.lookId || 0;
+		var records = useSelect(function (select) {
+			return select('core').getEntityRecords('postType', 'chidemoon_look', { per_page: 100, context: 'edit' });
+		}, []);
+		var previewState = useState(null);
+		var preview = previewState[0];
+		var setPreview = previewState[1];
+		var errorState = useState('');
+		var error = errorState[0];
+		var setError = errorState[1];
+		var blockProps = useBlockProps({ className: 'chidemoon-shop-the-look-editor' });
+		useEffect(function () {
+			var active = true;
+			setPreview(null); setError('');
+			if (!id) return;
+			wp.apiFetch({ path: '/chidemoon-core/v1/looks/' + id + '/preview' })
+				.then(function (response) { if (active) setPreview(response); })
+				.catch(function () { if (active) setError(__('Look unavailable or access denied.', 'chidemoon-core')); });
+			return function () { active = false; };
+		}, [id]);
+		var options = [{ value: '0', label: __('Choose a Look', 'chidemoon-core') }].concat((records || []).map(function (look) {
+			return { value: String(look.id), label: (look.title && look.title.raw ? look.title.raw : '#' + look.id) };
+		}));
+		return el('div', blockProps,
+			el(SelectControl, { label: __('Look record', 'chidemoon-core'), value: String(id), options: options, onChange: function (value) { props.setAttributes({ lookId: Number(value) }); } }),
+			el(TextControl, { label: __('Look ID', 'chidemoon-core'), type: 'number', min: 0, value: id || '', onChange: function (value) { props.setAttributes({ lookId: Math.max(0, Number(value) || 0) }); } }),
+			el('p', null, __('Edit products, roles, palette and hotspots in the Look record. Every placement uses that record.', 'chidemoon-core')),
+			el(Button, { href: '/wp-admin/post-new.php?post_type=chidemoon_look', target: '_blank', rel: 'noopener', variant: 'secondary' }, __('Create a Look', 'chidemoon-core')),
+			preview && preview.editUrl ? el(Button, { href: preview.editUrl, target: '_blank', rel: 'noopener', variant: 'secondary' }, __('Edit this Look', 'chidemoon-core')) : null,
+			error ? el('p', { role: 'status' }, error) : null,
+			id && !preview && !error ? el(Spinner) : null,
+			preview ? el('div', { onClick: function (event) { event.preventDefault(); }, dangerouslySetInnerHTML: { __html: preview.html || '' } }) : null
+		);
+	}
+	registerBlockType('chidemoon/shop-the-look', { edit: function (props) {
+		return el(props.attributes.lookId || !props.attributes.imageId ? LookRecordEditor : ShopTheLookEditor, props);
+	}, save: function () { return null; } });
 })(window.wp);

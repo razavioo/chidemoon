@@ -63,12 +63,14 @@ final class Chidemoon_Core_Public_Design {
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-room-filters-widget.php';
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-actions-widget.php';
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-catalog-tools-widget.php';
-		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-extra-tabs-widget.php';
 		$manager->register( new Chidemoon_Core_Elementor_Product_Offer_Widget() );
 		$manager->register( new Chidemoon_Core_Elementor_Room_Filters_Widget() );
 		$manager->register( new Chidemoon_Core_Elementor_Product_Actions_Widget() );
 		$manager->register( new Chidemoon_Core_Elementor_Catalog_Tools_Widget() );
-		$manager->register( new Chidemoon_Core_Elementor_Product_Extra_Tabs_Widget() );
+		if ( class_exists( '\\ElementorPro\\Modules\\Woocommerce\\Widgets\\Product_Data_Tabs' ) ) {
+			require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-extra-tabs-widget.php';
+			$manager->register( new Chidemoon_Core_Elementor_Product_Extra_Tabs_Widget() );
+		}
 	}
 
 	public static function data_tags( $manager ): void {
@@ -87,6 +89,13 @@ final class Chidemoon_Core_Public_Design {
 			$query->set( 'meta_query', WC()->query->get_meta_query( (array) $query->get( 'meta_query' ) ) );
 		}
 		if ( $id && 'product' === get_post_type( $id ) ) {
+			if ( Chidemoon_Core_Enrichment::read( $id ) ) {
+				$ranked = Chidemoon_Core_Discovery::related_product_ids( $id );
+				$existing = (array) $query->get( 'post__in' );
+				$query->set( 'post__in', ( $existing ? array_values( array_intersect( $ranked, $existing ) ) : $ranked ) ?: array( 0 ) );
+				$query->set( 'orderby', 'post__in' );
+				return;
+			}
 			$query->set( 'post__not_in', array_values( array_unique( array_merge( (array) $query->get( 'post__not_in' ), array( $id ) ) ) ) );
 			if ( $query->get( 'post__in' ) ) {
 				$included = array_values( array_diff( (array) $query->get( 'post__in' ), (array) $query->get( 'post__not_in' ) ) );
@@ -254,6 +263,13 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function post_card_label( int $post_id ): string {
+		if ( 'chidemoon_look' === get_post_type( $post_id ) ) {
+			foreach ( Chidemoon_Core_Looks::relationships( $post_id ) as $row ) {
+				$product = $row['product_id'] ? wc_get_product( (int) $row['product_id'] ) : null;
+				if ( $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) { return 'چیدمان قابل خرید'; }
+			}
+			return 'ایدهٔ مفهومی';
+		}
 		if ( get_post_meta( $post_id, '_chidemoon_native_look', true ) ) {
 			$elements = json_decode( (string) get_post_meta( $post_id, '_elementor_data', true ), true );
 			$stack = is_array( $elements ) ? $elements : array();
@@ -323,13 +339,16 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function looks_query( WP_Query $query ): void {
-		$query->set( 'post_type', 'post' );
+		$query->set( 'post_type', 'chidemoon_look' );
 		$query->set( 'post_status', 'publish' );
-		$query->set( 'tag', 'shop-the-look' );
+		foreach ( array( 'cat', 'category_name', 'tag', 'tag_id' ) as $key ) { $query->set( $key, '' ); }
+		foreach ( array( 'category__in', 'category__not_in', 'category__and', 'tag__in', 'tag__not_in', 'tag__and', 'tag_slug__in', 'tag_slug__and', 'tax_query' ) as $key ) { $query->set( $key, array() ); }
 		$room = isset( $_GET['room'] ) ? sanitize_title( wp_unslash( (string) $_GET['room'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( $room && term_exists( $room, Chidemoon_Core_Shop_The_Look::TAXONOMY ) ) {
 			$query->set( 'tax_query', array( array( 'taxonomy' => Chidemoon_Core_Shop_The_Look::TAXONOMY, 'field' => 'slug', 'terms' => $room ) ) );
 		}
+		$style = isset( $_GET['style'] ) && is_string( $_GET['style'] ) ? sanitize_title( wp_unslash( $_GET['style'] ) ) : '';
+		if ( $style && term_exists( $style, 'chidemoon_style' ) ) { $query->set( 'tax_query', array( 'relation' => 'AND', (array) $query->get( 'tax_query' ), array( 'taxonomy' => 'chidemoon_style', 'field' => 'slug', 'terms' => $style ) ) ); }
 	}
 
 	public static function room_filters( array $attributes = array() ): string {
