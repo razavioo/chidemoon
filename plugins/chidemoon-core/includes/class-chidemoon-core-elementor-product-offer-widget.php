@@ -33,6 +33,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 			$this->add_control( $key, array( 'label' => $control[0], 'type' => \Elementor\Controls_Manager::TEXT, 'default' => $control[1], 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_compare' => 'yes' ) ) );
 		}
 		$this->add_control( 'show_source', array( 'label' => 'منبع و تاریخ بررسی', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
+		$this->add_control( 'show_looks', array( 'label' => __( 'Used in these Looks', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
 		$this->add_control( 'merchant_label', array( 'label' => 'عنوان فروشنده', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'فروشنده', 'dynamic' => array( 'active' => true ) ) );
 		$this->add_control( 'source_label', array( 'label' => 'متن لینک منبع', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشاهدهٔ اطلاعات در فروشگاه', 'dynamic' => array( 'active' => true ) ) );
 		$this->add_control( 'checked_label', array( 'label' => 'عنوان تاریخ بررسی', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'بررسی منبع', 'dynamic' => array( 'active' => true ) ) );
@@ -93,6 +94,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 			echo '<p class="ch-product-merchant"><span>' . esc_html( $settings['merchant_label'] ?? 'فروشنده' ) . '</span><strong>' . esc_html( $merchant ) . '</strong></p>';
 		}
 		if ( 'yes' === ( $settings['show_source'] ?? 'yes' ) ) {
+			echo Chidemoon_Core_Commercial::observations_shortcode( array( 'product_id' => $product->get_id() ) );
 			$checked = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_SOURCE_CHECKED );
 			$checked_at = strtotime( $checked );
 			if ( $checked && false !== $checked_at ) {
@@ -126,6 +128,9 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 			echo $this->facts_markup( $product, $settings['facts_empty_text'] ?? 'مشخصات بررسی‌شده‌ای برای این محصول ثبت نشده است.' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		echo '</div>';
+		if ( 'yes' === ( $settings['show_looks'] ?? 'yes' ) ) {
+			echo Chidemoon_Core_Looks::product_looks_shortcode( array( 'product_id' => $product->get_id() ) );
+		}
 	}
 
 	/** @param array<string, mixed> $settings */

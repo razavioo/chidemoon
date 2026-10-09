@@ -59,6 +59,15 @@ foreach ( array( 'main', 'accent' ) as $index => $role ) {
 }
 catalog_check( 'main' === Chidemoon_Core_Looks::relationships( $look_ids[0] )[0]['role'] && 'accent' === Chidemoon_Core_Looks::relationships( $look_ids[1] )[0]['role'], 'Look roles are not independent' );
 catalog_check( 2 === substr_count( Chidemoon_Core_Looks::product_looks_shortcode( array( 'product_id' => $product_id ) ), '<li>' ), 'Reverse Look links are missing' );
+foreach ( array( 'visible' => array(), 'hidden' => array( 'show_source' => '', 'show_looks' => '' ) ) as $visibility => $settings ) {
+ $widget = \Elementor\Plugin::$instance->elements_manager->create_element_instance( array( 'id' => 'catalog-offer-' . $visibility, 'elType' => 'widget', 'widgetType' => 'chidemoon-product-offer', 'settings' => array_merge( array( 'product_id' => (string) $product_id ), $settings ), 'elements' => array() ) );
+ catalog_check( $widget instanceof \Elementor\Widget_Base, 'Product offer widget is unavailable' );
+ ob_start();
+ try { ( new ReflectionMethod( $widget, 'render' ) )->invoke( $widget ); $offer_html = (string) ob_get_contents(); }
+ finally { ob_end_clean(); }
+ foreach ( $look_ids as $look_id ) { catalog_check( ( 'visible' === $visibility ) === str_contains( $offer_html, esc_url( get_permalink( $look_id ) ) ), 'Elementor offer ignores Look relationships or visibility controls' ); }
+ catalog_check( ( 'visible' === $visibility ) === str_contains( $offer_html, 'ch-offer-observations' ), 'Elementor offer hides source observations or ignores visibility controls' );
+}
 $archive = new WP_Query();
 $archive->set( 'category_name', 'obsolete-post-category' );
 $archive->set( 'tax_query', array( array( 'taxonomy' => 'post_tag', 'field' => 'slug', 'terms' => array( 'obsolete-look-tag' ) ) ) );
