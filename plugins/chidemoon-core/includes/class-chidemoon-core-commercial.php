@@ -25,6 +25,8 @@ final class Chidemoon_Core_Commercial {
  }
  public static function protect_source_write( $product, $request, bool $creating ) {
   if ( is_wp_error( $product ) ) { return $product; }
+  $existing = ! $creating && $product->get_id() ? wc_get_product( $product->get_id() ) : null;
+  if ( ! $product->is_type( 'external' ) && ! ( $existing && $existing->is_type( 'external' ) ) && ! $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) { return $product; }
   $fields = array( 'name', 'description', 'short_description', 'external_url', 'regular_price', 'sale_price', 'images', 'categories', 'tags', 'attributes', 'dimensions' );
   if ( $creating || array_intersect( $fields, array_keys( $request->get_params() ) ) ) { return new WP_Error( 'chidemoon_source_profile_required', __( 'Import approved source data through the versioned source profile. Editorial fields are reviewed in Chidemoon.', 'chidemoon-core' ), array( 'status' => 409 ) ); }
   foreach ( (array) $request->get_param( 'meta_data' ) as $meta ) {

@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Chidemoon_Core_Enrichment {
  public const META = '_chidemoon_enrichment';
  public const REVISION = '_chidemoon_enrichment_revision';
+ public const DRAFT = '_chidemoon_classification_draft';
  public const TAXONOMIES = array( 'category' => 'product_cat', 'style' => 'chidemoon_style', 'room' => 'chidemoon_room', 'color' => 'pa_color', 'material' => 'pa_material', 'features' => 'pa_features', 'suitability' => 'pa_space_size', 'tags' => 'product_tag' );
  public const REQUIRED = array( 'style', 'room', 'color', 'material' );
  private static bool $applying = false;
@@ -25,6 +26,7 @@ final class Chidemoon_Core_Enrichment {
  public static function register(): void {
   add_action( 'init', array( __CLASS__, 'register_model' ), 20 );
   add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+  add_filter( 'woocommerce_rest_pre_insert_product_object', array( __CLASS__, 'receive_classification_draft' ), 10, 3 );
   add_action( 'admin_notices', static function(): void {
    $key = 'chidemoon_enrichment_error_' . get_current_user_id(); $error = get_transient( $key );
    if ( $error ) { delete_transient( $key ); echo '<div class="notice notice-error"><p>' . esc_html( $error ) . '</p></div>'; }
@@ -196,6 +198,19 @@ final class Chidemoon_Core_Enrichment {
  }
 
  public static function register_routes(): void {
+  register_rest_route( 'wc/v3', '/chidemoon/classification', array(
+   'methods' => 'GET',
+   'permission_callback' => static fn() => current_user_can( 'chidemoon_manage_affiliate' ) && current_user_can( 'edit_products' ),
+   'callback' => static function() {
+    $fields = array();
+    foreach ( self::TAXONOMIES as $field => $taxonomy ) {
+     $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false ) );
+     if ( is_wp_error( $terms ) ) { return $terms; }
+     $fields[] = array( 'key' => $field, 'label' => self::field_label( $field ), 'terms' => array_map( static fn( $term ) => array( 'id' => (int) $term->term_id, 'name' => $term->name, 'parent' => (int) $term->parent ), $terms ) );
+    }
+    return array( 'fields' => $fields );
+   },
+  ) );
   register_rest_route( 'chidemoon-core/v1', '/products/(?P<id>\d+)/enrichment', array(
    array( 'methods' => 'GET', 'permission_callback' => array( __CLASS__, 'can_edit' ), 'callback' => static fn( $request ) => array( 'revision' => self::token( (int) $request['id'] ), 'fields' => self::read( (int) $request['id'] ), 'readiness' => self::readiness( (int) $request['id'] ) ) ),
    array( 'methods' => 'PATCH', 'permission_callback' => array( __CLASS__, 'can_edit' ), 'callback' => static function( $request ) {
@@ -203,6 +218,28 @@ final class Chidemoon_Core_Enrichment {
     catch ( Throwable $exception ) { return new WP_Error( 'enrichment_rejected', $exception->getMessage(), array( 'status' => 'revision_conflict' === $exception->getMessage() ? 409 : 422 ) ); }
    } ),
   ) );
+ }
+ public static function validate_classification_draft( $draft ): array {
+  if ( ! is_array( $draft ) || array_diff( array_keys( $draft ), array_keys( self::TAXONOMIES ) ) ) { throw new InvalidArgumentException( 'Invalid classification draft' ); }
+  $clean = array();
+  foreach ( $draft as $field => $values ) {
+   if ( ! is_array( $values ) ) { throw new InvalidArgumentException( 'Invalid classification terms' ); }
+   if ( ! $values ) { continue; }
+   $clean[ $field ] = self::validate_field( $field, array( 'state' => 'value', 'value' => $values ) )['value'];
+  }
+  return $clean;
+ }
+ public static function receive_classification_draft( $product, $request, $creating ) {
+  if ( is_wp_error( $product ) ) { return $product; }
+  foreach ( (array) $request->get_param( 'meta_data' ) as $entry ) {
+   if ( self::DRAFT !== ( $entry['key'] ?? '' ) ) { continue; }
+   if ( ! current_user_can( 'chidemoon_manage_affiliate' ) || ! current_user_can( 'edit_products' ) ) { return new WP_Error( 'classification_forbidden', 'Classification requires editorial access', array( 'status' => 403 ) ); }
+   try { $draft = self::validate_classification_draft( $entry['value'] ?? null ); }
+   catch ( Throwable $error ) { return new WP_Error( 'classification_invalid', $error->getMessage(), array( 'status' => 422 ) ); }
+   $product->update_meta_data( self::DRAFT, $draft );
+   if ( $creating ) { $product->set_status( 'draft' ); }
+  }
+  return $product;
  }
  public static function can_edit( $request ): bool { return current_user_can( 'chidemoon_manage_affiliate' ) && current_user_can( 'edit_post', (int) $request['id'] ); }
  private static function acquire( int $id ): bool { global $wpdb; return '1' === (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', 'ch_enrichment_' . $id ) ); }
@@ -213,8 +250,10 @@ final class Chidemoon_Core_Enrichment {
   wp_nonce_field( 'chidemoon_enrichment_' . $post->ID, 'chidemoon_enrichment_nonce' );
   echo '<input type="hidden" name="chidemoon_enrichment_revision" value="' . esc_attr( self::token( $post->ID ) ) . '">';
   $fields = self::read( $post->ID );
+  $draft = get_post_meta( $post->ID, self::DRAFT, true );
+  if ( is_array( $draft ) && $draft ) { echo '<p role="status">' . esc_html__( 'Kalahamoon classification suggestions are selected below. Choose Reviewed values for each field to approve them. Existing reviewed values are preserved.', 'chidemoon-core' ) . '</p>'; }
   foreach ( self::TAXONOMIES as $field => $taxonomy ) {
-   $current = $fields[ $field ] ?? array();
+   $current = $fields[ $field ] ?? array( 'state' => '', 'value' => is_array( $draft ) ? ( $draft[ $field ] ?? array() ) : array() );
    echo '<fieldset><legend><strong>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</strong></legend><select name="chidemoon_enrichment[' . esc_attr( $field ) . '][state]">';
    foreach ( array( '' => 'Pending review', 'value' => 'Reviewed values', 'unknown' => 'Unknown', 'not_applicable' => 'Not applicable' ) as $state => $label ) { echo '<option value="' . esc_attr( $state ) . '" ' . selected( $current['state'] ?? '', $state, false ) . '>' . esc_html__( $label, 'chidemoon-core' ) . '</option>'; }
    echo '</select> <select multiple name="chidemoon_enrichment[' . esc_attr( $field ) . '][value][]" aria-label="' . esc_attr( $field ) . '" style="min-width:220px;max-width:100%">';
