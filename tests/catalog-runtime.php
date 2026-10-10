@@ -32,6 +32,10 @@ catalog_check( 'draft' === get_post_status( $product_id ), 'Import auto-publishe
 $product = wc_get_product( $product_id );
 catalog_check( '<p>Chidemoon editorial explanation</p>' === $product->get_description(), 'Editorial content changed during import' );
 catalog_check( '125000' === $product->get_price() && '150000' === $product->get_regular_price(), 'Destination currency conversion failed' );
+$pending_comparison = Chidemoon_Core_Compare::facts( $product );
+catalog_check( 'Preserved' === $pending_comparison['Editorial fact'], 'Comparison removed legacy editorial facts before enrichment review' );
+catalog_check( 'Unknown' === $pending_comparison['Width (cm)'] && 'Unknown' === $pending_comparison['Style'], 'Comparison invented pending enrichment values' );
+catalog_check( 'Available at merchant' === $pending_comparison['Availability'] && $record['observations']['availability']['observedAt'] === $pending_comparison['Availability observed'], 'Comparison hides source observations before enrichment review' );
 wp_update_post( array( 'ID' => $product_id, 'post_status' => 'publish' ) );
 catalog_check( 'draft' === get_post_status( $product_id ), 'Publication readiness was bypassed' );
 $approved = array(); $term_ids = array();

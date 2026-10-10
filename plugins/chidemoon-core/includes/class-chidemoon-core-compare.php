@@ -326,26 +326,10 @@ final class Chidemoon_Core_Compare {
 
 	/** @return array<string, string> */
 	public static function facts( WC_Product $product ): array {
-		if ( class_exists( 'Chidemoon_Core_Enrichment' ) && get_post_meta( $product->get_id(), Chidemoon_Core_Enrichment::META, true ) ) {
-			$facts = array(); $fields = Chidemoon_Core_Enrichment::read( $product->get_id() );
-			foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) {
-				$labels = array();
-				foreach ( $fields[ $field ]['value'] ?? array() as $id ) { $term = get_term( $id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $labels[] = $term->name; } }
-				$facts[ Chidemoon_Core_Enrichment::field_label( $field ) ] = $labels ? implode( ', ', $labels ) : __( 'not_applicable' === ( $fields[ $field ]['state'] ?? '' ) ? 'Not applicable' : 'Unknown', 'chidemoon-core' );
-			}
-			foreach ( array( 'length', 'width', 'height', 'depth' ) as $axis ) { $value = $fields['dimensions']['value'][ $axis ] ?? null; $facts[ Chidemoon_Core_Enrichment::field_label( $axis ) . ' (cm)' ] = null === $value ? __( 'Unknown', 'chidemoon-core' ) : (string) $value; }
-			$observations = Chidemoon_Core_Commercial::observations( $product );
-			$facts[ __( 'Availability', 'chidemoon-core' ) ] = Chidemoon_Core_Commercial::availability_label( $product );
-			$facts[ __( 'Availability observed', 'chidemoon-core' ) ] = $observations['availability']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
-			$facts[ __( 'Price observed', 'chidemoon-core' ) ] = $observations['price']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
-			$rating = $observations['rating'] ?? null;
-			$facts[ __( 'Merchant rating', 'chidemoon-core' ) ] = $rating ? $rating['value'] . '/' . $rating['scale'] . ' (' . $rating['count'] . ') ' . $rating['provider'] . ' — ' . $rating['observedAt'] : __( 'Unavailable', 'chidemoon-core' );
-			return $facts;
-		}
 		$raw = $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS, true );
 		$data = is_string( $raw ) ? json_decode( $raw, true ) : array();
 		if ( ! is_array( $data ) ) {
-			return array();
+			$data = array();
 		}
 		$facts = array();
 		foreach ( $data as $key => $value ) {
@@ -361,6 +345,22 @@ final class Chidemoon_Core_Compare {
 			if ( '' !== $label && '' !== $fact ) {
 				$facts[ $label ] = $fact;
 			}
+		}
+		if ( class_exists( 'Chidemoon_Core_Enrichment' ) && ( get_post_meta( $product->get_id(), Chidemoon_Core_Enrichment::META, true ) || $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) ) {
+			$fields = Chidemoon_Core_Enrichment::read( $product->get_id() );
+			if ( $fields ) { $facts = array(); }
+			foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) {
+				$labels = array();
+				foreach ( $fields[ $field ]['value'] ?? array() as $id ) { $term = get_term( $id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $labels[] = $term->name; } }
+				$facts[ Chidemoon_Core_Enrichment::field_label( $field ) ] = $labels ? implode( ', ', $labels ) : __( 'not_applicable' === ( $fields[ $field ]['state'] ?? '' ) ? 'Not applicable' : 'Unknown', 'chidemoon-core' );
+			}
+			foreach ( array( 'length', 'width', 'height', 'depth' ) as $axis ) { $value = $fields['dimensions']['value'][ $axis ] ?? null; $facts[ Chidemoon_Core_Enrichment::field_label( $axis ) . ' (cm)' ] = null === $value ? __( 'Unknown', 'chidemoon-core' ) : (string) $value; }
+			$observations = Chidemoon_Core_Commercial::observations( $product );
+			$facts[ __( 'Availability', 'chidemoon-core' ) ] = Chidemoon_Core_Commercial::availability_label( $product );
+			$facts[ __( 'Availability observed', 'chidemoon-core' ) ] = $observations['availability']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
+			$facts[ __( 'Price observed', 'chidemoon-core' ) ] = $observations['price']['observedAt'] ?? __( 'Unknown', 'chidemoon-core' );
+			$rating = $observations['rating'] ?? null;
+			$facts[ __( 'Merchant rating', 'chidemoon-core' ) ] = $rating ? $rating['value'] . '/' . $rating['scale'] . ' (' . $rating['count'] . ') ' . $rating['provider'] . ' — ' . $rating['observedAt'] : __( 'Unavailable', 'chidemoon-core' );
 		}
 		return $facts;
 	}
