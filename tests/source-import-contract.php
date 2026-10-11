@@ -58,10 +58,16 @@ check( Chidemoon_Core_Source_Contract::compare_decimals( '9999999999999999.2', '
 $snapshot = array( 'version' => 'v2', 'organization' => array( 'id' => 'org', 'slug' => 'chidemoon' ), 'snapshot' => array( 'id' => 'snapshot', 'revision' => str_repeat( 'a', 64 ), 'generatedAt' => '2026-10-09T08:00:00Z' ), 'items' => array( $fixture ), 'withdrawals' => array() );
 // Media downloads are covered by the real WooCommerce fixture. This fixture verifies ownership without network IO.
 unset( $snapshot['items'][0]['content']['images'] );
+$snapshot['items'][0]['observations']['sourceState'] = array( 'status' => 'OUT_OF_SYNC', 'publicationState' => 'DRAFT', 'productStatus' => 'inactive', 'observedAt' => '2026-10-10T19:25:45Z' );
 $result = Chidemoon_Core_Source_Importer::import_snapshot( $snapshot, false, 'chidemoon' );
 check( 'imported' === $result['records'][0]['status'], 'Source import failed' );
 $product = $GLOBALS['product'];
 check( 'publish' === $product->values['status'], 'Commercial import reset publication' );
+check( 'OUT_OF_SYNC' === $product->meta['_chidemoon_source_status'] && 'DRAFT' === $product->meta['_chidemoon_source_publication_state'], 'Unapproved source status was not imported independently' );
+check( 'inactive' === $product->meta['_chidemoon_source_product_status'], 'Local product status was not preserved' );
+$invalid_state = $snapshot['items'][0];
+$invalid_state['observations']['sourceState']['status'] = 'INVALID';
+try { Chidemoon_Core_Source_Contract::validate_record( $invalid_state ); throw new RuntimeException( 'Invalid source state accepted' ); } catch ( InvalidArgumentException $expected ) {}
 check( '<p>Editorial Elementor explanation</p>' === $product->values['description'], 'Editorial content overwritten' );
 check( array( 42 ) === $product->values['categories'] && array( 'pa_color' => 'blue' ) === $product->values['attributes'], 'Taxonomy overwritten' );
 check( 'reviewed' === $product->meta['_chidemoon_review_state'] && 'approved facts' === $product->meta['_chidemoon_product_facts'], 'Review or facts overwritten' );

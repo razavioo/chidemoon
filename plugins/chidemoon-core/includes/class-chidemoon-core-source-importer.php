@@ -165,6 +165,7 @@ final class Chidemoon_Core_Source_Importer {
     } catch ( InvalidArgumentException $exception ) { $issues[] = $exception->getMessage(); continue; }
    }
    $observations[ $field ] = $observation;
+   if ( 'sourceState' === $field ) { $product->update_meta_data( '_chidemoon_source_status', $observation['status'] ); $product->update_meta_data( '_chidemoon_source_publication_state', $observation['publicationState'] ); if ( isset( $observation['productStatus'] ) ) { $product->update_meta_data( '_chidemoon_source_product_status', $observation['productStatus'] ); } }
    if ( 'availability' === $field ) { $product->update_meta_data( '_chidemoon_availability_status', $observation['status'] ); $product->update_meta_data( '_chidemoon_availability_observed_unix', strtotime( $observation['observedAt'] ) ); }
   }
   foreach ( $record['removals'] as $field ) {

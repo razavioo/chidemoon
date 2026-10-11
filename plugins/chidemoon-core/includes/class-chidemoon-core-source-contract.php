@@ -51,10 +51,12 @@ final class Chidemoon_Core_Source_Contract {
    }
   }
   $observations = $record['observations'] ?? null;
-  if ( ! is_array( $observations ) || array_diff( array_keys( $observations ), array( 'price', 'availability', 'rating' ) ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
+  if ( ! is_array( $observations ) || array_diff( array_keys( $observations ), array( 'price', 'availability', 'rating', 'sourceState' ) ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
   foreach ( $observations as $field => $observation ) {
    if ( ! is_array( $observation ) || ! self::timestamp( $observation['observedAt'] ?? null ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
-   if ( 'price' === $field ) {
+   if ( 'sourceState' === $field ) {
+    if ( array_diff( array_keys( $observation ), array( 'status', 'publicationState', 'productStatus', 'observedAt' ) ) || ! in_array( $observation['status'] ?? '', array( 'ACTIVE', 'INACTIVE', 'ARCHIVED', 'CAPTURED', 'OUT_OF_SYNC' ), true ) || ! in_array( $observation['publicationState'] ?? '', array( 'DRAFT', 'VERIFIED', 'ARCHIVED' ), true ) || ( array_key_exists( 'productStatus', $observation ) && ( ! is_string( $observation['productStatus'] ) || '' === $observation['productStatus'] || mb_strlen( $observation['productStatus'] ) > 64 ) ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
+   } elseif ( 'price' === $field ) {
     if ( array_diff( array_keys( $observation ), array( 'current', 'previous', 'currency', 'observedAt' ) ) || ! self::decimal( $observation['current'] ?? null ) || (float) $observation['current'] <= 0 || ! preg_match( '/^[A-Z]{3}$/D', (string) ( $observation['currency'] ?? '' ) ) || ! array_key_exists( 'previous', $observation ) || ( null !== $observation['previous'] && ( ! self::decimal( $observation['previous'] ) || self::compare_decimals( $observation['previous'], $observation['current'] ) <= 0 ) ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
    } elseif ( 'availability' === $field ) {
     if ( array_diff( array_keys( $observation ), array( 'status', 'observedAt' ) ) || ! in_array( $observation['status'] ?? '', array( 'in_stock', 'out_of_stock', 'unknown' ), true ) ) { throw new InvalidArgumentException( 'invalid_record' ); }
