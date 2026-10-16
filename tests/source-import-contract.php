@@ -11,21 +11,23 @@ function get_woocommerce_currency() { return 'IRT'; }
 function get_option( $key, $default = false ) { return $GLOBALS['options'][ $key ] ?? $default; }
 function update_option( $key, $value, $autoload = null ) { $GLOBALS['options'][ $key ] = $value; return true; }
 function wc_get_product_id_by_sku( $sku ) { return 0; }
-function wc_get_product( $id ) { return $GLOBALS['product']; }
-function get_post_meta( $id, $key, $single = true ) { return 123 === (int) $id ? ( $GLOBALS['product']->meta[ $key ] ?? '' ) : ''; }
-function get_posts( $query ) { return in_array( $query['meta_query'][0]['value'] ?? '', array( 'kalahamoon:crm-product:base', $GLOBALS['fixture']['sourceKey'] ?? '' ), true ) ? array( 123 ) : array(); }
+function wc_get_product( $id ) { return isset( $GLOBALS['products'] ) ? ( $GLOBALS['products'][ $id ] ?? false ) : $GLOBALS['product']; }
+function get_post_meta( $id, $key, $single = true ) { $p = wc_get_product( $id ); return $p ? ( $p->meta[ $key ] ?? '' ) : ''; }
+function get_posts( $query ) { if ( isset( $GLOBALS['matches'] ) ) { return $GLOBALS['matches'][ $query['meta_query'][0]['value'] ?? '' ] ?? array(); } return in_array( $query['meta_query'][0]['value'] ?? '', array( 'kalahamoon:crm-product:base', $GLOBALS['fixture']['sourceKey'] ?? '' ), true ) ? array( 123 ) : array(); }
 class WP_Error {}
 function is_wp_error( $value ) { return $value instanceof WP_Error; }
 class WC_Product {
+ public int $id = 123;
+ public string $type = 'external';
  public array $meta = array( '_chidemoon_review_state' => 'reviewed', '_chidemoon_product_facts' => 'approved facts' );
  public array $values = array( 'description' => '<p>Editorial Elementor explanation</p>', 'categories' => array( 42 ), 'attributes' => array( 'pa_color' => 'blue' ), 'status' => 'publish' );
  public function get_meta( $key, $single = true ) { return $this->meta[ $key ] ?? ''; }
  public function update_meta_data( $key, $value ) { $this->meta[ $key ] = $value; }
  public function delete_meta_data( $key ) { unset( $this->meta[ $key ] ); }
- public function is_type( $type ) { return 'external' === $type; }
- public function get_id() { return 123; }
+ public function is_type( $type ) { return $this->type === $type; }
+ public function get_id() { return $this->id; }
  public function get_description() { return $this->values['description']; }
- public function save() { return 123; }
+ public function save() { return $this->id; }
  public function __call( $method, $args ) { $this->values[ substr( $method, 4 ) ] = $args[0] ?? null; }
 }
 class WC_Product_External extends WC_Product {}
@@ -34,10 +36,11 @@ class FakeDatabase {
  public function prepare( $query, ...$params ) { return array( $query, $params ); }
  public function get_var( $query ) {
   if ( str_contains( $query[0], 'GET_LOCK' ) || str_contains( $query[0], 'RELEASE_LOCK' ) ) { return '1'; }
-  if ( str_contains( $query[0], 'SELECT product_id' ) ) { return 123; }
-  if ( str_contains( $query[0], 'SELECT source_key' ) ) { return $GLOBALS['fixture']['sourceKey']; }
+  if ( str_contains( $query[0], 'SELECT product_id' ) ) { return $GLOBALS['source_map'][ $query[1][0] ] ?? null; }
+  if ( str_contains( $query[0], 'SELECT source_key' ) ) { return array_search( (int) $query[1][0], $GLOBALS['source_map'] ?? array(), true ) ?: null; }
   return null;
  }
+ public function insert( $table, $data, $formats ) { $GLOBALS['source_map'][ $data['source_key'] ] = $data['product_id']; return 1; }
 }
 $GLOBALS['wpdb'] = new FakeDatabase();
 $GLOBALS['product'] = new WC_Product_External();

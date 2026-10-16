@@ -11,6 +11,17 @@ final class Chidemoon_Core_Source_Importer {
  public const META_WITHDRAWN = '_chidemoon_source_withdrawn';
  public const META_IMPORTED = '_chidemoon_source_imported_at';
 
+ public static function register(): void {
+  add_filter( 'woocommerce_duplicate_product_exclude_meta', array( __CLASS__, 'duplicate_excluded_meta' ), 10, 2 );
+ }
+
+ public static function duplicate_excluded_meta( array $excluded, array $existing ): array {
+  foreach ( $existing as $key ) {
+   if ( str_starts_with( $key, '_chidemoon_source_' ) || '_chidemoon_identity_migration_backup_v2' === $key ) { $excluded[] = $key; }
+  }
+  return array_values( array_unique( $excluded ) );
+ }
+
  public static function install(): void {
   global $wpdb;
   $collation = $wpdb->get_charset_collate();
@@ -59,7 +70,13 @@ final class Chidemoon_Core_Source_Importer {
  public static function resolve( string $source_key, array $aliases = array() ): int {
   global $wpdb;
   $mapped = (int) $wpdb->get_var( $wpdb->prepare( "SELECT product_id FROM {$wpdb->prefix}chidemoon_source_map WHERE source_key = %s", $source_key ) );
-  $ids = $mapped ? array( $mapped ) : array();
+  if ( $mapped ) {
+   $identity = json_decode( (string) get_post_meta( $mapped, self::META_IDENTITY, true ), true );
+   if ( ! is_array( $identity ) || Chidemoon_Core_Source_Contract::source_key( $identity ) !== $source_key || (string) get_post_meta( $mapped, Chidemoon_Core_Affiliate::META_SOURCE_KEY, true ) !== $source_key ) { throw new RuntimeException( 'identity_collision' ); }
+   // The unique import mapping owns the identity; copied post metadata cannot reassign it.
+   return $mapped;
+  }
+  $ids = array();
   foreach ( array_unique( array_merge( array( $source_key ), $aliases ) ) as $key ) {
    $matches = Chidemoon_Core_Importer::find_product_ids( $key );
    $sku = 'km-src-' . substr( hash( 'sha256', $key ), 0, 48 );
@@ -116,7 +133,10 @@ final class Chidemoon_Core_Source_Importer {
   $fingerprint = hash( 'sha256', Chidemoon_Core_Importer::canonical_json( json_decode( wp_json_encode( $record ) ) ) );
   if ( $record['revision'] < $old_revision ) { throw new RuntimeException( 'stale_revision' ); }
   $existing_identity = (string) $product->get_meta( self::META_IDENTITY, true );
-  if ( $existing_identity && ! hash_equals( $existing_identity, wp_json_encode( $record['identity'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) ) ) { throw new RuntimeException( 'identity_collision' ); }
+  if ( $existing_identity ) {
+   $identity = json_decode( $existing_identity, true );
+   if ( ! is_array( $identity ) || Chidemoon_Core_Source_Contract::source_key( $identity ) !== $record['sourceKey'] ) { throw new RuntimeException( 'identity_collision' ); }
+  }
   if ( $record['contentRevision'] < (int) $product->get_meta( self::META_CONTENT_REVISION, true ) ) { throw new RuntimeException( 'stale_revision' ); }
   if ( $record['revision'] === $old_revision ) {
    $old_fingerprint = (string) $product->get_meta( '_chidemoon_source_fingerprint', true );
