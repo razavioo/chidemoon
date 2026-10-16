@@ -22,7 +22,7 @@ final class Chidemoon_Core_Elementor_Catalog_Tools_Widget extends \Elementor\Wid
 			'raw' => 'این ابزار تعداد و مرتب‌سازی نتایج فهرست جاری ووکامرس را نمایش می‌دهد. آن را پیش از Loop Grid محصولات قرار دهید و منبع Query کارت‌ها را «Current Query» نگه دارید تا دسته‌بندی، فیلترها و شمارهٔ صفحه حفظ شوند.',
 		) );
 		$this->add_control( 'show_count', array( 'label' => 'نمایش تعداد نتایج', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
-		$this->add_control( 'show_filters', array( 'label' => __( 'Catalog filters', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
+		$this->add_control( 'show_filters', array( 'label' => __( 'Catalog filters', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => '' ) );
 		foreach ( array(
 			'count_single' => array( 'متن یک نتیجه', 'نمایش یک محصول', '' ),
 			'count_all' => array( 'متن همهٔ نتایج', 'نمایش همهٔ {total} محصول', 'از {total} برای تعداد کل استفاده کنید.' ),
@@ -71,7 +71,7 @@ final class Chidemoon_Core_Elementor_Catalog_Tools_Widget extends \Elementor\Wid
 		$settings = $this->get_settings_for_display();
 		$show_count = 'yes' === ( $settings['show_count'] ?? 'yes' );
 		$show_sorting = 'yes' === ( $settings['show_sorting'] ?? 'yes' );
-		$show_filters = 'yes' === ( $settings['show_filters'] ?? 'yes' );
+		$show_filters = 'yes' === ( $settings['show_filters'] ?? '' );
 		if ( $show_filters ) {
 			echo Chidemoon_Core_Discovery::filters();
 			$chooser = get_page_by_path( 'product-chooser' );

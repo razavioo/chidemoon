@@ -128,17 +128,34 @@ $find_look = static function ( array $elements ) use ( &$find_look ): array {
 	return array();
 };
 $look_settings = $find_look( is_array( $look_elements ) ? $look_elements : array() );
+if ( ! empty( $look_settings['look_id'] ) ) {
+	$look_id = (int) $look_settings['look_id'];
+	$check( Chidemoon_Core_Looks::POST_TYPE === get_post_type( $look_id ) && 'publish' === get_post_status( $look_id ), 'Shop the Look references a published Look.' );
+	$look_settings['image']['id'] = get_post_thumbnail_id( $look_id );
+	$look_settings['hotspots'] = array();
+	foreach ( Chidemoon_Core_Looks::relationships( $look_id ) as $row ) {
+		if ( ! empty( $row['hotspot_approved'] ) && null !== $row['hotspot_x'] && null !== $row['hotspot_y'] ) {
+			$look_settings['hotspots'][] = array( 'product_source_key' => $row['source_key'], 'product_id' => $row['product_id'] );
+		}
+	}
+}
 $check( wp_attachment_is_image( (int) ( $look_settings['image']['id'] ?? 0 ) ), 'Shop the Look has a scene image.' );
 foreach ( array( 'basalam:25688211', 'basalam:33684609' ) as $source_key ) {
 	$spot_found = false;
+	$spot_product_id = 0;
 	foreach ( $look_settings['hotspots'] ?? array() as $spot ) {
 		if ( $source_key === ( $spot['product_source_key'] ?? '' ) ) {
 			$spot_found = true;
+			$spot_product_id = (int) ( $spot['product_id'] ?? 0 );
 			break;
 		}
 	}
 	$products = get_posts( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 1, 'fields' => 'ids', 'meta_key' => Chidemoon_Core_Affiliate::META_SOURCE_KEY, 'meta_value' => $source_key ) );
-	$product = $products ? wc_get_product( (int) $products[0] ) : null;
+	$product = wc_get_product( $spot_product_id ?: (int) ( $products[0] ?? 0 ) );
+	if ( $spot_product_id && $product instanceof WC_Product ) {
+		$identity = json_decode( (string) $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ), true );
+		$check( $source_key === ( $identity['provider'] ?? '' ) . ':' . ( $identity['product'] ?? '' ), 'Look reference retains the expected source identity: ' . $source_key );
+	}
 	$check( $spot_found && $product instanceof WC_Product && Chidemoon_Core_Affiliate::is_publicly_eligible( $product ), 'Shoppable product is published and reviewed: ' . $source_key );
 }
 foreach ( wc_get_products( array( 'status' => 'publish', 'limit' => -1 ) ) as $product ) {

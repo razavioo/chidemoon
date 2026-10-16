@@ -6,6 +6,7 @@ final class Chidemoon_Core_Discovery {
   add_action( 'woocommerce_product_query', array( __CLASS__, 'filter_archive' ), 25 );
   add_action( 'elementor/query/chidemoon_catalog', array( __CLASS__, 'filter_archive' ), 25 );
   add_shortcode( 'chidemoon_catalog_filters', array( __CLASS__, 'filters' ) );
+  add_shortcode( 'chidemoon_catalog_sidebar', array( __CLASS__, 'sidebar_filters' ) );
   add_shortcode( 'chidemoon_guided_chooser', array( __CLASS__, 'chooser' ) );
   add_action( 'elementor/widgets/register', array( __CLASS__, 'register_widget' ) );
  }
@@ -39,7 +40,6 @@ final class Chidemoon_Core_Discovery {
   $min = self::number_input( 'ch_min_price', $input ); $max = self::number_input( 'ch_max_price', $input );
   if ( null !== $min || null !== $max ) {
    $meta[] = array( 'key' => '_price', 'value' => array( $min ?? 0, $max ?? 999999999999999 ), 'compare' => 'BETWEEN', 'type' => 'DECIMAL(24,6)' );
-   $meta[] = array( 'key' => '_chidemoon_price_observed_unix', 'value' => array( time() - Chidemoon_Core_Commercial::FRESHNESS_SECONDS, time() + 300 ), 'compare' => 'BETWEEN', 'type' => 'NUMERIC' );
   }
   $availability = self::selection( 'ch_availability', $input );
   if ( $availability ) {
@@ -77,6 +77,21 @@ final class Chidemoon_Core_Discovery {
   foreach ( array( 'ch_min_price' => 'Minimum price', 'ch_max_price' => 'Maximum price' ) as $key => $label ) { $html .= '<label>' . esc_html__( $label, 'chidemoon-core' ) . ' (' . esc_html( get_woocommerce_currency() ) . ') <input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '"></label>'; }
   foreach ( array( 's', 'orderby', 'post_type' ) as $key ) { if ( isset( $input[ $key ] ) && is_string( $input[ $key ] ) ) { $html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( sanitize_text_field( $input[ $key ] ) ) . '">'; } }
   return $html . '<button type="submit">' . esc_html__( 'Apply filters', 'chidemoon-core' ) . '</button></form>';
+ }
+ public static function sidebar_filters( array $attributes = array() ): string {
+  $input = wp_unslash( $_GET );
+  $action = wc_get_page_permalink( 'shop' );
+  if ( is_product_category() ) { $link = get_term_link( get_queried_object() ); if ( ! is_wp_error( $link ) ) { $action = $link; } }
+  $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" aria-label="فیلتر محصولات"><fieldset><legend>قیمت (تومان)</legend>';
+  foreach ( array( 'ch_min_price' => 'از قیمت', 'ch_max_price' => 'تا قیمت' ) as $key => $label ) {
+   $html .= '<label>' . esc_html( $label ) . '<input type="number" inputmode="numeric" min="0" step="1" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '" placeholder="تومان"></label>';
+  }
+  $html .= '</fieldset><fieldset><legend>دسته‌بندی محصولات</legend><div class="ch-sidebar-categories">';
+  $terms = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'orderby' => 'name' ) );
+  foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $html .= self::checkbox( 'ch_category', $term->slug, $term->name, $input ); }
+  $html .= '</div></fieldset>';
+  foreach ( array( 's', 'orderby', 'post_type' ) as $key ) { if ( isset( $input[ $key ] ) && is_string( $input[ $key ] ) ) { $html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( sanitize_text_field( $input[ $key ] ) ) . '">'; } }
+  return $html . '<button type="submit">اعمال فیلتر</button><a class="ch-sidebar-reset" href="' . esc_url( $action ) . '">پاک کردن فیلترها</a></form>';
  }
  private static function checkbox( string $key, string $value, string $label, array $input ): string { return '<label><input type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value ) . '" ' . checked( in_array( $value, self::selection( $key, $input ), true ), true, false ) . '> ' . esc_html( $label ) . '</label> '; }
  private static function facet( string $field, string $taxonomy, array $input ): string {

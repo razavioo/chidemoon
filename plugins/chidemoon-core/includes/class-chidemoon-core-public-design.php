@@ -81,6 +81,10 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function related_products_query( WP_Query $query ): void {
+		static $ranking = false;
+		// Elementor keeps its pre_get_posts callback active during custom queries.
+		// The ranking lookup must not re-enter this filter or change its own query.
+		if ( $ranking ) { return; }
 		$id = (int) get_queried_object_id();
 		$query->set( 'post_type', 'product' );
 		$query->set( 'post_status', 'publish' );
@@ -90,7 +94,12 @@ final class Chidemoon_Core_Public_Design {
 		}
 		if ( $id && 'product' === get_post_type( $id ) ) {
 			if ( Chidemoon_Core_Enrichment::read( $id ) ) {
-				$ranked = Chidemoon_Core_Discovery::related_product_ids( $id );
+				$ranking = true;
+				try {
+					$ranked = Chidemoon_Core_Discovery::related_product_ids( $id );
+				} finally {
+					$ranking = false;
+				}
 				$existing = (array) $query->get( 'post__in' );
 				$query->set( 'post__in', ( $existing ? array_values( array_intersect( $ranked, $existing ) ) : $ranked ) ?: array( 0 ) );
 				$query->set( 'orderby', 'post__in' );

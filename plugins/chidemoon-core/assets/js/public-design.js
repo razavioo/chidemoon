@@ -33,8 +33,24 @@
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
 
+	function syncHeaderNavigation(header) {
+		// Elementor may cache a header rendered on another page, including e-current.
+		const path = window.location.pathname.replace(/\/+$/, '') || '/';
+		header.querySelectorAll('.ch-mega-nav .e-n-menu-title-container[href]').forEach((link) => {
+			const url = new URL(link.href, window.location.href);
+			const target = url.pathname.replace(/\/+$/, '') || '/';
+			const exact = path === target;
+			const productSection = target === '/shop' && (document.body.classList.contains('single-product') || document.body.classList.contains('tax-product_cat'));
+			const active = url.origin === window.location.origin && (exact || (target !== '/' && path.startsWith(`${target}/`)) || productSection);
+			link.closest('.e-n-menu-title')?.classList.toggle('e-current', active);
+			if (active) link.setAttribute('aria-current', exact ? 'page' : 'location');
+			else link.removeAttribute('aria-current');
+		});
+	}
+
 	function enhanceHeader() {
 		const header = document.querySelector('.ch-header');
+		if (header) syncHeaderNavigation(header);
 		if (!header || header.querySelector('.ch-header-search-shortcut')) return;
 		const searchQuery = window.chidemoonPublicDesign?.searchQuery || '';
 		if (searchQuery) {

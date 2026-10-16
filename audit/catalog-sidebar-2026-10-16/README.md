@@ -1,0 +1,12 @@
+﻿# Catalog sidebar, price label and card alignment — 2026-10-16
+
+Implemented the user's latest instruction: display the existing numeric amount followed by “تومان”, without converting or changing stored amounts. Earlier unexecuted migration draft was replaced before deployment.
+
+- Store currency remains IRR; only its rendered symbol changes to تومان and WooCommerce currency position is right_space. Checked all 418 product price snapshots (current, regular and sale): zero changed values. Source observations and import conversion rules unchanged.
+- Removed the article-topic heading/feed from category panel 525. Header category submenu now contains 27 product category links; no buying-guide, room-idea or comparison topics. Main header destinations retained.
+- Archive 410 now has a right sidebar with only price range and category checkboxes, plus apply/reset controls. Uses existing Discovery filtering with price matching the displayed recorded amount; removed freshness exclusion from price-range queries so older recorded prices remain filterable. Guided chooser's independent freshness checks remain.
+- Sidebar form submits to the first archive page, preserves sorting/search, and supports multiple category selection. Native Elementor Discovery widget gains a sidebar mode; current-query product grid and native pagination retained.
+- Corrected Elementor's flex-grow:0 override on product card bodies; body now fills remaining height and action widget has automatic top margin. Browser measurement across all 6 rows on the first page: action positions differ by 0 pixels within each row.
+- Backups: /opt/chidemoon/backups/catalog-sidebar-20261016/ contains four original production files; _chidemoon_before_sidebar_20261016 stores original Elementor trees, _chidemoon_before_currency_label_20261016 stores previous currency position and numeric price snapshots.
+- Verified combined category electric-heater and range 1,000,000–10,000,000: expected and actual product counts both 38, actual browser submit finds 38, page 2 retains filters, reset returns 389 products. All 389 published products still pass readiness/public eligibility. Full installed Elementor acceptance and PHP lint pass; git diff --check passes.
+- Desktop 1440px and mobile 390px: no horizontal overflow. Desktop sidebar is on the right. Currency confirmed on listing/detail. Screenshots in output/playwright/catalog-sidebar-desktop.png, catalog-sidebar-mobile.png and catalog-card-actions-aligned.png.

@@ -210,7 +210,8 @@ final class Chidemoon_Catalog_Sync {
 			foreach ( array_chunk( $report['records'], 1000 ) as $records ) { $outbox[] = array( 'snapshotId' => $snapshot['snapshot']['id'], 'snapshotRevision' => $snapshot['snapshot']['revision'], 'records' => $records ); }
 			update_option( self::OUTBOX, $outbox, false );
 			$status['lastImportAt'] = gmdate( 'c' ); $status['report'] = $report; $status['snapshotId'] = $snapshot['snapshot']['id']; update_option( self::STATUS, $status, false );
-			self::flush_receipts( $token );
+			// Media imports can outlast the access token; renew before acknowledging.
+			self::flush_receipts( self::access_token() );
 			if ( $report['failed'] ) {
 				$issues = array_merge( ...array_map( static fn( $record ) => $record['issues'] ?? array(), $report['records'] ) );
 				if ( array_diff( $issues, array( 'media_failed', 'persistence_failed' ) ) ) { throw new DomainException( 'records_require_review' ); }

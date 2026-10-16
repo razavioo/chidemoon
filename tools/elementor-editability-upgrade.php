@@ -62,6 +62,10 @@ final class Chidemoon_Elementor_Editability_Upgrade {
 		$url = $this->tag( $term ? 'archive-url' : 'post-url' );
 		$media = $this->widget( 'image', array( 'image_size' => 'large', 'link_to' => 'custom', '_css_classes' => 'ch-native-card-media', '__dynamic__' => array( 'image' => $this->tag( 'product_taxonomy' === $kind ? 'woocommerce-category-image-tag' : 'post-featured-image' ), 'link' => $url ) ) );
 		$title = $this->widget( 'heading', array( 'header_size' => 'h2', 'typography_typography' => 'custom', 'typography_font_size' => array( 'unit' => 'px', 'size' => $term ? 16 : 20 ), 'typography_line_height' => array( 'unit' => 'em', 'size' => 1.6 ), 'typography_font_weight' => '700', '_css_classes' => 'ch-native-card-title', '__dynamic__' => array( 'title' => $this->tag( $term ? 'archive-title' : 'post-title', $term ? array( 'include_context' => 'no' ) : array() ), 'link' => $url ) ) );
+		if ( $term ) {
+			$title['settings'] = array_merge( $title['settings'], array( 'header_size' => 'div', 'typography_font_size' => array( 'unit' => 'px', 'size' => 13 ), 'typography_font_weight' => '400', '_css_classes' => 'ch-category-list-link' ) );
+			return array( $this->box( array( $title ), 'ch-category-link-item', array( 'padding' => array( 'unit' => 'px', 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'isLinked' => true ) ) ) );
+		}
 		$body = array();
 		if ( ! $term ) {
 			$body[] = $this->widget( 'heading', array( 'header_size' => 'div', 'typography_typography' => 'custom', 'typography_font_size' => array( 'unit' => 'px', 'size' => 12 ), 'typography_font_weight' => '600', '_css_classes' => 'ch-native-card-kind', '__dynamic__' => array( 'title' => $this->tag( 'chidemoon-content-label' ) ) ) );
@@ -142,9 +146,7 @@ final class Chidemoon_Elementor_Editability_Upgrade {
 		}
 		$category_elements = array( $this->box( array(
 			$this->heading( 'دسته‌های محصولات' ),
-			$this->grid( 'product_taxonomy', array( 'product_taxonomy_query_post_type' => 'product_cat', 'product_taxonomy_query_filter_by' => 'show_all', 'product_taxonomy_hide_empty' => 'yes', 'product_taxonomy_orderby' => 'name', 'product_taxonomy_order' => 'ASC', 'pagination_type' => '', 'columns' => '3', 'posts_per_page' => 100 ) ),
-			$this->heading( 'مطالب و ایده‌ها' ),
-			$this->grid( 'post_taxonomy', array( 'post_taxonomy_query_post_type' => 'category', 'post_taxonomy_query_filter_by' => 'show_all', 'post_taxonomy_hide_empty' => 'yes', 'post_taxonomy_orderby' => 'name', 'post_taxonomy_order' => 'ASC', 'pagination_type' => '', 'columns' => '3', 'posts_per_page' => 100 ) ),
+			$this->grid( 'product_taxonomy', array( 'product_taxonomy_query_post_type' => 'product_cat', 'product_taxonomy_query_filter_by' => 'show_all', 'product_taxonomy_hide_empty' => 'yes', 'product_taxonomy_orderby' => 'name', 'product_taxonomy_order' => 'ASC', 'pagination_type' => '', 'columns' => '3', 'columns_mobile' => '2', 'equal_height' => '', 'posts_per_page' => 100 ) ),
 		), 'ch-category-panel' ) );
 		$this->create_template( 'category-cards', 'کارت‌های دسته‌بندی', 'section', $category_elements );
 	}

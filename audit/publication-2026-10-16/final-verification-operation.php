@@ -1,0 +1,4 @@
+<?php
+$p=wc_get_product(721);if($p && 'draft'===$p->get_status()){add_post_meta(721,'_chidemoon_duplicate_archive_20261016',['duplicateOf'=>706,'status'=>$p->get_status(),'at'=>gmdate('c')],true);wp_trash_post(721);}
+$errors=[];$published=wc_get_products(['status'=>'publish','limit'=>-1]);foreach($published as $p){$issues=Chidemoon_Core_Enrichment::readiness($p->get_id());if(!Chidemoon_Core_Affiliate::is_publicly_eligible($p))$issues[]='not_public';if($issues)$errors[]=['id'=>$p->get_id(),'issues'=>$issues];}
+$s=get_option('chidemoon_catalog_status',[]);unset($s['report']);echo wp_json_encode(['published'=>count($published),'counts'=>wp_count_posts('product'),'integrityErrors'=>$errors,'sync'=>$s,'pendingReceipts'=>count(get_option('chidemoon_catalog_outbox',[])),'nextPoll'=>gmdate('c',wp_next_scheduled('chidemoon_catalog_poll'))])."\n";

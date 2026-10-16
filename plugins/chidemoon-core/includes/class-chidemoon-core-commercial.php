@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Chidemoon_Core_Commercial {
  public const FRESHNESS_SECONDS = 86400;
  public static function register(): void {
+  // Store preference: change the displayed label without converting amounts.
+  add_filter( 'woocommerce_currency_symbol', static fn( string $symbol, string $currency ): string => in_array( $currency, array( 'IRR', 'IRT' ), true ) ? 'تومان' : $symbol, 10, 2 );
   add_action( 'rest_api_init', static function(): void {
    register_rest_route( 'chidemoon-core/v1', '/source-profile', array( 'methods' => 'GET', 'permission_callback' => '__return_true', 'callback' => static fn() => array( 'profile' => 'source-v2', 'publicationApproval' => 'editor', 'directProductWrites' => false ) ) );
   } );
@@ -74,7 +76,12 @@ final class Chidemoon_Core_Commercial {
  public static function price_html( string $html, WC_Product $product ): string {
   if ( ! $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) { return $html; }
   $observations = self::observations( $product );
-  if ( ! self::is_fresh( $observations['price']['observedAt'] ?? null ) ) { return '<span class="ch-price-unknown">' . esc_html__( 'Current price unavailable', 'chidemoon-core' ) . '</span>'; }
+  if ( ! self::is_fresh( $observations['price']['observedAt'] ?? null ) ) {
+   $price = $product->get_price();
+   if ( '' === $price || ! is_numeric( $price ) || (float) $price < 0 ) { return '<span class="ch-price-unknown">' . esc_html__( 'Current price unavailable', 'chidemoon-core' ) . '</span>'; }
+   // Keep the imported amount visible without presenting an old sale as current.
+   return '<span class="ch-price-recorded">' . wc_price( $price ) . '<small style="display:block;font-size:12px;font-weight:400">' . esc_html__( 'آخرین قیمت ثبت‌شده', 'chidemoon-core' ) . '</small></span>';
+  }
   return $html;
  }
  public static function merchant_url( string $url, WC_Product $product ): string { return Chidemoon_Core_Affiliate::is_offer_available( $product ) ? Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) : get_permalink( $product->get_id() ); }
