@@ -319,7 +319,15 @@ class Chidemoon_Elementor_Rebuild {
 				$this->text( '<p>مجله</p>', 'ch-eyebrow' ),
 				$this->heading( 'تازه‌ترین ایده‌ها و راهنماها' ),
 				$this->posts( '', 6 ),
-				$this->button( 'همهٔ مطالب', '/magazine/', 'ch-link-button' ),
+				$this->box( array(
+					$this->box( array(
+						$this->text( '<p>از الهام تا چیدمان</p>', 'ch-home-action-eyebrow' ),
+						$this->heading( 'ایده‌ات را به خانه بیاور' ),
+						$this->text( '<p>چیدمان دلخواهت را پیدا کن؛ ترکیب رنگ‌ها، وسایل و جزئیاتش را ببین و برای خانه خودت ایده بگیر.</p>' ),
+						$this->button( 'چیدمان دلخواهم را پیدا کنم', '/shop-the-look/', 'ch-home-action-button' ),
+					), 'ch-home-action-copy' ),
+					$this->image( 'hero', 'ch-home-action-image' ),
+				), 'ch-home-action' ),
 			), 'ch-magazine-section' ),
 		);
 	}
