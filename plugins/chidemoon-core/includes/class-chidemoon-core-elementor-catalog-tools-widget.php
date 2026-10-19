@@ -69,7 +69,7 @@ final class Chidemoon_Core_Elementor_Catalog_Tools_Widget extends \Elementor\Wid
 	protected function render(): void {
 		if ( ! function_exists( 'woocommerce_result_count' ) || ! function_exists( 'woocommerce_catalog_ordering' ) ) { return; }
 		$settings = $this->get_settings_for_display();
-		$show_count = 'yes' === ( $settings['show_count'] ?? 'yes' );
+		$show_count = false;
 		$show_sorting = 'yes' === ( $settings['show_sorting'] ?? 'yes' );
 		$show_filters = 'yes' === ( $settings['show_filters'] ?? '' );
 		if ( $show_filters ) {

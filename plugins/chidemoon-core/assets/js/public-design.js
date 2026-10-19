@@ -1,6 +1,202 @@
 (function () {
 	'use strict';
 
+	function showProductSkeleton(widget, append = false) {
+		const grid = widget?.querySelector('.elementor-loop-container, ul.products');
+		if (!grid) return () => {};
+		widget.querySelectorAll('.ch-catalog-skeleton').forEach(node => node.remove());
+		const skeleton = document.createElement('div');
+		skeleton.className = append ? 'ch-catalog-skeleton ch-catalog-skeleton--more' : 'elementor-loop-container ch-catalog-skeleton';
+		skeleton.setAttribute('aria-hidden', 'true');
+		const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+		const count = append ? columns : Math.max(columns, Math.min(grid.children.length || columns * 2, columns * 2));
+		for (let i = 0; i < count; i++) {
+			const card = document.createElement('div'); card.className = 'ch-skeleton-card';
+			card.innerHTML = '<div class="ch-skeleton-photo"></div><div class="ch-skeleton-body"><div class="ch-skeleton-line"></div><div class="ch-skeleton-line ch-skeleton-line--short"></div><div class="ch-skeleton-price"></div><div class="ch-skeleton-action"></div></div>';
+			skeleton.append(card);
+		}
+		if (append) grid.append(skeleton);
+		else grid.after(skeleton);
+		return () => skeleton.remove();
+	}
+
+	function enhancePriceSteps(form) {
+		const min = form.querySelector('[name="ch_min_price"]');
+		const max = form.querySelector('[name="ch_max_price"]');
+		const format = value => Number(value).toLocaleString('fa-IR');
+		const controls = [];
+		[min, max].filter(Boolean).forEach(input => {
+			if (input.closest('.ch-price-stepper')) return;
+			input.step = 'any';
+			input.id ||= `ch-price-${input.name}-${document.querySelectorAll('.ch-price-stepper').length}`;
+			const label = input.closest('label');
+			if (label) label.htmlFor = input.id;
+			const wrapper = document.createElement('span'); wrapper.className = 'ch-price-stepper';
+			const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−';
+			const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+';
+			const hint = document.createElement('span'); hint.className = 'ch-price-hint';
+			hint.setAttribute('aria-live', 'polite');
+			input.before(wrapper); wrapper.append(minus, input, plus); wrapper.after(hint);
+			if (label) {
+				const heading = document.createElement('span'); heading.className = 'ch-price-label';
+				const title = document.createElement('span');
+				[...label.childNodes].filter(node => node.nodeType === Node.TEXT_NODE).forEach(node => title.append(node));
+				heading.append(title, hint); label.prepend(heading);
+			}
+			const next = direction => {
+				const value = Math.max(0, Number(input.value) || (input === max ? Number(min?.value) : 0) || 0);
+				const basis = direction < 0 ? Math.max(0, value - 1) : value;
+				const step = basis < 1000000 ? 100000 : basis < 10000000 ? 1000000 : 10000000;
+				let result = direction > 0 ? (Math.floor(value / step) + 1) * step : (Math.ceil(value / step) - 1) * step;
+				result = Math.max(0, result);
+				if (input === min && max && max.value !== '') result = Math.min(result, Number(max.value));
+				if (input === max && min && min.value !== '') result = Math.max(result, Number(min.value));
+				return result;
+			};
+			const sync = () => {
+				const value = Number(input.value) || 0;
+				minus.disabled = next(-1) === value;
+				plus.disabled = next(1) === value;
+				minus.setAttribute('aria-label', `کاهش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(-1))} تومان`);
+				plus.setAttribute('aria-label', `افزایش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(1))} تومان`);
+				minus.title = minus.getAttribute('aria-label'); plus.title = plus.getAttribute('aria-label');
+				hint.textContent = input.value ? `${format(value)} تومان` : '';
+			};
+			const change = direction => {
+				input.value = String(next(direction));
+				input.dispatchEvent(new Event('input', { bubbles: true }));
+				input.dispatchEvent(new Event('change', { bubbles: true }));
+			};
+			minus.addEventListener('click', () => change(-1)); plus.addEventListener('click', () => change(1));
+			input.addEventListener('keydown', event => {
+				if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { event.preventDefault(); change(event.key === 'ArrowUp' ? 1 : -1); }
+			});
+			controls.push(sync);
+		});
+		const syncAll = () => controls.forEach(sync => sync());
+		form.addEventListener('input', syncAll); form.addEventListener('change', syncAll); syncAll();
+	}
+
+	function enhanceCatalogSorting() {
+		document.querySelectorAll('.woocommerce-ordering select.orderby').forEach((select, index) => {
+			if (select.dataset.chEnhanced) return;
+			select.dataset.chEnhanced = 'true';
+			const wrapper = document.createElement('div');
+			wrapper.className = 'ch-sort-select';
+			const trigger = document.createElement('button');
+			trigger.type = 'button'; trigger.className = 'ch-sort-trigger';
+			trigger.id = `ch-sort-trigger-${index}`;
+			trigger.setAttribute('aria-haspopup', 'menu');
+			trigger.setAttribute('aria-expanded', 'false');
+			const menu = document.createElement('div');
+			menu.className = 'ch-sort-menu'; menu.id = `ch-sort-menu-${index}`;
+			menu.setAttribute('role', 'menu'); menu.setAttribute('aria-labelledby', trigger.id); menu.hidden = true;
+			trigger.setAttribute('aria-controls', menu.id);
+			const label = select.form.querySelector(`label[for="${select.id}"]`);
+			if (label) label.htmlFor = trigger.id;
+			const results = select.closest('.ch-catalog-results');
+			let request, committedValue = select.value;
+			const status = document.createElement('p');
+			status.className = 'ch-sort-status'; status.setAttribute('role', 'status'); status.hidden = true;
+			if (results) select.form.closest('.ch-catalog-tools').after(status);
+			const updateResults = async (url, push = true) => {
+				request?.abort();
+				const controller = new AbortController(); request = controller;
+				results.setAttribute('aria-busy', 'true');
+				const clearSkeleton = showProductSkeleton(results.querySelector('.elementor-widget-loop-grid'));
+				status.hidden = true; status.textContent = '';
+				try {
+					const response = await fetch(url, { signal: controller.signal, credentials: 'same-origin' });
+					if (!response.ok) throw new Error('catalog');
+					const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+					const remoteResults = doc.querySelector('.ch-catalog-results');
+					const current = results.querySelector('.elementor-widget-loop-grid');
+					const remote = remoteResults?.querySelector('.elementor-widget-loop-grid');
+					if (!current || !remote) throw new Error('listing');
+					if (controller.signal.aborted) return;
+					const replacement = document.importNode(remote, true);
+					current.replaceWith(replacement);
+					select.value = remoteResults.querySelector('select.orderby')?.value || select.value;
+					committedValue = select.value; sync();
+					if (push) history.pushState(null, '', url);
+					document.querySelectorAll('.ch-sidebar-filters input[name="orderby"], .ch-catalog-filters input[name="orderby"]').forEach(input => { input.value = select.value; });
+					enhanceInfiniteListings(results);
+					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(replacement));
+				} catch (error) {
+					if (error.name === 'AbortError') return;
+					select.value = committedValue; sync();
+					status.hidden = false;
+					status.textContent = 'بارگذاری انجام نشد؛ لطفاً دوباره گزینهٔ مرتب‌سازی را انتخاب کنید.';
+				} finally {
+					clearSkeleton();
+					if (request === controller) results.removeAttribute('aria-busy');
+				}
+			};
+			const sortResults = () => {
+				const url = new URL(location.href);
+				url.pathname = url.pathname.replace(/\/page\/\d+\/?$/, '/');
+				for (const key of [...url.searchParams.keys()]) {
+					if (key === 'paged' || key === 'product-page' || key.startsWith('e-page-')) url.searchParams.delete(key);
+				}
+				url.searchParams.set('orderby', select.value);
+				updateResults(url);
+			};
+			if (results) {
+				select.form.addEventListener('submit', event => { event.preventDefault(); sortResults(); });
+				select.addEventListener('change', event => { event.stopImmediatePropagation(); sortResults(); }, true);
+				results.addEventListener('click', event => {
+					const link = event.target.closest('.elementor-pagination a');
+					if (!link || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+					event.preventDefault(); event.stopPropagation(); updateResults(new URL(link.href));
+				}, true);
+				window.addEventListener('popstate', () => updateResults(new URL(location.href), false));
+			}
+			const buttons = [...select.options].map(option => {
+				const button = document.createElement('button');
+				button.type = 'button'; button.className = 'ch-sort-option';
+				button.textContent = option.textContent; button.disabled = option.disabled;
+				button.setAttribute('role', 'menuitemradio'); button.tabIndex = -1;
+				button.addEventListener('click', () => {
+					select.value = option.value; sync(); close(true);
+					if (results) sortResults();
+					else if (window.jQuery) window.jQuery(select).trigger('change');
+					else select.dispatchEvent(new Event('change', { bubbles: true }));
+				});
+				menu.append(button); return button;
+			});
+			const sync = () => {
+				trigger.textContent = select.selectedOptions[0]?.textContent || '';
+				trigger.disabled = select.disabled;
+				buttons.forEach((button, i) => button.setAttribute('aria-checked', String(select.options[i].selected)));
+			};
+			const close = (restoreFocus = false) => {
+				menu.hidden = true; trigger.setAttribute('aria-expanded', 'false');
+				if (restoreFocus) trigger.focus();
+			};
+			const open = () => {
+				menu.hidden = false; trigger.setAttribute('aria-expanded', 'true');
+				(buttons[select.selectedIndex] || buttons[0])?.focus();
+			};
+			trigger.addEventListener('click', () => menu.hidden ? open() : close());
+			wrapper.addEventListener('keydown', event => {
+				if (event.key === 'Escape') { event.preventDefault(); close(true); }
+				if (event.key === 'Tab') close();
+				if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+					event.preventDefault();
+					if (menu.hidden) { open(); return; }
+					const available = buttons.filter(button => !button.disabled);
+					const current = available.indexOf(document.activeElement);
+					const next = event.key === 'Home' ? 0 : event.key === 'End' ? available.length - 1 : (current + (event.key === 'ArrowDown' ? 1 : -1) + available.length) % available.length;
+					available[next]?.focus();
+				}
+			});
+			document.addEventListener('pointerdown', event => { if (!wrapper.contains(event.target)) close(); });
+			wrapper.addEventListener('focusout', event => { if (!wrapper.contains(event.relatedTarget)) close(); });
+			select.addEventListener('change', sync);
+			wrapper.append(trigger, menu); select.after(wrapper); select.hidden = true; sync();
+		});
+	}
+
 	function enhanceGalleryCounter() {
 		if (!document.body.classList.contains('single-product') && !document.querySelector('.ch-product-single')) return;
 		const localize = (counter) => {
@@ -252,8 +448,48 @@
 		new MutationObserver(() => { enhanceHeader(); enhanceSceneHotspots(); }).observe(document.body, { childList: true, subtree: true });
 	}
 
+	function enhanceInfiniteListings(root = document) {
+		// Keep normal pagination as a no-JS/error fallback. Each listing owns its next URL.
+		if ('IntersectionObserver' in window) root.querySelectorAll('.elementor-widget-loop-grid, .elementor-widget-woocommerce-products, .elementor-widget-woocommerce-archive-products, .ch-editorial-feed, .ch-chooser-results').forEach(widget => {
+			const grid = widget.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
+			const pagination = widget.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination');
+			if (!grid || !pagination || widget.dataset.chInfinite) return;
+			widget.dataset.chInfinite = 'true';
+			const nextPage = nav => nav?.querySelector('a.next')?.href || nav?.querySelector('[aria-current="page"]')?.nextElementSibling?.closest('a')?.href;
+			let next = nextPage(pagination), busy = false;
+			if (!next) return;
+			const seen = new Set();
+			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = 'نمایش موارد بیشتر';
+			status.setAttribute('aria-live', 'polite'); pagination.after(status); pagination.hidden = true;
+			const load = async () => {
+				if (!widget.isConnected) { observer.disconnect(); return; }
+				if (busy || !next || seen.has(next)) return;
+				busy = true; status.textContent = 'در حال نمایش موارد بیشتر…'; grid.setAttribute('aria-busy', 'true');
+				const clearSkeleton = widget.closest('.ch-catalog-results') ? showProductSkeleton(widget, true) : () => {};
+				try {
+					const url = next, response = await fetch(url);
+					if (!response.ok) throw new Error('pagination');
+					const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+					const id = widget.dataset.id;
+					const remote = id ? doc.querySelector(`[data-id="${id}"]`) : null;
+					const source = remote?.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
+					if (!source?.children.length) throw new Error('listing');
+					[...source.children].forEach(child => grid.append(document.importNode(child, true)));
+					seen.add(url); next = nextPage(remote.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination'));
+					if (next) status.textContent = 'نمایش موارد بیشتر';
+					else { observer.disconnect(); status.remove(); }
+					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(grid));
+				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
+				finally { clearSkeleton(); busy = false; grid.removeAttribute('aria-busy'); if (next && pagination.hidden) { observer.unobserve(status); observer.observe(status); } }
+			};
+			status.addEventListener('click', load);
+			const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) load(); }, { rootMargin: '350px' }); observer.observe(status);
+		});
+	}
+
 	function enhanceStorefront() {
 		document.querySelectorAll('.ch-sidebar-filters, .ch-catalog-filters').forEach((form, index) => {
+			enhancePriceSteps(form);
 			const state = () => JSON.stringify([...new FormData(form)].filter(([key]) => key.startsWith('ch_')).sort());
 			const initial = state();
 			const submit = form.querySelector('button[type="submit"]');
@@ -273,6 +509,11 @@
 			const applied = [...new FormData(form)].filter(([key, value]) => key.startsWith('ch_') && value !== '').length;
 			if (reset) reset.hidden = !applied;
 			if (form.classList.contains('ch-sidebar-filters')) {
+				const heading = document.createElement('div'); heading.className = 'ch-filter-heading';
+				const title = document.createElement('strong'); title.textContent = 'فیلتر محصولات';
+				const icon = document.createElement('span'); icon.className = 'ch-filter-heading-icon'; icon.setAttribute('aria-hidden', 'true');
+				icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg>';
+				heading.append(icon, title); form.prepend(heading);
 				const toggle = document.createElement('button');
 				toggle.type = 'button'; toggle.className = 'ch-filter-toggle'; toggle.textContent = 'فیلتر محصولات' + (applied ? ` (${applied.toLocaleString('fa-IR')})` : '');
 				form.id ||= `ch-catalog-filter-form-${index}`;
@@ -284,39 +525,7 @@
 			}
 			sync();
 		});
-		// Keep normal pagination as a no-JS/error fallback. Each listing owns its next URL.
-		if ('IntersectionObserver' in window) document.querySelectorAll('.elementor-widget-loop-grid, .elementor-widget-woocommerce-products, .elementor-widget-woocommerce-archive-products, .ch-editorial-feed, .ch-chooser-results').forEach(widget => {
-			const grid = widget.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
-			const pagination = widget.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination');
-			if (!grid || !pagination) return;
-			const nextPage = nav => nav?.querySelector('a.next')?.href || nav?.querySelector('[aria-current="page"]')?.nextElementSibling?.closest('a')?.href;
-			let next = nextPage(pagination), busy = false;
-			if (!next) return;
-			const seen = new Set();
-			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = 'نمایش موارد بیشتر';
-			status.setAttribute('aria-live', 'polite'); pagination.after(status); pagination.hidden = true;
-			const load = async () => {
-				if (busy || !next || seen.has(next)) return;
-				busy = true; status.textContent = 'در حال نمایش موارد بیشتر…'; grid.setAttribute('aria-busy', 'true');
-				try {
-					const url = next, response = await fetch(url);
-					if (!response.ok) throw new Error('pagination');
-					const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
-					const id = widget.dataset.id;
-					const remote = id ? doc.querySelector(`[data-id="${id}"]`) : null;
-					const source = remote?.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
-					if (!source?.children.length) throw new Error('listing');
-					[...source.children].forEach(child => grid.append(document.importNode(child, true)));
-					seen.add(url); next = nextPage(remote.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination'));
-					status.textContent = next ? 'نمایش موارد بیشتر' : 'همه موارد را دیدید';
-					if (!next) { observer.disconnect(); status.disabled = true; }
-					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(grid));
-				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
-				finally { busy = false; grid.removeAttribute('aria-busy'); if (next && pagination.hidden) { observer.unobserve(status); observer.observe(status); } }
-			};
-			status.addEventListener('click', load);
-			const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) load(); }, { rootMargin: '350px' }); observer.observe(status);
-		});
+		enhanceInfiniteListings();
 		const article = document.querySelector('.single-post .ch-article-body');
 		if (article && !document.querySelector('.ch-guide-toc')) {
 			const headings = [...article.querySelectorAll('h2, h3')].filter(h => h.textContent.trim());
@@ -419,6 +628,9 @@
 			window.addEventListener('scroll', syncSections, { passive: true }); syncSections();
 		}
 	}
+
+	document.addEventListener('DOMContentLoaded', enhanceCatalogSorting, { once: true });
+	if (document.readyState !== 'loading') enhanceCatalogSorting();
 
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', onReady, { once: true });
