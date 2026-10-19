@@ -73,6 +73,7 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	tools/elementor-rebuild.php \
 	tools/elementor-editability-upgrade.php \
 	tools/branding-refresh.php \
+	tools/home-action-upgrade.php \
 	tools/typography-upgrade.php \
 	tools/type-scale-upgrade.php \
 	tools/font-size-down.php \
