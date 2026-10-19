@@ -100,14 +100,26 @@ final class Chidemoon_Catalog_Sync {
 	private static function store_tokens( array $tokens ): void {
 		if ( ! is_string( $tokens['access_token'] ?? null ) || ! is_string( $tokens['refresh_token'] ?? null ) || 'Bearer' !== ( $tokens['token_type'] ?? null ) || ! is_int( $tokens['expires_in'] ?? null ) || $tokens['expires_in'] < 60 || array_diff( self::SCOPES, explode( ' ', (string) ( $tokens['scope'] ?? '' ) ) ) ) { throw new DomainException( 'source_scopes_missing' ); }
 		$tokens['expiresAt'] = time() + $tokens['expires_in'];
-		update_option( self::TOKENS, self::seal( $tokens ), false );
+		self::persist_tokens( $tokens );
+	}
+
+	private static function persist_tokens( array $tokens ): void {
+		$sealed = self::seal( $tokens );
+		update_option( self::TOKENS, $sealed, false );
+		if ( get_option( self::TOKENS, '' ) !== $sealed ) { throw new DomainException( 'credentials_persistence_failed' ); }
 	}
 
 	private static function access_token(): string {
 		$tokens = self::unseal( (string) get_option( self::TOKENS, '' ) );
+		if ( ! empty( $tokens['refreshPending'] ) ) { throw new DomainException( 'refresh_outcome_unknown' ); }
 		if ( (int) ( $tokens['expiresAt'] ?? 0 ) > time() + 60 ) { return $tokens['access_token']; }
 		$config = self::configuration();
-		$tokens = self::request( '/api/oauth2/token', array( 'method' => 'POST', 'body' => array( 'grant_type' => 'refresh_token', 'refresh_token' => $tokens['refresh_token'], 'client_id' => $config['clientId'], 'client_secret' => self::secret() ) ), 16000 );
+		$secret = self::secret();
+		// A timed-out refresh may already have rotated the token upstream.
+		self::persist_tokens( array_merge( $tokens, array( 'refreshPending' => true ) ) );
+		try {
+			$tokens = self::request( '/api/oauth2/token', array( 'method' => 'POST', 'body' => array( 'grant_type' => 'refresh_token', 'refresh_token' => $tokens['refresh_token'], 'client_id' => $config['clientId'], 'client_secret' => $secret ) ), 16000 );
+		} catch ( RuntimeException $exception ) { throw new DomainException( 'refresh_outcome_unknown', 0, $exception ); }
 		self::store_tokens( $tokens );
 		return $tokens['access_token'];
 	}
@@ -172,10 +184,10 @@ final class Chidemoon_Catalog_Sync {
 		$status = get_option( self::STATUS, array() );
 		$status['error'] = preg_match( '/^[a-z_]{1,80}$/D', $exception->getMessage() ) ? $exception->getMessage() : 'import_rejected';
 		$status['attempts'] = (int) ( $status['attempts'] ?? 0 ) + 1;
-		$status['blocked'] = $exception instanceof DomainException || $exception instanceof InvalidArgumentException || $status['attempts'] >= 6;
+		$status['blocked'] = $exception instanceof InvalidArgumentException || ( $exception instanceof DomainException && ! in_array( $status['error'], array( 'upstream_rejected', 'records_require_review' ), true ) );
 		$status['lastFailureAt'] = gmdate( 'c' );
 		if ( ! $status['blocked'] ) {
-			$delay = min( 3600, 60 * ( 2 ** ( $status['attempts'] - 1 ) ) );
+			$delay = min( 3600, 60 * ( 2 ** min( 6, $status['attempts'] - 1 ) ) );
 			$status['nextAttemptAt'] = time() + $delay;
 			if ( ! wp_next_scheduled( self::HOOK, array( 'retry' ) ) ) { wp_schedule_single_event( time() + $delay, self::HOOK, array( 'retry' ) ); }
 		}
@@ -188,8 +200,13 @@ final class Chidemoon_Catalog_Sync {
 			$receipt = $outbox[0];
 			$response = self::request( '/api/integrations/catalog/v2/source-receipts', array( 'method' => 'POST', 'headers' => array( 'Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json' ), 'body' => wp_json_encode( $receipt ) ), 16000 );
 			if ( true !== ( $response['imported'] ?? null ) || false !== ( $response['publicationConfirmed'] ?? null ) ) { throw new DomainException( 'receipt_not_confirmed' ); }
-			array_shift( $outbox ); update_option( self::OUTBOX, $outbox, false );
+			array_shift( $outbox ); self::persist_outbox( $outbox );
 		}
+	}
+
+	private static function persist_outbox( array $outbox ): void {
+		update_option( self::OUTBOX, $outbox, false );
+		if ( get_option( self::OUTBOX, array() ) !== $outbox ) { throw new RuntimeException( 'receipts_persistence_failed' ); }
 	}
 
 	public static function poll( string $reason = '' ): void {
@@ -198,7 +215,8 @@ final class Chidemoon_Catalog_Sync {
 		if ( '1' !== (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s,0)', $lock ) ) ) { return; }
 		try {
 			$config = self::configuration(); $status = get_option( self::STATUS, array() );
-			if ( ( empty( $config['enabled'] ) && ! in_array( $reason, array( 'manual', 'retry' ), true ) ) || ! empty( $status['blocked'] ) ) { return; }
+			if ( empty( $config['enabled'] ) && 'manual' !== $reason ) { return; }
+			if ( ! empty( $status['blocked'] ) && ! in_array( $status['error'] ?? '', array( 'upstream_rejected', 'records_require_review', 'records_require_retry', 'upstream_unavailable' ), true ) ) { return; }
 			if ( 'manual' !== $reason && (int) ( $status['nextAttemptAt'] ?? 0 ) > time() ) { return; }
 			if ( ! class_exists( 'Chidemoon_Core_Source_Importer' ) ) { throw new DomainException( 'source_importer_unavailable' ); }
 			$status['lastAttemptAt'] = gmdate( 'c' ); update_option( self::STATUS, $status, false );
@@ -208,13 +226,13 @@ final class Chidemoon_Catalog_Sync {
 			$report = Chidemoon_Core_Source_Importer::import_snapshot( $snapshot, false, $config['organizationSlug'] );
 			$outbox = array();
 			foreach ( array_chunk( $report['records'], 1000 ) as $records ) { $outbox[] = array( 'snapshotId' => $snapshot['snapshot']['id'], 'snapshotRevision' => $snapshot['snapshot']['revision'], 'records' => $records ); }
-			update_option( self::OUTBOX, $outbox, false );
+			self::persist_outbox( $outbox );
 			$status['lastImportAt'] = gmdate( 'c' ); $status['report'] = $report; $status['snapshotId'] = $snapshot['snapshot']['id']; update_option( self::STATUS, $status, false );
 			// Media imports can outlast the access token; renew before acknowledging.
 			self::flush_receipts( self::access_token() );
 			if ( $report['failed'] ) {
 				$issues = array_merge( ...array_map( static fn( $record ) => $record['issues'] ?? array(), $report['records'] ) );
-				if ( array_diff( $issues, array( 'media_failed', 'persistence_failed' ) ) ) { throw new DomainException( 'records_require_review' ); }
+				if ( array_diff( $issues, array( 'media_failed', 'persistence_failed' ) ) ) { throw new RuntimeException( 'records_require_review' ); }
 				throw new RuntimeException( 'records_require_retry' );
 			}
 			$status['lastSuccessAt'] = gmdate( 'c' ); $status['attempts'] = 0; $status['blocked'] = false; unset( $status['error'], $status['nextAttemptAt'] ); update_option( self::STATUS, $status, false );
