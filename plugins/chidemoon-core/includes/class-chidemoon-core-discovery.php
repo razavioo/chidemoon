@@ -3,6 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class Chidemoon_Core_Discovery {
  public static function register(): void {
+  add_action( 'wp_enqueue_scripts', static function (): void {
+   foreach ( array('css','js') as $type ) {
+    $path = 'assets/' . $type . '/category-navigation.' . $type;
+    if ( 'css' === $type ) { wp_enqueue_style('chidemoon-category-navigation',CHIDEMOON_CORE_URL.$path,array('chidemoon-public-design'),(string)filemtime(CHIDEMOON_CORE_DIR.$path)); }
+    else { wp_enqueue_script('chidemoon-category-navigation',CHIDEMOON_CORE_URL.$path,array('chidemoon-public-design'),(string)filemtime(CHIDEMOON_CORE_DIR.$path),true); }
+   }
+  }, 40 );
   add_action( 'woocommerce_product_query', array( __CLASS__, 'filter_archive' ), 25 );
   add_action( 'elementor/query/chidemoon_catalog', array( __CLASS__, 'filter_archive' ), 25 );
   add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
@@ -15,7 +22,10 @@ final class Chidemoon_Core_Discovery {
   add_action( 'elementor/widgets/register', array( __CLASS__, 'register_widget' ) );
  }
  public static function category_tree(): string {
-  $items = wp_list_categories( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'hierarchical' => true, 'title_li' => '', 'echo' => false, 'show_count' => false, 'orderby' => 'name' ) );
+  $scope = array_values( array_filter( array_map( 'absint', (array) get_option( 'chidemoon_category_coverage_ids', array() ) ) ) );
+  $query = array( 'taxonomy' => 'product_cat', 'hide_empty' => ! $scope, 'hierarchical' => true, 'title_li' => '', 'echo' => false, 'show_count' => false, 'orderby' => 'name' );
+  if ( $scope ) { $query['include'] = $scope; }
+  $items = wp_list_categories( $query );
   static $samples = null;
   if ( null === $samples ) {
    $samples = array();
