@@ -26,7 +26,7 @@ $walk = static function ( array &$nodes ) use ( &$walk ): void {
 		}
 		if ( ! empty( $node['elements'] ) ) { $walk( $node['elements'] ); }
 		if ( str_contains( $class, 'ch-product-single' ) ) {
-			$facts = null; $description = null; $reviews = null; $rest = array(); $position = null;
+			$facts = null; $description = null; $reviews = null; $context = null; $rest = array(); $position = null;
 			foreach ( $node['elements'] as $child ) {
 				$child_class = $child['settings']['css_classes'] ?? $child['settings']['_css_classes'] ?? '';
 				if ( 'ch-product-facts-widget' === $child_class ) { $facts = $child; $position ??= count( $rest ); }
@@ -35,9 +35,10 @@ $walk = static function ( array &$nodes ) use ( &$walk ): void {
 					foreach ( $child['elements'] as $widget ) { if ( 'chidemoon-product-extra-tabs' === ( $widget['widgetType'] ?? '' ) ) { $reviews = $widget; } else { $body[] = $widget; } }
 					$description['elements'] = $body;
 				} elseif ( 'chidemoon-product-extra-tabs' === ( $child['widgetType'] ?? '' ) ) { $reviews = $child; }
+				elseif ( 'chidemoon-product-context' === ( $child['widgetType'] ?? '' ) ) { $context = $child; }
 				else { $rest[] = $child; }
 			}
-			if ( $facts && $description ) { array_splice( $rest, $position, 0, array_values( array_filter( array( $description, $facts, $reviews ) ) ) ); $node['elements'] = $rest; }
+			if ( $facts && $description ) { array_splice( $rest, $position, 0, array_values( array_filter( array( $description, $context, $facts, $reviews ) ) ) ); $node['elements'] = $rest; }
 			$has_context = false;
 			foreach ( $node['elements'] as $child ) { if ( 'chidemoon-product-context' === ( $child['widgetType'] ?? '' ) ) { $has_context = true; } }
 			if ( ! $has_context ) {
