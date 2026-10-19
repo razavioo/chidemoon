@@ -227,6 +227,9 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		$mode         = sanitize_key( (string) ( $payload['mode'] ?? 'generate' ) );
 		$attachments  = is_array( $payload['source_attachment_ids'] ?? null ) ? array_map( 'absint', $payload['source_attachment_ids'] ) : array();
 		$prompt       = $this->image_prompt( $mode, (string) ( $payload['prompt'] ?? '' ) );
+		if ( str_starts_with( $this->image_model, 'gemini-' ) ) {
+			return $this->gemini_image( $payload, $attachments, $prompt );
+		}
 		$common       = array(
 			'model'          => $this->image_model,
 			'prompt'         => $prompt,
@@ -358,6 +361,24 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 	 * @return array<string, mixed>|WP_Error
 	 */
 	private function json_request( string $path, array $body, bool $allow_retry_body = false ): array|WP_Error {
+		if ( '/chat/completions' === $path && str_starts_with( (string) ( $body['model'] ?? '' ), 'gemini-' ) ) {
+			$contents = array();
+			$system = array();
+			foreach ( $body['messages'] ?? array() as $message ) {
+				if ( 'system' === $message['role'] ) { $system[] = array( 'text' => (string) $message['content'] ); continue; }
+				$parts = array();
+				foreach ( is_array( $message['content'] ) ? $message['content'] : array( array( 'type' => 'text', 'text' => $message['content'] ) ) as $part ) {
+					$converted = 'image_url' === $part['type'] ? Chidemoon_AI_Gemini::image_part( $part['image_url']['url'] ) : array( 'text' => (string) ( $part['text'] ?? '' ) );
+					if ( is_wp_error( $converted ) ) { return $converted; }
+					$parts[] = $converted;
+				}
+				$contents[] = array( 'role' => 'assistant' === $message['role'] ? 'model' : 'user', 'parts' => $parts );
+			}
+			$native = array( 'contents' => $contents, 'generationConfig' => array( 'responseMimeType' => 'application/json', 'temperature' => $body['temperature'] ?? 0.2 ) );
+			if ( $system ) { $native['systemInstruction'] = array( 'parts' => $system ); }
+			$result = Chidemoon_AI_Gemini::request( $this->base_url, $this->api_key, $body['model'], $native, $this->timeout );
+			return is_wp_error( $result ) ? $result : array( 'choices' => array( array( 'message' => array( 'content' => Chidemoon_AI_Gemini::text( $result ) ) ) ), 'usage' => Chidemoon_AI_Gemini::usage( $result ) );
+		}
 		$response = wp_safe_remote_post(
 			$this->base_url . $path,
 			array(
@@ -436,6 +457,37 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		}
 
 		return $body;
+	}
+
+	/** Send product photos first, then optional references with distinct labels. */
+	private function gemini_image( array $payload, array $attachments, string $prompt ): array|WP_Error {
+		$parts = array( array( 'text' => $prompt ) );
+		foreach ( array_slice( (array) ( $payload['product_ids'] ?? array() ), 0, 6 ) as $product_id ) {
+			$image_id = (int) get_post_thumbnail_id( (int) $product_id );
+			if ( ! $image_id ) { return new WP_Error( 'chidemoon_ai_product_image_missing', __( 'A selected product has no image. Add its product photo before generating a look.', 'chidemoon-ai' ) ); }
+			$url = $this->attachment_data_url( $image_id );
+			if ( is_wp_error( $url ) ) { return $url; }
+			$parts[] = array( 'text' => 'Exact product to preserve: ' . wp_strip_all_tags( get_the_title( (int) $product_id ) ) );
+			$parts[] = Chidemoon_AI_Gemini::image_part( $url );
+		}
+		foreach ( $attachments as $attachment_id ) {
+			$url = $this->attachment_data_url( (int) $attachment_id );
+			if ( is_wp_error( $url ) ) { return $url; }
+			$parts[] = array( 'text' => empty( $payload['product_ids'] ) ? 'Source image to edit:' : 'Style and composition reference only; preserve the products supplied above:' );
+			$parts[] = Chidemoon_AI_Gemini::image_part( $url );
+		}
+		$result = Chidemoon_AI_Gemini::request( $this->base_url, $this->api_key, $this->image_model, array(
+			'contents' => array( array( 'role' => 'user', 'parts' => $parts ) ),
+			'generationConfig' => array( 'responseModalities' => array( 'TEXT', 'IMAGE' ) ),
+		), $this->timeout );
+		if ( is_wp_error( $result ) ) { return $result; }
+		foreach ( $result['candidates'][0]['content']['parts'] as $part ) {
+			$image = $part['inlineData'] ?? $part['inline_data'] ?? array();
+			if ( empty( $part['thought'] ) && ! empty( $image['data'] ) && in_array( $image['mimeType'] ?? $image['mime_type'] ?? '', Chidemoon_AI_Media::ALLOWED_MIME_TYPES, true ) ) {
+				return array( 'b64_json' => $image['data'], 'url' => '', 'revised_prompt' => '', '_usage' => Chidemoon_AI_Gemini::usage( $result ) );
+			}
+		}
+		return new WP_Error( 'chidemoon_ai_provider_image_invalid', __( 'The AI provider returned no usable image.', 'chidemoon-ai' ) );
 	}
 
 	private function image_prompt( string $mode, string $prompt ): string {

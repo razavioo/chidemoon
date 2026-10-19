@@ -33,6 +33,7 @@ require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-web.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-look.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-enrich.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-provider.php';
+require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-gemini.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-openai-compatible-provider.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-moderation.php';
 require_once CHIDEMOON_AI_DIR . 'includes/class-chidemoon-ai-media.php';
