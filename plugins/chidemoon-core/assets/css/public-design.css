@@ -1463,7 +1463,7 @@ html.ch-search-modal-open { overflow:hidden; }
 @media (max-width: 1024px) {
  body .ch-header .ch-mega-nav .e-n-menu-wrapper { background: #fff !important; gap: 0 !important; justify-content: flex-start !important; }
  body .ch-header .ch-mega-nav .e-n-menu-wrapper > .ch-drawer-heading { order: -3; flex-shrink: 0; }
- body .ch-header .ch-mega-nav .e-n-menu-wrapper > .ch-header-search { order: -2; flex-shrink: 0; }
+ body .ch-header .ch-mega-nav .e-n-menu-wrapper > .ch-header-search { order: 2; flex-shrink: 0; }
  body .ch-header .ch-mega-nav .e-n-menu-heading { flex-direction: column; flex-shrink: 0; }
 }
 /* Keep expanded sections in the menu's scroll area, above the search footer. */
@@ -1627,4 +1627,14 @@ body :is(a, button, [role="button"]) :is(svg, i)[class*="angle-"],
 body :is(a, button, [role="button"]) :is(svg, i)[class*="chevron"],
 body :is(a, button, [role="button"]) :is(svg, i)[class*="caret-"] {
  display: none !important;
+}
+
+/* Mobile state is controlled by clicks, independently of Elementor hover state. */
+@media (max-width: 1024px) {
+ body.ch-mobile-menu-open .ch-header.ch-header .ch-mega-nav .e-n-menu-wrapper { display: flex; flex-direction: column; }
+ body .ch-header.ch-header .ch-mega-nav .e-n-menu-item > .e-n-menu-content { display: none !important; height: auto !important; min-height: 0 !important; padding: 0 !important; }
+ body .ch-header.ch-header .ch-mega-nav .e-n-menu-item.ch-mobile-expanded > .e-n-menu-content { display: block !important; max-height: min(360px, 45dvh); overflow-y: auto; overscroll-behavior: contain; }
+ body .ch-header.ch-header .ch-mega-nav .ch-mobile-expanded > .e-n-menu-content > .e-con { display: flex !important; height: auto !important; min-height: 0 !important; position: static !important; visibility: visible !important; opacity: 1 !important; }
+ body .ch-header.ch-header .ch-mega-nav .e-n-menu-wrapper > .ch-header-search { order: 2 !important; display: block !important; position: relative; flex: 0 0 auto !important; }
+ body .ch-header.ch-header .ch-mega-nav .ch-category-panel { min-height: 0 !important; height: auto !important; }
 }

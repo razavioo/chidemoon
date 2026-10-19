@@ -296,7 +296,32 @@
 		});
 		header.classList.add('ch-header-enhanced');
 		const menuPanel = header.querySelector('.e-n-menu-wrapper');
+		const mobileMenu = window.matchMedia('(max-width: 1024px)');
+		const menuHeading = menuPanel?.querySelector('.e-n-menu-heading');
+		const originalItems = menuHeading ? [...menuHeading.children] : [];
+		const homeItem = originalItems.find(item => {
+			const link = item.querySelector('.e-n-menu-title-container[href]');
+			return link && new URL(link.href).pathname === '/';
+		});
+		// Elementor's hover setting also applies to mouse-driven narrow windows.
+		['mouseover', 'mouseenter', 'mouseout', 'mouseleave', 'pointerover', 'pointerenter', 'pointerout', 'pointerleave'].forEach(type => {
+			header.addEventListener(type, event => {
+				if (mobileMenu.matches && event.target.closest('.e-n-menu-item')) event.stopImmediatePropagation();
+			}, true);
+		});
 		header.addEventListener('click', event => {
+			if (mobileMenu.matches) {
+				const title = event.target.closest('.e-n-menu-title');
+				const toggle = title?.querySelector('.e-n-menu-dropdown-icon');
+				if (toggle) {
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					const item = title.closest('.e-n-menu-item');
+					const open = item.classList.toggle('ch-mobile-expanded');
+					toggle.setAttribute('aria-expanded', String(open));
+					return;
+				}
+			}
 			const title = event.target.closest('.e-n-menu-title-container[href]');
 			const toggle = title?.closest('.e-n-menu-title')?.querySelector('.e-n-menu-dropdown-icon');
 			if (!toggle) return;
@@ -370,6 +395,10 @@
 
 		function syncHeader() {
 			const mobile = window.matchMedia('(max-width: 1024px)').matches;
+			if (menuHeading && homeItem) {
+				if (mobile && menuHeading.firstElementChild !== homeItem) menuHeading.prepend(homeItem);
+				else if (!mobile && menuHeading.firstElementChild !== originalItems[0]) originalItems.forEach(item => menuHeading.append(item));
+			}
 			if (menuPanel && drawerHeading) {
 				if (mobile && search.parentNode !== menuPanel) drawerHeading.after(search);
 				else if (!mobile && search.parentNode === menuPanel) searchHome.after(search);
