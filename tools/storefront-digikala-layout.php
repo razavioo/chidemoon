@@ -38,13 +38,22 @@ $walk = static function ( array &$nodes ) use ( &$walk ): void {
 				else { $rest[] = $child; }
 			}
 			if ( $facts && $description ) { array_splice( $rest, $position, 0, array_values( array_filter( array( $description, $facts, $reviews ) ) ) ); $node['elements'] = $rest; }
+			$has_context = false;
+			foreach ( $node['elements'] as $child ) { if ( 'chidemoon-product-context' === ( $child['widgetType'] ?? '' ) ) { $has_context = true; } }
+			if ( ! $has_context ) {
+				foreach ( $node['elements'] as $index => $child ) {
+					if ( 'ch-product-description' === ( $child['settings']['css_classes'] ?? '' ) ) {
+						array_splice( $node['elements'], $index + 1, 0, array( array( 'id' => 'chcontext', 'elType' => 'widget', 'widgetType' => 'chidemoon-product-context', 'settings' => array(), 'elements' => array() ) ) ); break;
+					}
+				}
+			}
 		}
 	}
 };
 $walk( $elements );
 if ( wp_json_encode( $elements ) === wp_json_encode( json_decode( $raw, true ) ) ) { WP_CLI::success( 'Layout already updated.' ); return; }
 if ( $apply ) {
-	add_post_meta( $post->ID, '_chidemoon_before_digikala_layout_20261019', $raw, true );
+	if ( ! metadata_exists( 'post', $post->ID, '_chidemoon_before_product_layout_20261020' ) && ! add_post_meta( $post->ID, '_chidemoon_before_product_layout_20261020', wp_slash( $raw ), true ) ) { WP_CLI::error( 'Backup failed.' ); }
 	$doc = \Elementor\Plugin::$instance->documents->get( $post->ID, false );
 	if ( false === $doc->save( array( 'elements' => $elements ) ) ) { WP_CLI::error( 'Save failed.' ); }
 	\Elementor\Plugin::$instance->files_manager->clear_cache();

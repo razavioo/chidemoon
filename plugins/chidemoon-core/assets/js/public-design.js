@@ -596,7 +596,7 @@
 				description.addEventListener('focusin', () => expand(true));
 				description.after(more); expand(false);
 			}
-			const sections = [['.ch-product-description', 'معرفی', 'product-intro'], ['.ch-product-facts-widget', 'مشخصات', 'product-specs'], ['.ch-product-tabs-widget', 'دیدگاه‌ها', 'product-reviews']];
+			const sections = [['.ch-product-description', 'معرفی', 'product-intro'], ['.ch-product-context', 'ایده‌ها و راهنماها', 'product-context'], ['.ch-product-facts-widget', 'مشخصات', 'product-specs'], ['.ch-product-tabs-widget', 'دیدگاه‌ها', 'product-reviews']];
 			const nav = document.createElement('nav'); nav.className = 'ch-product-section-nav'; nav.setAttribute('aria-label', 'بخش‌های محصول');
 			sections.forEach(([selector, label, id]) => { const section = product.querySelector(selector); if (!section || !section.textContent.trim()) return; section.id = id; const link = document.createElement('a'); link.href = `#${id}`; link.textContent = label; nav.append(link); });
 			const layout = product.querySelector('.ch-product-layout'); if (layout && nav.children.length) layout.after(nav);

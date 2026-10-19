@@ -133,7 +133,7 @@ final class Chidemoon_Core_Looks {
     $content = '<h2>' . esc_html( $look->post_title ) . '</h2>' . ( self::relationships( $look->ID ) ? self::render( $look->ID ) : self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) );
    }
    if ( ! trim( $content ) ) { continue; }
-   $html .= '<section class="ch-look-gallery-scene" data-look-id="' . (int) $look->ID . '">' . $content . '</section>';
+   $html .= '<section id="ch-scene-' . (int) $look->ID . '" class="ch-look-gallery-scene" data-look-id="' . (int) $look->ID . '">' . $content . '</section>';
    ++$shown;
   }
   if ( ! $shown ) { $html .= '<p>هنوز چیدمانی برای این فضا منتشر نشده است.</p>'; }

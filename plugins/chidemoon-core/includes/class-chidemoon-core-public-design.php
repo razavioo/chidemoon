@@ -89,6 +89,8 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function widgets( $manager ): void {
+		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-context-widget.php';
+		$manager->register( new Chidemoon_Core_Elementor_Product_Context_Widget() );
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-offer-widget.php';
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-room-filters-widget.php';
 		require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-product-actions-widget.php';

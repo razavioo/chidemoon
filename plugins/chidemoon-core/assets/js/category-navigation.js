@@ -17,21 +17,39 @@
   bed: '<path d="M14 77V32q0-8 8-8h52q8 0 8 8v45M14 49h68M14 66h68M24 49V35h19v14m10 0V35h19v14M20 77v7m56-7v7"/>',
   linen: '<path d="M22 22h52v56H22ZM22 37h52M33 37v41m30-41v41M22 65h52M31 22v15m34-15v15"/>',
   rug: '<path d="M23 20h50v58H23ZM31 28h34v42H31ZM48 36l13 13-13 13-13-13ZM23 13v7m12-7v7m13-7v7m13-7v7m12-7v7M23 78v7m12-7v7m13-7v7m13-7v7m12-7v7"/>',
+  porcelain: '<ellipse cx="48" cy="53" rx="32" ry="23"/><ellipse cx="48" cy="53" rx="22" ry="15"/><path d="M41 49q7-13 14 0-7 14-14 0Zm7-8v24M26 36q22-17 44 0"/>',
+  arcopal: '<rect x="18" y="24" width="60" height="53" rx="16"/><rect x="27" y="33" width="42" height="35" rx="12"/><path d="m38 44 5 6-5 6m20-12-5 6 5 6M33 82h30"/>',
+  crystal: '<path d="M26 19h44l-6 31-16 12-16-12ZM48 62v17M34 80h28M26 19l22 43 22-43M29 35h38M32 50h32"/>',
+  ceramic: '<path d="M22 31h52l-5 35q-21 17-42 0ZM22 31q26-13 52 0M31 46q8-10 17 0t17 0M34 76h28"/><circle cx="39" cy="58" r="2"/><circle cx="58" cy="58" r="2"/>',
+  melamine: '<rect x="16" y="23" width="64" height="54" rx="12"/><path d="M48 24v52M17 48h62M25 32h14v8H25m32 17h14v11H57"/>',
+  jug: '<path d="M27 18h29v13l8 12v33H25V43l8-12V18M56 37h12q15 0 10 20l-14 8M31 51h26M34 63h18M66 22h14v12H66"/>',
+  condiment: '<path d="M16 49h26q-2 21-13 21T16 49Zm38 0h26q-2 21-13 21T54 49ZM35 27h26q-2 16-13 16T35 27M13 78h70"/>',
+  oil: '<path d="M29 18h20v12l9 10v39H20V40l9-10ZM27 18v-7h24l8 7M26 50h26v17H26M65 48h14v29H65Zm3-8h8v8"/>',
+  grinder: '<path d="M30 15h36l-4 24H34ZM34 39h28l8 42H26ZM38 50h20M35 71h26"/><circle cx="48" cy="60" r="4"/>',
+  electric: '<rect x="20" y="25" width="56" height="48" rx="9"/><path d="M28 35h40v27H28M38 36l-5 12 8 3-5 10m20-25-5 12 8 3-5 10M30 73v9m36-9v9"/>',
+  pillow: '<path d="M17 24q31 6 62 0l-4 47q-27-5-54 0ZM26 33q22 5 44 0M28 62q20-4 40 0M39 43h18v13H39"/>',
+  mat: '<path d="M19 29h58v39H19ZM25 35h46v27H25M20 23v6m10-6v6m12-6v6m12-6v6m12-6v6m10-6v6M20 68v6m10-6v6m12-6v6m12-6v6m12-6v6m10-6v6M31 43h34m-34 9h34"/>',
  };
  const iconFor = link => {
   const slug = new URL(link.href).pathname.split('/').filter(Boolean).pop();
   const groups = {
-   appliance: ['home-appliance'], blender: ['chopper-food-processor','food-grinder'],
+   appliance: ['home-appliance'], blender: ['chopper-food-processor'], grinder: ['food-grinder'],
    coffee: ['espresso-maker','coffee-maker'], kettle: ['drink-maker','tea-maker'],
-   heater: ['heater','gas-heater','electric-room-heaters','electric-heater'],
-   plate: ['kitchen-appliances','dinnerware-sets','porcelain-tableware','arcopal-tableware','crystalware','ceramicware','melamine-tableware'],
-   bowl: ['serving','bowl','condiment-and-appetizer-dishes'], tray: ['tray'], cutlery: ['spoon-fork-knife'],
-   cup: ['tea-sets','mug-jug'], jar: ['canisters','sauce-dish'], storage: ['kitchen-organizers','drawer-cabinet-organizer'],
-   bed: ['bedroom-essentials','bedding'], linen: ['bedspread'], rug: ['carpets','rugs-floor-mats','machine-made-carpet'],
+   heater: ['heater','gas-heater'], electric: ['electric-room-heaters','electric-heater'],
+   plate: ['kitchen-appliances','dinnerware-sets'], porcelain: ['porcelain-tableware'], arcopal: ['arcopal-tableware'],
+   crystal: ['crystalware'], ceramic: ['ceramicware'], melamine: ['melamine-tableware'],
+   bowl: ['serving','bowl'], condiment: ['condiment-and-appetizer-dishes'], tray: ['tray'], cutlery: ['spoon-fork-knife'],
+   cup: ['tea-sets'], jug: ['mug-jug'], jar: ['canisters'], oil: ['sauce-dish'], storage: ['kitchen-organizers','drawer-cabinet-organizer'],
+   bed: ['bedroom-essentials'], pillow: ['bedding'], linen: ['bedspread'], rug: ['carpets','machine-made-carpet'], mat: ['rugs-floor-mats'],
   };
   const key = Object.keys(groups).find(key => groups[key].includes(slug)) || 'storage';
   const icon = document.createElement('span'); icon.className = `ch-category-icon ch-category-icon-${key}`; icon.setAttribute('aria-hidden','true');
-  icon.innerHTML = `<svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="48" cy="48" r="42" fill="#edf2e8" stroke="none"/>${illustrations[key]}</svg>`;
+  // Related categories share a drawing language, with visible details unique to each slug.
+  const signature = [...slug].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 0);
+  const x = 18 + signature % 59;
+  const accent = `<path d="M${x} 88h${5 + signature % 9}" stroke="#d08a52"/><circle cx="${14 + (signature >>> 8) % 67}" cy="10" r="${2 + signature % 3}" fill="#d08a52" stroke="none"/>`;
+  icon.dataset.categoryIllustration = slug;
+  icon.innerHTML = `<svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="48" cy="48" r="42" fill="#edf2e8" stroke="none"/>${illustrations[key]}${accent}</svg>`;
   return icon;
  };
  const initMenu = () => {
