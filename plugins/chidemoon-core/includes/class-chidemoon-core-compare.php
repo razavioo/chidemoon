@@ -558,11 +558,14 @@ final class Chidemoon_Core_Compare {
 		$input_id = wp_unique_id( 'chidemoon-comparison-search-' );
 		ob_start();
 		?>
-		<section class="chidemoon-comparison-picker" aria-label="<?php esc_attr_e( 'انتخاب محصولات برای مقایسه', 'chidemoon-core' ); ?>">
+		<details class="chidemoon-comparison-picker" <?php echo count( self::products_from_request() ) < 2 ? 'open' : ''; ?> aria-label="<?php esc_attr_e( 'انتخاب محصولات برای مقایسه', 'chidemoon-core' ); ?>">
+			<summary class="chidemoon-comparison-picker__summary"><span><strong>انتخاب محصولات</strong><small>از یک دسته انتخاب کن تا مقایسه دقیق‌تری داشته باشی</small></span><span class="chidemoon-comparison-picker__add">＋ افزودن / تغییر محصولات</span></summary>
+			<div class="chidemoon-comparison-picker__content">
 			<div class="chidemoon-comparison-search">
 				<div class="chidemoon-comparison-search__heading"><label for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $atts['search_label'] ?? 'محصولات را انتخاب کن' ); ?></label><p class="chidemoon-comparison-search__hint"><?php echo esc_html( $atts['selection_hint'] ?? '۲ تا ۴ محصول برای مقایسه' ); ?></p></div>
 				<div class="chidemoon-comparison-search__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input id="<?php echo esc_attr( $input_id ); ?>" type="search" autocomplete="off" data-comparison-search-input placeholder="<?php echo esc_attr( $atts['search_placeholder'] ?? 'نام محصول یا مدل را جست‌وجو کن' ); ?>"></div>
 				<div class="chidemoon-comparison-search__results" data-comparison-search-results hidden></div>
+				<p class="chidemoon-comparison-feedback" data-comparison-feedback role="status" hidden></p>
 			</div>
 			<?php if ( ! empty( $catalogue ) ) : ?>
 				<div class="chidemoon-core-product-grid" data-comparison-catalogue>
@@ -573,7 +576,8 @@ final class Chidemoon_Core_Compare {
 			<?php else : ?>
 				<div class="chidemoon-compare-empty"><strong><?php echo esc_html( $atts['empty_title'] ?? 'محصولی برای مقایسه موجود نیست' ); ?></strong><p><?php echo esc_html( $atts['empty_text'] ?? 'محصولات پس از بررسی مشخصات فروشنده به این فهرست اضافه می‌شوند.' ); ?></p></div>
 			<?php endif; ?>
-		</section>
+			</div>
+		</details>
 		<?php
 		return (string) ob_get_clean();
 	}
@@ -601,8 +605,14 @@ final class Chidemoon_Core_Compare {
 		ob_start();
 		?>
 		<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">
+			<div class="chidemoon-comparison-toolbar">
+				<div><span class="chidemoon-comparison-eyebrow">کنار هم، انتخاب روشن‌تر</span><h2>مقایسه در یک نگاه</h2><p>قیمت، جزئیات و تفاوت‌های <?php echo esc_html( number_format_i18n( count( $products ) ) ); ?> محصول</p></div>
+				<div class="chidemoon-comparison-toolbar__actions" data-comparison-tools hidden><label class="chidemoon-comparison-switch"><input type="checkbox" data-comparison-differences><span>فقط تفاوت‌ها</span></label><button type="button" data-comparison-share>کپی لینک مقایسه ↗</button></div>
+			</div>
+			<p class="chidemoon-comparison-scroll-hint">برای دیدن همه محصولات، جدول را به چپ و راست بکشید.</p>
 			<div class="chidemoon-comparison-table-wrap" tabindex="0" aria-label="<?php esc_attr_e( 'جدول مقایسه محصولات', 'chidemoon-core' ); ?>">
-				<table class="chidemoon-comparison-table">
+				<table class="chidemoon-comparison-table" data-product-count="<?php echo esc_attr( count( $products ) ); ?>">
+					<caption class="chidemoon-sr-only">مقایسه قیمت، فروشنده و مشخصات محصولات انتخاب‌شده</caption>
 					<thead><tr><th scope="col"><?php esc_html_e( 'محصول', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><th scope="col"><a href="<?php echo esc_url( get_permalink( $product->get_id() ) ); ?>"><?php echo $product->get_image_id() ? wp_get_attachment_image( $product->get_image_id(), 'woocommerce_thumbnail', false, array( 'alt' => '' ) ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $product->get_name() ); ?></span></a><button type="button" class="chidemoon-comparison-table__remove" data-compare-product="<?php echo esc_attr( $product->get_id() ); ?>" data-compare-name="<?php echo esc_attr( $product->get_name() ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'حذف %s از مقایسه', 'chidemoon-core' ), $product->get_name() ) ); ?>"><?php esc_html_e( 'حذف', 'chidemoon-core' ); ?></button></th><?php endforeach; ?></tr></thead>
 					<tbody>
 						<?php $cell_label = static function ( WC_Product $product ): void { echo ' data-label="' . esc_attr( $product->get_name() ) . '"'; }; ?>
@@ -614,6 +624,8 @@ final class Chidemoon_Core_Compare {
 					</tbody>
 				</table>
 			</div>
+			<p class="chidemoon-comparison-no-differences" data-comparison-no-differences hidden>تفاوتی در مشخصات ثبت‌شده این محصولات وجود ندارد.</p>
+			<p class="chidemoon-comparison-footnote">قیمت‌ها آخرین اطلاعات ثبت‌شده‌اند؛ قیمت و موجودی نهایی را در فروشگاه بررسی کن. «—» یعنی اطلاعاتی ثبت نشده است.</p>
 		</div>
 		<?php
 		return (string) ob_get_clean();

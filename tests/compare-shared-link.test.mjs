@@ -17,6 +17,7 @@ describe('shared comparison links', () => {
     const chips = { innerHTML: '' };
     const cta = { hidden: true, href: '' };
     const strip = {
+      classList: { toggle() {} },
       hidden: false,
       querySelector(selector) {
         return {
@@ -78,6 +79,7 @@ describe('shared comparison links', () => {
     ];
     const table = { querySelectorAll() { return tableButtons; } };
     const strip = {
+      classList: { toggle() {} },
       hidden: true,
       querySelector(selector) {
         return {

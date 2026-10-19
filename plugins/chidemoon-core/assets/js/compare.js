@@ -103,6 +103,8 @@
 	}
 
 	function announce(message) {
+		var feedback = document.querySelector('[data-comparison-feedback]');
+		if (feedback) { feedback.textContent = message; feedback.hidden = !message; }
 		var notice = document.getElementById('chidemoon-compare-status');
 		if (!notice) {
 			notice = document.createElement('p');
@@ -277,13 +279,17 @@
 		var chips = strip.querySelector('[data-comparison-status-chips]');
 		if (chips) {
 			chips.innerHTML = items.map(function (item) {
-				return '<span class="chidemoon-comparison-status__chip">' + thumbHtml(item, 'chidemoon-comparison-status__chip-thumb') + '<span dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span></span>';
+				return '<button type="button" class="chidemoon-comparison-status__chip" data-comparison-remove="' + Number(item.id) + '" aria-label="' + escapeHtml('حذف ' + item.name + ' از مقایسه') + '">' + thumbHtml(item, 'chidemoon-comparison-status__chip-thumb') + '<span dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span aria-hidden="true">×</span></button>';
 			}).join('');
 		}
 		var cta = strip.querySelector('.chidemoon-comparison-status__cta');
 		if (cta) {
 			cta.hidden = items.length < 2;
 			if (!cta.hidden) cta.href = comparisonUrl(items);
+			var displayed = displayedTableSelection().map(function (item) { return Number(item.id); });
+			var same = displayed.length === items.length && items.every(function (item, index) { return Number(item.id) === displayed[index]; });
+			cta.textContent = same ? 'دیدن جدول مقایسه' : 'به‌روزرسانی مقایسه';
+			strip.classList.toggle('is-current', same);
 		}
 	}
 
@@ -368,6 +374,7 @@
 	}
 
 	function bind() {
+		bindComparisonTools();
 		var statusCta = document.querySelector('[data-comparison-status] .chidemoon-comparison-status__cta');
 		if (statusCta) {
 			statusCta.addEventListener('click', function (event) {
@@ -381,6 +388,14 @@
 			});
 		}
 		document.addEventListener('click', function (event) {
+			var chipRemove = event.target.closest('[data-comparison-remove]');
+			if (chipRemove) {
+				write(read().filter(function (item) { return Number(item.id) !== Number(chipRemove.dataset.comparisonRemove); }));
+				refresh();
+				var input = document.querySelector('[data-comparison-search-input]');
+				if (input) input.focus();
+				return;
+			}
 			var tableRemove = event.target.closest('.chidemoon-comparison-table__remove');
 			if (tableRemove) {
 				event.preventDefault();
@@ -412,6 +427,65 @@
 		bindSearch();
 		refresh();
 		backfillImages();
+	}
+
+	function bindComparisonTools() {
+		var section = document.querySelector('.chidemoon-comparison-table-section');
+		var tools = section && section.querySelector('[data-comparison-tools]');
+		if (!tools) return;
+		var table = section.querySelector('table');
+		var rows = Array.from(table.querySelectorAll('tbody tr'));
+		var comparable = rows.slice(0, -1);
+		var normalizeValue = function (value) {
+			return value.replace(/[\u200c\u200e\u200f]/g, '').replace(/\s+/g, ' ').trim();
+		};
+		comparable.forEach(function (row) {
+			var values = Array.from(row.querySelectorAll('td')).map(function (cell) { return normalizeValue(cell.textContent); });
+			row.dataset.different = values.some(function (value) { return value !== values[0]; }) ? 'true' : 'false';
+			row.classList.toggle('is-different', row.dataset.different === 'true');
+		});
+		var summary = section.querySelector('.chidemoon-comparison-toolbar p');
+		var differenceCount = comparable.filter(function (row) { return row.dataset.different === 'true'; }).length;
+		if (summary) summary.textContent = faDigits(differenceCount) + ' تفاوت در اطلاعات ثبت‌شده · ' + faDigits(comparable.length - differenceCount) + ' ویژگی مشترک';
+		var headings = table.querySelectorAll('thead th');
+		var offers = rows[rows.length - 1].querySelectorAll('td');
+		Array.from(offers).forEach(function (cell, index) {
+			var link = cell.querySelector('a');
+			if (link && headings[index + 1]) headings[index + 1].appendChild(link.cloneNode(true));
+		});
+		if (headings.length === 3) {
+			var hint = section.querySelector('.chidemoon-comparison-scroll-hint');
+			if (hint) hint.textContent = 'نقطه‌های طلایی، ردیف‌های متفاوت را مشخص می‌کنند.';
+		}
+		var filter = document.createElement('input');
+		filter.type = 'search';
+		filter.className = 'chidemoon-comparison-spec-search';
+		filter.placeholder = 'جست‌وجو در مشخصات…';
+		filter.setAttribute('aria-label', 'جست‌وجو در مشخصات محصولات');
+		tools.prepend(filter);
+		var differences = tools.querySelector('[data-comparison-differences]');
+		function applyFilters() {
+			var term = normalizeValue(filter.value).toLocaleLowerCase('fa');
+			var visible = 0;
+			comparable.forEach(function (row) {
+				row.hidden = (differences.checked && row.dataset.different !== 'true') || (term && normalizeValue(row.textContent).toLocaleLowerCase('fa').indexOf(term) === -1);
+				if (!row.hidden) visible++;
+			});
+			var empty = section.querySelector('[data-comparison-no-differences]');
+			empty.hidden = visible > 0;
+			empty.textContent = term ? 'مشخصاتی با این عبارت پیدا نشد.' : 'تفاوتی در مشخصات ثبت‌شده این محصولات وجود ندارد.';
+			announce(faDigits(visible) + ' ردیف مشخصات نمایش داده می‌شود.');
+		}
+		filter.addEventListener('input', applyFilters);
+		differences.addEventListener('change', applyFilters);
+		tools.querySelector('[data-comparison-share]').addEventListener('click', function () {
+			var url = comparisonUrl(displayedTableSelection());
+			if (navigator.clipboard && window.isSecureContext) {
+				var button = this;
+				navigator.clipboard.writeText(new URL(url, window.location.href).href).then(function () { button.textContent = 'لینک کپی شد ✓'; announce('لینک مقایسه کپی شد.'); }, function () { window.prompt('لینک مقایسه را کپی کنید', url); });
+			} else window.prompt('لینک مقایسه را کپی کنید', url);
+		});
+		tools.hidden = false;
 	}
 
 	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
