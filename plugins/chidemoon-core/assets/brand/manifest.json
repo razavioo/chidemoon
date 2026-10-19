@@ -1,0 +1,70 @@
+{
+  "direction": "03",
+  "palette": {
+    "green": "#41734D",
+    "orange": "#F47725",
+    "ink": "#2F332D"
+  },
+  "assets": {
+    "chidemoon-symbol": {
+      "width": 291.960387,
+      "height": 169.0
+    },
+    "chidemoon-symbol-mono": {
+      "width": 291.960387,
+      "height": 169.0
+    },
+    "chidemoon-symbol-white": {
+      "width": 291.960387,
+      "height": 169.0
+    },
+    "chidemoon-wordmark-fa": {
+      "width": 455.16772,
+      "height": 118.6
+    },
+    "chidemoon-wordmark-fa-mono": {
+      "width": 455.16772,
+      "height": 118.6
+    },
+    "chidemoon-wordmark-fa-white": {
+      "width": 455.16772,
+      "height": 118.6
+    },
+    "chidemoon-wordmark-en": {
+      "width": 684.5,
+      "height": 91.5
+    },
+    "chidemoon-wordmark-en-mono": {
+      "width": 684.5,
+      "height": 91.5
+    },
+    "chidemoon-wordmark-en-white": {
+      "width": 684.5,
+      "height": 91.5
+    },
+    "chidemoon-logo-fa": {
+      "width": 1146.67332,
+      "height": 232.0
+    },
+    "chidemoon-logo-fa-mono": {
+      "width": 1146.67332,
+      "height": 232.0
+    },
+    "chidemoon-logo-fa-white": {
+      "width": 1146.67332,
+      "height": 232.0
+    },
+    "chidemoon-logo-en": {
+      "width": 1328.377231,
+      "height": 232.0
+    },
+    "chidemoon-logo-en-mono": {
+      "width": 1328.377231,
+      "height": 232.0
+    },
+    "chidemoon-logo-en-white": {
+      "width": 1328.377231,
+      "height": 232.0
+    }
+  }
+}

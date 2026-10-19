@@ -79,6 +79,7 @@ services:
       - ./plugins/chidemoon-core:/var/www/html/wp-content/plugins/chidemoon-core:ro
       - ./plugins/chidemoon-ai:/var/www/html/wp-content/plugins/chidemoon-ai:ro
       - ./plugins/chidemoon-catalog-sync:/var/www/html/wp-content/plugins/chidemoon-catalog-sync:ro
+      - ./ops/apache-json-compression.conf:/etc/apache2/conf-enabled/chidemoon-json-compression.conf:ro
       - "${CHIDEMOON_RUNTIME_DIR:-/opt/chidemoon/runtime}/ioncube:/opt/chidemoon-ioncube:ro"
     healthcheck:
       # Check HTTP status without following WordPress's canonical redirect to

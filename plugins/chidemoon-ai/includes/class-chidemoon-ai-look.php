@@ -15,6 +15,31 @@ class Chidemoon_AI_Look {
 	public const MAX_PRODUCTS     = 6;
 	public const MIN_PRODUCTS     = 1;
 	public const MAX_ATTACHMENTS  = 2;
+	public static function styles(): array {
+		return array(
+			'minimal' => array( 'مینیمال — ساده و خلوت', 'minimal, neutral palette, natural light' ),
+			'scandi' => array( 'اسکاندیناوی — روشن و چوبی', 'Scandinavian, light wood, soft textiles' ),
+			'warm' => array( 'گرم و دنج', 'warm, earthy tones, cozy textiles' ),
+			'luxe' => array( 'لوکس آرام', 'quiet luxury, marble and brass accents' ),
+			'modern' => array( 'مدرن', 'modern, clean lines, functional furniture' ),
+			'contemporary' => array( 'معاصر', 'contemporary, sculptural forms, balanced contrasting textures' ),
+			'classic' => array( 'کلاسیک', 'classic, symmetrical composition, ornate details, elegant wood' ),
+			'neoclassical' => array( 'نئوکلاسیک', 'neoclassical, restrained wall moldings, symmetry, soft neutral colors' ),
+			'boho' => array( 'بوهمی (بوهو)', 'bohemian, layered textiles, rattan, plants, earthy colors' ),
+			'japandi' => array( 'ژاپندی — ژاپنی و اسکاندیناوی', 'Japandi, low furniture, natural wood, warm minimalism' ),
+			'industrial' => array( 'صنعتی', 'industrial, exposed brick, dark metal, reclaimed wood' ),
+			'rustic' => array( 'روستیک — طبیعی و روستایی', 'rustic, weathered timber, stone, natural woven textures' ),
+			'farmhouse' => array( 'خانهٔ روستایی مدرن', 'modern farmhouse, light walls, simple timber furniture, linen' ),
+			'iranian' => array( 'سنتی ایرانی', 'traditional Persian, Persian rugs, carved wood, rich textile accents' ),
+			'iranian-modern' => array( 'تلفیقی ایرانی و مدرن', 'modern Persian fusion, contemporary furniture with Persian rugs and restrained Iranian motifs' ),
+			'mediterranean' => array( 'مدیترانه‌ای', 'Mediterranean, textured plaster, terracotta, warm white, natural light' ),
+			'coastal' => array( 'ساحلی', 'coastal, airy white and blue palette, light wood, linen' ),
+			'mid-century' => array( 'مدرن میانهٔ قرن', 'mid-century modern, tapered wood legs, organic shapes, muted accent colors' ),
+			'art-deco' => array( 'آرت‌دکو', 'Art Deco, geometric patterns, rich colors, brass, velvet' ),
+			'eclectic' => array( 'التقاطی — ترکیب هماهنگ سبک‌ها', 'eclectic, curated mix of eras, cohesive palette, varied textures' ),
+			'wabi-sabi' => array( 'وابی‌سابی — سادگی طبیعی', 'wabi-sabi, imperfect natural textures, muted earth palette, handmade ceramics' ),
+		);
+	}
 
 	/**
 	 * @param array<int, int> $product_ids
@@ -52,12 +77,7 @@ class Chidemoon_AI_Look {
 			'entryway'       => 'welcoming entryway',
 			'reading-corner' => 'cozy reading corner',
 		);
-		$style_labels = array(
-			'minimal' => 'minimal, neutral palette, natural light',
-			'scandi'  => 'Scandinavian, light wood, soft textiles',
-			'warm'    => 'warm, earthy tones, cozy textiles',
-			'luxe'    => 'quiet luxury, marble and brass accents',
-		);
+		$style_labels = array_map( static fn( $entry ) => $entry[1], self::styles() );
 		$room_text  = $room_labels[ $room ] ?? 'tasteful interior';
 		$style_text = $style_labels[ $style ] ?? $style_labels['minimal'];
 

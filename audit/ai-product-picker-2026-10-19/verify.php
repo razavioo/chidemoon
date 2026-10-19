@@ -1,0 +1,4 @@
+<?php
+$results=[];wp_set_current_user(0);$request=new WP_REST_Request('GET','/chidemoon-ai/v1/products');$request->set_param('search','lamp');$results['anonymous_status']=rest_do_request($request)->get_status();wp_set_current_user(1);
+foreach(['local'=>get_permalink(794),'external'=>'https://example.com/product/test','not_product'=>home_url('/shop-the-look/')]as$key=>$term){$request=new WP_REST_Request('GET','/chidemoon-ai/v1/products');$request->set_param('search',$term);$r=rest_do_request($request);$results[$key]=['status'=>$r->get_status(),'ids'=>array_column($r->get_data(),'id')];}
+echo wp_json_encode($results)."\n";if($results['anonymous_status']!==401||$results['local']['ids']!==[794]||$results['external']['ids']||$results['not_product']['ids'])throw new RuntimeException('picker permission or URL assertion failed');echo wp_json_encode($results)."\n";

@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Chidemoon_Core_Public_Design {
 	public static function register(): void {
+		require_once __DIR__ . '/class-chidemoon-core-catalog-empty.php';
+		Chidemoon_Core_Catalog_Empty::register();
 		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'polish_public_copy' ), 100, 2 );
 		add_filter( 'the_title', array( __CLASS__, 'normalize_persian' ), 100 );
 		add_filter( 'term_name', array( __CLASS__, 'normalize_persian' ), 100 );

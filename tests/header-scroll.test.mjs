@@ -14,6 +14,7 @@ test('sticky header follows the visible admin bar as the mobile bar scrolls away
     getElementById: () => ({ getBoundingClientRect: () => ({ bottom }) }),
     querySelector: () => null,
     querySelectorAll: () => [],
+    addEventListener: () => {},
   };
   vm.runInNewContext(readFileSync(new URL('../plugins/chidemoon-core/assets/js/public-design.js', import.meta.url), 'utf8'), {
     document,

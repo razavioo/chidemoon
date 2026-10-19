@@ -16,5 +16,10 @@ __pycache__/
 *.py[cod]
 .local-dev/
 
+# Local browser sessions and generated review artifacts may contain credentials.
+/.playwright-cli/
+/output/
+/debug.log
+
 # Optional host-specific PHP extensions are installed outside release source.
 /runtime/

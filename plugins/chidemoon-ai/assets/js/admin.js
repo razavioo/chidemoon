@@ -110,6 +110,10 @@
 	function initForm(form) {
 		form.addEventListener('submit', function (event) {
 			event.preventDefault();
+			if (form.querySelector('[data-look-product-picker]') && !ids(form.elements.product_ids.value).length) {
+				result(form.querySelector('.chidemoon-ai-job-form__result'), 'ابتدا حداقل یک محصول را جست‌وجو و اضافه کن.', true);
+				return;
+			}
 			var type = form.getAttribute('data-chidemoon-ai-job');
 			var output = form.querySelector('.chidemoon-ai-job-form__result');
 			var button = form.querySelector('button[type="submit"]');
@@ -158,8 +162,76 @@
 		document.querySelectorAll('form[data-chidemoon-ai-job]').forEach(initForm);
 		document.querySelectorAll('[data-chidemoon-ai-review]').forEach(initReview);
 		document.querySelectorAll('[data-chidemoon-ai-picker]').forEach(initPicker);
+		document.querySelectorAll('[data-look-product-picker]').forEach(initLookPicker);
+		document.querySelectorAll('[data-look-reference-picker]').forEach(initReferencePicker);
 		initDiag();
 	});
+
+	function initReferencePicker(root) {
+		var field = root.querySelector('[name="source_attachment_ids"]'), chosen = new Map();
+		var list = root.querySelector('[data-reference-selected]'), status = root.querySelector('[data-reference-status]');
+		function render() {
+			field.value = Array.from(chosen.keys()).join(','); list.replaceChildren();
+			chosen.forEach(function (image) {
+				var item = document.createElement('div'); item.className = 'ch-ai-product-row';
+				var thumb = document.createElement('img'); thumb.src = image.sizes && image.sizes.thumbnail ? image.sizes.thumbnail.url : image.url; thumb.alt = '';
+				var title = document.createElement('span'); title.textContent = image.title || image.filename;
+				var remove = document.createElement('button'); remove.type = 'button'; remove.className = 'button'; remove.textContent = 'حذف';
+				remove.setAttribute('aria-label', 'حذف عکس ' + title.textContent);
+				remove.addEventListener('click', function () { chosen.delete(image.id); status.textContent = ''; render(); });
+				item.append(thumb, title, remove); list.appendChild(item);
+			});
+		}
+		root.querySelector('[data-reference-open]').addEventListener('click', function () {
+			if (!window.wp || !wp.media) { status.textContent = 'انتخاب‌گر عکس آماده نشد؛ صفحه را تازه کن.'; return; }
+			var frame = wp.media({ title: 'انتخاب حداکثر دو عکس مرجع', button: { text: 'استفاده از عکس‌ها' }, library: { type: 'image' }, multiple: true });
+			frame.on('open', function () { chosen.forEach(function (image) { frame.state().get('selection').add(wp.media.attachment(image.id)); }); });
+			frame.on('select', function () {
+				var images = frame.state().get('selection').toJSON();
+				if (images.length > 2) { status.textContent = 'حداکثر دو عکس انتخاب کن؛ انتخاب قبلی حفظ شد.'; return; }
+				chosen.clear(); images.forEach(function (image) { if (image.type === 'image') chosen.set(image.id, image); });
+				status.textContent = chosen.size ? chosen.size + ' عکس مرجع انتخاب شد.' : ''; render();
+			});
+			frame.open();
+		});
+	}
+
+	function initLookPicker(root) {
+		var search = root.querySelector('input[type="search"]'), field = root.querySelector('[name="product_ids"]');
+		var results = root.querySelector('[data-product-results]'), selected = root.querySelector('[data-product-selected]');
+		var status = root.querySelector('[data-product-status]'), choices = new Map(), timer, controller, sequence = 0;
+		function row(product, remove) {
+			var item = document.createElement('div'); item.className = 'ch-ai-product-row';
+			if (product.image) { var image = document.createElement('img'); image.src = product.image; image.alt = ''; item.appendChild(image); }
+			var name = document.createElement('span'); name.textContent = product.title; item.appendChild(name);
+			var button = document.createElement('button'); button.type = 'button'; button.className = 'button';
+			button.textContent = remove ? 'حذف' : (choices.has(product.id) ? 'اضافه شده' : 'افزودن');
+			button.disabled = !remove && (choices.has(product.id) || choices.size >= 6);
+			button.setAttribute('aria-label', (remove ? 'حذف ' : 'افزودن ') + product.title);
+			button.addEventListener('click', function () {
+				clearTimeout(timer); ++sequence; if (controller) controller.abort();
+				if (remove) choices.delete(product.id); else if (choices.size < 6) choices.set(product.id, product);
+				field.value = Array.from(choices.keys()).join(','); selected.replaceChildren();
+				choices.forEach(function (p) { selected.appendChild(row(p, true)); });
+				results.replaceChildren(); search.value = ''; status.textContent = choices.size + ' محصول انتخاب شده' + (choices.size === 6 ? '؛ به سقف انتخاب رسیدی.' : '');
+			});
+			item.appendChild(button); return item;
+		}
+		search.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
+		search.addEventListener('input', function () {
+			clearTimeout(timer); if (controller) controller.abort(); var requestId = ++sequence;
+			var term = search.value.trim(); results.replaceChildren();
+			if (term.length < 2) { status.textContent = ''; return; }
+			status.textContent = 'در حال جست‌وجو…';
+			timer = setTimeout(function () {
+				controller = new AbortController();
+				fetch(window.ChidemoonAiAdmin.root + 'products?search=' + encodeURIComponent(term), { credentials: 'same-origin', headers: { 'X-WP-Nonce': window.ChidemoonAiAdmin.nonce }, signal: controller.signal })
+				.then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+				.then(function (products) { if (requestId !== sequence) return; status.textContent = products.length ? 'محصول موردنظر را اضافه کن.' : 'محصولی پیدا نشد؛ نام دیگری یا لینک محصول در چیدمون را امتحان کن.'; products.forEach(function (p) { results.appendChild(row(p, false)); }); })
+				.catch(function (e) { if (e.name !== 'AbortError' && requestId === sequence) status.textContent = 'جست‌وجو انجام نشد؛ دوباره امتحان کن.'; });
+			}, 300);
+		});
+	}
 
 	function initPicker(button) {
 		button.addEventListener('click', function () {

@@ -86,9 +86,15 @@ class Chidemoon_AI_Admin {
 			<h1><?php esc_html_e( 'Look Studio', 'chidemoon-ai' ); ?></h1>
 			<p><?php esc_html_e( 'Generate a full styled room scene from your products. The image is synthesized by AI, hotspots are proposed automatically, and everything waits in the Review Queue. Nothing is published automatically.', 'chidemoon-ai' ); ?></p>
 			<form class="chidemoon-ai-job-form" data-chidemoon-ai-job="look">
-				<p><label for="chidemoon-ai-look-products"><?php esc_html_e( 'Product IDs (1-6, comma-separated)', 'chidemoon-ai' ); ?></label><br>
-				<input id="chidemoon-ai-look-products" name="product_ids" type="text" class="regular-text" required>
-				<button type="button" class="button" data-chidemoon-ai-picker="product_ids"><?php esc_html_e( 'Search products', 'chidemoon-ai' ); ?></button></p>
+                <div class="ch-ai-products" data-look-product-picker>
+                    <label for="ch-ai-product-search"><strong>انتخاب محصولات چیدمان</strong></label>
+                    <p class="description">نام محصول را بنویس یا لینک همان محصول در سایت چیدمون را وارد کن؛ سپس روی «افزودن» بزن. حداکثر ۶ محصول.</p>
+                    <input type="hidden" name="product_ids" value="">
+                    <input id="ch-ai-product-search" type="search" class="regular-text" placeholder="مثلاً فرش، چراغ مطالعه یا لینک محصول" autocomplete="off">
+                    <div data-product-status role="status" aria-live="polite"></div>
+                    <div data-product-results></div>
+                    <div data-product-selected aria-label="محصولات انتخاب‌شده"></div>
+                </div>
 				<p><label for="chidemoon-ai-look-room"><?php esc_html_e( 'Room', 'chidemoon-ai' ); ?></label><br>
 				<select id="chidemoon-ai-look-room" name="room">
 					<option value="living-room"><?php esc_html_e( 'Living room', 'chidemoon-ai' ); ?></option>
@@ -103,13 +109,18 @@ class Chidemoon_AI_Admin {
 				</select></p>
 				<p><label for="chidemoon-ai-look-style"><?php esc_html_e( 'Style', 'chidemoon-ai' ); ?></label><br>
 				<select id="chidemoon-ai-look-style" name="style">
-					<option value="minimal"><?php esc_html_e( 'Minimal', 'chidemoon-ai' ); ?></option>
-					<option value="scandi"><?php esc_html_e( 'Scandinavian', 'chidemoon-ai' ); ?></option>
-					<option value="warm"><?php esc_html_e( 'Warm', 'chidemoon-ai' ); ?></option>
-					<option value="luxe"><?php esc_html_e( 'Quiet luxury', 'chidemoon-ai' ); ?></option>
+					<?php foreach ( Chidemoon_AI_Look::styles() as $key => $style ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $style[0] ); ?></option>
+					<?php endforeach; ?>
 				</select></p>
-				<p><label for="chidemoon-ai-look-refs"><?php esc_html_e( 'Reference Media Library IDs (optional, max 2)', 'chidemoon-ai' ); ?></label><br>
-				<input id="chidemoon-ai-look-refs" name="source_attachment_ids" type="text" class="regular-text"></p>
+				<div class="ch-ai-references" data-look-reference-picker>
+					<strong>عکس‌های مرجع (اختیاری، حداکثر ۲ عکس)</strong>
+					<p class="description">اگر نمونه‌ای از رنگ‌ها، حال‌وهوا یا چیدمان دلخواه داری، انتخابش کن. این عکس‌ها برای راهنمایی تولید تصویرند؛ عکس نهایی نیستند. می‌توانی این قسمت را خالی بگذاری.</p>
+					<input name="source_attachment_ids" type="hidden" value="">
+					<button type="button" class="button" data-reference-open>انتخاب یا بارگذاری عکس</button>
+					<div data-reference-status role="status" aria-live="polite"></div>
+					<div data-reference-selected></div>
+				</div>
 				<p><label for="chidemoon-ai-look-instructions"><?php esc_html_e( 'Style request', 'chidemoon-ai' ); ?></label><br>
 				<textarea id="chidemoon-ai-look-instructions" name="instructions" rows="4" class="large-text" required placeholder="<?php esc_attr_e( 'e.g. Bright minimal living room, oak floor, morning light', 'chidemoon-ai' ); ?>"></textarea></p>
 				<p><label><input name="rights_attestation" type="checkbox" value="1" required> <?php esc_html_e( 'I confirm that I have the rights to use every source image and requested image concept.', 'chidemoon-ai' ); ?></label></p>
@@ -420,7 +431,9 @@ class Chidemoon_AI_Admin {
 		}
 
 		$handle = 'chidemoon-ai-admin';
-		wp_enqueue_script( $handle, CHIDEMOON_AI_URL . 'assets/js/admin.js', array(), CHIDEMOON_AI_VERSION, true );
+		wp_enqueue_media();
+        wp_enqueue_style( $handle, CHIDEMOON_AI_URL . 'assets/css/admin.css', array(), (string) filemtime( CHIDEMOON_AI_DIR . 'assets/css/admin.css' ) );
+		wp_enqueue_script( $handle, CHIDEMOON_AI_URL . 'assets/js/admin.js', array(), (string) filemtime( CHIDEMOON_AI_DIR . 'assets/js/admin.js' ), true );
 		wp_add_inline_script(
 			$handle,
 			'window.ChidemoonAiAdmin = ' . wp_json_encode(

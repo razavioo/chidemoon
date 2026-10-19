@@ -40,6 +40,7 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-looks.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-reconciliation.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-discovery.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-public-design.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-branding.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-content.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-workspace.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-search-facets.php';

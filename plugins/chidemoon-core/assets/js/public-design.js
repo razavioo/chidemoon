@@ -303,32 +303,13 @@
 			const link = item.querySelector('.e-n-menu-title-container[href]');
 			return link && new URL(link.href).pathname === '/';
 		});
+		homeItem?.classList.add('ch-menu-home');
 		// Elementor's hover setting also applies to mouse-driven narrow windows.
 		['mouseover', 'mouseenter', 'mouseout', 'mouseleave', 'pointerover', 'pointerenter', 'pointerout', 'pointerleave'].forEach(type => {
 			header.addEventListener(type, event => {
 				if (mobileMenu.matches && event.target.closest('.e-n-menu-item')) event.stopImmediatePropagation();
 			}, true);
 		});
-		header.addEventListener('click', event => {
-			if (mobileMenu.matches) {
-				const title = event.target.closest('.e-n-menu-title');
-				const toggle = title?.querySelector('.e-n-menu-dropdown-icon');
-				if (toggle) {
-					event.preventDefault();
-					event.stopImmediatePropagation();
-					const item = title.closest('.e-n-menu-item');
-					const open = item.classList.toggle('ch-mobile-expanded');
-					toggle.setAttribute('aria-expanded', String(open));
-					return;
-				}
-			}
-			const title = event.target.closest('.e-n-menu-title-container[href]');
-			const toggle = title?.closest('.e-n-menu-title')?.querySelector('.e-n-menu-dropdown-icon');
-			if (!toggle) return;
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (toggle.getAttribute('aria-expanded') !== 'true') toggle.click();
-		}, true);
 		const searchHome = document.createComment('header-search');
 		search.before(searchHome);
 		let drawerHeading;
@@ -337,6 +318,13 @@
 			drawerHeading = document.createElement('div');
 			drawerHeading.className = 'ch-drawer-heading';
 			drawerHeading.innerHTML = '<div><strong>چیدمون</strong><span>خانه، به سلیقهٔ تو</span></div>';
+			const brandImage = header.querySelector('.ch-brand-logo img');
+			if (brandImage) {
+				const drawerLogo = brandImage.cloneNode();
+				drawerLogo.className = 'ch-drawer-brand-image';
+				drawerLogo.removeAttribute('fetchpriority');
+				drawerHeading.querySelector('strong').replaceChildren(drawerLogo);
+			}
 			drawerHeading.tabIndex = -1;
 			menuPanel.prepend(drawerHeading);
 			const backdrop = document.createElement('button');
@@ -349,6 +337,9 @@
 				if (menuToggle.getAttribute('aria-expanded') === 'true') menuToggle.click();
 				menuToggle.focus({ preventScroll: true });
 			};
+			const drawerClose = document.createElement('button');
+			drawerClose.type = 'button'; drawerClose.textContent = '×'; drawerClose.setAttribute('aria-label', 'بستن منو');
+			drawerClose.addEventListener('click', closeMenu); drawerHeading.append(drawerClose);
 			backdrop.addEventListener('click', closeMenu);
 			document.addEventListener('keydown', event => {
 				if (!document.body.classList.contains('ch-mobile-menu-open')) return;
@@ -544,13 +535,37 @@
 				icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg>';
 				heading.append(icon, title); form.prepend(heading);
 				const toggle = document.createElement('button');
-				toggle.type = 'button'; toggle.className = 'ch-filter-toggle'; toggle.textContent = 'فیلتر محصولات' + (applied ? ` (${applied.toLocaleString('fa-IR')})` : '');
+				toggle.type = 'button'; toggle.className = 'ch-filter-toggle';
+				toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg><span>فیلتر محصولات</span>';
+				if (applied) {
+					const badge = document.createElement('span'); badge.className = 'ch-filter-badge'; badge.textContent = applied.toLocaleString('fa-IR'); toggle.append(badge);
+					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `فیلتر محصولات، ${applied.toLocaleString('fa-IR')} فیلتر فعال`);
+				}
 				form.id ||= `ch-catalog-filter-form-${index}`;
-				toggle.setAttribute('aria-controls', form.id); toggle.setAttribute('aria-expanded', 'false');
-				form.before(toggle);
-				const setOpen = open => { toggle.setAttribute('aria-expanded', String(open)); form.classList.toggle('is-open', open); };
-				toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-				form.addEventListener('keydown', event => { if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); } });
+				const sidebar = form.parentElement;
+				const tools = sidebar.closest('.ch-catalog-layout')?.querySelector('.ch-catalog-tools');
+				if (!tools) return;
+				tools.prepend(toggle);
+				const dialog = document.createElement('dialog'); dialog.className = 'ch-filter-dialog'; dialog.id = `${form.id}-dialog`;
+				const dialogHeading = document.createElement('div'); dialogHeading.className = 'ch-filter-dialog-heading';
+				const dialogTitle = document.createElement('h2'); dialogTitle.id = `${dialog.id}-title`; dialogTitle.textContent = 'فیلتر محصولات';
+				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = '×'; close.setAttribute('aria-label', 'بستن فیلتر محصولات');
+				dialogHeading.append(dialogTitle, close); dialog.append(dialogHeading); document.body.append(dialog);
+				dialog.setAttribute('aria-labelledby', dialogTitle.id);
+				toggle.setAttribute('aria-controls', dialog.id); toggle.setAttribute('aria-haspopup', 'dialog'); toggle.setAttribute('aria-expanded', 'false');
+				const compact = window.matchMedia('(max-width: 1024px)');
+				const closeDialog = () => dialog.close();
+				toggle.addEventListener('click', () => { dialog.showModal(); toggle.setAttribute('aria-expanded', 'true'); document.documentElement.classList.add('ch-filter-modal-open'); close.focus(); });
+				close.addEventListener('click', closeDialog);
+				dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeDialog(); } });
+				dialog.addEventListener('click', event => { if (event.target === dialog) { const box = dialog.getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) closeDialog(); } });
+				dialog.addEventListener('close', () => { toggle.setAttribute('aria-expanded', 'false'); document.documentElement.classList.remove('ch-filter-modal-open'); if (compact.matches) toggle.focus(); });
+				const syncLayout = () => {
+					if (dialog.open) closeDialog();
+					if (compact.matches) dialog.append(form);
+					else sidebar.append(form);
+				};
+				compact.addEventListener('change', syncLayout); syncLayout();
 			}
 			sync();
 		});
@@ -570,70 +585,6 @@
 		}
 		const searchIcon = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>';
 		document.querySelectorAll('.ch-header-search .e-search-submit').forEach(button => { button.innerHTML = searchIcon; button.setAttribute('aria-label', 'جستجو در چیدمون'); });
-		const shapes = [
-			[/چراغ|نور|روشن/, '<path d="m65 30-22 45h74L95 30ZM80 75v54m-25 0h50"/><path d="m48 88-8 13m72-13 8 13"/>'],
-			[/خواب|تخت|کالای خواب/, '<path d="M25 123V65q0-12 12-12h86q12 0 12 12v58M25 88h110M35 88V70h35v18m20 0V70h35v18M25 113h110"/>'],
-			[/آشپز|پذیرایی|ظرف|قاشق/, '<circle cx="85" cy="83" r="36"/><circle cx="85" cy="83" r="25"/><path d="M30 42v30m-7-30v21q0 9 14 9V42m-7 30v55m101-85v85m0-85q-20 17 0 40"/>'],
-			[/فرش|بافت|نساج|منسوج|پرده/, '<path d="M36 38h88v90H36zM46 48h68v70H46zM36 32v-8m22 8v-8m22 8v-8m22 8v-8m22 8v-8M36 134v8m22-8v8m22-8v8m22-8v8m22-8v8M80 63l20 20-20 20-20-20Z"/>'],
-			[/دکور|گلدان|گیاه/, '<path d="M58 90h44l-8 43H66ZM80 90V45m0 23q-40 0-28-33 29 0 28 33Zm0-10q0-30 30-33 5 30-30 33Z"/>'],
-			[/مبل|نشیمن|صندلی/, '<path d="M35 82V58q0-15 15-15h60q15 0 15 15v24M35 76q-17-8-17 10v25h124V86q0-18-17-10v22H35ZM30 111v17m100-17v17"/>'],
-			[/آینه/, '<path d="M48 125V62a32 32 0 0 1 64 0v63ZM57 115V62a23 23 0 0 1 46 0v53ZM65 70l24-24m-20 48 26-26"/>'],
-			[/میز/, '<path d="M25 64h110v17H25ZM39 81v51m82-51v51M56 64V40h48v24"/>'],
-			[/قفسه|کتاب|نظم|نگهدار|کمد/, '<path d="M35 28h90v108H35ZM35 64h90M35 100h90M48 64V40h14v24m8 0V35h16v29m12 0 10-26 13 5-8 21M50 100V77h50v23M45 136v9m70-9v9"/>'],
-			[/تابلو|دیوار/, '<path d="M30 35h100v95H30ZM40 45h80v75H40ZM40 105l25-26 20 20 15-16 20 22"/><circle cx="93" cy="65" r="10"/>'],
-			[/حمام|سرویس|بهداشت/, '<path d="M25 80h110l-12 39H42ZM42 119v12m76-12v12M40 80V45q0-18 20-18h10v14H52v39"/>'],
-			[/./, '<path d="m30 77 50-42 50 42v53H30ZM60 130V89h40v41M38 60V35h17v11"/>']
-		];
-		document.querySelectorAll('.ch-category-tree').forEach((tree, treeIndex) => {
-			const roots = [...tree.querySelectorAll(':scope > ul > li')];
-			if (!roots.length) return;
-			const panel = document.createElement('div'); panel.className = 'ch-category-detail';
-			tree.append(panel); tree.classList.add('ch-category-browser');
-			const show = item => {
-				const link = item.querySelector(':scope > a'); if (!link) return;
-				roots.forEach(root => root.classList.toggle('is-active', root === item));
-				panel.replaceChildren();
-				const all = document.createElement('a'); all.href = link.href; all.className = 'ch-category-view-all'; all.textContent = `همه محصولات ${link.textContent.trim()}`; panel.append(all);
-				const children = item.querySelector(':scope > ul');
-				if (children) panel.append(children.cloneNode(true));
-				else {
-					const id = item.className.match(/(?:^|\s)cat-item-(\d+)(?:\s|$)/)?.[1];
-					const samples = id && tree.querySelector(`template[data-category-samples="${id}"]`);
-					if (samples) panel.append(samples.content.cloneNode(true));
-				}
-				const preview = document.createElement('div'); preview.className = 'ch-category-preview'; preview.setAttribute('aria-hidden', 'true');
-				preview.innerHTML = `<svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${shapes.find(([pattern]) => pattern.test(link.textContent))[1]}</svg>`;
-				panel.append(preview);
-			};
-			roots.forEach((item, index) => {
-				const link = item.querySelector(':scope > a'); if (!link) return;
-				const button = document.createElement('button');
-				button.type = 'button'; button.className = 'ch-category-toggle';
-				const icon = document.createElement('span'); icon.className = 'ch-category-icon'; icon.setAttribute('aria-hidden', 'true');
-				icon.innerHTML = `<svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">${shapes.find(([pattern]) => pattern.test(link.textContent))[1]}</svg>`;
-				const label = document.createElement('span'); label.textContent = link.textContent;
-				button.append(icon, label); link.hidden = true; link.after(button);
-				const section = document.createElement('div'); section.className = 'ch-category-accordion'; section.id = `ch-category-${treeIndex}-${index}`;
-				const all = document.createElement('a'); all.href = link.href; all.className = 'ch-category-view-all'; all.textContent = `همهٔ محصولات ${link.textContent.trim()}`;
-				section.append(all);
-				const children = item.querySelector(':scope > ul');
-				if (children) section.append(children.cloneNode(true));
-				item.append(section); button.setAttribute('aria-controls', section.id); button.setAttribute('aria-expanded', 'false');
-				button.addEventListener('click', () => {
-					const open = button.getAttribute('aria-expanded') !== 'true';
-					roots.forEach(root => { root.classList.remove('is-open'); root.querySelector('.ch-category-toggle')?.setAttribute('aria-expanded', 'false'); });
-					item.classList.toggle('is-open', open); button.setAttribute('aria-expanded', String(open)); show(item);
-				});
-				button.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') show(item); });
-				button.addEventListener('focus', () => show(item));
-				button.addEventListener('keydown', event => { if (event.key === 'ArrowLeft' && getComputedStyle(panel).display !== 'none') { event.preventDefault(); panel.querySelector('a')?.focus(); } });
-				link.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') show(item); });
-				link.addEventListener('focus', () => show(item));
-				link.addEventListener('keydown', event => { if (event.key === 'ArrowLeft' && getComputedStyle(panel).display !== 'none') { event.preventDefault(); panel.querySelector('a')?.focus(); } });
-			});
-			panel.addEventListener('keydown', event => { if (event.key === 'ArrowRight' || event.key === 'Escape') { event.preventDefault(); tree.querySelector(':scope > ul > li.is-active > .ch-category-toggle')?.focus(); } });
-			show(roots[0]);
-		});
 		const product = document.querySelector('.ch-product-single');
 		if (product) {
 			const description = product.querySelector('.ch-product-description .elementor-widget-theme-post-content');

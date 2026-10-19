@@ -72,6 +72,12 @@ git -C "$ROOT_DIR" archive --format=tar "$revision" -- \
 	plugins \
 	tools/elementor-rebuild.php \
 	tools/elementor-editability-upgrade.php \
+	tools/branding-refresh.php \
+	tools/typography-upgrade.php \
+	tools/type-scale-upgrade.php \
+	tools/font-size-down.php \
+	tools/remove-editorial-category-navigation.php \
+	tools/storefront-audit-upgrade.php \
 	tools/editorial-elementor-upgrade.php \
 	tools/rebuild-editorial.php \
 	tools/ui-catalogue-refresh.php \

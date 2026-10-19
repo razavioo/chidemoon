@@ -345,6 +345,7 @@ final class Chidemoon_Core_Affiliate {
 			array(
 				'product_id' => (string) get_the_ID(),
 				'label'      => __( 'View offer', 'chidemoon-core' ),
+				'show_price' => false,
 			),
 			$attributes,
 			'chidemoon_affiliate_cta'
@@ -359,7 +360,7 @@ final class Chidemoon_Core_Affiliate {
 		return sprintf(
 			'<a class="chidemoon-affiliate-cta" href="%1$s" target="_blank" rel="nofollow sponsored noopener">%2$s</a>',
 			esc_url( self::tracking_url( $product_id ) ),
-			esc_html( $attributes['label'] )
+			'<span class="chidemoon-affiliate-cta__label">' . esc_html( $attributes['label'] ) . '</span>' . ( ! empty( $attributes['show_price'] ) && '' !== $product->get_price_html() ? ' <span class="chidemoon-affiliate-cta__price">(' . wp_kses_post( $product->get_price_html() ) . ')</span>' : '' )
 		);
 	}
 

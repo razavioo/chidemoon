@@ -1,0 +1,69 @@
+/* Direction 03: preserve the artwork's proportions; spacing belongs to layout. */
+body .ch-header .ch-brand-block {
+	flex: 0 0 112px;
+	inline-size: 112px;
+	max-inline-size: 100%;
+	align-items: center;
+}
+body .ch-brand-logo.elementor-widget-image {
+	--container-widget-width: 112px;
+	inline-size: 112px;
+	max-inline-size: 100%;
+	margin: 0;
+	text-align: start;
+}
+body .ch-brand-logo a {
+	display: flex;
+	align-items: center;
+	min-block-size: 44px;
+	inline-size: 100%;
+}
+body .ch-brand-logo.elementor-widget-image img {
+	display: block;
+	inline-size: 100%;
+	max-inline-size: 100%;
+	block-size: auto;
+	object-fit: contain;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+body .ch-brand-logo a:focus-visible {
+	outline: 2px solid var(--ch-forest, #123f34);
+	outline-offset: 5px;
+	border-radius: 2px;
+}
+body .ch-header .ch-brand-caption { display: none; }
+body .ch-drawer-heading .ch-drawer-brand-image {
+	display: block;
+	inline-size: 112px;
+	max-inline-size: 100%;
+	block-size: auto;
+	margin-block-end: 10px;
+}
+body .ch-footer-about .ch-brand-logo {
+	--container-widget-width: 64px;
+	inline-size: 64px;
+	margin-block: 8px;
+}
+.login h1 a {
+	inline-size: 260px;
+	max-inline-size: 100%;
+	block-size: 64px;
+	background-size: 260px auto;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 0 auto 24px;
+}
+@media (max-width: 1024px) {
+	body .ch-header .ch-brand-block {
+		flex: 1 1 auto;
+		inline-size: auto;
+		align-items: flex-start;
+		min-inline-size: 0;
+	}
+	body .ch-header .ch-brand-logo {
+		--container-widget-width: 104px;
+		inline-size: 104px;
+	}
+}

@@ -9,8 +9,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Chidemoon_AI_REST_Controller {
 	private const NAMESPACE = 'chidemoon-ai/v1';
+	public static function product_search( WP_REST_Request $request ): array {
+		$value = $request->get_param( 'search' );
+		$raw = is_string( $value ) ? trim( $value ) : '';
+		$is_url = (bool) preg_match( '~^https?://~i', $raw );
+		$term = $is_url ? esc_url_raw( $raw ) : sanitize_text_field( $raw );
+		if ( mb_strlen( $term ) < 2 ) { return array(); }
+		$args = array( 'post_type' => 'product', 'post_status' => array( 'publish', 'draft', 'pending', 'private' ), 'posts_per_page' => 15, 's' => $term );
+		if ( $is_url ) {
+			if ( strtolower( (string) wp_parse_url( $term, PHP_URL_HOST ) ) !== strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ) { return array(); }
+			$id = url_to_postid( $term );
+			if ( ! $id || 'product' !== get_post_type( $id ) ) { return array(); }
+			unset( $args['s'] ); $args['post__in'] = array( $id );
+		}
+		$result = array();
+		foreach ( get_posts( $args ) as $post ) {
+			if ( ! current_user_can( 'edit_post', $post->ID ) ) { continue; }
+			$result[] = array( 'id' => $post->ID, 'title' => $post->post_title, 'image' => wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'thumbnail' ) ?: '' );
+		}
+		return $result;
+	}
 
 	public static function register(): void {
+		register_rest_route( self::NAMESPACE, '/products', array(
+			'methods' => WP_REST_Server::READABLE,
+			'permission_callback' => static fn() => current_user_can( Chidemoon_AI_Capabilities::GENERATE ),
+			'callback' => array( __CLASS__, 'product_search' ),
+		) );
 		register_rest_route(
 			self::NAMESPACE,
 			'/jobs/text',
@@ -298,7 +323,7 @@ class Chidemoon_AI_REST_Controller {
 		}
 		$room  = sanitize_key( (string) ( $data['room'] ?? '' ) );
 		$style = sanitize_key( (string) ( $data['style'] ?? 'minimal' ) );
-		if ( ! in_array( $style, array( 'minimal', 'scandi', 'warm', 'luxe' ), true ) ) {
+		if ( ! array_key_exists( $style, Chidemoon_AI_Look::styles() ) ) {
 			$style = 'minimal';
 		}
 		$prompt = '';

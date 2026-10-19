@@ -1,0 +1,74 @@
+▶ published-content search UI
+  ✔ keeps public assistant copy Persian and avoids a default duplicate heading (2.468014ms)
+  ✔ announces progress and preserves REST errors for visitors (2.619486ms)
+✔ published-content search UI (7.821751ms)
+✔ Elementor comparison copy survives selection changes across card and detail instances (8.962333ms)
+▶ shared comparison links
+  ✔ shows only the URL products in table order after validating them (13.54789ms)
+  ✔ uses the server-rendered table when validation is temporarily unavailable (4.689469ms)
+  ✔ keeps a prior selection if a broken link has no rendered table and validation fails (4.621734ms)
+✔ shared comparison links (25.496101ms)
+▶ native Elementor ownership
+  ✔ removes obsolete theme and feed renderers (5.194288ms)
+  ✔ keeps affiliate eligibility across all comparison surfaces (0.862156ms)
+  ✔ shares Shop-the-Look rendering and provides human editing controls (1.153267ms)
+✔ native Elementor ownership (13.483318ms)
+✔ sticky header follows the visible admin bar as the mobile bar scrolls away (4.413606ms)
+✔ scheduled host tasks resolve secrets outside immutable releases and respect explicit overrides (64.562041ms)
+▶ canonical JSON contract
+  ✔ matches the importer canonical_json algorithm on nested data (1.647057ms)
+  ✔ sorts object keys byte-wise and keeps arrays ordered (0.231852ms)
+✔ canonical JSON contract (4.339068ms)
+▶ buildExport artifact
+  ✔ carries schema v1 envelope fields (1.417759ms)
+  ✔ produces a checksum the importer algorithm would verify (0.85983ms)
+  ✔ checksum changes when any payload field is tampered with (0.589448ms)
+✔ buildExport artifact (3.447398ms)
+▶ record validation vocabulary
+  ✔ accepts a fully valid record without issues (0.867675ms)
+  ✔ rejects non-object records like the importer does (0.27443ms)
+  ✔ rejects unsafe gallery images and keeps gallery data in the checksum (1.018837ms)
+  ✔ emits the exact issue codes for each failure mode (2.339235ms)
+  ✔ blocks private and loopback IP literals but allows public hosts (0.532461ms)
+✔ record validation vocabulary (5.757777ms)
+▶ normalization helpers mirroring the importer
+  ✔ truncates cleaned text by code points (0.647326ms)
+  ✔ formats timestamps as UTC DATE_ATOM with +00:00 offset (0.197769ms)
+  ✔ maps legacy review states onto reviewed/draft/quarantine (0.384255ms)
+  ✔ moves invalid and duplicate records to skipped during export build (0.722425ms)
+✔ normalization helpers mirroring the importer (2.443839ms)
+▶ CLI end-to-end
+  ✔ writes a verifiable export for a valid catalog (67.30624ms)
+  ✔ fails when catalog organization disagrees with --organization-slug (59.400714ms)
+  ✔ fails fast on malformed catalogs and missing input (194.270162ms)
+✔ CLI end-to-end (321.434596ms)
+✔ a failed database dump cannot publish a gzip backup; verified pairs retain original data (81.58552ms)
+✔ selective deployment disk-after-backup preserves the correct release, data and maintenance state (1671.421316ms)
+✔ selective deployment dump preserves the correct release, data and maintenance state (1396.398775ms)
+✔ selective deployment migration preserves the correct release, data and maintenance state (2809.100355ms)
+✔ selective deployment late-health preserves the correct release, data and maintenance state (3040.874848ms)
+✔ selective deployment success preserves the correct release, data and maintenance state (2046.46651ms)
+✔ ionCube musl preserves prior runtime and activates only a complete verified pair (1216.598485ms)
+✔ ionCube checksum preserves prior runtime and activates only a complete verified pair (378.895336ms)
+✔ ionCube success preserves prior runtime and activates only a complete verified pair (4059.013496ms)
+▶ product facts editor
+  ✔ recognizes supported object and label-value array facts (2.947817ms)
+  ✔ preserves malformed or unsupported facts for manual repair (3.561289ms)
+✔ product facts editor (10.005425ms)
+▶ standalone Chidemoon runtime
+  ✔ has no legacy catalog runtime dependency (3.696622ms)
+  ✔ mounts only Chidemoon-owned plugins and keeps traffic from running cron (0.617149ms)
+  ✔ enforces affiliate-only products and local, safe public foundations (0.61802ms)
+  ✔ ships a checksum-verified, idempotent file importer (0.583777ms)
+  ✔ registers the independent editorial and affiliate pattern layer (0.422646ms)
+  ✔ keeps the expected standalone entry points present (0.347618ms)
+  ✔ uses a sealed, non-destructive release lane (0.957512ms)
+✔ standalone Chidemoon runtime (9.83065ms)
+ℹ tests 46
+ℹ suites 10
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16959.43173

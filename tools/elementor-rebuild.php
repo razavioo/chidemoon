@@ -847,6 +847,7 @@ if ( $ui_upgrade ) {
 	$rebuild_args = $args;
 	$args = array( 'apply' );
 	require __DIR__ . '/elementor-editability-upgrade.php';
+	require __DIR__ . '/branding-refresh.php';
 	$args = $rebuild_args;
 	WP_CLI::success( 'Migration finished. Inspect every template and route before activating Hello on production.' );
 }

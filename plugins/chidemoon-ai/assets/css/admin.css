@@ -1,0 +1,7 @@
+.ch-ai-products { max-width: 680px; margin-block: 20px 28px; }
+.ch-ai-products input[type=search] { width: 100%; max-width: 100%; margin-block: 10px; min-height: 40px; }
+.ch-ai-products [data-product-status] { margin-block: 8px; }
+.ch-ai-product-row { display: flex; align-items: center; gap: 12px; padding: 10px; margin-block: 6px; background: #fff; border: 1px solid #dce4dd; border-radius: 8px; }
+.ch-ai-product-row img { width: 44px; height: 44px; object-fit: contain; }
+.ch-ai-product-row span { flex: 1; line-height: 1.7; }
+.ch-ai-products [data-product-selected] .ch-ai-product-row { background: #eff7ef; }

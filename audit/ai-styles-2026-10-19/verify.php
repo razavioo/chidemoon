@@ -1,0 +1,2 @@
+<?php
+$styles=Chidemoon_AI_Look::styles();$prompts=[];foreach($styles as$key=>$value){$r=Chidemoon_AI_Look::build_prompt([794],'bedroom',$key,'test');if(is_wp_error($r)||!str_contains($r['prompt'],$value[1]))throw new RuntimeException('style missing:'.$key);$prompts[]=$r['prompt'];}if(count(array_unique($prompts))!==count($styles))throw new RuntimeException('duplicate style prompts');echo count($styles).' distinct styles verified';

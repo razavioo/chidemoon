@@ -36,6 +36,7 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Reconciliation::register();
 		Chidemoon_Core_Discovery::register();
 		Chidemoon_Core_Public_Design::register();
+		Chidemoon_Core_Branding::register();
 		Chidemoon_Core_Elementor_Workspace::register();
 		Chidemoon_Core_Search_Facets::register();
 		Chidemoon_Core_Dates::register();
