@@ -20,9 +20,9 @@ The runtime baseline lives in `plugins/chidemoon-core/assets/css/public-design.c
 
 | Role | Token | Current value | Usage |
 |---|---|---:|---|
-| Page | `--chidemoon-paper` | `#f3f4f1` | Main page background |
-| Surface | `--chidemoon-surface` | `#fffdfa` | Cards and reading surfaces |
-| Muted surface | `--chidemoon-surface-muted` | `#eee8dc` | Image fallback and quiet regions |
+| Page | `--chidemoon-paper` | `#fdfdfd` | Main page background |
+| Surface | `--chidemoon-surface` | `#ffffff` | Cards and reading surfaces |
+| Muted surface | `--chidemoon-surface-muted` | `#fafafa` | Image fallback and quiet regions |
 | Primary text | `--chidemoon-ink` | `#17241f` | Body and card text |
 | Secondary text | `--chidemoon-muted` | `#607069` | Metadata and supporting copy |
 | Brand primary | `--chidemoon-forest` | `#123f34` | Headings, controls, strong emphasis |
@@ -31,20 +31,49 @@ The runtime baseline lives in `plugins/chidemoon-core/assets/css/public-design.c
 | Supporting accent | `--chidemoon-sage` | `#a9b69e` | Quiet emphasis and depth |
 | Boundary | `--chidemoon-line` | `rgba(18, 63, 52, 0.12)` | Dividers and card outlines |
 
+Light surfaces use an achromatic scale: page #fdfdfd, cards #ffffff, muted regions #fafafa, and hover states #f5f5f5. Keep equal RGB channels to avoid yellow or green casts; reserve brand hues for text, actions, and intentional accents. Avoid tinted gradients on light surfaces.
+
 Do not introduce raw one-off brand colors inside components. New states must map to a semantic token and meet WCAG contrast in their actual composed background.
 
 ## Typography
 
 Fonts are local in `plugins/chidemoon-core/assets/fonts/` and registered in Elementor's font picker; do not add remote font imports.
 
-- **Display:** Estedad variable, weights 600–800
-- **Body/UI:** Vazirmatn, weights 400–800
+- **Display:** YekanBakh, weights 600–700 (800 reserved for the wordmark)
+- **Body/UI:** YekanBakh, weight 400 for prose/product names, 600 for controls/card titles/prices
+- **Source:** owner-supplied licensed WOFF2 files from `ai-agent/client/public/fonts`; local hosting only. Legacy Vazirmatn/Estedad remain available for explicitly styled content.
+- **Heading rhythm:** hero 1.45, page/section 1.5, article headings 1.6–1.65; no negative tracking
+- **Compact text:** product titles at least 14px, actions at least 13px, metadata at least 12px; mobile text inputs 16px to avoid focus zoom
 - **Body base:** at least 16px on mobile, line-height 1.8–2.15 for Persian prose
 - **Measure:** 60–75 Latin-equivalent characters for long-form desktop reading; narrower on mobile
 - **Headings:** balanced wrapping is progressive enhancement; never force words together
 - **Tracking:** zero for Persian headings/body; no uppercase transformation
 - **Numbers:** Persian digits in public dates/prices; tabular figures where alignment matters
 - **Long content:** wrap URLs, IDs, and user content without breaking ordinary prose character-by-character
+
+Existing installs: preview `wp --user=1 eval-file /tools/typography-upgrade.php`, then append `apply`. The migration backs up changed settings, updates only legacy project font families via native Elementor documents, preserves custom families/content, and clears generated CSS. Fresh installations use the same typography in `elementor-rebuild.php`.
+
+### Responsive type scale
+
+Role tokens `--ch-type-*` live in `public-design.css`. Do not reintroduce a generic H1 rule that overrides the hero, or leave mobile section headings at the theme's 32px default.
+
+| Role | Desktop | Mobile |
+|---|---:|---:|
+| Hero | 40px | 28px |
+| Page title | 36px | 28px |
+| Section title | 28px | 22px |
+| Article title | 36px | 26px |
+| Article H2 | 24px | 22px |
+| Article H3 / subheading | 20px | 18px |
+| Editorial card title | 18px | 17px |
+| Article prose | 17px | 16px |
+| Product detail title | 22px | 20px |
+| Product card title | 15px | 14px |
+| Product card price | 18px | 16px |
+
+Tablet values interpolate the hierarchy through a dedicated 768–1024 breakpoint. Native heading widgets inside article bodies use their container gap without duplicate prose heading margins. Buttons have 1.5 line-height; their height is not reduced with the text size.
+
+For existing generated Loop templates, also preview/apply `wp --user=1 eval-file /tools/type-scale-upgrade.php [apply]`. It changes only the three published managed card templates that still have the old 20px/700 baseline and no custom mobile size, with a one-time backup. Native Elementor settings remain editable.
 
 ## Spacing and shape
 

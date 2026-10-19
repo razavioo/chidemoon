@@ -28,6 +28,8 @@ final class Chidemoon_Core_Elementor_Product_Extra_Tabs_Widget extends \Elemento
 		$settings = $this->get_settings_for_display();
 		$filter = static function ( array $tabs ) use ( $settings ): array {
 			unset( $tabs['description'] );
+			// The product body already contains the description; avoid a second seller panel.
+			unset( $tabs['source_description'] );
 			foreach ( array( 'additional_information' => array( 'show_attributes', 'info_title' ), 'reviews' => array( 'show_reviews', 'reviews_title' ) ) as $tab => $controls ) {
 				if ( 'yes' !== ( $settings[ $controls[0] ] ?? 'yes' ) ) { unset( $tabs[ $tab ] ); continue; }
 				$title = trim( sanitize_text_field( (string) ( $settings[ $controls[1] ] ?? '' ) ) );

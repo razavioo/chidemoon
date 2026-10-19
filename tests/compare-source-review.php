@@ -28,11 +28,14 @@ check( 'EN101' === $facts['Model'], 'Legacy editorial facts were removed before 
 check( 'Unknown' === $facts['Width (cm)'] && 'Unknown' === $facts['Style'], 'Pending measurements or classification were invented' );
 check( 'Unavailable at merchant' === $facts['Availability'] && '2026-10-10T08:00:00Z' === $facts['Availability observed'], 'Availability requires enrichment approval' );
 check( 'Unknown' === $facts['Price observed'] && 'Unavailable' === $facts['Merchant rating'], 'Missing price or rating was invented' );
+check( array( 'Model' => 'EN101' ) === Chidemoon_Core_Compare::visible_facts( $product ), 'Public specifications expose missing values or operational observations' );
 $product->meta['_facts'] = 'invalid legacy JSON';
 check( 'Unavailable at merchant' === Chidemoon_Core_Compare::facts( $product )['Availability'], 'Malformed legacy facts hide source observations' );
 $product->meta['_chidemoon_enrichment'] = array( 'style' => array( 'state' => 'value', 'value' => array( 7 ) ), 'dimensions' => array( 'state' => 'value', 'unit' => 'cm', 'value' => array( 'width' => 45 ) ) );
 $facts = Chidemoon_Core_Compare::facts( $product );
 check( '45' === $facts['Width (cm)'] && 'Unknown' === $facts['Depth (cm)'] && 'Approved chidemoon_style' === $facts['Style'], 'Approved normalized fields were ignored' );
+$visible = Chidemoon_Core_Compare::visible_facts( $product );
+check( '45' === $visible['Width (cm)'] && ! isset( $visible['Depth (cm)'] ) && ! isset( $visible['Availability observed'] ) && ! isset( $visible['Merchant rating'] ), 'Public comparison lost measured values or retained empty fields' );
 $product->meta = array( '_facts' => '[{"label":"Model","value":"Legacy"}]' );
 check( array( 'Model' => 'Legacy' ) === Chidemoon_Core_Compare::facts( $product ), 'Unmapped legacy comparison changed' );
 echo "Comparison source review contract passed.\n";

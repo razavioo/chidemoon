@@ -333,7 +333,7 @@ final class Chidemoon_Core_Compare {
 		}
 		$facts = array();
 		foreach ( $data as $key => $value ) {
-			if ( is_array( $value ) && isset( $value['label'], $value['value'] ) ) {
+			if ( is_array( $value ) && isset( $value['label'], $value['value'] ) && is_scalar( $value['label'] ) && is_scalar( $value['value'] ) ) {
 				$label = sanitize_text_field( (string) $value['label'] );
 				$fact  = sanitize_text_field( (string) $value['value'] );
 			} elseif ( is_string( $key ) && is_scalar( $value ) ) {
@@ -365,11 +365,19 @@ final class Chidemoon_Core_Compare {
 		return $facts;
 	}
 
+	/** Public specifications exclude operational metadata and missing values. */
+	public static function visible_facts( WC_Product $product ): array {
+		$hidden = array_map( static fn( $label ) => __( $label, 'chidemoon-core' ), array( 'Availability', 'Availability observed', 'Price observed', 'Merchant rating', 'Merchant name' ) );
+		$missing = array( 'Unknown', 'Unavailable', 'Not applicable', 'نامشخص', 'در دسترس نیست', 'کاربرد ندارد', '—', '-' );
+		foreach ( array( 'Unknown', 'Unavailable', 'Not applicable' ) as $label ) { $missing[] = __( $label, 'chidemoon-core' ); }
+		return array_filter( self::facts( $product ), static fn( $value, $label ) => ! in_array( $label, $hidden, true ) && ! preg_match( '/فروشنده|زمان بررسی|تاریخ بررسی/u', $label ) && ! in_array( trim( $value ), $missing, true ), ARRAY_FILTER_USE_BOTH );
+	}
+
 	/** @return string[] */
 	public static function fact_labels( array $products ): array {
 		$labels = array();
 		foreach ( $products as $product ) {
-			foreach ( self::facts( $product ) as $label => $value ) {
+			foreach ( self::visible_facts( $product ) as $label => $value ) {
 				$labels[ $label ] = $label;
 			}
 		}
@@ -607,25 +615,24 @@ final class Chidemoon_Core_Compare {
 		<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">
 			<div class="chidemoon-comparison-toolbar">
 				<div><span class="chidemoon-comparison-eyebrow">کنار هم، انتخاب روشن‌تر</span><h2>مقایسه در یک نگاه</h2><p>قیمت، جزئیات و تفاوت‌های <?php echo esc_html( number_format_i18n( count( $products ) ) ); ?> محصول</p></div>
-				<div class="chidemoon-comparison-toolbar__actions" data-comparison-tools hidden><label class="chidemoon-comparison-switch"><input type="checkbox" data-comparison-differences><span>فقط تفاوت‌ها</span></label><button type="button" data-comparison-share>کپی لینک مقایسه ↗</button></div>
+				<div class="chidemoon-comparison-toolbar__actions" data-comparison-tools hidden><label class="chidemoon-comparison-switch"><input type="checkbox" data-comparison-differences><span>فقط تفاوت‌ها</span></label><button type="button" data-comparison-share>کپی لینک مقایسه</button></div>
 			</div>
 			<p class="chidemoon-comparison-scroll-hint">برای دیدن همه محصولات، جدول را به چپ و راست بکشید.</p>
 			<div class="chidemoon-comparison-table-wrap" tabindex="0" aria-label="<?php esc_attr_e( 'جدول مقایسه محصولات', 'chidemoon-core' ); ?>">
 				<table class="chidemoon-comparison-table" data-product-count="<?php echo esc_attr( count( $products ) ); ?>">
-					<caption class="chidemoon-sr-only">مقایسه قیمت، فروشنده و مشخصات محصولات انتخاب‌شده</caption>
+					<caption class="chidemoon-sr-only">مقایسه قیمت و مشخصات محصولات انتخاب شده</caption>
 					<thead><tr><th scope="col"><?php esc_html_e( 'محصول', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><th scope="col"><a href="<?php echo esc_url( get_permalink( $product->get_id() ) ); ?>"><?php echo $product->get_image_id() ? wp_get_attachment_image( $product->get_image_id(), 'woocommerce_thumbnail', false, array( 'alt' => '' ) ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $product->get_name() ); ?></span></a><button type="button" class="chidemoon-comparison-table__remove" data-compare-product="<?php echo esc_attr( $product->get_id() ); ?>" data-compare-name="<?php echo esc_attr( $product->get_name() ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'حذف %s از مقایسه', 'chidemoon-core' ), $product->get_name() ) ); ?>"><?php esc_html_e( 'حذف', 'chidemoon-core' ); ?></button></th><?php endforeach; ?></tr></thead>
 					<tbody>
 						<?php $cell_label = static function ( WC_Product $product ): void { echo ' data-label="' . esc_attr( $product->get_name() ) . '"'; }; ?>
 						<tr><th scope="row"><?php esc_html_e( 'قیمت', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php echo wp_kses_post( $product->get_price_html() ); ?></td><?php endforeach; ?></tr>
-						<tr><th scope="row"><?php esc_html_e( 'فروشنده', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME, true ) ?: '—' ); ?></td><?php endforeach; ?></tr>
 						<tr><th scope="row"><?php esc_html_e( 'دسته‌بندی', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php $categories = wc_get_product_category_list( $product->get_id(), '، ' ); echo esc_html( $categories ? wp_strip_all_tags( $categories ) : '—' ); ?></td><?php endforeach; ?></tr>
-						<?php foreach ( $labels as $label ) : ?><tr><th scope="row"><?php echo esc_html( $label ); ?></th><?php foreach ( $products as $product ) : $facts = self::facts( $product ); ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( $facts[ $label ] ?? '—' ); ?></td><?php endforeach; ?></tr><?php endforeach; ?>
+						<?php foreach ( $labels as $label ) : ?><tr><th scope="row"><?php echo esc_html( $label ); ?></th><?php foreach ( $products as $product ) : $facts = self::visible_facts( $product ); ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( $facts[ $label ] ?? '—' ); ?></td><?php endforeach; ?></tr><?php endforeach; ?>
 						<tr><th scope="row"><?php esc_html_e( 'خرید', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php if ( Chidemoon_Core_Affiliate::is_offer_available( $product ) ) : ?><a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a><?php else : ?><span aria-disabled="true"><?php esc_html_e( 'Offer unavailable', 'chidemoon-core' ); ?></span><?php endif; ?></td><?php endforeach; ?></tr>
 					</tbody>
 				</table>
 			</div>
 			<p class="chidemoon-comparison-no-differences" data-comparison-no-differences hidden>تفاوتی در مشخصات ثبت‌شده این محصولات وجود ندارد.</p>
-			<p class="chidemoon-comparison-footnote">قیمت‌ها آخرین اطلاعات ثبت‌شده‌اند؛ قیمت و موجودی نهایی را در فروشگاه بررسی کن. «—» یعنی اطلاعاتی ثبت نشده است.</p>
+			<p class="chidemoon-comparison-footnote">«—» یعنی اطلاعات این ویژگی برای محصول ثبت نشده است.</p>
 		</div>
 		<?php
 		return (string) ob_get_clean();
@@ -638,7 +645,6 @@ final class Chidemoon_Core_Compare {
 		$product_id = $product->get_id();
 		$title      = $product->get_name();
 		$image_id   = $product->get_image_id();
-		$merchant   = trim( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME, true ) );
 		$terms      = get_the_terms( $product_id, 'product_cat' );
 		$term       = is_array( $terms ) && ! empty( $terms ) && $terms[0] instanceof WP_Term ? $terms[0] : null;
 		ob_start();
@@ -648,7 +654,6 @@ final class Chidemoon_Core_Compare {
 			<div class="chidemoon-core-product-card__body">
 				<?php if ( $term ) : ?><p><?php echo esc_html( $term->name ); ?></p><?php endif; ?>
 				<h3><a href="<?php echo esc_url( get_permalink( $product_id ) ); ?>"><?php echo esc_html( $title ); ?></a></h3>
-				<?php if ( '' !== $merchant ) : ?><p class="chidemoon-core-product-card__merchant"><?php echo esc_html( sprintf( __( 'فروشنده: %s', 'chidemoon-core' ), $merchant ) ); ?></p><?php endif; ?>
 				<div class="chidemoon-core-product-card__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
 				<?php echo self::control( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>

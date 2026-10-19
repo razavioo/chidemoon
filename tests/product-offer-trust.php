@@ -45,12 +45,15 @@ namespace {
 	class Chidemoon_Core_Enrichment {
 		public static function read( int $id ): array { return array(); }
 	}
+	class Chidemoon_Core_Looks { public static function product_looks_shortcode( array $attributes ): string { return ''; } }
 
+	class Chidemoon_Core_Commercial { public static function availability( WC_Product $product ): string { return 'unknown'; } }
+	function __( string $value, string $domain ): string { return $value; }
 	$product = new WC_Product( array(
 		Chidemoon_Core_Affiliate::META_MERCHANT_NAME => 'فروشگاه نمونه',
 		Chidemoon_Core_Affiliate::META_SOURCE_CHECKED => '2026-09-29T15:05:00Z',
 		Chidemoon_Core_Affiliate::META_SOURCE_URL => 'https://example.com/product',
-		Chidemoon_Core_Affiliate::META_FACTS => json_encode( array( array( 'label' => 'جنس', 'value' => 'فلز' ) ), JSON_UNESCAPED_UNICODE ),
+		Chidemoon_Core_Affiliate::META_FACTS => json_encode( array( array( 'label' => 'اندازه', 'value' => 'Unknown' ), array( 'label' => 'جنس', 'value' => 'فلز' ), array( 'label' => 'رنگ', 'value' => 'سفید' ) ), JSON_UNESCAPED_UNICODE ),
 	) );
 
 	function wc_get_product( int $id ): WC_Product|false {
@@ -95,18 +98,22 @@ namespace {
 	$checked_at = strpos( $html, '<time datetime="2026-09-29T15:05:00+00:00">' );
 	$cta_at = strpos( $html, 'class="chidemoon-affiliate-cta"' );
 	$disclosure_at = strpos( $html, 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' );
-	assert_offer( false !== $merchant_at && false !== $checked_at && false !== $cta_at && false !== $disclosure_at, 'Missing purchase trust details' );
-	assert_offer( $merchant_at < $checked_at && $checked_at < $cta_at && $cta_at < $disclosure_at, 'Purchase trust details are out of order' );
-	assert_offer( str_contains( $html, 'قیمت را بررسی کن.' ) && str_contains( $html, 'https://example.com/product' ), 'Source settings were lost' );
+	assert_offer( false === $merchant_at && false === $checked_at && false !== $cta_at && false === $disclosure_at, 'Purchase shows seller metadata or redundant notice' );
+	assert_offer( ! str_contains( $html, 'ch-product-stock' ), 'Unknown availability must not be presented as confirmed' );
+	assert_offer( ! str_contains( $html, 'قیمت را بررسی کن.' ) && ! str_contains( $html, 'https://example.com/product' ), 'Redundant source details remain' );
 
 	\Elementor\Widget_Base::$settings['show_source'] = 'no';
 	$html = render_offer( $render, $widget );
 	assert_offer( ! str_contains( $html, '<time' ) && ! str_contains( $html, 'قیمت را بررسی کن.' ), 'Hidden source details were rendered' );
-	assert_offer( str_contains( $html, 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' ), 'Affiliate disclosure must remain next to an active CTA' );
+	assert_offer( ! str_contains( $html, 'کارمزد' ), 'Removed disclosure was restored' );
 	\Elementor\Widget_Base::$settings['facts_only'] = 'yes';
 	$html = render_offer( $render, $widget );
-	assert_offer( str_contains( $html, '<h2>مشخصات بررسی‌شده</h2>' ) && str_contains( $html, '<dt>جنس</dt><dd>فلز</dd>' ), 'Full-width facts are missing' );
+	assert_offer( str_contains( $html, '<h2>مشخصات محصول</h2>' ) && str_contains( $html, '<dt>جنس</dt><dd>فلز</dd>' ), 'Full-width facts are missing' );
 	assert_offer( ! str_contains( $html, 'chidemoon-affiliate-cta' ) && ! str_contains( $html, 'کارمزد' ) && ! str_contains( $html, 'فروشگاه نمونه' ), 'Facts-only view duplicates offer details' );
+	\Elementor\Widget_Base::$settings['facts_limit'] = 1;
+	$html = render_offer( $render, $widget );
+	assert_offer( str_contains( $html, 'ch-feature-tile' ) && str_contains( $html, '<dt>جنس</dt><dd>فلز</dd>' ) && ! str_contains( $html, '<dt>رنگ</dt>' ) && ! str_contains( $html, 'Unknown' ), 'Feature preview must limit valid facts, omit unknown values, and preserve the source value.' );
+	\Elementor\Widget_Base::$settings['facts_limit'] = 0;
 	\Elementor\Widget_Base::$settings['facts_heading'] = 'اطلاعات <تأییدشده>';
 	$html = render_offer( $render, $widget );
 	assert_offer( str_contains( $html, '<h2>اطلاعات &lt;تأییدشده&gt;</h2>' ), 'The facts heading must use escaped Elementor copy.' );
@@ -130,17 +137,17 @@ namespace {
 	\Elementor\Widget_Base::$settings['compare_selected_hint'] = 'انتخاب را حذف کن';
 	\Elementor\Widget_Base::$settings['disclosure_text'] = 'این خرید & کارمزد دارد.';
 	$html = render_offer( $render, $widget );
-	assert_offer( str_contains( $html, 'بسنج &lt;اکنون&gt;' ) && str_contains( $html, 'این خرید &amp; کارمزد دارد.' ), 'Editable offer and comparison copy was lost or not escaped.' );
+	assert_offer( str_contains( $html, 'بسنج &lt;اکنون&gt;' ) && ! str_contains( $html, 'کارمزد' ), 'Editable offer and comparison copy was lost or not escaped.' );
 	assert_offer( '' === Chidemoon_Core_Compare::$labels['hint'] && 'حذف از فهرست' === Chidemoon_Core_Compare::$labels['selected_label'], 'Comparison state copy must be passed to the interactive control.' );
 	\Elementor\Widget_Base::$settings['disclosure_text'] = '';
 	$html = render_offer( $render, $widget );
-	assert_offer( str_contains( $html, 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' ), 'An empty editor setting must not remove the active purchase disclosure.' );
+	assert_offer( ! str_contains( $html, 'کارمزد' ), 'Removed disclosure was restored' );
 
 	$product = new WC_Product( array( Chidemoon_Core_Affiliate::META_FACTS => '{invalid' ) );
 	\Elementor\Widget_Base::$settings['facts_only'] = 'yes';
 	\Elementor\Widget_Base::$settings['facts_empty_text'] = 'مشخصات هنوز ثبت نشده است.';
 	$html = render_offer( $render, $widget );
-	assert_offer( str_contains( $html, 'مشخصات هنوز ثبت نشده است.' ) && ! str_contains( $html, '<dl' ), 'Missing or malformed facts must use the editable empty state.' );
+	assert_offer( '' === $html, 'Empty facts section must be omitted' );
 	\Elementor\Widget_Base::$settings['facts_empty_text'] = '';
 	$html = render_offer( $render, $widget );
 	assert_offer( '' === $html, 'An intentionally empty facts fallback must hide an empty section.' );

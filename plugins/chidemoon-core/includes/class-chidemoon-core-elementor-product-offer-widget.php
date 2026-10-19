@@ -19,10 +19,10 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		$this->add_control( 'pending_text', array( 'label' => 'متن محصول تأییدنشده', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'اطلاعات این محصول هنوز تأیید نشده است؛ لینک خرید فعال نیست.', 'dynamic' => array( 'active' => true ) ) );
 		$this->add_control( 'missing_text', array( 'label' => 'متن بدون محصول', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'محصولی برای نمایش انتخاب نشده است.', 'dynamic' => array( 'active' => true ) ) );
 		$this->add_control( 'facts_only', array( 'label' => 'نمایش مستقل مشخصات', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'no' ) );
-		$this->add_control( 'show_facts', array( 'label' => 'مشخصات بررسی‌شده', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
+		$this->add_control( 'show_facts', array( 'label' => 'مشخصات محصول', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
+		$this->add_control( 'facts_limit', array( 'label' => 'تعداد ویژگی‌ها (صفر: همه)', 'type' => \Elementor\Controls_Manager::NUMBER, 'default' => 0, 'min' => 0, 'max' => 12 ) );
 		$this->add_control( 'show_facts_heading', array( 'label' => 'عنوان بخش مشخصات', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => array( 'facts_only' => 'yes' ) ) );
-		$this->add_control( 'facts_heading', array( 'label' => 'متن عنوان مشخصات', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشخصات بررسی‌شده', 'dynamic' => array( 'active' => true ), 'condition' => array( 'facts_only' => 'yes', 'show_facts_heading' => 'yes' ) ) );
-		$this->add_control( 'facts_empty_text', array( 'label' => 'متن مشخصات خالی', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'مشخصات بررسی‌شده‌ای برای این محصول ثبت نشده است.', 'dynamic' => array( 'active' => true ) ) );
+		$this->add_control( 'facts_heading', array( 'label' => 'متن عنوان مشخصات', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشخصات محصول', 'dynamic' => array( 'active' => true ), 'condition' => array( 'facts_only' => 'yes', 'show_facts_heading' => 'yes' ) ) );
 		$this->add_control( 'show_compare', array( 'label' => 'دکمهٔ مقایسه', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
 		foreach ( array(
 			'compare_text' => array( 'متن دکمهٔ مقایسه', 'افزودن به مقایسه' ),
@@ -32,13 +32,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		) as $key => $control ) {
 			$this->add_control( $key, array( 'label' => $control[0], 'type' => \Elementor\Controls_Manager::TEXT, 'default' => $control[1], 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_compare' => 'yes' ) ) );
 		}
-		$this->add_control( 'show_source', array( 'label' => 'منبع و تاریخ بررسی', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
 		$this->add_control( 'show_looks', array( 'label' => __( 'Used in these Looks', 'chidemoon-core' ), 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
-		$this->add_control( 'merchant_label', array( 'label' => 'عنوان فروشنده', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'فروشنده', 'dynamic' => array( 'active' => true ) ) );
-		$this->add_control( 'source_label', array( 'label' => 'متن لینک منبع', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشاهدهٔ اطلاعات در فروشگاه', 'dynamic' => array( 'active' => true ) ) );
-		$this->add_control( 'checked_label', array( 'label' => 'عنوان تاریخ بررسی', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'بررسی منبع', 'dynamic' => array( 'active' => true ) ) );
-		$this->add_control( 'price_notice', array( 'label' => 'توضیح قیمت', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'قیمت و موجودی را پیش از خرید در فروشگاه بررسی کن.', 'dynamic' => array( 'active' => true ) ) );
-		$this->add_control( 'disclosure_text', array( 'label' => 'توضیح کارمزد لینک خرید', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'چیدمون ممکن است از این لینک کارمزد دریافت کند.', 'dynamic' => array( 'active' => true ), 'description' => 'این توضیح کنار لینک خرید فعال نمایش داده می‌شود. اگر متن خالی باشد، توضیح پیش‌فرض استفاده می‌شود.' ) );
 		$this->end_controls_section();
 		$this->start_controls_section( 'style', array( 'label' => 'ظاهر', 'tab' => \Elementor\Controls_Manager::TAB_STYLE ) );
 		$this->add_control( 'text_color', array( 'label' => 'رنگ متن', 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => array( '{{WRAPPER}} .ch-product-offer, {{WRAPPER}} .ch-product-facts-section' => 'color: {{VALUE}};' ) ) );
@@ -73,11 +67,11 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		}
 		if ( 'yes' === ( $settings['facts_only'] ?? 'no' ) ) {
 			if ( Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
-				$facts = $this->facts_markup( $product, $settings['facts_empty_text'] ?? 'مشخصات بررسی‌شده‌ای برای این محصول ثبت نشده است.' );
+				$facts = $this->facts_markup( $product, max( 0, (int) ( $settings['facts_limit'] ?? 0 ) ) );
 				if ( $facts ) {
 					echo '<section class="ch-product-facts-section">';
-					if ( 'yes' === ( $settings['show_facts_heading'] ?? 'yes' ) && '' !== ( $settings['facts_heading'] ?? 'مشخصات بررسی‌شده' ) ) {
-						echo '<h2>' . esc_html( $settings['facts_heading'] ?? 'مشخصات بررسی‌شده' ) . '</h2>';
+					if ( 'yes' === ( $settings['show_facts_heading'] ?? 'yes' ) && '' !== ( $settings['facts_heading'] ?? 'مشخصات محصول' ) ) {
+						echo '<h2>' . esc_html( $settings['facts_heading'] ?? 'مشخصات محصول' ) . '</h2>';
 					}
 					echo $facts . '</section>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
@@ -89,33 +83,11 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 			echo '<p>' . esc_html( $settings['pending_text'] ?? 'اطلاعات این محصول هنوز تأیید نشده است؛ لینک خرید فعال نیست.' ) . '</p></div>';
 			return;
 		}
-		$merchant = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME );
-		if ( $merchant ) {
-			echo '<p class="ch-product-merchant"><span>' . esc_html( $settings['merchant_label'] ?? 'فروشنده' ) . '</span><strong>' . esc_html( $merchant ) . '</strong></p>';
-		}
-		if ( 'yes' === ( $settings['show_source'] ?? 'yes' ) ) {
-			echo Chidemoon_Core_Commercial::observations_shortcode( array( 'product_id' => $product->get_id() ) );
-			$checked = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_SOURCE_CHECKED );
-			$checked_at = strtotime( $checked );
-			if ( $checked && false !== $checked_at ) {
-				echo '<p class="ch-product-merchant ch-product-checked"><span>' . esc_html( $settings['checked_label'] ?? 'بررسی منبع' ) . '</span><strong><time datetime="' . esc_attr( gmdate( DATE_ATOM, $checked_at ) ) . '">' . esc_html( wp_date( 'j F Y، H:i', $checked_at ) ) . '</time></strong></p>';
-			}
-		}
+		$status = Chidemoon_Core_Commercial::availability( $product );
+		if ( in_array( $status, array( 'in_stock', 'out_of_stock', 'withdrawn' ), true ) ) { echo '<p class="ch-product-stock">' . esc_html( Chidemoon_Core_Commercial::availability_label( $product ) ) . '</p>'; }
 		echo '<div class="ch-product-offer-actions">';
 		echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => (string) $product->get_id(), 'label' => $this->required_text( $settings, 'button_text', 'خرید از فروشگاه' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</div>';
-		echo '<div class="ch-product-note"><p>' . esc_html( $this->required_text( $settings, 'disclosure_text', 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' ) ) . '</p></div>';
-		if ( 'yes' === ( $settings['show_source'] ?? 'yes' ) ) {
-			$source = (string) $product->get_meta( Chidemoon_Core_Affiliate::META_SOURCE_URL );
-			echo '<div class="ch-product-source">';
-			if ( $source ) {
-				echo '<p><a href="' . esc_url( $source ) . '" target="_blank" rel="nofollow noopener">' . esc_html( $settings['source_label'] ?? 'مشاهدهٔ اطلاعات در فروشگاه' ) . '</a></p>';
-			}
-			if ( '' !== trim( (string) ( $settings['price_notice'] ?? '' ) ) ) {
-				echo '<p>' . esc_html( $settings['price_notice'] ) . '</p>';
-			}
-			echo '</div>';
-		}
 		if ( 'yes' === ( $settings['show_compare'] ?? 'yes' ) ) {
 			echo Chidemoon_Core_Compare::single_control( $product, array(
 				'label' => $this->required_text( $settings, 'compare_text', 'افزودن به مقایسه' ),
@@ -125,7 +97,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 			) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		if ( 'yes' === ( $settings['show_facts'] ?? 'yes' ) ) {
-			echo $this->facts_markup( $product, $settings['facts_empty_text'] ?? 'مشخصات بررسی‌شده‌ای برای این محصول ثبت نشده است.' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->facts_markup( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		echo '</div>';
 		if ( 'yes' === ( $settings['show_looks'] ?? 'yes' ) ) {
@@ -139,19 +111,23 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		return '' !== $text ? $text : $fallback;
 	}
 
-	private function facts_markup( WC_Product $product, string $empty_text ): string {
+	private function facts_markup( WC_Product $product, int $limit = 0 ): string {
 		$facts = Chidemoon_Core_Enrichment::read( $product->get_id() ) ? Chidemoon_Core_Compare::facts( $product ) : json_decode( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_FACTS ), true );
 		$rows = '';
+		$count = 0;
 		foreach ( is_array( $facts ) ? $facts : array() as $key => $value ) {
 			$label = is_array( $value ) ? ( $value['label'] ?? '' ) : $key;
 			$fact = is_array( $value ) ? ( $value['value'] ?? '' ) : $value;
-			if ( is_scalar( $label ) && is_scalar( $fact ) && '' !== trim( (string) $label ) && '' !== trim( (string) $fact ) ) {
-				$rows .= '<dt>' . esc_html( (string) $label ) . '</dt><dd>' . esc_html( (string) $fact ) . '</dd>';
+			if ( ! is_scalar( $label ) || ! is_scalar( $fact ) || preg_match( '/فروشنده|زمان بررسی|تاریخ بررسی/u', (string) $label ) ) { continue; }
+			if ( ! in_array( (string) $label, array( __( 'Availability', 'chidemoon-core' ), __( 'Availability observed', 'chidemoon-core' ), __( 'Price observed', 'chidemoon-core' ), __( 'Merchant rating', 'chidemoon-core' ), __( 'Merchant name', 'chidemoon-core' ) ), true ) && ! in_array( trim( (string) $fact ), array( 'نامشخص', 'در دسترس نیست', 'کاربرد ندارد', 'Unknown', 'Unavailable', 'Not applicable', '—', '-' ), true ) && is_scalar( $label ) && is_scalar( $fact ) && '' !== trim( (string) $label ) && '' !== trim( (string) $fact ) ) {
+				$row = '<dt>' . esc_html( (string) $label ) . '</dt><dd>' . esc_html( (string) $fact ) . '</dd>';
+				$rows .= $limit ? '<div class="ch-feature-tile">' . $row . '</div>' : $row;
+				if ( $limit && ++$count >= $limit ) { break; }
 			}
 		}
 		if ( $rows ) {
 			return '<dl class="ch-product-facts">' . $rows . '</dl>';
 		}
-		return '' !== trim( $empty_text ) ? '<p class="ch-product-facts-empty">' . esc_html( $empty_text ) . '</p>' : '';
+		return '';
 	}
 }

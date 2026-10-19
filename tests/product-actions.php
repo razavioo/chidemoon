@@ -8,6 +8,16 @@ namespace Elementor {
 
 namespace {
 	define( 'ABSPATH', __DIR__ );
+	define( 'CHIDEMOON_CORE_DIR', __DIR__ . '/../plugins/chidemoon-core/' );
+	define( 'CHIDEMOON_CORE_URL', '/plugins/chidemoon-core/' );
+	function wp_register_script( ...$args ): void {}
+	function wp_register_style( ...$args ): void {}
+	function wp_enqueue_script( ...$args ): void {}
+	function wp_enqueue_style( ...$args ): void {}
+	function wp_add_inline_script( ...$args ): void {}
+	function wp_json_encode( $value ): string { return json_encode( $value ); }
+	function rest_url( string $path ): string { return '/wp-json/' . $path; }
+	function get_page_by_path( string $path ): ?object { return null; }
 
 	class WC_Product {
 		public function __construct( private int $id, private string $review = 'reviewed', private string $type = 'external', private string $url = 'https://seller.example/product', public string $status = 'publish' ) {}
@@ -73,9 +83,9 @@ namespace {
 	$settings = array( 'show_purchase' => 'yes', 'purchase_text' => 'خرید <از فروشنده>', 'disclosure_text' => 'این لینک & کارمزد دارد.', 'details_new_tab' => 'yes' );
 	$html = card_actions( $render, $widget, $settings );
 	assert_actions( str_contains( $html, 'href="/go/42/" target="_blank" rel="nofollow sponsored noopener"' ), 'The approved purchase must retain the local redirect and seller-link attributes.' );
-	assert_actions( str_contains( $html, 'خرید &lt;از فروشنده&gt;' ) && str_contains( $html, 'این لینک &amp; کارمزد دارد.' ), 'Editor copy must be escaped.' );
+	assert_actions( str_contains( $html, 'خرید &lt;از فروشنده&gt;' ) && ! str_contains( $html, 'کارمزد' ), 'Editor copy must be escaped.' );
 	assert_actions( str_contains( $html, 'href="/products/42/" target="_blank" rel="noopener"' ), 'The internal link tab control is ignored.' );
-	assert_actions( strpos( $html, '/go/42/' ) < strpos( $html, 'ch-product-card-disclosure' ), 'The disclosure must follow its active purchase action.' );
+	assert_actions( ! str_contains( $html, 'ch-product-card-disclosure' ), 'Removed disclosure is still rendered' );
 
 	foreach ( array( 43, 44, 45, 46 ) as $id ) {
 		$html = card_actions( $render, $widget, $settings + array( 'product_id' => $id, 'unavailable_text' => 'پیشنهاد فعال نیست.' ) );
@@ -91,7 +101,7 @@ namespace {
 
 	$html = card_actions( $render, $widget, array( 'show_details' => 'no', 'show_compare' => 'no', 'show_purchase' => 'yes', 'purchase_text' => ' ', 'disclosure_text' => '' ) );
 	assert_actions( ! str_contains( $html, 'ch-product-card-details' ) && ! str_contains( $html, 'data-compare-product' ), 'Hidden card actions remain visible.' );
-	assert_actions( str_contains( $html, '>خرید از فروشگاه</a>' ) && str_contains( $html, 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' ), 'An active purchase must retain a readable label and disclosure.' );
+	assert_actions( str_contains( $html, '>خرید از فروشگاه</a>' ) && ! str_contains( $html, 'کارمزد' ), 'An active purchase must retain a readable label and disclosure.' );
 
 	$single = Chidemoon_Core_Compare::single_control( $GLOBALS['products'][42], array( 'label' => 'مقایسه "ویژه"', 'selected_label' => 'حذف', 'hint' => '', 'selected_hint' => '' ) );
 	assert_actions( str_contains( $single, 'data-compare-label="مقایسه &quot;ویژه&quot;"' ) && str_contains( $single, 'chidemoon-compare-single__hint" hidden' ), 'Single comparison labels must escape copy and support a hidden hint.' );

@@ -28,6 +28,10 @@ final class Chidemoon_Core_Looks {
   } );
   add_filter( 'the_content', array( __CLASS__, 'render_content' ), 25 );
   add_shortcode( 'chidemoon_product_looks', array( __CLASS__, 'product_looks_shortcode' ) );
+  add_shortcode( 'chidemoon_look_gallery', array( __CLASS__, 'gallery' ) );
+  add_action( 'init', static function(): void {
+   if ( post_type_exists( 'reycob_look' ) ) { register_taxonomy_for_object_type( 'chidemoon_room', 'reycob_look' ); }
+  }, 20 );
   add_action( 'woocommerce_after_single_product_summary', array( __CLASS__, 'product_looks' ), 12 );
   add_filter( 'option_elementor_cpt_support', static fn( $types ) => array_values( array_unique( array_merge( $types, array( self::POST_TYPE ) ) ) ) );
  }
@@ -114,6 +118,53 @@ final class Chidemoon_Core_Looks {
     if ( $manage_transaction ) { $wpdb->query( 'COMMIT' ); }
    } catch ( Throwable $exception ) { if ( $manage_transaction ) { $wpdb->query( 'ROLLBACK' ); } wp_cache_delete( $look_id, 'post_meta' ); throw $exception; }
   } finally { $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', 'ch_look_' . $look_id ) ); }
+ }
+ public static function gallery(): string {
+  $args = array( 'post_type' => array( self::POST_TYPE, 'reycob_look' ), 'post_status' => 'publish', 'posts_per_page' => -1, 'orderby' => 'date', 'order' => 'DESC' );
+  $room = isset( $_GET['room'] ) && is_string( $_GET['room'] ) ? sanitize_title( wp_unslash( $_GET['room'] ) ) : '';
+  if ( $room ) { $args['tax_query'] = array( array( 'taxonomy' => 'chidemoon_room', 'field' => 'slug', 'terms' => $room ) ); }
+  $html = '<div class="ch-look-gallery">';
+  $shown = 0;
+  foreach ( get_posts( $args ) as $look ) {
+   if ( self::POST_TYPE === $look->post_type && get_post_meta( $look->ID, '_chidemoon_reycob_scene', true ) ) { continue; }
+   if ( 'reycob_look' === $look->post_type ) {
+    $content = self::hotspot_scene( $look->ID, 0 === $shown );
+   } else {
+    $content = '<h2>' . esc_html( $look->post_title ) . '</h2>' . ( self::relationships( $look->ID ) ? self::render( $look->ID ) : self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) );
+   }
+   if ( ! trim( $content ) ) { continue; }
+   $html .= '<section class="ch-look-gallery-scene" data-look-id="' . (int) $look->ID . '">' . $content . '</section>';
+   ++$shown;
+  }
+  if ( ! $shown ) { $html .= '<p>هنوز چیدمانی برای این فضا منتشر نشده است.</p>'; }
+  return $html . '</div>';
+ }
+ public static function scene_image( int $id, bool $first = false ): string {
+  $image = wp_get_attachment_image( $id, 'full', false, array( 'class' => 'ch-scene-image', 'loading' => $first ? 'eager' : 'lazy', 'fetchpriority' => $first ? 'high' : 'auto', 'decoding' => 'async', 'sizes' => '(max-width: 767px) calc(100vw - 32px), (max-width: 1280px) calc(100vw - 48px), 1232px' ) );
+  $variants = (array) get_post_meta( $id, '_chidemoon_look_webp', true );
+  if ( ! $image || ! $variants ) { return $image; }
+  $srcset = array();
+  foreach ( $variants as $variant ) {
+   if ( ! is_array( $variant ) || empty( $variant['url'] ) || empty( $variant['width'] ) ) { continue; }
+   $srcset[] = esc_url( $variant['url'] ) . ' ' . (int) $variant['width'] . 'w';
+  }
+  if ( ! $srcset ) { return $image; }
+  return '<picture><source type="image/webp" srcset="' . esc_attr( implode( ', ', $srcset ) ) . '" sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1280px) calc(100vw - 48px), 1232px">' . $image . '</picture>';
+ }
+ public static function hotspot_scene( int $id, bool $first = false ): string {
+  $image = self::scene_image( (int) get_post_meta( $id, '_reycob_stl_image_id', true ), $first );
+  if ( ! $image ) { return ''; }
+  $title = (string) get_post_meta( $id, '_reycob_stl_heading', true ) ?: get_the_title( $id );
+  $html = '<h2>' . esc_html( $title ) . '</h2><div class="ch-scene-canvas">' . $image;
+  foreach ( (array) get_post_meta( $id, '_reycob_stl_points', true ) as $index => $point ) {
+   $product = wc_get_product( (int) ( $point['product_id'] ?? 0 ) );
+   if ( ! $product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) || ! isset( $point['x'], $point['y'] ) ) { continue; }
+   $key = 'ch-scene-' . $id . '-' . (int) $index;
+   $style = 'left:' . max( 0, min( 100, (float) $point['x'] ) ) . '%;top:' . max( 0, min( 100, (float) $point['y'] ) ) . '%';
+   $html .= '<button type="button" class="ch-scene-point" style="' . esc_attr( $style ) . '" aria-expanded="false" aria-controls="' . esc_attr( $key ) . '" aria-label="' . esc_attr( 'مشاهدهٔ ' . $product->get_name() ) . '"><span aria-hidden="true"></span></button>';
+   $html .= '<div class="ch-scene-popover" id="' . esc_attr( $key ) . '" hidden>' . $product->get_image( 'woocommerce_thumbnail' ) . '<div><strong>' . esc_html( $product->get_name() ) . '</strong><div class="ch-scene-price">' . $product->get_price_html() . '</div><a class="ch-scene-cta" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">مشاهده محصول</a></div></div>';
+  }
+  return $html . '</div>';
  }
  public static function render( int $id, string $extra_class = '' ): string {
   if ( self::POST_TYPE !== get_post_type( $id ) || ( 'publish' !== get_post_status( $id ) && ! current_user_can( 'edit_post', $id ) ) ) { return ''; }

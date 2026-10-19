@@ -13,6 +13,7 @@ test('sticky header follows the visible admin bar as the mobile bar scrolls away
     documentElement: { style: { setProperty: (key, value) => offsets.set(key, value) } },
     getElementById: () => ({ getBoundingClientRect: () => ({ bottom }) }),
     querySelector: () => null,
+    querySelectorAll: () => [],
   };
   vm.runInNewContext(readFileSync(new URL('../plugins/chidemoon-core/assets/js/public-design.js', import.meta.url), 'utf8'), {
     document,

@@ -170,7 +170,10 @@
 			document.documentElement.style.removeProperty('--chidemoon-compare-bar-height');
 			return;
 		}
-		document.documentElement.style.setProperty('--chidemoon-compare-bar-height', Math.ceil(bar.getBoundingClientRect().height) + 'px');
+		document.documentElement.style.setProperty('--chidemoon-compare-bar-height', Math.ceil(bar.querySelector('.chidemoon-compare-bar__toolbar').getBoundingClientRect().height) + 'px');
+		var footer = document.querySelector('.elementor-location-footer, #colophon, footer.site-footer');
+		var overlap = footer ? Math.max(0, window.innerHeight - footer.getBoundingClientRect().top) : 0;
+		bar.style.transform = overlap ? 'translateY(-' + Math.ceil(overlap) + 'px)' : '';
 	}
 
 	function setBarExpanded(bar, expanded) {
@@ -197,7 +200,7 @@
 			bar = document.createElement('aside');
 			bar.className = 'chidemoon-compare-bar';
 			bar.setAttribute('aria-label', config.labels.compare);
-			bar.innerHTML = '<div class="chidemoon-compare-bar__toolbar"><button type="button" class="chidemoon-compare-bar__summary" aria-expanded="false" aria-controls="chidemoon-compare-bar-details"><strong class="chidemoon-compare-bar__badge" aria-hidden="true"></strong><span class="chidemoon-compare-bar__summary-count" aria-hidden="true"></span><span class="chidemoon-compare-bar__summary-context" aria-hidden="true">' + escapeHtml(config.labels.context) + '</span><span class="chidemoon-compare-bar__chevron" aria-hidden="true"></span></button><button type="button" class="chidemoon-compare-bar__go"></button></div><span class="chidemoon-sr-only chidemoon-compare-bar__live" aria-live="polite"></span><div class="chidemoon-compare-bar__details" id="chidemoon-compare-bar-details" hidden><div class="chidemoon-compare-bar__items"></div><div class="chidemoon-compare-bar__details-footer"><p class="chidemoon-compare-bar__hint" hidden></p><button type="button" class="chidemoon-compare-bar__clear"></button></div></div>';
+			bar.innerHTML = "<div class=\"chidemoon-compare-bar__details\" id=\"chidemoon-compare-bar-details\" hidden><div class=\"chidemoon-compare-bar__heading\"><span>محصولات انتخاب‌شده</span><button type=\"button\" class=\"chidemoon-compare-bar__clear\"></button></div><ul class=\"chidemoon-compare-bar__items\"></ul><p class=\"chidemoon-compare-bar__hint\" hidden></p></div><div class=\"chidemoon-compare-bar__toolbar\"><button type=\"button\" class=\"chidemoon-compare-bar__summary\" aria-expanded=\"false\" aria-controls=\"chidemoon-compare-bar-details\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4\"/></svg><span>فهرست مقایسه</span><svg class=\"chidemoon-compare-bar__chevron\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"m5 12 5-5 5 5\"/></svg></button><button type=\"button\" class=\"chidemoon-compare-bar__go\"><span></span><svg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 10H4m5-5-5 5 5 5\"/></svg></button><span class=\"chidemoon-compare-bar__single-hint\" hidden>یک محصول دیگر اضافه کنید</span></div><span class=\"chidemoon-sr-only chidemoon-compare-bar__live\" aria-live=\"polite\"></span>";
 			document.body.appendChild(bar);
 			bar.addEventListener('click', function (event) {
 				if (event.target.closest('.chidemoon-compare-bar__summary')) {
@@ -240,8 +243,22 @@
 					bar.querySelector('.chidemoon-compare-bar__summary').focus();
 				}
 			});
-			if (window.ResizeObserver) new ResizeObserver(function () { setBarOffset(bar); }).observe(bar);
+			if (window.ResizeObserver) {
+				var barObserver = new ResizeObserver(function () { setBarOffset(bar); });
+				barObserver.observe(bar);
+				var footer = document.querySelector('.elementor-location-footer, #colophon, footer.site-footer');
+				if (footer) barObserver.observe(footer);
+			}
 			window.addEventListener('resize', function () { setBarOffset(bar); });
+			document.addEventListener('click', function (event) {
+				if (!bar.contains(event.target) && bar.classList.contains('is-expanded')) setBarExpanded(bar, false);
+			});
+			var scrollPending = false;
+			window.addEventListener('scroll', function () {
+				if (scrollPending) return;
+				scrollPending = true;
+				window.requestAnimationFrame(function () { setBarOffset(bar); scrollPending = false; });
+			}, { passive: true });
 		}
 
 		bar.hidden = items.length === 0;
@@ -254,18 +271,16 @@
 		var summary = bar.querySelector('.chidemoon-compare-bar__summary');
 		summary.dataset.countLabel = faDigits(items.length) + ' ' + config.labels.count;
 		bar.querySelector('.chidemoon-compare-bar__live').textContent = summary.dataset.countLabel;
-		bar.querySelector('.chidemoon-compare-bar__badge').textContent = faDigits(items.length);
-		bar.querySelector('.chidemoon-compare-bar__summary-count').textContent = config.labels.product;
 		bar.querySelector('.chidemoon-compare-bar__items').innerHTML = items.map(function (item) {
-			return '<button type="button" class="chidemoon-compare-bar__chip" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + (config.labels.removeItem || config.labels.removed)) + '">' + thumbHtml(item, 'chidemoon-compare-bar__thumb') + '<span class="chidemoon-compare-bar__chip-name" dir="auto">' + escapeHtml(item.name || ('#' + item.id)) + '</span><span class="chidemoon-compare-bar__chip-x" aria-hidden="true">×</span></button>';
+			return '<li class="chidemoon-compare-bar__chip">' + thumbHtml(item, 'chidemoon-compare-bar__thumb') + '<span class="chidemoon-compare-bar__chip-name" dir="auto" title="' + escapeHtml(item.name || ('#' + item.id)) + '">' + escapeHtml(item.name || ('#' + item.id)) + '</span><button type="button" class="chidemoon-compare-bar__remove" data-remove-compare="' + Number(item.id) + '" aria-label="' + escapeHtml((item.name || '') + ' — ' + (config.labels.removeItem || config.labels.removed)) + '"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8"/></svg></button></li>';
 		}).join('');
 		bar.querySelector('.chidemoon-compare-bar__clear').textContent = config.labels.clear;
 		var go = bar.querySelector('.chidemoon-compare-bar__go');
 		var hint = bar.querySelector('.chidemoon-compare-bar__hint');
-		go.textContent = config.labels.compare;
+		go.querySelector('span').textContent = config.labels.compare;
 		go.hidden = items.length < 2;
-		hint.hidden = items.length >= 2;
-		if (items.length < 2) hint.textContent = config.labels.oneMore;
+		hint.hidden = true;
+		bar.querySelector('.chidemoon-compare-bar__single-hint').hidden = items.length >= 2;
 		setBarExpanded(bar, !bar.querySelector('.chidemoon-compare-bar__details').hidden);
 	}
 

@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Chidemoon_Core_Public_Design {
 	public static function register(): void {
+		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'polish_public_copy' ), 100, 2 );
+		add_filter( 'the_title', array( __CLASS__, 'normalize_persian' ), 100 );
+		add_filter( 'term_name', array( __CLASS__, 'normalize_persian' ), 100 );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ), 30 );
 		add_action( 'elementor/query/chidemoon_looks', array( __CLASS__, 'looks_query' ) );
 		add_action( 'elementor/query/chidemoon_related_posts', array( __CLASS__, 'related_posts_query' ) );
@@ -39,6 +42,31 @@ final class Chidemoon_Core_Public_Design {
 		add_filter( 'gettext', static function ( string $translation, string $text, string $domain ): string {
 			return 'hello-elementor' === $domain && 'Skip to content' === $text && is_rtl() ? 'رفتن به محتوا' : $translation;
 		}, 10, 3 );
+	}
+
+	public static function normalize_persian( string $text ): string {
+		if ( is_admin() ) { return $text; }
+		return str_replace( array( "\u{0654}", "\u{0655}", 'ۀ', 'هٔ', 'ثبت‌شده', 'بررسی‌شده', 'دسته‌بندی', 'جست‌وجو', 'فیلتر‌ها' ), array( '', '', 'ه', 'ه', 'ثبت شده', 'بررسی شده', 'دسته بندی', 'جستجو', 'فیلترها' ), $text );
+	}
+
+	public static function polish_public_copy( string $content, $widget ): string {
+		if ( is_admin() || ! class_exists( 'DOMDocument' ) || '' === trim( $content ) ) { return $content; }
+		if ( in_array( $widget->get_name(), array( 'loop-grid', 'posts', 'archive-posts' ), true ) && str_contains( $content, 'هنوز مطلبی در این بخش منتشر نشده است.' ) ) { return ''; }
+		$document = new DOMDocument( '1.0', 'UTF-8' );
+		$previous = libxml_use_internal_errors( true );
+		$document->loadHTML( '<?xml encoding="UTF-8"><div id="ch-copy-root">' . $content . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NONET );
+		libxml_clear_errors(); libxml_use_internal_errors( $previous );
+		$xpath = new DOMXPath( $document );
+		foreach ( $xpath->query( '//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::textarea) and not(ancestor::code)]' ) as $node ) {
+			$text = self::normalize_persian( $node->nodeValue );
+			$text = str_replace( array( 'مشخصات بررسی شده', 'مقاله‌های مقایسه چیدمون به تفاوت کاربرد، اندازه و شرایط استفاده می‌پردازند.', 'مقایسه‌های تحریریه را بخوان و تفاوت گزینه‌ها را بر اساس کاربرد، اندازه و نیاز خانه‌ات بررسی کن.' ), array( 'مشخصات محصول', 'بین چند گزینه مرددی؟ تفاوت‌ها را ببین و مناسب‌ترین را برای خانه‌ات انتخاب کن.', '' ), $text );
+			if ( in_array( trim( $text ), array( 'خواندن مطلب', 'مشاهده نتیجه', 'مشاهدهٔ نتیجه' ), true ) && in_array( $widget->get_name(), array( 'button', 'posts', 'archive-posts' ), true ) ) { $text = 'product' === get_post_type( get_the_ID() ) ? 'دیدن محصول' : 'خواندن ' . self::post_card_label( get_the_ID() ); }
+			$node->nodeValue = $text;
+		}
+		$root = $document->getElementById( 'ch-copy-root' );
+		if ( ! $root ) { return $content; }
+		$result = ''; foreach ( $root->childNodes as $child ) { $result .= $document->saveHTML( $child ); }
+		return $result;
 	}
 
 	public static function catalog_query_args( array $args ): array {
@@ -256,7 +284,7 @@ final class Chidemoon_Core_Public_Design {
 			}
 			$action = $xpath->query( './/a[contains(concat(" ", normalize-space(@class), " "), " elementor-post__read-more ")]', $text )->item( 0 );
 			if ( $action ) {
-				$action->textContent = 'product' === $type ? 'دیدن محصول' : 'خواندن مطلب';
+				$action->textContent = 'product' === $type ? 'دیدن محصول' : 'خواندن ' . $label;
 				$action->setAttribute( 'aria-label', $action->textContent . ': ' . get_the_title( $post_id ) );
 			}
 		}
@@ -342,6 +370,7 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function fonts( array $fonts ): array {
+		$fonts['YekanBakh'] = \Elementor\Fonts::LOCAL;
 		$fonts['Vazirmatn'] = \Elementor\Fonts::LOCAL;
 		$fonts['Estedad'] = \Elementor\Fonts::LOCAL;
 		return $fonts;
@@ -387,6 +416,16 @@ final class Chidemoon_Core_Public_Design {
 	}
 
 	public static function enqueue(): void {
+		// Elementor renders shortcodes after wp_head. REYCOB otherwise queues
+		// its stylesheet too late, leaving hotspots and carousel unpositioned.
+		if ( class_exists( 'REYCOB_Shop_The_Look' ) && ! ( is_page( 'shop-the-look' ) && has_shortcode( (string) get_post_meta( get_queried_object_id(), '_elementor_data', true ), 'chidemoon_look_gallery' ) && ! isset( $_GET['elementor-preview'] ) ) ) {
+			wp_enqueue_style(
+				'reycob-stl-frontend',
+				plugins_url( 'reycob-shop-the-look/assets/frontend.css' ),
+				array(),
+				REYCOB_Shop_The_Look::VERSION
+			);
+		}
 		$path = CHIDEMOON_CORE_DIR . 'assets/css/public-design.css';
 		wp_enqueue_style(
 			'chidemoon-public-design',

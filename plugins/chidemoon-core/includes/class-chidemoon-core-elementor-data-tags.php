@@ -31,7 +31,7 @@ final class Chidemoon_Core_Elementor_Product_Field_Tag extends \Elementor\Core\D
 	public function get_group(): array { return array( 'chidemoon' ); }
 	public function get_categories(): array { return array( \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY ); }
 	protected function register_controls(): void {
-		$this->add_control( 'field', array( 'label' => 'داده', 'type' => \Elementor\Controls_Manager::SELECT, 'options' => array( 'price' => 'قیمت ثبت‌شده', 'merchant' => 'نام فروشنده', 'short_description' => 'توضیح کوتاه' ), 'default' => 'merchant' ) );
+		$this->add_control( 'field', array( 'label' => 'داده', 'type' => \Elementor\Controls_Manager::SELECT, 'options' => array( 'price' => 'قیمت', 'merchant' => 'نام فروشنده', 'short_description' => 'توضیح کوتاه' ), 'default' => 'merchant' ) );
 		$this->add_control( 'merchant_label', array( 'label' => 'عنوان فروشنده', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'فروشنده:', 'condition' => array( 'field' => 'merchant' ) ) );
 	}
 	public function render(): void {
@@ -49,7 +49,11 @@ final class Chidemoon_Core_Elementor_Product_Field_Tag extends \Elementor\Core\D
 				echo wp_kses_post( $product->get_price_html() );
 				break;
 			case 'short_description':
-				echo wp_kses_post( apply_filters( 'woocommerce_short_description', $product->get_short_description() ) );
+				$description = apply_filters( 'woocommerce_short_description', $product->get_short_description() );
+				$plain = wp_strip_all_tags( $description );
+				if ( mb_strlen( $plain ) > 280 ) {
+					echo '<p>' . esc_html( wp_trim_words( $plain, 38, '…' ) ) . '</p>';
+				} else { echo wp_kses_post( $description ); }
 				break;
 			default:
 				$merchant = trim( (string) $product->get_meta( Chidemoon_Core_Affiliate::META_MERCHANT_NAME ) );

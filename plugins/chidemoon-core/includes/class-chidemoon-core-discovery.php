@@ -5,10 +5,35 @@ final class Chidemoon_Core_Discovery {
  public static function register(): void {
   add_action( 'woocommerce_product_query', array( __CLASS__, 'filter_archive' ), 25 );
   add_action( 'elementor/query/chidemoon_catalog', array( __CLASS__, 'filter_archive' ), 25 );
+  add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
+   if ( ! is_admin() && $query->is_main_query() && $query->is_search() && array( 'product' ) === (array) $query->get( 'post_type' ) ) { self::filter_archive( $query ); }
+  }, 30 );
   add_shortcode( 'chidemoon_catalog_filters', array( __CLASS__, 'filters' ) );
   add_shortcode( 'chidemoon_catalog_sidebar', array( __CLASS__, 'sidebar_filters' ) );
+  add_shortcode( 'chidemoon_category_tree', array( __CLASS__, 'category_tree' ) );
   add_shortcode( 'chidemoon_guided_chooser', array( __CLASS__, 'chooser' ) );
   add_action( 'elementor/widgets/register', array( __CLASS__, 'register_widget' ) );
+ }
+ public static function category_tree(): string {
+  $items = wp_list_categories( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'hierarchical' => true, 'title_li' => '', 'echo' => false, 'show_count' => false, 'orderby' => 'name' ) );
+  static $samples = null;
+  if ( null === $samples ) {
+   $samples = array();
+   $products = get_posts( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 60, 'no_found_rows' => true, 'orderby' => 'date', 'order' => 'DESC' ) );
+   foreach ( $products as $post ) {
+    $terms = get_the_terms( $post->ID, 'product_cat' );
+    if ( ! is_array( $terms ) ) { continue; }
+    $ids = array();
+    foreach ( $terms as $term ) { $ids = array_merge( $ids, array( $term->term_id ), get_ancestors( $term->term_id, 'product_cat', 'taxonomy' ) ); }
+    foreach ( array_unique( $ids ) as $id ) {
+     if ( count( $samples[ $id ] ?? array() ) >= 3 ) { continue; }
+     $samples[ $id ][] = '<a href="' . esc_url( get_permalink( $post->ID ) ) . '">' . get_the_post_thumbnail( $post->ID, 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) ) . '<span>' . esc_html( get_the_title( $post->ID ) ) . '</span></a>';
+    }
+   }
+  }
+  $templates = '';
+  foreach ( $samples as $id => $cards ) { $templates .= '<template data-category-samples="' . (int) $id . '"><div class="ch-category-samples">' . implode( '', $cards ) . '</div></template>'; }
+  return '<nav class="ch-category-tree" aria-label="' . esc_attr__( 'دسته‌بندی محصولات', 'chidemoon-core' ) . '"><ul>' . $items . '</ul>' . $templates . '</nav>';
  }
  public static function register_widget( $manager ): void { require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-discovery-widget.php'; $manager->register( new Chidemoon_Core_Elementor_Discovery_Widget() ); }
  public static function selection( string $key, array $input ): array {
@@ -55,7 +80,8 @@ final class Chidemoon_Core_Discovery {
  }
  private static function available_meta(): array { return array( 'relation' => 'AND', array( 'key' => '_chidemoon_availability_status', 'value' => 'in_stock' ), array( 'key' => '_chidemoon_availability_observed_unix', 'value' => array( time() - Chidemoon_Core_Commercial::FRESHNESS_SECONDS, time() + 300 ), 'compare' => 'BETWEEN', 'type' => 'NUMERIC' ), array( 'relation' => 'OR', array( 'key' => Chidemoon_Core_Source_Importer::META_WITHDRAWN, 'value' => '0' ), array( 'key' => Chidemoon_Core_Source_Importer::META_WITHDRAWN, 'compare' => 'NOT EXISTS' ) ) ); }
  public static function filter_archive( WP_Query $query ): void {
-  if ( is_admin() ) { return; }
+  if ( is_admin() || $query->get( '_chidemoon_discovery_filtered' ) ) { return; }
+  $query->set( '_chidemoon_discovery_filtered', true );
   $filters = self::query_filters( wp_unslash( $_GET ) );
   foreach ( $filters as $key => $clauses ) { $existing = (array) $query->get( $key ); $query->set( $key, $existing ? array( 'relation' => 'AND', $existing, $clauses ) : $clauses ); }
  }
@@ -82,6 +108,12 @@ final class Chidemoon_Core_Discovery {
   $input = wp_unslash( $_GET );
   $action = wc_get_page_permalink( 'shop' );
   if ( is_product_category() ) { $link = get_term_link( get_queried_object() ); if ( ! is_wp_error( $link ) ) { $action = $link; } }
+  if ( is_search() ) {
+   $action = home_url( '/' );
+   $input['s'] = get_search_query( false );
+   $input['content_type'] = 'product';
+  }
+  $reset = is_search() ? add_query_arg( array( 's' => $input['s'], 'content_type' => 'product' ), $action ) : $action;
   $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" aria-label="فیلتر محصولات"><fieldset><legend>قیمت (تومان)</legend>';
   foreach ( array( 'ch_min_price' => 'از قیمت', 'ch_max_price' => 'تا قیمت' ) as $key => $label ) {
    $html .= '<label>' . esc_html( $label ) . '<input type="number" inputmode="numeric" min="0" step="1" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '" placeholder="تومان"></label>';
@@ -90,12 +122,13 @@ final class Chidemoon_Core_Discovery {
   $terms = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'orderby' => 'name' ) );
   foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $html .= self::checkbox( 'ch_category', $term->slug, $term->name, $input ); }
   $html .= '</div></fieldset>';
-  foreach ( array( 's', 'orderby', 'post_type' ) as $key ) { if ( isset( $input[ $key ] ) && is_string( $input[ $key ] ) ) { $html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( sanitize_text_field( $input[ $key ] ) ) . '">'; } }
-  return $html . '<button type="submit">اعمال فیلتر</button><a class="ch-sidebar-reset" href="' . esc_url( $action ) . '">پاک کردن فیلترها</a></form>';
+  foreach ( array( 's', 'orderby', 'post_type', 'content_type' ) as $key ) { if ( isset( $input[ $key ] ) && is_string( $input[ $key ] ) ) { $html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( sanitize_text_field( $input[ $key ] ) ) . '">'; } }
+  return $html . '<button type="submit">اعمال فیلتر</button><a class="ch-sidebar-reset" href="' . esc_url( $reset ) . '">پاک کردن فیلترها</a></form>';
  }
  private static function checkbox( string $key, string $value, string $label, array $input ): string { return '<label><input type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value ) . '" ' . checked( in_array( $value, self::selection( $key, $input ), true ), true, false ) . '> ' . esc_html( $label ) . '</label> '; }
  private static function facet( string $field, string $taxonomy, array $input ): string {
   $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
+  if ( is_wp_error( $terms ) || ! $terms ) { return ''; }
   $html = '<fieldset><legend>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</legend>';
   foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $html .= self::checkbox( 'ch_' . $field, $term->slug, $term->name, $input ); }
   return $html . '</fieldset>';
@@ -131,27 +164,30 @@ final class Chidemoon_Core_Discovery {
  }
  public static function chooser( array $attributes = array() ): string {
   $input = wp_unslash( $_GET );
-  $html = '<form method="get" class="ch-guided-chooser"><input type="hidden" name="ch_choose" value="1">';
+  $html = '<form method="get" class="ch-guided-chooser" aria-label="راهنمای انتخاب محصول"><input type="hidden" name="ch_choose" value="1">';
   foreach ( array( 'room', 'style', 'color', 'material' ) as $field ) { $html .= self::facet( $field, Chidemoon_Core_Enrichment::TAXONOMIES[ $field ], $input ); }
-  $html .= '<label>' . esc_html__( 'Budget', 'chidemoon-core' ) . ' (' . esc_html( get_woocommerce_currency() ) . ') <input type="number" min="0" name="ch_budget" value="' . esc_attr( (string) ( self::number_input( 'ch_budget', $input ) ?? '' ) ) . '"></label>';
+  $html .= '<label>' . esc_html__( 'Budget', 'chidemoon-core' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ') <input type="number" inputmode="numeric" min="0" step="1" name="ch_budget" value="' . esc_attr( (string) ( self::number_input( 'ch_budget', $input ) ?? '' ) ) . '"></label>';
   $space = array();
-  foreach ( array( 'width', 'depth', 'height' ) as $axis ) { $space[ $axis ] = self::number_input( 'ch_space_' . $axis, $input ); $html .= '<label>' . esc_html( Chidemoon_Core_Enrichment::field_label( $axis ) . ' (cm)' ) . '<input type="number" min="0" step="0.01" name="ch_space_' . esc_attr( $axis ) . '" value="' . esc_attr( (string) ( $space[ $axis ] ?? '' ) ) . '"></label>'; }
+  foreach ( array( 'width', 'depth', 'height' ) as $axis ) { $space[ $axis ] = self::number_input( 'ch_space_' . $axis, $input ); $html .= '<label>' . esc_html( Chidemoon_Core_Enrichment::field_label( $axis ) . ' (سانتی متر)' ) . '<input type="number" inputmode="decimal" min="0" step="0.01" name="ch_space_' . esc_attr( $axis ) . '" value="' . esc_attr( (string) ( $space[ $axis ] ?? '' ) ) . '"></label>'; }
   $html .= '<button type="submit">' . esc_html__( 'Find suitable products', 'chidemoon-core' ) . '</button></form>';
   if ( ! isset( $input['ch_choose'] ) ) { return $html; }
   $requirements = array( 'ch_room' => self::selection( 'ch_room', $input ), 'ch_availability' => array( 'in_stock' ) );
   $query = new WP_Query( array_merge( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => -1, 'fields' => 'ids', 'no_found_rows' => true ), self::query_filters( $requirements ) ) );
   $preferences = array(); foreach ( array( 'room', 'style', 'color', 'material' ) as $field ) { $preferences[ $field ] = self::selection( 'ch_' . $field, $input ); }
   $results = self::rank( $query->posts, $preferences, $space, self::number_input( 'ch_budget', $input ) );
+  if ( ! $results ) { return $html . '<div class="ch-chooser-empty" role="status"><h2>محصولی با این شرایط پیدا نشد</h2><p>انتخاب ها را تغییر بده یا محصولات بیشتری را در فروشگاه ببین.</p><a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">دیدن همه محصولات</a></div>'; }
   $page = max( 1, min( 10000, absint( $input['ch_page'] ?? 1 ) ) );
-  $html .= '<div class="ch-chooser-results" aria-live="polite"><p>' . esc_html( (string) count( $results ) ) . ' ' . esc_html__( 'matching products', 'chidemoon-core' ) . '</p><ul>';
+  $html .= '<div class="ch-chooser-results" data-id="ch-chooser-results" aria-live="polite"><p>' . esc_html( number_format_i18n( count( $results ) ) ) . ' ' . esc_html__( 'matching products', 'chidemoon-core' ) . '</p><ul class="ch-chooser-list">';
   $fit_labels = array( 'fits' => __( 'Fits the supplied measurements', 'chidemoon-core' ), 'exceeds' => __( 'Exceeds the supplied measurements', 'chidemoon-core' ), 'insufficient_data' => __( 'Insufficient measurement data', 'chidemoon-core' ) );
   foreach ( array_slice( $results, ( $page - 1 ) * 12, 12 ) as $result ) {
    $product = wc_get_product( $result['id'] );
-   $html .= '<li><a href="' . esc_url( get_permalink( $result['id'] ) ) . '">' . wp_get_attachment_image( $product->get_image_id(), 'woocommerce_thumbnail' ) . esc_html( $product->get_name() ) . '</a> ' . $product->get_price_html() . '<p>' . esc_html( $fit_labels[ $result['fit'] ] ) . '</p><ul>';
+   $html .= '<li><a href="' . esc_url( get_permalink( $result['id'] ) ) . '">' . wp_get_attachment_image( $product->get_image_id(), 'woocommerce_thumbnail' ) . esc_html( $product->get_name() ) . '</a> ' . $product->get_price_html();
+   if ( 'fits' === $result['fit'] && array_filter( $space, static fn( $value ) => null !== $value ) ) { $html .= '<p>' . esc_html( $fit_labels[ $result['fit'] ] ) . '</p>'; }
+   $html .= '<ul>';
    foreach ( $result['matches'] as $field => $terms ) { $html .= '<li>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) . ': ' . implode( ', ', $terms ) ) . '</li>'; }
    $html .= '</ul>' . Chidemoon_Core_Compare::single_control( $product ) . '</li>';
   }
-  $html .= '</ul>' . paginate_links( array( 'base' => add_query_arg( 'ch_page', '%#%' ), 'format' => '', 'current' => $page, 'total' => max( 1, (int) ceil( count( $results ) / 12 ) ) ) ) . '</div>';
+  $html .= '</ul><nav class="ch-chooser-pagination" aria-label="صفحه های محصولات پیشنهادی">' . paginate_links( array( 'base' => add_query_arg( 'ch_page', '%#%' ), 'format' => '', 'current' => $page, 'total' => max( 1, (int) ceil( count( $results ) / 12 ) ) ) ) . '</nav></div>';
   return $html;
  }
  public static function related_product_ids( int $product_id, int $limit = 12 ): array {

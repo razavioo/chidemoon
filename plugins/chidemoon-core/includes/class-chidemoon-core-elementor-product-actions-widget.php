@@ -35,7 +35,6 @@ final class Chidemoon_Core_Elementor_Product_Actions_Widget extends \Elementor\W
 		$this->add_control( 'details_new_tab', array( 'label' => 'باز کردن جزئیات در زبانهٔ تازه', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => '', 'condition' => array( 'show_details' => 'yes' ) ) );
 		$this->add_control( 'show_purchase', array( 'label' => 'دکمهٔ خرید از فروشنده', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => '', 'description' => 'فقط برای محصول منتشرشده با پیشنهاد فروشندهٔ بررسی‌شده فعال می‌شود.' ) );
 		$this->add_control( 'purchase_text', array( 'label' => 'متن دکمهٔ خرید', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'خرید از فروشگاه', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_purchase' => 'yes' ) ) );
-		$this->add_control( 'disclosure_text', array( 'label' => 'توضیح کارمزد خرید', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'چیدمون ممکن است از این لینک کارمزد دریافت کند.', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_purchase' => 'yes' ), 'description' => 'کنار لینک خرید نمایش داده می‌شود؛ متن خالی از توضیح پیش‌فرض استفاده می‌کند.' ) );
 		$this->add_control( 'show_compare', array( 'label' => 'دکمهٔ مقایسه', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
 		$this->add_control( 'compare_text', array( 'label' => 'متن دکمهٔ مقایسه', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مقایسه', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_compare' => 'yes' ) ) );
 		$this->add_control( 'compare_selected_text', array( 'label' => 'متن پس از انتخاب برای مقایسه', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'حذف از مقایسه', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_compare' => 'yes' ) ) );
@@ -90,7 +89,7 @@ final class Chidemoon_Core_Elementor_Product_Actions_Widget extends \Elementor\W
 		if ( $eligible && 'yes' === ( $settings['show_purchase'] ?? '' ) ) {
 			echo '<div class="ch-product-card-purchase">';
 			echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => (string) $product->get_id(), 'label' => $this->required_text( $settings, 'purchase_text', 'خرید از فروشگاه' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<p class="ch-product-card-disclosure">' . esc_html( $this->required_text( $settings, 'disclosure_text', 'چیدمون ممکن است از این لینک کارمزد دریافت کند.' ) ) . '</p></div>';
+			echo '</div>';
 		}
 		if ( $eligible && 'yes' === ( $settings['show_compare'] ?? 'yes' ) ) {
 			echo Chidemoon_Core_Compare::control( $product, array(

@@ -16,6 +16,7 @@ final class Chidemoon_Core_Commercial {
   add_filter( 'woocommerce_loop_add_to_cart_link', array( __CLASS__, 'loop_button' ), 100, 2 );
   add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'tabs' ), 100 );
   add_filter( 'woocommerce_product_review_comment_form_args', array( __CLASS__, 'review_label' ) );
+  add_filter( 'woocommerce_reviews_title', static fn( string $title ): string => 'دیدگاه های کاربران' );
   add_filter( 'pre_comment_approved', array( __CLASS__, 'moderate_review' ), 100, 2 );
   add_filter( 'option_woocommerce_review_rating_verification_label', static function( $value ) { $product = wc_get_product( get_the_ID() ); return $product instanceof WC_Product && $product->is_type( 'external' ) ? 'no' : $value; } );
   add_filter( 'option_woocommerce_review_rating_verification_required', static function( $value ) { $product = wc_get_product( get_the_ID() ); return $product instanceof WC_Product && $product->is_type( 'external' ) ? 'no' : $value; } );
@@ -80,7 +81,7 @@ final class Chidemoon_Core_Commercial {
    $price = $product->get_price();
    if ( '' === $price || ! is_numeric( $price ) || (float) $price < 0 ) { return '<span class="ch-price-unknown">' . esc_html__( 'Current price unavailable', 'chidemoon-core' ) . '</span>'; }
    // Keep the imported amount visible without presenting an old sale as current.
-   return '<span class="ch-price-recorded">' . wc_price( $price ) . '<small style="display:block;font-size:12px;font-weight:400">' . esc_html__( 'آخرین قیمت ثبت‌شده', 'chidemoon-core' ) . '</small></span>';
+   return '<span class="ch-price-recorded">' . wc_price( $price ) . '</span>';
   }
   return $html;
  }
@@ -105,19 +106,9 @@ final class Chidemoon_Core_Commercial {
  public static function observations_shortcode( array $attributes = array() ): string {
   $product = wc_get_product( absint( $attributes['product_id'] ?? get_the_ID() ) );
   if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) || ! $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) { return ''; }
-  $observations = self::observations( $product );
-  $html = '<div class="ch-offer-observations"><p>' . esc_html( self::availability_label( $product ) );
-  if ( isset( $observations['availability']['observedAt'] ) ) { $html .= ' <time datetime="' . esc_attr( $observations['availability']['observedAt'] ) . '">' . esc_html( wp_date( 'Y-m-d H:i', strtotime( $observations['availability']['observedAt'] ) ) ) . '</time>'; }
-  $html .= '</p>';
-  $price = $observations['price'] ?? array();
-  if ( self::is_fresh( $price['observedAt'] ?? null ) && isset( $price['previous'], $price['current'] ) && (float) $price['previous'] > (float) $price['current'] ) { $html .= '<p>' . esc_html( sprintf( __( '%s%% discount', 'chidemoon-core' ), (string) round( ( 1 - (float) $price['current'] / (float) $price['previous'] ) * 100 ) ) ) . '</p>'; }
-  if ( isset( $observations['price']['observedAt'] ) ) { $html .= '<p>' . esc_html__( 'Price observed:', 'chidemoon-core' ) . ' <time datetime="' . esc_attr( $observations['price']['observedAt'] ) . '">' . esc_html( wp_date( 'Y-m-d H:i', strtotime( $observations['price']['observedAt'] ) ) ) . '</time></p>'; }
-  if ( isset( $observations['rating'] ) ) {
-   $rating = $observations['rating'];
-   $html .= '<p class="ch-source-rating">' . esc_html__( 'Merchant rating:', 'chidemoon-core' ) . ' ' . esc_html( $rating['value'] . '/' . $rating['scale'] . ' (' . $rating['count'] . ')' ) . ' <a href="' . esc_url( $rating['sourceUrl'] ) . '" target="_blank" rel="nofollow noopener">' . esc_html( $rating['provider'] ) . '</a> <time datetime="' . esc_attr( $rating['observedAt'] ) . '">' . esc_html( wp_date( 'Y-m-d H:i', strtotime( $rating['observedAt'] ) ) ) . '</time></p>';
-  }
-  return $html . '</div>';
+  if ( 'unknown' === self::availability( $product ) ) { return ''; }
+  return '<div class="ch-offer-observations"><p class="ch-product-stock">' . esc_html( self::availability_label( $product ) ) . '</p></div>';
  }
- public static function review_label( array $args ): array { $args['comment_notes_after'] = '<p>' . esc_html__( 'Community reviews are moderated. Purchases take place at the merchant; Chidemoon does not verify purchases.', 'chidemoon-core' ) . '</p>'; return $args; }
+ public static function review_label( array $args ): array { $args['title_reply'] = 'دیدگاهت را بنویس'; $args['label_submit'] = 'ثبت دیدگاه'; $args['comment_notes_after'] = '<p>دیدگاهت پس از بررسی منتشر می شود.</p>'; return $args; }
  public static function moderate_review( $approved, array $comment ) { return 'product' === get_post_type( (int) ( $comment['comment_post_ID'] ?? 0 ) ) && ! is_wp_error( $approved ) && 'spam' !== $approved && 'trash' !== $approved ? 0 : $approved; }
 }

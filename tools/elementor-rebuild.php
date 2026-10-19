@@ -217,7 +217,7 @@ class Chidemoon_Elementor_Rebuild {
 	private function links( array $links ): array {
 		$items = array();
 		foreach ( $links as $path => $label ) {
-			$items[] = array( '_id' => $this->id(), 'text' => $label, 'link' => array( 'url' => home_url( $path ) ), 'selected_icon' => array( 'value' => 'fas fa-angle-left', 'library' => 'fa-solid' ) );
+			$items[] = array( '_id' => $this->id(), 'text' => $label, 'link' => array( 'url' => home_url( $path ) ), 'selected_icon' => array( 'value' => '', 'library' => '' ) );
 		}
 		return $this->widget( 'icon-list', array( 'icon_list' => $items, '_css_classes' => 'ch-footer-nav' ) );
 	}
@@ -780,14 +780,14 @@ class Chidemoon_Elementor_Rebuild {
 					array( '_id' => 'accent', 'title' => 'تأکید', 'color' => '#607069' ),
 				),
 				'system_typography' => array(
-					array( '_id' => 'primary', 'title' => 'عنوان اصلی', 'typography_typography' => 'custom', 'typography_font_family' => 'Estedad', 'typography_font_weight' => '800' ),
-					array( '_id' => 'secondary', 'title' => 'عنوان فرعی', 'typography_typography' => 'custom', 'typography_font_family' => 'Estedad', 'typography_font_weight' => '700' ),
-					array( '_id' => 'text', 'title' => 'متن', 'typography_typography' => 'custom', 'typography_font_family' => 'Vazirmatn', 'typography_font_weight' => '400' ),
-					array( '_id' => 'accent', 'title' => 'تأکید', 'typography_typography' => 'custom', 'typography_font_family' => 'Vazirmatn', 'typography_font_weight' => '600' ),
+					array( '_id' => 'primary', 'title' => 'عنوان اصلی', 'typography_typography' => 'custom', 'typography_font_family' => 'YekanBakh', 'typography_font_weight' => '700' ),
+					array( '_id' => 'secondary', 'title' => 'عنوان فرعی', 'typography_typography' => 'custom', 'typography_font_family' => 'YekanBakh', 'typography_font_weight' => '600' ),
+					array( '_id' => 'text', 'title' => 'متن', 'typography_typography' => 'custom', 'typography_font_family' => 'YekanBakh', 'typography_font_weight' => '400' ),
+					array( '_id' => 'accent', 'title' => 'تأکید', 'typography_typography' => 'custom', 'typography_font_family' => 'YekanBakh', 'typography_font_weight' => '600' ),
 				),
 				'container_width' => array( 'unit' => 'px', 'size' => 1280, 'sizes' => array() ),
-				'body_color' => '#17241f', 'body_typography_font_family' => 'Vazirmatn',
-				'h1_typography_font_family' => 'Estedad', 'h2_typography_font_family' => 'Estedad', 'h3_typography_font_family' => 'Estedad',
+				'body_color' => '#17241f', 'body_typography_font_family' => 'YekanBakh',
+				'h1_typography_font_family' => 'YekanBakh', 'h2_typography_font_family' => 'YekanBakh', 'h3_typography_font_family' => 'YekanBakh',
 			) ) );
 			update_post_meta( $kit_id, '_chidemoon_elementor_rebuild', '2026-09-29' );
 		}
