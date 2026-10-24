@@ -1,0 +1,13 @@
+{
+    "lastSuccessAt": "2026-10-22T13:00:47+00:00",
+    "error": null,
+    "report": {
+        "version": "v2",
+        "dryRun": false,
+        "failed": 0,
+        "created": 0,
+        "updated": 520
+    },
+    "received": 908,
+    "issues": []
+}

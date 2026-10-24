@@ -125,6 +125,9 @@ final class Chidemoon_Core_Source_Importer {
  private static function apply_record( array $record, bool $dry_run ): array {
   global $wpdb;
   $record = Chidemoon_Core_Source_Contract::validate_record( $record );
+  // A connected store may mirror this site's products back into Kalahamoon.
+  // Such records are destinations, never new merchant offers.
+  if ( self::is_local_source( $record, home_url( '/' ) ) ) { throw new RuntimeException( 'invalid_record' ); }
   if ( $record['revision'] <= (int) get_option( 'chidemoon_source_withdrawal_' . $record['sourceKey'], 0 ) ) { throw new RuntimeException( 'stale_revision' ); }
   $id = self::resolve( $record['sourceKey'], $record['aliases'] );
   $product = $id ? wc_get_product( $id ) : new WC_Product_External();
@@ -152,7 +155,7 @@ final class Chidemoon_Core_Source_Importer {
   $issues = array();
   if ( ! $id ) { $product->set_status( 'draft' ); $product->set_catalog_visibility( 'hidden' ); $product->update_meta_data( Chidemoon_Core_Affiliate::META_REVIEW_STATE, 'draft' ); }
   $content_changed = $record['contentRevision'] !== (int) $product->get_meta( self::META_CONTENT_REVISION, true );
-  if ( $id && ( $content_changed || in_array( 'description', $record['removals'], true ) ) ) {
+  if ( $content_changed || in_array( 'description', $record['removals'], true ) ) {
    $prior_description = (string) $product->get_meta( self::META_DESCRIPTION, true );
    Chidemoon_Core_Reconciliation::prepare_source_description( $product, $prior_description ?: wp_kses_post( $content['description'] ?? '' ) );
   }
@@ -161,7 +164,6 @@ final class Chidemoon_Core_Source_Importer {
    $product->set_name( $content['title'] );
    // Existing post content is editorial. Source descriptions are rendered dynamically.
    if ( isset( $content['description'] ) && '' !== $content['description'] ) { $product->update_meta_data( self::META_DESCRIPTION, wp_kses_post( $content['description'] ) ); }
-   if ( ! $id ) { $product->set_description( '' ); }
    $product->update_meta_data( Chidemoon_Core_Affiliate::META_SOURCE_URL, $content['sourceUrl'] );
    $product->update_meta_data( Chidemoon_Core_Affiliate::META_AFFILIATE_URL, $content['affiliateUrl'] );
    $product->set_product_url( $content['affiliateUrl'] );
@@ -219,6 +221,12 @@ final class Chidemoon_Core_Source_Importer {
    $product->save();
   }
   return array( 'status' => $issues ? 'partial' : 'imported', 'issues' => array_values( array_unique( $issues ) ), 'localProductId' => (string) $new_id, 'action' => $id ? 'updated' : 'created' );
+ }
+
+ public static function is_local_source( array $record, string $site_url ): bool {
+  $local = preg_replace( '/^www\./', '', strtolower( (string) parse_url( $site_url, PHP_URL_HOST ) ) );
+  $source = preg_replace( '/^www\./', '', strtolower( (string) parse_url( $record['content']['sourceUrl'] ?? '', PHP_URL_HOST ) ) );
+  return '' !== $local && $local === $source;
  }
 
  private static function withdraw( array $withdrawal, bool $dry_run ): array {

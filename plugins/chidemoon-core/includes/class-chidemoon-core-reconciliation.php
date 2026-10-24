@@ -180,9 +180,13 @@ final class Chidemoon_Core_Reconciliation {
   if ( ! metadata_exists( 'post', $post->ID, self::BACKUP ) && ! add_post_meta( $post->ID, self::BACKUP, wp_slash( array( 'content' => $post->post_content, 'elementor' => get_post_meta( $post->ID, '_elementor_data', true ), 'createdAt' => gmdate( 'c' ) ) ), true ) ) { throw new RuntimeException( 'Migration backup failed' ); }
  }
  public static function prepare_source_description( WC_Product $product, string $description ): void {
-  if ( ! $product->get_id() || '' === trim( $description ) ) { return; }
+  if ( '' === trim( $description ) ) { return; }
+  if ( ! $product->get_id() ) {
+   if ( '' === trim( $product->get_description() ) ) { $product->set_description( '[chidemoon_source_description]' ); }
+   return;
+  }
   $id = $product->get_id();
-  $copy = trim( $product->get_description() ) === trim( $description );
+  $copy = '' === trim( $product->get_description() ) || trim( $product->get_description() ) === trim( $description );
   $elements = json_decode( (string) get_post_meta( $id, '_elementor_data', true ), true );
   $issues = array();
   $updated = is_array( $elements ) ? self::source_elements( $elements, $description, $issues ) : $elements;

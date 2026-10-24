@@ -21,6 +21,7 @@
 	}
 
 	function enhancePriceSteps(form) {
+		const unit = form.dataset.priceUnit || '';
 		const min = form.querySelector('[name="ch_min_price"]');
 		const max = form.querySelector('[name="ch_max_price"]');
 		const format = value => Number(value).toLocaleString('fa-IR');
@@ -57,10 +58,10 @@
 				const value = Number(input.value) || 0;
 				minus.disabled = next(-1) === value;
 				plus.disabled = next(1) === value;
-				minus.setAttribute('aria-label', `کاهش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(-1))} تومان`);
-				plus.setAttribute('aria-label', `افزایش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(1))} تومان`);
+				minus.setAttribute('aria-label', `کاهش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(-1))} ${unit}`);
+				plus.setAttribute('aria-label', `افزایش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(1))} ${unit}`);
 				minus.title = minus.getAttribute('aria-label'); plus.title = plus.getAttribute('aria-label');
-				hint.textContent = input.value ? `${format(value)} تومان` : '';
+				hint.textContent = input.value ? `${format(value)} ${unit}` : '';
 			};
 			const change = direction => {
 				input.value = String(next(direction));

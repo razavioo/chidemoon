@@ -1,0 +1,31 @@
+{
+    "verified": 27,
+    "issues": [],
+    "remainingDrafts": [
+        739
+    ],
+    "publishedProductsWithSourceButEmptyBody": [],
+    "counts": {
+        "publish": "534",
+        "future": 0,
+        "draft": "1",
+        "pending": 0,
+        "private": 0,
+        "trash": "17",
+        "auto-draft": 0,
+        "inherit": 0,
+        "request-pending": 0,
+        "request-confirmed": 0,
+        "request-failed": 0,
+        "request-completed": 0,
+        "wc-pending": 0,
+        "wc-processing": 0,
+        "wc-on-hold": 0,
+        "wc-completed": 0,
+        "wc-cancelled": 0,
+        "wc-refunded": 0,
+        "wc-failed": 0,
+        "wc-checkout-draft": 0
+    },
+    "internalBatchTagMembership": 27
+}

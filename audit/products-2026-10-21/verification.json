@@ -1,0 +1,44 @@
+{
+    "counts": {
+        "publish": "389",
+        "future": 0,
+        "draft": "146",
+        "pending": 0,
+        "private": 0,
+        "trash": "17",
+        "auto-draft": "1",
+        "inherit": 0,
+        "request-pending": 0,
+        "request-confirmed": 0,
+        "request-failed": 0,
+        "request-completed": 0,
+        "wc-pending": 0,
+        "wc-processing": 0,
+        "wc-on-hold": 0,
+        "wc-completed": 0,
+        "wc-cancelled": 0,
+        "wc-refunded": 0,
+        "wc-failed": 0,
+        "wc-checkout-draft": 0
+    },
+    "mappedExternalProducts": 524,
+    "syncedExternalProducts": 520,
+    "legacySourceProductsOutsideCurrentSnapshot": [
+        455,
+        451,
+        447,
+        443
+    ],
+    "nonTrashedDestinationMirrors": [],
+    "issues": [],
+    "lastSuccessAt": "2026-10-21T10:25:52+00:00",
+    "syncError": null,
+    "report": {
+        "version": "v2",
+        "dryRun": false,
+        "failed": 0,
+        "created": 0,
+        "updated": 0
+    },
+    "pendingReceipts": 0
+}

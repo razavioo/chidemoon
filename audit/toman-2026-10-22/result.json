@@ -1,0 +1,11 @@
+{
+    "converted": 532,
+    "currency": "IRT",
+    "examplePrice": "3150000",
+    "exampleHtml": "<span class=\"woocommerce-Price-amount amount\"><bdi>۳.۱۵۰.۰۰۰&nbsp;<span class=\"woocommerce-Price-currencySymbol\" translate=\"no\">تومان<\/span><\/bdi><\/span>",
+    "unchangedManualPrices": {
+        "443": "1195000",
+        "447": "749000"
+    },
+    "issues": []
+}

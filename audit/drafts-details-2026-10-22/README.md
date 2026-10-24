@@ -1,0 +1,27 @@
+# Draft publication, product descriptions and public tags — 2026-10-22
+
+Production initially contained 28 drafts. Recovered real source details for 17 recent imports and identified ten older drafts through Basalam search plus matching product titles and existing descriptions. The old bread-bin description matched its source text before the merchant's newly added final sentence. Identity mappings were checked for collisions before importing onto the existing WooCommerce IDs; no new products were created.
+
+Published 27 completed drafts through normal WooCommerce saves and the existing enrichment/publication gate, with real downloaded product images, source destinations and appropriate categories. Missing classifications remained explicitly unknown; existing values were preserved. Four recent entries previously named after shops now have their real source product names and tea-maker categories. The blanket-only item 5812 was corrected to blankets. The ten older products received canister, tray or bread-bin categories. A private-use product tag, `completed-drafts-2026-10-22`, identifies this exact 27-product batch in admin.
+
+One draft remains: **739 — بانکه سرامیکی جاادویه سرویس پاسماوری**. It has preserved text and an attached photograph (740), but no real source URL/identity. Exact-title searches, source catalogue checks and 100 search candidates did not establish a safe identity. Its photo fingerprint and original text were checked against fetched candidate pages. No other merchant was guessed. The user was asked for its source URL while the other work continued.
+
+Source details: updated 17 tenant-scoped Basalam listing records, retaining complete old rows in a backup. Read the actual public product pages on the production host (local browser requests returned 403). Validated structured product IDs against existing source identities. Excluded default images, used product-scoped gallery/OG images, and extracted full seller descriptions rather than truncated JSON-LD snippets. Source poll updated all 17 existing WooCommerce products with zero failures. Recovered 16 nonempty descriptions; source 6423 has no seller description, so no generic SEO text was imported. Imported ten matched older descriptions and recovered descriptions for existing lamps 455 and 451: **28 recovered descriptions total**. Existing lamps 443/447 already have editorial body text; Digikala's source pages/API were unavailable, so their existing text was preserved and no claim of absent source descriptions was made.
+
+Four source offers (6551, 5388, 4933, 4784) explicitly reported OutOfStock. Recorded the observed unavailability in their source listings, preserving prior rows separately. A subsequent source poll updated four products without failures. These products remain publicly visible, with unavailable offers disabled rather than a false in-stock purchase action.
+
+Fixed the missing-description rendering path: newly created/empty source-backed bodies now use the dynamic source-description shortcode, preserving editorial bodies. Repaired 118 published empty bodies whose source descriptions were already stored. The Elementor extra-tabs widget omits the seller-description tab only when a dynamic seller description actually appears inline; editorial bodies can retain a separate seller-description panel. A fresh full product audit found no published product with source text and an empty body.
+
+Product tags remain stored and editable in WooCommerce, but are excluded from public WooCommerce metadata, feature/specification/comparison rows and the catalog tag facet. The product tag filter still works for admin batch navigation. Browser verification caught a second feature-table tag row after native WooCommerce tags were removed; both feature and full specification tables were corrected and checked again.
+
+Validation:
+
+- Standalone source-contract checks passed, including ownership, revisions, withdrawals, price conversion and local-destination rejection.
+- New description/visibility checks passed for new/existing empty bodies, copied-source migration, editorial preservation, absent descriptions, public tag suppression, category preservation and editable admin tags.
+- Comparison checks passed with added normalized/legacy tag hiding and stored-tag preservation cases.
+- PHP syntax checks passed for all seven changed PHP classes. `git diff --check` passed.
+- Anonymous HTTP checks on all 27 newly published products plus 4447/455/451 returned 200. All applicable descriptions appeared; none had tag rows or product-tag links. Product 6423 correctly had no invented description.
+- Real browser snapshot confirmed visible seller text and no tag labels; screenshot: `output/playwright/product-description-no-tags-20261022.png`. Browser session closed.
+- Final fresh WordPress check: **534 published, one draft (739), 17 trash**; all 27 products visible/publicly eligible with complete local images, no public tag facts, and correct unavailable-offer handling. Admin batch membership equals exactly 27.
+
+Files: `source-repair-plan.json`, `legacy-recovery-plan.json`, `publish-plan.json`, `publish-result.json`, `verification.json`, `public-verification.json`, `body-repair.json`, and source poll results. Production backup root: `/opt/chidemoon/backups/drafts-details-20261022/`, containing pre-change WordPress SQL, original PHP files, source listing row backups and operation results. Per-product state/classification backups also remain in product meta. No credentials were generated or changed.

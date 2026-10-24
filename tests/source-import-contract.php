@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 define( 'ABSPATH', __DIR__ );
+function home_url( $path = '/' ) { return 'https://chidemoon.com' . $path; }
 function wp_json_encode( $value, $flags = 0 ) { return json_encode( $value, $flags ); }
 function wp_parse_url( $value, $component = -1 ) { return parse_url( $value, $component ); }
 function esc_url_raw( $value, $protocols = array() ) { return $value; }
@@ -98,4 +99,8 @@ check( '1' === $product->meta['_chidemoon_source_withdrawn'] && 'approved facts'
 check( 4 === get_option( 'chidemoon_source_withdrawal_' . $fixture['sourceKey'] ), 'Withdrawal was not durably retained' );
 $snapshot['withdrawals'] = array(); $snapshot['items'] = array( $fixture );
 check( 'stale_revision' === Chidemoon_Core_Source_Importer::import_snapshot( $snapshot, false, 'chidemoon' )['records'][0]['issues'][0], 'A delayed snapshot reactivated a withdrawn offer' );
-echo "Source contract, ownership, conversion, freshness, revision and withdrawal checks passed.\n";
+check( Chidemoon_Core_Source_Importer::is_local_source( array( 'content' => array( 'sourceUrl' => 'https://www.CHIDEMOON.com/product/example/' ) ), 'https://chidemoon.com/' ), 'Mirrored store hostname must be recognized' );
+check( ! Chidemoon_Core_Source_Importer::is_local_source( array( 'content' => array( 'sourceUrl' => 'https://chidemoon.com.seller.example/product/example/' ) ), 'https://chidemoon.com/' ), 'Unrelated merchant must not be treated as the destination' );
+$snapshot['items'][0]['content']['sourceUrl'] = 'https://chidemoon.com/product/mirrored/';
+check( 'invalid_record' === Chidemoon_Core_Source_Importer::import_snapshot( $snapshot, false, 'chidemoon' )['records'][0]['issues'][0], 'Destination mirror must be rejected before resolving or creating products' );
+echo "Source contract, ownership, conversion, freshness, revision, withdrawal and destination-loop checks passed.\n";

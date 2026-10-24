@@ -118,7 +118,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		foreach ( is_array( $facts ) ? $facts : array() as $key => $value ) {
 			$label = is_array( $value ) ? ( $value['label'] ?? '' ) : $key;
 			$fact = is_array( $value ) ? ( $value['value'] ?? '' ) : $value;
-			if ( ! is_scalar( $label ) || ! is_scalar( $fact ) || preg_match( '/فروشنده|زمان بررسی|تاریخ بررسی/u', (string) $label ) ) { continue; }
+			if ( ! is_scalar( $label ) || ! is_scalar( $fact ) || preg_match( '/فروشنده|زمان بررسی|تاریخ بررسی|برچسب|^Tags$/ui', (string) $label ) ) { continue; }
 			if ( ! in_array( (string) $label, array( __( 'Availability', 'chidemoon-core' ), __( 'Availability observed', 'chidemoon-core' ), __( 'Price observed', 'chidemoon-core' ), __( 'Merchant rating', 'chidemoon-core' ), __( 'Merchant name', 'chidemoon-core' ) ), true ) && ! in_array( trim( (string) $fact ), array( 'نامشخص', 'در دسترس نیست', 'کاربرد ندارد', 'Unknown', 'Unavailable', 'Not applicable', '—', '-' ), true ) && is_scalar( $label ) && is_scalar( $fact ) && '' !== trim( (string) $label ) && '' !== trim( (string) $fact ) ) {
 				$row = '<dt>' . esc_html( (string) $label ) . '</dt><dd>' . esc_html( (string) $fact ) . '</dd>';
 				$rows .= $limit ? '<div class="ch-feature-tile">' . $row . '</div>' : $row;

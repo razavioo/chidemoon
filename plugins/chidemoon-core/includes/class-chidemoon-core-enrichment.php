@@ -37,6 +37,8 @@ final class Chidemoon_Core_Enrichment {
   add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'review_gate' ), 110 );
   add_action( 'edited_term', array( __CLASS__, 'invalidate_groups' ), 10, 3 );
   add_action( 'set_object_terms', array( __CLASS__, 'preserve_approved_terms' ), 100, 4 );
+  add_filter( 'woocommerce_display_product_attributes', array( __CLASS__, 'display_attributes' ), 20, 2 );
+  add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'classification_tab' ), 15 );
   foreach ( array( 'pa_color', 'pa_material', 'product_cat' ) as $taxonomy ) {
    add_action( $taxonomy . '_edit_form_fields', array( __CLASS__, 'term_fields' ), 10, 2 );
    add_action( 'edited_' . $taxonomy, array( __CLASS__, 'save_term_fields' ) );
@@ -165,10 +167,41 @@ final class Chidemoon_Core_Enrichment {
   foreach ( array( 'color', 'material', 'features', 'suitability' ) as $field ) {
    if ( ! isset( $approved[ $field ] ) ) { continue; }
    $taxonomy = self::TAXONOMIES[ $field ];
+   if ( 'value' !== ( $approved[ $field ]['state'] ?? '' ) || empty( $approved[ $field ]['value'] ) ) { unset( $attributes[ $taxonomy ] ); continue; }
    $attribute = new WC_Product_Attribute();
    $attribute->set_id( wc_attribute_taxonomy_id_by_name( $taxonomy ) );
    $attribute->set_name( $taxonomy ); $attribute->set_options( $approved[ $field ]['value'] ?? array() );
    $attribute->set_visible( true ); $attribute->set_variation( false ); $attributes[ $taxonomy ] = $attribute;
+  }
+  return $attributes;
+ }
+
+ public static function has_attributes( bool $has, $product ): bool {
+  if ( $has ) { return true; }
+  foreach ( array( 'style', 'room' ) as $field ) {
+   $terms = wp_get_object_terms( $product->get_id(), self::TAXONOMIES[ $field ] );
+   if ( ! is_wp_error( $terms ) && $terms ) { return true; }
+  }
+  return false;
+ }
+
+ public static function classification_tab( array $tabs ): array {
+  global $product;
+  if ( $product instanceof WC_Product && ! isset( $tabs['additional_information'] ) && self::has_attributes( false, $product ) ) {
+   $tabs['additional_information'] = array( 'title' => __( 'Additional information', 'woocommerce' ), 'priority' => 20, 'callback' => 'woocommerce_product_additional_information_tab' );
+  }
+  return $tabs;
+ }
+
+ public static function display_attributes( array $attributes, $product ): array {
+  foreach ( array( 'color' => 'Color', 'material' => 'Material', 'features' => 'Features', 'suitability' => 'Space suitability' ) as $field => $default_label ) {
+   $key = 'attribute_' . self::TAXONOMIES[ $field ];
+   if ( isset( $attributes[ $key ] ) && $default_label === $attributes[ $key ]['label'] ) { $attributes[ $key ]['label'] = self::field_label( $field ); }
+  }
+  foreach ( array( 'style', 'room' ) as $field ) {
+   $terms = wp_get_object_terms( $product->get_id(), self::TAXONOMIES[ $field ] );
+   if ( is_wp_error( $terms ) || ! $terms ) { continue; }
+   $attributes[ 'chidemoon_' . $field ] = array( 'label' => self::field_label( $field ), 'value' => esc_html( implode( '، ', wp_list_pluck( $terms, 'name' ) ) ) );
   }
   return $attributes;
  }
@@ -245,22 +278,26 @@ final class Chidemoon_Core_Enrichment {
  private static function acquire( int $id ): bool { global $wpdb; return '1' === (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', 'ch_enrichment_' . $id ) ); }
  private static function release( int $id ): void { global $wpdb; $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', 'ch_enrichment_' . $id ) ); }
 
- public static function add_editor(): void { add_meta_box( 'chidemoon-enrichment', __( 'Reviewed classification and measurements', 'chidemoon-core' ), array( __CLASS__, 'render_editor' ), 'product', 'normal', 'high' ); }
+ public static function add_editor(): void { add_meta_box( 'chidemoon-enrichment', 'ویژگی‌های محصول: سبک، رنگ، فضا و کاربرد', array( __CLASS__, 'render_editor' ), 'product', 'normal', 'high' ); }
  public static function render_editor( WP_Post $post ): void {
   wp_nonce_field( 'chidemoon_enrichment_' . $post->ID, 'chidemoon_enrichment_nonce' );
   echo '<input type="hidden" name="chidemoon_enrichment_revision" value="' . esc_attr( self::token( $post->ID ) ) . '">';
   $fields = self::read( $post->ID );
+  echo '<p>ویژگی‌ها را انتخاب کنید یا مقدار جدید بنویسید و محصول را ذخیره کنید. برای حذف ویژگی، وضعیت «نامشخص» را انتخاب کنید. این بخش مرجع ویرایش ویژگی‌های محصولات واردشده است.</p>';
   $draft = get_post_meta( $post->ID, self::DRAFT, true );
   if ( is_array( $draft ) && $draft ) { echo '<p role="status">' . esc_html__( 'Kalahamoon classification suggestions are selected below. Choose Reviewed values for each field to approve them. Existing reviewed values are preserved.', 'chidemoon-core' ) . '</p>'; }
+  echo '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-bottom:16px">';
   foreach ( self::TAXONOMIES as $field => $taxonomy ) {
-   $current = $fields[ $field ] ?? array( 'state' => '', 'value' => is_array( $draft ) ? ( $draft[ $field ] ?? array() ) : array() );
-   echo '<fieldset><legend><strong>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</strong></legend><select name="chidemoon_enrichment[' . esc_attr( $field ) . '][state]">';
+   $existing = wp_get_object_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) );
+   $current = $fields[ $field ] ?? array( 'state' => '', 'value' => ( is_array( $draft ) ? ( $draft[ $field ] ?? null ) : null ) ?? ( is_wp_error( $existing ) ? array() : $existing ) );
+   echo '<fieldset style="min-width:0;border:1px solid #dcdcde;padding:12px"><legend><strong>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</strong></legend><select style="width:100%;margin-bottom:8px" name="chidemoon_enrichment[' . esc_attr( $field ) . '][state]">';
    foreach ( array( '' => 'Pending review', 'value' => 'Reviewed values', 'unknown' => 'Unknown', 'not_applicable' => 'Not applicable' ) as $state => $label ) { echo '<option value="' . esc_attr( $state ) . '" ' . selected( $current['state'] ?? '', $state, false ) . '>' . esc_html__( $label, 'chidemoon-core' ) . '</option>'; }
-   echo '</select> <select multiple name="chidemoon_enrichment[' . esc_attr( $field ) . '][value][]" aria-label="' . esc_attr( $field ) . '" style="min-width:220px;max-width:100%">';
+   echo '</select> <select multiple name="chidemoon_enrichment[' . esc_attr( $field ) . '][value][]" aria-label="' . esc_attr( $field ) . '" style="width:100%;min-height:110px">';
    $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false ) );
    foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { echo '<option value="' . (int) $term->term_id . '" ' . selected( in_array( (int) $term->term_id, $current['value'] ?? array(), true ), true, false ) . '>' . esc_html( $term->name ) . '</option>'; }
-   echo '</select></fieldset>';
+   echo '</select><p><label>افزودن مقدار جدید (با ویرگول جدا کنید) <input class="widefat" name="chidemoon_enrichment[' . esc_attr( $field ) . '][new_terms]" placeholder="مقدار اول، مقدار دوم"></label></p></fieldset>';
   }
+  echo '</div>';
   $dimensions = $fields['dimensions'] ?? array();
   echo '<fieldset><legend><strong>' . esc_html__( 'Product measurements (cm)', 'chidemoon-core' ) . '</strong></legend>';
   echo '<select aria-label="' . esc_attr__( 'Measurement review', 'chidemoon-core' ) . '" name="chidemoon_dimension_state">';
@@ -268,7 +305,7 @@ final class Chidemoon_Core_Enrichment {
   echo '</select> ';
   foreach ( array( 'length', 'width', 'height', 'depth' ) as $axis ) { echo '<label>' . esc_html( Chidemoon_Core_Enrichment::field_label( $axis ) ) . ' <input type="number" min="0.0001" step="0.0001" name="chidemoon_dimensions[' . esc_attr( $axis ) . ']" value="' . esc_attr( (string) ( $dimensions['value'][ $axis ] ?? '' ) ) . '"></label> '; }
   echo '<p><label>' . esc_html__( 'Measurement evidence URL or reference', 'chidemoon-core' ) . ' <input class="widefat" name="chidemoon_dimension_evidence" value="' . esc_attr( implode( ', ', $dimensions['evidence'] ?? array() ) ) . '"></label></p></fieldset>';
-  echo '<p>' . esc_html__( 'Categories are hierarchical WooCommerce terms. Create vocabulary terms in their taxonomy screens. Optional empty measurements stay unknown.', 'chidemoon-core' ) . '</p>';
+  echo '<p>هر ویژگی می‌تواند چند مقدار داشته باشد. برای ثبت مقدار تازه از کادر زیر همان ویژگی استفاده کنید. ابعاد اختیاری‌اند.</p>';
   $issues = self::readiness( $post->ID );
   if ( $issues ) { echo '<p role="status">' . esc_html__( 'First publication still needs:', 'chidemoon-core' ) . ' ' . esc_html( implode( ', ', $issues ) ) . '</p>'; }
  }
@@ -276,10 +313,28 @@ final class Chidemoon_Core_Enrichment {
   static $saving = false;
   if ( $saving ) { return; }
   if ( wp_is_post_revision( $id ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! isset( $_POST['chidemoon_enrichment_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['chidemoon_enrichment_nonce'] ) ), 'chidemoon_enrichment_' . $id ) || ! current_user_can( 'chidemoon_manage_affiliate' ) || ! current_user_can( 'edit_post', $id ) ) { return; }
+  if ( ! hash_equals( self::token( $id ), sanitize_text_field( wp_unslash( $_POST['chidemoon_enrichment_revision'] ?? '' ) ) ) ) { set_transient( 'chidemoon_enrichment_error_' . get_current_user_id(), 'اطلاعات محصول تغییر کرده است؛ صفحه را تازه کنید و دوباره ذخیره کنید.', 60 ); return; }
   $fields = array();
   foreach ( (array) ( $_POST['chidemoon_enrichment'] ?? array() ) as $field => $value ) {
-   if ( ! is_array( $value ) || empty( $value['state'] ) ) { continue; }
-   $fields[ $field ] = array( 'state' => sanitize_key( $value['state'] ), 'value' => array_map( 'intval', $value['value'] ?? array() ), 'evidence' => array( 'editor:' . get_current_user_id() ) );
+   if ( ! is_array( $value ) || ! isset( self::TAXONOMIES[ $field ] ) ) { continue; }
+   $ids = array_map( 'intval', (array) ( $value['value'] ?? array() ) );
+   $new_terms = sanitize_text_field( wp_unslash( $value['new_terms'] ?? '' ) );
+   foreach ( array_filter( array_map( 'trim', preg_split( '/[,،]+/u', $new_terms ) ) ) as $name ) {
+    $taxonomy = self::TAXONOMIES[ $field ];
+    $term = term_exists( $name, $taxonomy );
+    if ( ! $term ) {
+     $tax = get_taxonomy( $taxonomy );
+     if ( ! $tax || ! current_user_can( $tax->cap->manage_terms ) ) { set_transient( 'chidemoon_enrichment_error_' . get_current_user_id(), 'اجازهٔ افزودن مقدار جدید را ندارید.', 60 ); return; }
+     $term = wp_insert_term( $name, $taxonomy );
+    }
+    if ( is_wp_error( $term ) ) { set_transient( 'chidemoon_enrichment_error_' . get_current_user_id(), $term->get_error_message(), 60 ); return; }
+    $ids[] = (int) ( is_array( $term ) ? $term['term_id'] : $term );
+   }
+   $state = sanitize_key( $value['state'] ?? '' );
+   $previous = self::read( $id )[ $field ] ?? array();
+   if ( $new_terms || ( $ids && ! in_array( $state, array( 'unknown', 'not_applicable' ), true ) && $ids !== ( $previous['value'] ?? array() ) ) ) { $state = 'value'; }
+   if ( ! $state ) { continue; }
+   $fields[ $field ] = array( 'state' => $state, 'value' => $ids, 'evidence' => array( 'editor:' . get_current_user_id() ) );
   }
   $measurements = array();
   foreach ( (array) ( $_POST['chidemoon_dimensions'] ?? array() ) as $axis => $value ) { if ( '' !== trim( (string) $value ) ) { $measurements[ $axis ] = (string) $value; } }

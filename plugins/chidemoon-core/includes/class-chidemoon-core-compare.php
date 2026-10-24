@@ -350,6 +350,7 @@ final class Chidemoon_Core_Compare {
 			$fields = Chidemoon_Core_Enrichment::read( $product->get_id() );
 			if ( $fields ) { $facts = array(); }
 			foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) {
+				if ( 'tags' === $field ) { continue; }
 				$labels = array();
 				foreach ( $fields[ $field ]['value'] ?? array() as $id ) { $term = get_term( $id, $taxonomy ); if ( $term && ! is_wp_error( $term ) ) { $labels[] = $term->name; } }
 				$facts[ Chidemoon_Core_Enrichment::field_label( $field ) ] = $labels ? implode( ', ', $labels ) : __( 'not_applicable' === ( $fields[ $field ]['state'] ?? '' ) ? 'Not applicable' : 'Unknown', 'chidemoon-core' );
@@ -367,7 +368,7 @@ final class Chidemoon_Core_Compare {
 
 	/** Public specifications exclude operational metadata and missing values. */
 	public static function visible_facts( WC_Product $product ): array {
-		$hidden = array_map( static fn( $label ) => __( $label, 'chidemoon-core' ), array( 'Availability', 'Availability observed', 'Price observed', 'Merchant rating', 'Merchant name' ) );
+		$hidden = array_merge( array( 'Tags', 'برچسب', 'برچسب‌ها', 'برچسب ها' ), array_map( static fn( $label ) => __( $label, 'chidemoon-core' ), array( 'Tags', 'Availability', 'Availability observed', 'Price observed', 'Merchant rating', 'Merchant name' ) ) );
 		$missing = array( 'Unknown', 'Unavailable', 'Not applicable', 'نامشخص', 'در دسترس نیست', 'کاربرد ندارد', '—', '-' );
 		foreach ( array( 'Unknown', 'Unavailable', 'Not applicable' ) as $label ) { $missing[] = __( $label, 'chidemoon-core' ); }
 		return array_filter( self::facts( $product ), static fn( $value, $label ) => ! in_array( $label, $hidden, true ) && ! preg_match( '/فروشنده|زمان بررسی|تاریخ بررسی/u', $label ) && ! in_array( trim( $value ), $missing, true ), ARRAY_FILTER_USE_BOTH );

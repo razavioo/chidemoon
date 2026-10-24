@@ -1,0 +1,79 @@
+{
+    "version": "v2",
+    "dryRun": false,
+    "failed": 0,
+    "created": 0,
+    "updated": 10,
+    "records": [
+        {
+            "sourceKey": "src:v2:658e94d71bb39cd02bb839c7671f12681e7b39715337d5c8433dc649a8cbc4ca",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "746"
+        },
+        {
+            "sourceKey": "src:v2:8b803d1fb1b8169e6e99c1191503482f1c81840c1db1b227270369c8fcaf612a",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "742"
+        },
+        {
+            "sourceKey": "src:v2:f536687b5c2051afef4935be75c774b49211adcc38faea60b4f5db7df564ad55",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "736"
+        },
+        {
+            "sourceKey": "src:v2:f96296794e263638a74660bf8054fe568c6f8440303bdd6ea990f4cf84d06818",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "733"
+        },
+        {
+            "sourceKey": "src:v2:3362a4dba1b2f7574a9251cd8ca6d4db8974c6875497cbcabe91da58dab01c1e",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "730"
+        },
+        {
+            "sourceKey": "src:v2:b0dff616c97e979fd42fe2dc4ba8aba2c76edbd5aa3435c2201743aa3261b1e9",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "728"
+        },
+        {
+            "sourceKey": "src:v2:cf6723a2bf78c1393f7cb29eb0e0bfd0e7c4e45b88ca82bfb28e4f3c5d085254",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "726"
+        },
+        {
+            "sourceKey": "src:v2:5136a190fdb0716a038bb1f5384d4c21def8421d8e101fba873cecb652804bb0",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "724"
+        },
+        {
+            "sourceKey": "src:v2:6f72687c0b294831db5781f868ef488dad0d1eee3b66a9f87297d7cbd47d1a0e",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "722"
+        },
+        {
+            "sourceKey": "src:v2:c5c5fa89d732dd3e37e3364c8382d00c86ce1fa4131be76f81a0fb86718ac0a9",
+            "revision": 1,
+            "status": "imported",
+            "issues": [],
+            "localProductId": "717"
+        }
+    ]
+}

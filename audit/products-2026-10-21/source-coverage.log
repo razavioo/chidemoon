@@ -1,0 +1,40 @@
+BEGIN
+              set_config              
+--------------------------------------
+ 81742f20-f6d8-4a3f-aa32-4bdc11aee0cc
+(1 row)
+
+  intent   | count 
+-----------+-------
+ DRAFT     |   519
+ PUBLISHED |     1
+(2 rows)
+
+  status  |  status  |  platform   | count 
+----------+----------+-------------+-------
+ active   | ACTIVE   | WOOCOMMERCE |   385
+ inactive | INACTIVE | WOOCOMMERCE |    12
+(2 rows)
+
+                  id                  |        name         |     publicOrigin      
+--------------------------------------+---------------------+-----------------------
+ 72aeea4c-0c33-4eb6-af69-89a3c661269f | Chidemoon source v2 | https://chidemoon.com
+(1 row)
+
+ eligible_external_products_without_target 
+-------------------------------------------
+                                         0
+(1 row)
+
+ destination_mirrors_selected 
+------------------------------
+                            0
+(1 row)
+
+ withdrawn | count 
+-----------+-------
+ f         |   520
+ t         |   388
+(2 rows)
+
+COMMIT

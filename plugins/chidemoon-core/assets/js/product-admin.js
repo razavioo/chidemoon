@@ -175,6 +175,14 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('#chidemoon-enrichment fieldset').forEach(function (fieldset) {
+			var values = fieldset.querySelector('select[multiple]');
+			var state = fieldset.querySelector('select');
+			if (!values || !state) return;
+			values.addEventListener('change', function () {
+				state.value = values.selectedOptions.length ? 'value' : 'unknown';
+			});
+		});
 		// Structured facts editor for comparison table
 		try { initFactsEditor(); } catch (e) {}
 		var button = document.getElementById('chidemoon_enrich_button');

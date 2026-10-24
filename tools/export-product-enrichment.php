@@ -1,0 +1,6 @@
+<?php
+if(!defined('WP_CLI')||!WP_CLI)exit;
+$out=['vocabulary'=>[],'products'=>[]];
+foreach(Chidemoon_Core_Enrichment::TAXONOMIES as $f=>$t){$out['vocabulary'][$f]=array_map(static fn($x)=>['id'=>$x->term_id,'name'=>$x->name,'slug'=>$x->slug],get_terms(['taxonomy'=>$t,'hide_empty'=>false]));}
+foreach(get_posts(['post_type'=>'product','post_status'=>['publish','draft'],'posts_per_page'=>-1,'orderby'=>'ID','order'=>'ASC']) as $post){$p=wc_get_product($post->ID);$out['products'][]=['id'=>$post->ID,'title'=>$p->get_name(),'status'=>$p->get_status(),'url'=>get_permalink($post->ID),'token'=>Chidemoon_Core_Enrichment::token($post->ID),'approved'=>Chidemoon_Core_Enrichment::read($post->ID),'draft'=>get_post_meta($post->ID,Chidemoon_Core_Enrichment::DRAFT,true),'source'=>json_decode((string)$p->get_meta('_chidemoon_source_content',true),true),'specs'=>get_post_meta($post->ID,'_chidemoon_source_specifications',true),'description'=>$p->get_meta('_chidemoon_source_description',true),'body'=>$post->post_content,'image'=>wp_get_attachment_url($p->get_image_id()),'categories'=>wp_get_object_terms($post->ID,'product_cat',['fields'=>'names'])];}
+WP_CLI::log(wp_json_encode($out,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));

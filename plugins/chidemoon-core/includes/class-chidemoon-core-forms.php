@@ -280,7 +280,7 @@ final class Chidemoon_Core_Forms {
 			'<form class="chidemoon-public-form" data-chidemoon-form="price-alert" action="%1$s" method="post" novalidate>
 				<h2>%2$s</h2>
 				<label>ایمیل <input name="email" type="email" maxlength="320" autocomplete="email" required></label>
-				<label>قیمت هدف (تومان) <input name="targetPrice" type="number" min="0" step="0.01" required></label>
+				<label>قیمت هدف (%4$s) <input name="targetPrice" type="number" min="0" step="0.01" required></label>
 				<input name="productId" type="hidden" value="%3$d">
 				<label class="chidemoon-honeypot" aria-hidden="true">Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
 				<label><input name="consent" type="checkbox" value="1" required> با ذخیره‌ی این درخواست هشدار قیمت در چیدمون موافقم.</label>
@@ -288,7 +288,8 @@ final class Chidemoon_Core_Forms {
 			</form>',
 			esc_url( rest_url( self::REST_NAMESPACE . '/price-alerts' ) ),
 			esc_html( $attributes['title'] ),
-			$product_id
+			$product_id,
+			esc_html( get_woocommerce_currency_symbol() )
 		);
 	}
 

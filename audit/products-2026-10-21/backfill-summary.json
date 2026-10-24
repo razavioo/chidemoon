@@ -1,0 +1,15 @@
+{
+    "created":  135,
+    "updated":  4,
+    "enrolledExternalProducts":  139,
+    "initialDestinationMirrorDraftsRemoved":  58,
+    "initialUnavailableImageProducts":  [
+                                            4960,
+                                            5642,
+                                            6110,
+                                            6375
+                                        ],
+    "finalImport":  "result.json",
+    "finalVerification":  "verification.json",
+    "idempotency":  "idempotency.json"
+}

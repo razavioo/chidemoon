@@ -4,8 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Chidemoon_Core_Commercial {
  public const FRESHNESS_SECONDS = 86400;
  public static function register(): void {
-  // Store preference: change the displayed label without converting amounts.
-  add_filter( 'woocommerce_currency_symbol', static fn( string $symbol, string $currency ): string => in_array( $currency, array( 'IRR', 'IRT' ), true ) ? 'تومان' : $symbol, 10, 2 );
+  add_filter( 'woocommerce_currencies', static function( array $currencies ): array { $currencies['IRT'] = 'تومان'; return $currencies; } );
+  // Labels must match the actual accounting unit; IRR amounts are never toman.
+  add_filter( 'woocommerce_currency_symbol', static fn( string $symbol, string $currency ): string => 'IRR' === $currency ? 'ریال' : ( 'IRT' === $currency ? 'تومان' : $symbol ), 10, 2 );
   add_action( 'rest_api_init', static function(): void {
    register_rest_route( 'chidemoon-core/v1', '/source-profile', array( 'methods' => 'GET', 'permission_callback' => '__return_true', 'callback' => static fn() => array( 'profile' => 'source-v2', 'publicationApproval' => 'editor', 'directProductWrites' => false ) ) );
   } );
@@ -21,6 +22,10 @@ final class Chidemoon_Core_Commercial {
   add_filter( 'option_woocommerce_review_rating_verification_label', static function( $value ) { $product = wc_get_product( get_the_ID() ); return $product instanceof WC_Product && $product->is_type( 'external' ) ? 'no' : $value; } );
   add_filter( 'option_woocommerce_review_rating_verification_required', static function( $value ) { $product = wc_get_product( get_the_ID() ); return $product instanceof WC_Product && $product->is_type( 'external' ) ? 'no' : $value; } );
   add_shortcode( 'chidemoon_source_description', array( __CLASS__, 'source_description' ) );
+  add_filter( 'get_the_terms', static function( $terms, int $post_id, string $taxonomy ) {
+   // Keep product tags editable and usable as filters, but omit public tag metadata.
+   return 'product_tag' === $taxonomy && ! is_admin() && ! ( defined( 'WP_CLI' ) && WP_CLI ) && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ? false : $terms;
+  }, 100, 3 );
   add_shortcode( 'chidemoon_offer_observations', array( __CLASS__, 'observations_shortcode' ) );
   add_action( 'woocommerce_single_product_summary', array( __CLASS__, 'render_summary' ), 25 );
   remove_action( 'woocommerce_external_add_to_cart', 'woocommerce_external_add_to_cart', 30 );

@@ -1,0 +1,34 @@
+[
+    {
+        "listingId":  "3fb5d093-916a-4299-bf5d-2bf39b4dfc83",
+        "wpId":  6551,
+        "sourceProductId":  "45678180",
+        "availability":  "out_of_stock",
+        "sourceUrl":  "https://basalam.com/delshadstore/product/45678180",
+        "observedAt":  "2026-10-22T12:10:26.2391188Z"
+    },
+    {
+        "listingId":  "69b0809d-f446-4ea8-a528-bbb016516fc7",
+        "wpId":  5388,
+        "sourceProductId":  "15746720",
+        "availability":  "out_of_stock",
+        "sourceUrl":  "https://basalam.com/your_coverlet/product/15746720",
+        "observedAt":  "2026-10-22T12:10:26.2462179Z"
+    },
+    {
+        "listingId":  "c322b52b-e167-405b-8ecb-72f9977c5323",
+        "wpId":  4933,
+        "sourceProductId":  "50575355",
+        "availability":  "out_of_stock",
+        "sourceUrl":  "https://basalam.com/abkhorshidi_369/product/50575355",
+        "observedAt":  "2026-10-22T12:10:26.2472175Z"
+    },
+    {
+        "listingId":  "4d3ff14d-7ebf-4f14-860a-898be1b15b9a",
+        "wpId":  4784,
+        "sourceProductId":  "56286410",
+        "availability":  "out_of_stock",
+        "sourceUrl":  "https://basalam.com/abzaryaraghgolzar/product/56286410",
+        "observedAt":  "2026-10-22T12:10:26.2472175Z"
+    }
+]

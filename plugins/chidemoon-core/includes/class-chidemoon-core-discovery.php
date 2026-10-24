@@ -99,7 +99,7 @@ final class Chidemoon_Core_Discovery {
  public static function filters( array $attributes = array() ): string {
   $input = wp_unslash( $_GET );
   $html = '<form method="get" class="ch-catalog-filters" aria-label="' . esc_attr__( 'Product filters', 'chidemoon-core' ) . '">';
-  foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) { $html .= self::facet( $field, $taxonomy, $input ); }
+  foreach ( Chidemoon_Core_Enrichment::TAXONOMIES as $field => $taxonomy ) { if ( 'tags' !== $field ) { $html .= self::facet( $field, $taxonomy, $input ); } }
   foreach ( array( 'color', 'material' ) as $field ) {
    $groups = self::groups( Chidemoon_Core_Enrichment::TAXONOMIES[ $field ] );
    if ( ! $groups ) { continue; }
@@ -124,9 +124,10 @@ final class Chidemoon_Core_Discovery {
    $input['content_type'] = 'product';
   }
   $reset = is_search() ? add_query_arg( array( 's' => $input['s'], 'content_type' => 'product' ), $action ) : $action;
-  $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" aria-label="فیلتر محصولات"><fieldset><legend>قیمت (تومان)</legend>';
+  $unit = get_woocommerce_currency_symbol();
+  $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" data-price-unit="' . esc_attr( $unit ) . '" aria-label="فیلتر محصولات"><fieldset><legend>قیمت (' . esc_html( $unit ) . ')</legend>';
   foreach ( array( 'ch_min_price' => 'از قیمت', 'ch_max_price' => 'تا قیمت' ) as $key => $label ) {
-   $html .= '<label>' . esc_html( $label ) . '<input type="number" inputmode="numeric" min="0" step="1" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '" placeholder="تومان"></label>';
+   $html .= '<label>' . esc_html( $label ) . '<input type="number" inputmode="numeric" min="0" step="1" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '" placeholder="' . esc_attr( $unit ) . '"></label>';
   }
   $html .= '</fieldset><fieldset><legend>دسته‌بندی محصولات</legend><div class="ch-sidebar-categories">';
   $terms = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'orderby' => 'name' ) );

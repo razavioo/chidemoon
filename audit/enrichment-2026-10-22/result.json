@@ -1,0 +1,4502 @@
+{
+    "updated": 534,
+    "fields": {
+        "style": 507,
+        "features": 530,
+        "suitability": 6,
+        "color": 450,
+        "material": 186,
+        "room": 140
+    },
+    "products": [
+        {
+            "id": 443,
+            "fields": [
+                "style",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 447,
+            "fields": [
+                "style",
+                "color",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 451,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 455,
+            "fields": [
+                "style",
+                "color",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 567,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 581,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 583,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 587,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 660,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 665,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 686,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 695,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 706,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 717,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 722,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 724,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 726,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 728,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 730,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 733,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 736,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 742,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 746,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 750,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 751,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 752,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 753,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 754,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 755,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 756,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 757,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 758,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 759,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 760,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 761,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 762,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 763,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 764,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 765,
+            "fields": [
+                "style",
+                "color"
+            ]
+        },
+        {
+            "id": 766,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 767,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 768,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 769,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 770,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 771,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 772,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 773,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 774,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 775,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 776,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 777,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 778,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 779,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 780,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 781,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 782,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 783,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 784,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 785,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 786,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 787,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 788,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 789,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 790,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 791,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 792,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 793,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 794,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 795,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 796,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 797,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 798,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 799,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 800,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 801,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 802,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 803,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 804,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 805,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 806,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 807,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 808,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 809,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 810,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 811,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 812,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 813,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 814,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 815,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 816,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 817,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 818,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 819,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 820,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 821,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 822,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 823,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 824,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 825,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 826,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 827,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 828,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 829,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 830,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 831,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 832,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 833,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 834,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 835,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 836,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 837,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 838,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 839,
+            "fields": [
+                "style",
+                "color"
+            ]
+        },
+        {
+            "id": 840,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 841,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 842,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 843,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 844,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 845,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 846,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 847,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 848,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 849,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 850,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 851,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 852,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 853,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 854,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 855,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 856,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 857,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 858,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 859,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 860,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 861,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 862,
+            "fields": [
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 863,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 864,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 865,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 866,
+            "fields": [
+                "style",
+                "color"
+            ]
+        },
+        {
+            "id": 867,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 868,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 869,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 870,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 871,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 872,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 873,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 874,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 875,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 876,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 877,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 878,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 879,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 880,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 881,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 882,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 883,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 884,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 885,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 886,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 887,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 888,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 889,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 890,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 891,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 892,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 893,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 894,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 895,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 896,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 897,
+            "fields": [
+                "material",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 898,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 899,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 900,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 901,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 902,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 903,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 904,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 905,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 906,
+            "fields": [
+                "material",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 907,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 908,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 909,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 910,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 911,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 912,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 913,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 914,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 915,
+            "fields": [
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 916,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 917,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 918,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 919,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 920,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 921,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 922,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 923,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 924,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 925,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 926,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 927,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 928,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 929,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 930,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 931,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 932,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 933,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 934,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 935,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 936,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 937,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 938,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 939,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 940,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 941,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 942,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 943,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 944,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 945,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 946,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 947,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 948,
+            "fields": [
+                "style",
+                "color",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 949,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 950,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 951,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 952,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 953,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 954,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 955,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 956,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 957,
+            "fields": [
+                "material",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 958,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 959,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 960,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 961,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 962,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 963,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 964,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 965,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 966,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 967,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 968,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 969,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 970,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 971,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 972,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 973,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 974,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 975,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 976,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 977,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 978,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 979,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 980,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 981,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 982,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 983,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 984,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 985,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 986,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 987,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 988,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 989,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 990,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 991,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 992,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 993,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 994,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 995,
+            "fields": [
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 996,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 997,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 998,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 999,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1000,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1001,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1002,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1003,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 1004,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1005,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 1006,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 1007,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1008,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 1009,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1010,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1011,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1012,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 1013,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 1014,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2506,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2513,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2515,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2517,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2523,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2535,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2537,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2544,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2547,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2553,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2564,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2568,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2593,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2603,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2607,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2614,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2616,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2619,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2631,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2634,
+            "fields": [
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 2637,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2644,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2648,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2652,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2659,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2665,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2670,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2672,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2679,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2683,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2685,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2688,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2692,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2695,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2701,
+            "fields": [
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2707,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2709,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2714,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2725,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2731,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2734,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2738,
+            "fields": [
+                "color",
+                "style"
+            ]
+        },
+        {
+            "id": 2748,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2753,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2757,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2762,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2769,
+            "fields": [
+                "color",
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 2773,
+            "fields": [
+                "style",
+                "color",
+                "features",
+                "suitability"
+            ]
+        },
+        {
+            "id": 2779,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2785,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2789,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2792,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2800,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2806,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2825,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2844,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2854,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2863,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2870,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2877,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2881,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2888,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2891,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2897,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2907,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2912,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2933,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2937,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2941,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2947,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2958,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2960,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2965,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2971,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 2977,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2995,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 2997,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 3003,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3008,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3011,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3016,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3023,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3025,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3029,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3037,
+            "fields": [
+                "material",
+                "features"
+            ]
+        },
+        {
+            "id": 3041,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3044,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3053,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3059,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3064,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3069,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3087,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3095,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3097,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3099,
+            "fields": [
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3108,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3113,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3120,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3125,
+            "fields": [
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3130,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3137,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3142,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3144,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3157,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3167,
+            "fields": [
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3170,
+            "fields": [
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 3182,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3185,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3193,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3196,
+            "fields": [
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 3199,
+            "fields": [
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4447,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4472,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4497,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4498,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4523,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4539,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4564,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4589,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4614,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4639,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4645,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4670,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4686,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4707,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4732,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4738,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4763,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4784,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4785,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4786,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4802,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4827,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4852,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4877,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4883,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4908,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4933,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 4935,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4960,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 4980,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5005,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5010,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5026,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5047,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5048,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5073,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5098,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5109,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5120,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5136,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5157,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5182,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5207,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5218,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5219,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5230,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5255,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5261,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5286,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5311,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5313,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5338,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5363,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5388,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5389,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5390,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5415,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5440,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5465,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5466,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5472,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5488,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5513,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5524,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5549,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5555,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5580,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5581,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5606,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5631,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5642,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5664,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5685,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5710,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5731,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5737,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5758,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5783,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5804,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5810,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5812,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5813,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5838,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5863,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5879,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5904,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 5920,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5945,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5951,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 5976,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6001,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6026,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6042,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6067,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6069,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6085,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6110,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6121,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6130,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6146,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6171,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6187,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6203,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6214,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6239,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6250,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6256,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6281,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6306,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6317,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6333,
+            "fields": [
+                "room",
+                "color",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6344,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6369,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6375,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6377,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6402,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6423,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6424,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6435,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6446,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6452,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6458,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6483,
+            "fields": [
+                "features"
+            ]
+        },
+        {
+            "id": 6504,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6529,
+            "fields": [
+                "room",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6540,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6551,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6553,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6578,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6603,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6628,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6653,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6654,
+            "fields": [
+                "room",
+                "color",
+                "material",
+                "style",
+                "features"
+            ]
+        },
+        {
+            "id": 6679,
+            "fields": [
+                "room",
+                "material",
+                "style",
+                "color",
+                "features"
+            ]
+        },
+        {
+            "id": 6704,
+            "fields": [
+                "features"
+            ]
+        }
+    ]
+}

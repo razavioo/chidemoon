@@ -1,0 +1,21 @@
+# Product import and classification repair — 2026-10-21
+
+Production: https://chidemoon.com
+
+The connector was successfully polling 381 source offers, but 139 external-source products had never been enrolled for this target. Most omitted products were inactive in Kalahamoon. Enrolled them as source drafts without approving publication, changing merchant status or inventing classifications. The final source selection has 520 entries; the coverage query reports zero eligible external products without a target entry.
+
+The initial broad comparison mistakenly included Chidemoon's own WooCommerce listings mirrored into Kalahamoon. Stopped that poll, removed the mistakenly added target selections, explicitly withdrew their retained source records, and removed the 58 newly created hidden mirror drafts and only their newly downloaded image attachments. The drafts were temporarily trashed before final cleanup; their metadata and mappings were backed up before removal. Original products and media were preserved, and the trash count returned to its original 17. The importer now rejects source URLs on its own hostname, including the www alias, before identity resolution or product creation. Regression coverage checks that unrelated merchant hosts remain accepted.
+
+Created 135 products and updated four existing products. Four of the new products initially had unavailable Basalam image URLs; all 26 unavailable URL variants returned HTTP 403. Preserved the original listing rows and image lists, recorded the observations in listing metadata, and selected only already downloaded, valid images of those same products. The subsequent import completed successfully. The image repair changed neither prices nor merchant status. The reviewed plan and SQL are included in this directory.
+
+The product add/edit screen now has a named Persian classification section with existing values, multi-selection and inline vocabulary creation for style, room, color, material, features/uses and the other existing classification fields. Selection changes update the review state. Revision validation runs before vocabulary writes. Clearing a managed attribute removes it instead of retaining an empty specification. Existing unrelated WooCommerce attributes are preserved. Style and room also appear in the native additional-information table, including products whose specifications consist only of those editorial fields. Default managed attribute labels use the site's translations.
+
+Validation:
+
+- All 48 Node tests passed in an isolated Linux container with PHP, mbstring, Bash and curl.
+- Source ownership/recovery, token-expiry recovery, native product tabs and the new classification display checks passed.
+- Actual WordPress/WooCommerce CRUD checks passed against the isolated `catalog_test` database: new values, multiple values, edits, clearing, native attribute preservation, public specifications and stale-editor rejection. The isolated containers and volumes were removed after verification.
+- Production browser checks verified the section, eight value selectors, eight inline inputs, automatic selection state and the public room specification. Screenshots: `output/playwright/product-classification-editor-20261021.png` and `output/playwright/product-classification-public-20261021.png`.
+- Final counts: 389 published products, 146 drafts (135 new and 11 pre-existing), 17 trash. All 520 current source products passed identity, completion and local cover/gallery file checks; four older manually imported source products outside this snapshot remain intact. Zero destination mirrors remain. The repeat poll created zero products, updated zero products and reported zero failures; pending receipt batches are zero. See `verification.json`, `idempotency.json` and `source-coverage.log`.
+
+Backups and operational logs are under `/opt/chidemoon/backups/products-20261021`: pre-change WordPress SQL, source catalog tables, source records before mirror withdrawal, original PHP/JS and translations. No connector secrets or OAuth credentials were manually replaced. New source products retain draft status until their editorial information is completed and publication is approved. Eleven pre-existing drafts lack verified merchant source identities and were not guessed or merged by title.

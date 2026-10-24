@@ -557,7 +557,7 @@ final class Chidemoon_Core_Affiliate {
 			return;
 		}
 		$handle = 'chidemoon-core-product-admin';
-		wp_enqueue_script( $handle, CHIDEMOON_CORE_URL . 'assets/js/product-admin.js', array(), CHIDEMOON_CORE_VERSION, true );
+		wp_enqueue_script( $handle, CHIDEMOON_CORE_URL . 'assets/js/product-admin.js', array(), CHIDEMOON_CORE_VERSION . '.' . filemtime( CHIDEMOON_CORE_DIR . 'assets/js/product-admin.js' ), true );
 		wp_add_inline_script(
 			$handle,
 			'window.ChidemoonProductAdmin = ' . wp_json_encode(
