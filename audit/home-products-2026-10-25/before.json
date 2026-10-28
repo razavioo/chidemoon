@@ -1,0 +1,773 @@
+{
+    "id": 66,
+    "nodes": [
+        {
+            "id": "a309978f",
+            "elType": "container",
+            "settings": {
+                "content_width": "full",
+                "flex_direction": "column",
+                "flex_gap": {
+                    "column": "16",
+                    "row": "16",
+                    "isLinked": true,
+                    "unit": "px",
+                    "size": 16
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "0",
+                    "left": "0",
+                    "isLinked": true
+                },
+                "css_classes": "ch-main",
+                "html_tag": "main",
+                "_element_id": "chidemoon-content"
+            },
+            "elements": [
+                {
+                    "id": "de646c4e",
+                    "elType": "container",
+                    "settings": {
+                        "flex_direction": "row",
+                        "flex_gap": {
+                            "column": "28",
+                            "row": "28",
+                            "isLinked": true,
+                            "unit": "px",
+                            "size": 28
+                        },
+                        "padding": {
+                            "unit": "px",
+                            "top": "40",
+                            "right": "24",
+                            "bottom": "40",
+                            "left": "24",
+                            "isLinked": false
+                        },
+                        "css_classes": "ch-section ch-hero ch-home-hero",
+                        "boxed_width": {
+                            "unit": "px",
+                            "size": 1280,
+                            "sizes": []
+                        },
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "24",
+                            "right": "16",
+                            "bottom": "24",
+                            "left": "16",
+                            "isLinked": false
+                        },
+                        "flex_direction_mobile": "column",
+                        "flex_align_items": "center"
+                    },
+                    "elements": [
+                        {
+                            "id": "f50908cc",
+                            "elType": "container",
+                            "settings": {
+                                "content_width": "full",
+                                "flex_direction": "column",
+                                "flex_gap": {
+                                    "column": "16",
+                                    "row": "16",
+                                    "isLinked": true,
+                                    "unit": "px",
+                                    "size": 16
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": "0",
+                                    "bottom": "0",
+                                    "left": "0",
+                                    "isLinked": true
+                                },
+                                "css_classes": "ch-hero-copy",
+                                "width": {
+                                    "unit": "%",
+                                    "size": 47,
+                                    "sizes": []
+                                },
+                                "width_mobile": {
+                                    "unit": "%",
+                                    "size": 100,
+                                    "sizes": []
+                                }
+                            },
+                            "elements": [
+                                {
+                                    "id": "9baeb3c1",
+                                    "elType": "widget",
+                                    "settings": {
+                                        "editor": "<p>چیدمون<\/p>",
+                                        "_css_classes": "ch-eyebrow"
+                                    },
+                                    "elements": [],
+                                    "widgetType": "text-editor"
+                                },
+                                {
+                                    "id": "cc3961ae",
+                                    "elType": "widget",
+                                    "settings": {
+                                        "title": "ایده‌های چیدمان خانه",
+                                        "header_size": "h1",
+                                        "_css_classes": "ch-display"
+                                    },
+                                    "elements": [],
+                                    "widgetType": "heading"
+                                },
+                                {
+                                    "id": "854f20c3",
+                                    "elType": "widget",
+                                    "settings": {
+                                        "editor": "<p>از ایدهٔ یک گوشه تا انتخاب محصول؛ فضاها را ببین، راهنماها را بخوان و گزینه‌ها را کنار هم مقایسه کن.<\/p>",
+                                        "_css_classes": "ch-intro-copy"
+                                    },
+                                    "elements": [],
+                                    "widgetType": "text-editor"
+                                },
+                                {
+                                    "id": "4246856b",
+                                    "elType": "container",
+                                    "settings": {
+                                        "content_width": "full",
+                                        "flex_direction": "row",
+                                        "flex_gap": {
+                                            "column": "16",
+                                            "row": "16",
+                                            "isLinked": true,
+                                            "unit": "px",
+                                            "size": 16
+                                        },
+                                        "padding": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": true
+                                        },
+                                        "css_classes": "ch-actions",
+                                        "flex_wrap": "wrap"
+                                    },
+                                    "elements": [
+                                        {
+                                            "id": "92528be1",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "کشف چیدمان‌ها",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/shop-the-look\/"
+                                                },
+                                                "align": "right",
+                                                "typography_typography": "custom"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        },
+                                        {
+                                            "id": "b384c405",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "راهنمای خرید",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/guides\/"
+                                                },
+                                                "align": "right",
+                                                "_css_classes": "ch-link-button"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        }
+                                    ],
+                                    "isInner": true
+                                }
+                            ],
+                            "isInner": true
+                        },
+                        {
+                            "id": "89b0259b",
+                            "elType": "container",
+                            "settings": {
+                                "content_width": "full",
+                                "flex_direction": "column",
+                                "flex_gap": {
+                                    "column": "16",
+                                    "row": "16",
+                                    "isLinked": true,
+                                    "unit": "px",
+                                    "size": 16
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": "0",
+                                    "bottom": "0",
+                                    "left": "0",
+                                    "isLinked": true
+                                },
+                                "css_classes": "ch-hero-visual",
+                                "width": {
+                                    "unit": "%",
+                                    "size": 50,
+                                    "sizes": []
+                                },
+                                "width_mobile": {
+                                    "unit": "%",
+                                    "size": 100,
+                                    "sizes": []
+                                }
+                            },
+                            "elements": [
+                                {
+                                    "id": "c4c2c3ca",
+                                    "elType": "widget",
+                                    "settings": {
+                                        "image": {
+                                            "id": 294,
+                                            "url": "https:\/\/chidemoon.com\/wp-content\/uploads\/2026\/08\/look-real-43.jpg"
+                                        },
+                                        "image_size": "full",
+                                        "_css_classes": "ch-hero-media"
+                                    },
+                                    "elements": [],
+                                    "widgetType": "image"
+                                }
+                            ],
+                            "isInner": true
+                        }
+                    ],
+                    "isInner": true
+                },
+                {
+                    "id": "7b75f7d3",
+                    "elType": "container",
+                    "settings": {
+                        "flex_direction": "column",
+                        "flex_gap": {
+                            "column": "16",
+                            "row": "16",
+                            "isLinked": true,
+                            "unit": "px",
+                            "size": 16
+                        },
+                        "padding": {
+                            "unit": "px",
+                            "top": "40",
+                            "right": "24",
+                            "bottom": "40",
+                            "left": "24",
+                            "isLinked": false
+                        },
+                        "css_classes": "ch-section ch-discovery",
+                        "boxed_width": {
+                            "unit": "px",
+                            "size": 1280,
+                            "sizes": []
+                        },
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "24",
+                            "right": "16",
+                            "bottom": "24",
+                            "left": "16",
+                            "isLinked": false
+                        }
+                    },
+                    "elements": [
+                        {
+                            "id": "dbd10aef",
+                            "elType": "widget",
+                            "settings": {
+                                "editor": "<p>از کجا شروع کنیم؟<\/p>",
+                                "_css_classes": "ch-eyebrow"
+                            },
+                            "elements": [],
+                            "widgetType": "text-editor"
+                        },
+                        {
+                            "id": "6d32a086",
+                            "elType": "widget",
+                            "settings": {
+                                "title": "مسیر خودت را پیدا کن"
+                            },
+                            "elements": [],
+                            "widgetType": "heading"
+                        },
+                        {
+                            "id": "bb34696f",
+                            "elType": "container",
+                            "settings": {
+                                "content_width": "full",
+                                "flex_direction": "row",
+                                "flex_gap": {
+                                    "column": "16",
+                                    "row": "16",
+                                    "isLinked": true,
+                                    "unit": "px",
+                                    "size": 16
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": "0",
+                                    "bottom": "0",
+                                    "left": "0",
+                                    "isLinked": true
+                                },
+                                "css_classes": "ch-route-grid",
+                                "flex_direction_mobile": "column",
+                                "flex_wrap": "wrap",
+                                "flex_justify_content": "space-between"
+                            },
+                            "elements": [
+                                {
+                                    "id": "69207f57",
+                                    "elType": "container",
+                                    "settings": {
+                                        "content_width": "full",
+                                        "flex_direction": "column",
+                                        "flex_gap": {
+                                            "column": "16",
+                                            "row": "16",
+                                            "isLinked": true,
+                                            "unit": "px",
+                                            "size": 16
+                                        },
+                                        "padding": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": true
+                                        },
+                                        "css_classes": "ch-route",
+                                        "width": {
+                                            "unit": "%",
+                                            "size": 31,
+                                            "sizes": []
+                                        },
+                                        "width_mobile": {
+                                            "unit": "%",
+                                            "size": 100,
+                                            "sizes": []
+                                        }
+                                    },
+                                    "elements": [
+                                        {
+                                            "id": "82418146",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "image": {
+                                                    "id": 298,
+                                                    "url": "https:\/\/chidemoon.com\/wp-content\/uploads\/2026\/08\/look-reading-corner.jpg"
+                                                },
+                                                "image_size": "full",
+                                                "_css_classes": "ch-route-media"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "image"
+                                        },
+                                        {
+                                            "id": "d43d217a",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "title": "ایده‌های چیدمان",
+                                                "header_size": "h3"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "heading"
+                                        },
+                                        {
+                                            "id": "b8b30f4a",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "editor": "<p>از ترکیب رنگ، نور و وسایل برای فضای خودت ایده بگیر.<\/p>"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "text-editor"
+                                        },
+                                        {
+                                            "id": "d093bda9",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "دیدن ایده‌ها",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/shop-the-look\/"
+                                                },
+                                                "align": "right",
+                                                "_css_classes": "ch-link-button"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        }
+                                    ],
+                                    "isInner": true
+                                },
+                                {
+                                    "id": "e5191d3a",
+                                    "elType": "container",
+                                    "settings": {
+                                        "content_width": "full",
+                                        "flex_direction": "column",
+                                        "flex_gap": {
+                                            "column": "16",
+                                            "row": "16",
+                                            "isLinked": true,
+                                            "unit": "px",
+                                            "size": 16
+                                        },
+                                        "padding": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": true
+                                        },
+                                        "css_classes": "ch-route",
+                                        "width": {
+                                            "unit": "%",
+                                            "size": 31,
+                                            "sizes": []
+                                        },
+                                        "width_mobile": {
+                                            "unit": "%",
+                                            "size": 100,
+                                            "sizes": []
+                                        }
+                                    },
+                                    "elements": [
+                                        {
+                                            "id": "fe9a0154",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "image": {
+                                                    "id": 295,
+                                                    "url": "https:\/\/chidemoon.com\/wp-content\/uploads\/2026\/08\/look-compact-home-office.jpg"
+                                                },
+                                                "image_size": "full",
+                                                "_css_classes": "ch-route-media"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "image"
+                                        },
+                                        {
+                                            "id": "dc4f5aeb",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "title": "راهنمای خرید",
+                                                "header_size": "h3"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "heading"
+                                        },
+                                        {
+                                            "id": "40d1b41f",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "editor": "<p>برای انتخاب اندازه، جنس و کاربرد درست شروع کن.<\/p>"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "text-editor"
+                                        },
+                                        {
+                                            "id": "52af03fd",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "خواندن راهنماها",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/guides\/"
+                                                },
+                                                "align": "right",
+                                                "_css_classes": "ch-link-button"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        }
+                                    ],
+                                    "isInner": true
+                                },
+                                {
+                                    "id": "baa416ff",
+                                    "elType": "container",
+                                    "settings": {
+                                        "content_width": "full",
+                                        "flex_direction": "column",
+                                        "flex_gap": {
+                                            "column": "16",
+                                            "row": "16",
+                                            "isLinked": true,
+                                            "unit": "px",
+                                            "size": 16
+                                        },
+                                        "padding": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": true
+                                        },
+                                        "css_classes": "ch-route",
+                                        "width": {
+                                            "unit": "%",
+                                            "size": 31,
+                                            "sizes": []
+                                        },
+                                        "width_mobile": {
+                                            "unit": "%",
+                                            "size": 100,
+                                            "sizes": []
+                                        }
+                                    },
+                                    "elements": [
+                                        {
+                                            "id": "f879facd",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "image": {
+                                                    "id": 300,
+                                                    "url": "https:\/\/chidemoon.com\/wp-content\/uploads\/2026\/08\/look-japandi-dining.jpg"
+                                                },
+                                                "image_size": "full",
+                                                "_css_classes": "ch-route-media"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "image"
+                                        },
+                                        {
+                                            "id": "652391fa",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "title": "مقایسه‌ها",
+                                                "header_size": "h3"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "heading"
+                                        },
+                                        {
+                                            "id": "6f90f766",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "editor": "<p>تفاوت گزینه‌ها را در کنار هم بخوان.<\/p>"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "text-editor"
+                                        },
+                                        {
+                                            "id": "26460663",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "دیدن مقایسه‌ها",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/comparisons\/"
+                                                },
+                                                "align": "right",
+                                                "_css_classes": "ch-link-button"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        }
+                                    ],
+                                    "isInner": true
+                                }
+                            ],
+                            "isInner": true
+                        }
+                    ],
+                    "isInner": true
+                },
+                {
+                    "id": "30b9d510",
+                    "elType": "container",
+                    "settings": {
+                        "flex_direction": "column",
+                        "flex_gap": {
+                            "column": "16",
+                            "row": "16",
+                            "isLinked": true,
+                            "unit": "px",
+                            "size": 16
+                        },
+                        "padding": {
+                            "unit": "px",
+                            "top": "40",
+                            "right": "24",
+                            "bottom": "40",
+                            "left": "24",
+                            "isLinked": false
+                        },
+                        "css_classes": "ch-section ch-magazine-section",
+                        "boxed_width": {
+                            "unit": "px",
+                            "size": 1280,
+                            "sizes": []
+                        },
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "24",
+                            "right": "16",
+                            "bottom": "24",
+                            "left": "16",
+                            "isLinked": false
+                        }
+                    },
+                    "elements": [
+                        {
+                            "id": "14ffc995",
+                            "elType": "widget",
+                            "settings": {
+                                "editor": "<p>مجله<\/p>",
+                                "_css_classes": "ch-eyebrow"
+                            },
+                            "elements": [],
+                            "widgetType": "text-editor"
+                        },
+                        {
+                            "id": "29797ed8",
+                            "elType": "widget",
+                            "settings": {
+                                "title": "تازه‌ترین ایده‌ها و راهنماها"
+                            },
+                            "elements": [],
+                            "widgetType": "heading"
+                        },
+                        {
+                            "id": "0bc00957",
+                            "elType": "widget",
+                            "settings": {
+                                "_skin": "post",
+                                "template_id": "505",
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1",
+                                "posts_per_page": 3,
+                                "masonry": "",
+                                "equal_height": "yes",
+                                "pagination_type": "numbers",
+                                "pagination_load_type": "page_reload",
+                                "enable_nothing_found_message": "yes",
+                                "nothing_found_message_text": "هنوز مطلبی در این بخش منتشر نشده است.",
+                                "_css_classes": "ch-editorial-feed ch-native-feed",
+                                "post_query_post_type": "post",
+                                "post_query_orderby": "date",
+                                "post_query_order": "DESC",
+                                "pagination_prev_label": "&laquo; قبلی",
+                                "pagination_next_label": "بعدی &laquo;"
+                            },
+                            "elements": [],
+                            "widgetType": "loop-grid"
+                        },
+                        {
+                            "id": "faf11ccd",
+                            "elType": "container",
+                            "settings": {
+                                "content_width": "full",
+                                "flex_direction": "column",
+                                "css_classes": "ch-home-action"
+                            },
+                            "elements": [
+                                {
+                                    "id": "abe36d73",
+                                    "elType": "container",
+                                    "settings": {
+                                        "content_width": "full",
+                                        "flex_direction": "column",
+                                        "css_classes": "ch-home-action-copy"
+                                    },
+                                    "elements": [
+                                        {
+                                            "id": "e51b5cd1",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "editor": "<p>از الهام تا چیدمان<\/p>",
+                                                "_css_classes": "ch-home-action-eyebrow"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "text-editor"
+                                        },
+                                        {
+                                            "id": "92d8747b",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "title": "ایده‌ات را به خانه بیاور",
+                                                "header_size": "h2"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "heading"
+                                        },
+                                        {
+                                            "id": "118012b7",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "editor": "<p>چیدمان دلخواهت را پیدا کن؛ ترکیب رنگ‌ها، وسایل و جزئیاتش را ببین و برای خانه خودت ایده بگیر.<\/p>"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "text-editor"
+                                        },
+                                        {
+                                            "id": "66f09f60",
+                                            "elType": "widget",
+                                            "settings": {
+                                                "text": "چیدمان دلخواهم را پیدا کنم",
+                                                "link": {
+                                                    "url": "https:\/\/chidemoon.com\/shop-the-look\/"
+                                                },
+                                                "align": "right",
+                                                "_css_classes": "ch-home-action-button"
+                                            },
+                                            "elements": [],
+                                            "widgetType": "button"
+                                        }
+                                    ],
+                                    "isInner": false
+                                },
+                                {
+                                    "id": "42a7cfbb",
+                                    "elType": "widget",
+                                    "settings": {
+                                        "image": {
+                                            "id": 294,
+                                            "url": "https:\/\/chidemoon.com\/wp-content\/uploads\/2026\/08\/look-real-43.jpg"
+                                        },
+                                        "image_size": "full",
+                                        "open_lightbox": "no",
+                                        "_css_classes": "ch-home-action-image"
+                                    },
+                                    "elements": [],
+                                    "widgetType": "image"
+                                }
+                            ],
+                            "isInner": false
+                        }
+                    ],
+                    "isInner": true
+                }
+            ],
+            "isInner": false
+        }
+    ],
+    "templates": [
+        525,
+        521,
+        517,
+        513,
+        509,
+        505,
+        410,
+        408,
+        406,
+        404,
+        402,
+        400,
+        398,
+        396,
+        324
+    ]
+}

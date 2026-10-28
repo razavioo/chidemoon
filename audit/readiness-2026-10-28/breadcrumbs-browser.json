@@ -1,0 +1,100 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "breadcrumbs": 0,
+    "schema": 0,
+    "trail": [],
+    "h1": 1
+  },
+  {
+    "path": "/categories/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهدسته بندی‌ها"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/shop/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانه / محصولات"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/product-category/desk-lamps/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانه / چراغ مطالعه"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/guides/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهراهنمای خرید"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/comparisons/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهمقایسه‌ها"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/bedroom-lighting-guide/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهراهنمای خریدنور اتاق خواب را لایه‌به‌لایه انتخاب کنیم"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/round-or-rectangular-table/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهمقایسه‌هامیز گرد یا مستطیل؛ کدام برای فضای تو مناسب‌تر است؟"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/shop-the-look/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهایده‌های چیدمان"
+    ],
+    "h1": 1
+  },
+  {
+    "path": "/product-comparison/",
+    "status": 200,
+    "breadcrumbs": 1,
+    "schema": 1,
+    "trail": [
+      "خانهمقایسه محصولات"
+    ],
+    "h1": 1
+  }
+]

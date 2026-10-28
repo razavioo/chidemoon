@@ -11,6 +11,8 @@
 	var searchController = null;
 	var pageSelectionPending = false;
 	var pageSelectionFailed = false;
+	var tableRequest = null;
+	var tableRevision = 0;
 
 	function normalize(items) {
 		return Array.isArray(items) ? items.filter(function (item) { return item && Number(item.id) > 0; }).slice(0, config.maximum) : [];
@@ -124,6 +126,10 @@
 	}
 
 	function syncPageSelection() {
+		if (document.getElementById('chidemoon-comparison-table')) {
+			write(displayedTableSelection());
+			return;
+		}
 		var pageIds = new URLSearchParams(window.location.search).get('products');
 		if (!pageIds) return;
 		var allowed = pageIds.split(',').map(function (id) { return Number(id); }).filter(function (id, index, ids) { return Number.isInteger(id) && id > 0 && ids.indexOf(id) === index; }).slice(0, config.maximum);
@@ -161,8 +167,63 @@
 		var table = document.querySelector('.chidemoon-comparison-table');
 		if (!table) return [];
 		return Array.from(table.querySelectorAll('.chidemoon-comparison-table__remove')).map(function (button) {
-			return { id: Number(button.dataset.compareProduct), name: button.dataset.compareName || '', image: '' };
+			var image = button.parentElement.querySelector('img');
+			return { id: Number(button.dataset.compareProduct), name: button.dataset.compareName || '', image: image ? image.currentSrc || image.src : '' };
 		}).filter(function (item) { return Number.isInteger(item.id) && item.id > 0; }).slice(0, config.maximum);
+	}
+
+	function setComparisonHistory(items, push) {
+		var url = new URL(location.href);
+		url.searchParams.set('products', items.map(function (item) { return item.id; }).join(','));
+		history[push ? 'pushState' : 'replaceState'](null, '', url);
+	}
+
+	function removeTableProduct(id) {
+		var section = document.getElementById('chidemoon-comparison-table');
+		if (!section) return false;
+		++tableRevision;
+		if (tableRequest) tableRequest.abort();
+		section.removeAttribute('aria-busy');
+		var table = section.querySelector('table');
+		var button = table && Array.from(table.querySelectorAll('.chidemoon-comparison-table__remove')).find(function (b) { return Number(b.dataset.compareProduct) === Number(id); });
+		if (button) {
+			var index = button.parentElement.cellIndex;
+			Array.from(table.rows).forEach(function (row) { if (row.cells[index]) row.deleteCell(index); });
+			table.dataset.productCount = table.querySelectorAll('.chidemoon-comparison-table__remove').length;
+			if (table.dataset.productCount === '0') section.innerHTML = '<p class="chidemoon-compare-empty">محصولی انتخاب نشده است؛ از نوار جست‌وجو محصول اضافه کنید.</p>';
+		}
+		write(displayedTableSelection());
+		setComparisonHistory(read(), true);
+		bindComparisonTools(); refresh();
+		announce('محصول از جدول حذف شد.');
+		return true;
+	}
+
+	function updateComparisonTable(items, push) {
+		var section = document.getElementById('chidemoon-comparison-table');
+		if (!section || !config.tableUrl) return;
+		if (tableRequest) tableRequest.abort();
+		tableRequest = new AbortController();
+		var revision = ++tableRevision;
+		section.setAttribute('aria-busy', 'true');
+		announce(config.labels.loading);
+		fetch(config.tableUrl + '?ids=' + encodeURIComponent(items.map(function (item) { return item.id; }).join(',')), {signal:tableRequest.signal})
+			.then(function (response) { if (!response.ok) throw new Error('table'); return response.json(); })
+			.then(function (data) {
+				if (revision !== tableRevision) return;
+				var doc = new DOMParser().parseFromString(data.html, 'text/html');
+				var replacement = doc.getElementById('chidemoon-comparison-table');
+				if (!replacement) throw new Error('table');
+				section.replaceWith(document.importNode(replacement, true));
+				write(displayedTableSelection());
+				if (push) setComparisonHistory(read(), true);
+				bindComparisonTools(); refresh(); announce('جدول مقایسه به‌روز شد.');
+			})
+			.catch(function (error) {
+				if (error.name === 'AbortError' || revision !== tableRevision) return;
+				section.removeAttribute('aria-busy');
+				write(displayedTableSelection()); refresh(); announce(config.labels.searchError);
+			});
 	}
 
 	function setBarOffset(bar) {
@@ -216,6 +277,7 @@
 				}
 				var remove = event.target.closest('[data-remove-compare]');
 				if (remove) {
+					if (removeTableProduct(remove.dataset.removeCompare)) return;
 					write(read().filter(function (item) { return Number(item.id) !== Number(remove.dataset.removeCompare); }));
 					refresh();
 					var nextFocus = bar.hidden ? document.querySelector('[data-compare-product]') : bar.querySelector('.chidemoon-compare-bar__summary');
@@ -223,6 +285,10 @@
 					return;
 				}
 				if (event.target.closest('.chidemoon-compare-bar__clear')) {
+					if (document.getElementById('chidemoon-comparison-table')) {
+						displayedTableSelection().forEach(function (item) { removeTableProduct(item.id); });
+						return;
+					}
 					write([]);
 					refresh();
 					var firstControl = document.querySelector('[data-compare-product]');
@@ -405,6 +471,7 @@
 		document.addEventListener('click', function (event) {
 			var chipRemove = event.target.closest('[data-comparison-remove]');
 			if (chipRemove) {
+				if (removeTableProduct(chipRemove.dataset.comparisonRemove)) return;
 				write(read().filter(function (item) { return Number(item.id) !== Number(chipRemove.dataset.comparisonRemove); }));
 				refresh();
 				var input = document.querySelector('[data-comparison-search-input]');
@@ -414,10 +481,7 @@
 			var tableRemove = event.target.closest('.chidemoon-comparison-table__remove');
 			if (tableRemove) {
 				event.preventDefault();
-				var displayed = displayedTableSelection();
-				write((displayed.length ? displayed : read()).filter(function (item) { return Number(item.id) !== Number(tableRemove.dataset.compareProduct); }));
-				var remaining = read();
-				window.location.assign(remaining.length ? comparisonUrl(remaining) : config.compareUrl + '#chidemoon-comparison-table');
+				removeTableProduct(tableRemove.dataset.compareProduct);
 				return;
 			}
 			var control = event.target.closest('.chidemoon-compare-control, .chidemoon-compare-single, .chidemoon-comparison-search__result');
@@ -426,6 +490,7 @@
 			var id = Number(control.dataset.compareProduct);
 			var items = read();
 			if (selected(id, items)) {
+				if (removeTableProduct(id)) return;
 				write(items.filter(function (item) { return Number(item.id) !== id; }));
 			} else if (items.length < config.maximum) {
 				items.push({ id: id, name: control.dataset.compareName || '', image: control.dataset.compareImage || '' });
@@ -436,12 +501,19 @@
 				return;
 			}
 			pageSelectionFailed = false;
+			if (document.getElementById('chidemoon-comparison-table')) updateComparisonTable(read(), true);
 			refresh();
 		});
 		syncPageSelection();
 		bindSearch();
 		refresh();
 		backfillImages();
+		window.addEventListener('popstate', function () {
+			if (!document.getElementById('chidemoon-comparison-table')) return;
+			var ids = new URLSearchParams(location.search).get('products') || '';
+			var items = ids.split(',').filter(function (id) { return /^[1-9][0-9]*$/.test(id); }).slice(0,config.maximum).map(function (id) { return {id:Number(id),name:'',image:''}; });
+			updateComparisonTable(items, false);
+		});
 	}
 
 	function bindComparisonTools() {
@@ -449,6 +521,7 @@
 		var tools = section && section.querySelector('[data-comparison-tools]');
 		if (!tools) return;
 		var table = section.querySelector('table');
+		if (!table) return;
 		var rows = Array.from(table.querySelectorAll('tbody tr'));
 		var comparable = rows.slice(0, -1);
 		var normalizeValue = function (value) {
@@ -462,21 +535,20 @@
 		var summary = section.querySelector('.chidemoon-comparison-toolbar p');
 		var differenceCount = comparable.filter(function (row) { return row.dataset.different === 'true'; }).length;
 		if (summary) summary.textContent = faDigits(differenceCount) + ' تفاوت در اطلاعات ثبت‌شده · ' + faDigits(comparable.length - differenceCount) + ' ویژگی مشترک';
-		var headings = table.querySelectorAll('thead th');
-		var offers = rows[rows.length - 1].querySelectorAll('td');
-		Array.from(offers).forEach(function (cell, index) {
-			var link = cell.querySelector('a');
-			if (link && headings[index + 1]) headings[index + 1].appendChild(link.cloneNode(true));
+		// Keep removal before the image, independent of product-title length.
+		table.querySelectorAll('.chidemoon-comparison-table__remove').forEach(function (button) {
+			button.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M6 18 18 6"/></svg>';
+			button.parentElement.prepend(button);
 		});
 		var copyResetTimer;
 		var copyLabel = tools.querySelector('[data-comparison-share]').textContent;
-		tools.querySelector('[data-comparison-share]').addEventListener('click', function () {
+		tools.querySelector('[data-comparison-share]').onclick = function () {
 			var url = comparisonUrl(displayedTableSelection());
 			if (navigator.clipboard && window.isSecureContext) {
 				var button = this;
 				navigator.clipboard.writeText(new URL(url, window.location.href).href).then(function () { clearTimeout(copyResetTimer); button.textContent = 'لینک کپی شد ✓'; announce('لینک مقایسه کپی شد.'); copyResetTimer = setTimeout(function () { button.textContent = copyLabel; }, 2000); }, function () { window.prompt('لینک مقایسه را کپی کنید', url); });
 			} else window.prompt('لینک مقایسه را کپی کنید', url);
-		});
+		};
 		tools.hidden = false;
 	}
 

@@ -1,0 +1,54 @@
+{
+  "checked": 647,
+  "failed": [],
+  "redirects": [
+    {
+      "url": "https://chidemoon.com/cart/",
+      "to": "https://chidemoon.com/shop/"
+    },
+    {
+      "url": "https://chidemoon.com/checkout/",
+      "to": "https://chidemoon.com/shop/"
+    },
+    {
+      "url": "https://chidemoon.com/my-account/",
+      "to": "https://chidemoon.com/shop/"
+    }
+  ],
+  "noIncoming": [
+    {
+      "url": "https://chidemoon.com/product-chooser/",
+      "type": "page"
+    },
+    {
+      "url": "https://chidemoon.com/product-category/uncategorized/"
+    },
+    {
+      "url": "https://chidemoon.com/cart/",
+      "type": "page"
+    },
+    {
+      "url": "https://chidemoon.com/checkout/",
+      "type": "page"
+    },
+    {
+      "url": "https://chidemoon.com/my-account/",
+      "type": "page"
+    },
+    {
+      "url": "https://chidemoon.com/product-category/import-needs-review/"
+    },
+    {
+      "url": "https://chidemoon.com/product-category/home-appliance/small-home-appliances/"
+    },
+    {
+      "url": "https://chidemoon.com/looks/%d9%85%db%8c%d8%b2-%da%a9%d8%a7%d8%b1-%d8%af%d8%b1-%db%8c%da%a9-%d9%81%d8%b6%d8%a7%db%8c-%da%a9%d9%88%da%86%da%a9/",
+      "type": "chidemoon_look"
+    },
+    {
+      "url": "https://chidemoon.com/looks/%db%8c%da%a9-%da%af%d9%88%d8%b4%d9%87%d9%94-%d8%a2%d8%b1%d8%a7%d9%85-%d8%a8%d8%b1%d8%a7%db%8c-%d9%85%d8%b7%d8%a7%d9%84%d8%b9%d9%87/",
+      "type": "chidemoon_look"
+    }
+  ],
+  "placeholders": []
+}

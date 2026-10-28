@@ -46,6 +46,9 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-elementor-works
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-search-facets.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-dates.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-content-relations.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-breadcrumbs.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-structural-links.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-responsive-images.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 
 register_activation_hook( __FILE__, array( 'Chidemoon_Core_Activator', 'activate' ) );

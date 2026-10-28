@@ -30,7 +30,7 @@ final class Chidemoon_Core_Looks {
   add_shortcode( 'chidemoon_product_looks', array( __CLASS__, 'product_looks_shortcode' ) );
   add_shortcode( 'chidemoon_look_gallery', array( __CLASS__, 'gallery' ) );
   add_action( 'init', static function(): void {
-   if ( post_type_exists( 'reycob_look' ) ) { register_taxonomy_for_object_type( 'chidemoon_room', 'reycob_look' ); }
+   if ( post_type_exists( 'reycob_look' ) ) { foreach(self::filter_taxonomies() as $taxonomy)register_taxonomy_for_object_type($taxonomy, 'reycob_look'); }
   }, 20 );
   add_action( 'woocommerce_after_single_product_summary', array( __CLASS__, 'product_looks' ), 12 );
   add_filter( 'option_elementor_cpt_support', static fn( $types ) => array_values( array_unique( array_merge( $types, array( self::POST_TYPE ) ) ) ) );
@@ -119,14 +119,44 @@ final class Chidemoon_Core_Looks {
    } catch ( Throwable $exception ) { if ( $manage_transaction ) { $wpdb->query( 'ROLLBACK' ); } wp_cache_delete( $look_id, 'post_meta' ); throw $exception; }
   } finally { $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', 'ch_look_' . $look_id ) ); }
  }
+ /** A shared registry keeps future sidebar facets and result queries in sync. */
+ public static function filter_taxonomies(): array {
+  return apply_filters('chidemoon_look_filter_taxonomies', ['room'=>'chidemoon_room','style'=>'chidemoon_style']);
+ }
+ public static function filter_query(array $input): array {
+  $clauses=['relation'=>'AND'];
+  foreach(self::filter_taxonomies() as $key=>$taxonomy){
+   if(!isset($input[$key])||!is_string($input[$key])||$input[$key]==='')continue;
+   $clauses[]=['taxonomy'=>$taxonomy,'field'=>'slug','terms'=>sanitize_title(wp_unslash($input[$key]))];
+  }
+  return count($clauses)>1?['tax_query'=>$clauses]:[];
+ }
+ public static function filters(): string {
+  $page=get_page_by_path('shop-the-look');$url=$page?get_permalink($page):home_url('/shop-the-look/');
+  $html='<aside class="ch-look-sidebar" aria-label="فیلتر چیدمان‌ها"><h2>فیلتر چیدمان‌ها</h2><form method="get" action="'.esc_url($url).'#ch-look-results">';
+  foreach(self::filter_taxonomies() as $key=>$taxonomy){
+   $terms=get_terms(['taxonomy'=>$taxonomy,'hide_empty'=>false]);if(is_wp_error($terms)||!$terms)continue;
+   $label=['room'=>'فضاهای خانه','style'=>'سبک‌ها'][$key]??get_taxonomy($taxonomy)->label;
+   $selected=isset($_GET[$key])&&is_string($_GET[$key])?sanitize_title(wp_unslash($_GET[$key])):'';
+   $html.='<fieldset><legend>'.esc_html($label).'</legend><label><input type="radio" name="'.esc_attr($key).'" value="" '.checked($selected,'',false).'> همه</label>';
+   foreach($terms as $term){if(strtolower($term->name)==='none')continue;$html.='<label><input type="radio" name="'.esc_attr($key).'" value="'.esc_attr($term->slug).'" '.checked($selected,$term->slug,false).'> '.esc_html($term->name).'</label>';}
+   $html.='</fieldset>';
+  }
+  $type=isset($_GET['look_type'])&&is_string($_GET['look_type'])?sanitize_key($_GET['look_type']):'';
+  $html.='<fieldset><legend>نوع چیدمان</legend>';
+  foreach([''=>'همه','shoppable'=>'قابل خرید','concept'=>'ایده‌های مفهومی'] as $value=>$label)$html.='<label><input type="radio" name="look_type" value="'.esc_attr($value).'" '.checked($type,$value,false).'> '.esc_html($label).'</label>';
+  return $html.'</fieldset><button class="ch-look-filter-submit" type="submit">اعمال فیلترها</button><a class="ch-look-filter-reset" href="'.esc_url($url).'#ch-look-results">پاک کردن فیلترها</a></form></aside>';
+ }
  public static function gallery(): string {
   $args = array( 'post_type' => array( self::POST_TYPE, 'reycob_look' ), 'post_status' => 'publish', 'posts_per_page' => -1, 'orderby' => 'date', 'order' => 'DESC' );
-  $room = isset( $_GET['room'] ) && is_string( $_GET['room'] ) ? sanitize_title( wp_unslash( $_GET['room'] ) ) : '';
-  if ( $room ) { $args['tax_query'] = array( array( 'taxonomy' => 'chidemoon_room', 'field' => 'slug', 'terms' => $room ) ); }
-  $html = '<div class="ch-look-gallery">';
+  $args=array_merge($args,self::filter_query($_GET));
+  $html = '<div class="ch-look-browse">'.self::filters().'<div id="ch-look-results" class="ch-look-gallery" aria-label="نتایج چیدمان‌ها">';
   $shown = 0;
   foreach ( get_posts( $args ) as $look ) {
    if ( self::POST_TYPE === $look->post_type && get_post_meta( $look->ID, '_chidemoon_reycob_scene', true ) ) { continue; }
+   $type=isset($_GET['look_type'])&&is_string($_GET['look_type'])?sanitize_key($_GET['look_type']):'';
+   $shoppable='reycob_look'===$look->post_type||!empty(self::relationships($look->ID));
+   if(('shoppable'===$type&&!$shoppable)||('concept'===$type&&$shoppable))continue;
    if ( 'reycob_look' === $look->post_type ) {
     $content = self::hotspot_scene( $look->ID, 0 === $shown );
    } else {
@@ -136,8 +166,8 @@ final class Chidemoon_Core_Looks {
    $html .= '<section id="ch-scene-' . (int) $look->ID . '" class="ch-look-gallery-scene" data-look-id="' . (int) $look->ID . '">' . $content . '</section>';
    ++$shown;
   }
-  if ( ! $shown ) { $html .= '<p>هنوز چیدمانی برای این فضا منتشر نشده است.</p>'; }
-  return $html . '</div>';
+  if ( ! $shown ) { $html .= '<p>چیدمانی با این فیلترها پیدا نشد؛ فیلترها را تغییر دهید یا پاک کنید.</p>'; }
+  return $html . '</div></div>';
  }
  public static function scene_image( int $id, bool $first = false ): string {
   $image = wp_get_attachment_image( $id, 'full', false, array( 'class' => 'ch-scene-image', 'loading' => $first ? 'eager' : 'lazy', 'fetchpriority' => $first ? 'high' : 'auto', 'decoding' => 'async', 'sizes' => '(max-width: 767px) calc(100vw - 32px), (max-width: 1280px) calc(100vw - 48px), 1232px' ) );

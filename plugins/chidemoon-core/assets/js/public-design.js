@@ -270,22 +270,18 @@
 		shortcut.className = 'ch-header-search-shortcut';
 		shortcut.setAttribute('aria-label', 'جستجو در چیدمون');
 		shortcut.setAttribute('aria-expanded', 'false');
-		shortcut.setAttribute('aria-haspopup', 'dialog');
-		shortcut.setAttribute('aria-controls', 'ch-search-dialog');
+		shortcut.setAttribute('aria-controls', 'ch-header-search-panel');
 		shortcut.title = 'جستجو';
 		shortcut.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>';
-		row.appendChild(shortcut);
-		const dialog = document.createElement('dialog');
-		dialog.id = 'ch-search-dialog';
-		dialog.className = 'ch-search-dialog';
-		const elementorRoot = search.closest('.elementor');
-		if (elementorRoot) dialog.classList.add(...Array.from(elementorRoot.classList).filter(name => name === 'elementor' || /^elementor-\d+$/.test(name)));
-		dialog.dir = 'rtl';
-		dialog.tabIndex = -1;
-		dialog.setAttribute('aria-labelledby', 'ch-search-title');
-		dialog.setAttribute('aria-describedby', 'ch-search-description');
-		dialog.innerHTML = '<div class="ch-search-dialog-heading"><div><span class="ch-search-eyebrow">خانه‌ای به سلیقهٔ تو</span><h2 id="ch-search-title">دنبال چی می‌گردی؟</h2></div><button type="button" class="ch-search-close" aria-label="بستن جستجو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><p id="ch-search-description">از محصولات تا ایده‌های چیدمان؛ اینجا پیدایش کن.</p><div class="ch-search-dialog-body"></div><p class="ch-search-hint">نام محصول، سبک یا موضوع موردنظرت را بنویس.</p>';
-		document.body.appendChild(dialog);
+		const searchShell = document.createElement('div');
+		searchShell.className = 'ch-header-search-shell';
+		searchShell.appendChild(shortcut); row.appendChild(searchShell);
+		const panel = document.createElement('div');
+		panel.id = 'ch-header-search-panel'; panel.className = 'ch-header-search-panel'; panel.inert = true; panel.setAttribute('aria-hidden','true');
+		const closeButton = document.createElement('button');
+		closeButton.type = 'button'; closeButton.className = 'ch-header-search-close';
+		closeButton.textContent = '×'; closeButton.setAttribute('aria-label', 'بستن جستجو');
+		panel.append(search, closeButton); searchShell.append(panel);
 		input.placeholder = 'جستجو در چیدمون';
 		input.setAttribute('enterkeyhint', 'search');
 		input.addEventListener('keydown', event => {
@@ -311,8 +307,7 @@
 				if (mobileMenu.matches && event.target.closest('.e-n-menu-item')) event.stopImmediatePropagation();
 			}, true);
 		});
-		const searchHome = document.createComment('header-search');
-		search.before(searchHome);
+
 		let drawerHeading;
 		if (menuPanel && menuToggle) {
 			menuToggle.setAttribute('aria-label', 'باز کردن منو');
@@ -353,37 +348,31 @@
 				}
 			});
 		}
-		function closeSearch() { if (dialog.open) dialog.close(); }
-		dialog.addEventListener('keydown', event => {
-			if (event.key === 'Escape') {
-				event.preventDefault();
-				event.stopPropagation();
-				closeSearch();
-			}
-		}, true);
-		dialog.addEventListener('close', () => {
-			document.documentElement.classList.remove('ch-search-modal-open');
-			shortcut.setAttribute('aria-expanded', 'false');
-			shortcut.focus({ preventScroll: true });
+		function closeSearch() {
+			searchShell.classList.remove('is-expanded'); header.classList.remove('ch-header-search-open');
+			panel.inert = true; panel.setAttribute('aria-hidden','true'); shortcut.setAttribute('aria-expanded', 'false');
+		}
+		closeButton.addEventListener('click', () => { closeSearch(); shortcut.focus({preventScroll:true}); });
+		panel.addEventListener('keydown', event => {
+			if(event.key === 'Escape') { event.preventDefault(); closeSearch(); shortcut.focus({preventScroll:true}); }
 		});
-		dialog.querySelector('.ch-search-close').addEventListener('click', closeSearch);
-		const outside = event => {
-			const r = dialog.getBoundingClientRect();
-			return event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom;
-		};
-		let backdropPress = false;
-		dialog.addEventListener('pointerdown', event => { backdropPress = outside(event); });
-		dialog.addEventListener('click', event => { if (backdropPress && outside(event)) closeSearch(); });
 		shortcut.addEventListener('click', () => {
-			if (dialog.open) return;
-			if (menuToggle?.getAttribute('aria-expanded') === 'true') menuToggle.click();
-			dialog.querySelector('.ch-search-dialog-body').appendChild(search);
-			search.classList.add('is-open');
-			dialog.showModal();
-			document.documentElement.classList.add('ch-search-modal-open');
-			shortcut.setAttribute('aria-expanded', 'true');
-			dialog.focus({ preventScroll: true });
+			if(menuToggle?.getAttribute('aria-expanded') === 'true')menuToggle.click();
+			if(searchShell.classList.contains('is-expanded')){closeSearch();return;}
+			searchShell.classList.add('is-expanded'); header.classList.add('ch-header-search-open');
+			panel.inert = false; panel.setAttribute('aria-hidden','false'); shortcut.setAttribute('aria-expanded','true');
+			input.focus({preventScroll:true});
 		});
+		// Use a real document navigation, retaining the page before search in browser history.
+		search.querySelector('form')?.addEventListener('submit', event => {
+			event.preventDefault(); event.stopImmediatePropagation();
+			if(!input.value.trim()){input.focus();return;}
+			const form=event.currentTarget; const url=new URL(form.action || '/', location.href);
+			url.search=''; new FormData(form).forEach((value,key)=>{if(typeof value==='string'&&value)url.searchParams.append(key,value);});
+			closeSearch(); location.assign(url.href);
+		},true);
+		window.addEventListener('pageshow', closeSearch);
+		window.addEventListener('pagehide', closeSearch);
 
 		function syncHeader() {
 			const mobile = window.matchMedia('(max-width: 1024px)').matches;
@@ -391,11 +380,6 @@
 				if (mobile && menuHeading.firstElementChild !== homeItem) menuHeading.prepend(homeItem);
 				else if (!mobile && menuHeading.firstElementChild !== originalItems[0]) originalItems.forEach(item => menuHeading.append(item));
 			}
-			if (menuPanel && drawerHeading) {
-				if (mobile && search.parentNode !== menuPanel) drawerHeading.after(search);
-				else if (!mobile && search.parentNode === menuPanel) searchHome.after(search);
-			}
-			if (!mobile) closeSearch();
 			const collapsedMenu = !!menuToggle && getComputedStyle(menuToggle).display !== 'none';
 			const menuOpen = collapsedMenu && (menuToggle.classList.contains('elementor-active') || menuToggle.getAttribute('aria-expanded') === 'true');
 			const wasOpen = document.body.classList.contains('ch-mobile-menu-open');

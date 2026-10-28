@@ -72,6 +72,7 @@ final class Chidemoon_Core_Compare {
 					'maximum'   => self::MAX_PRODUCTS,
 					'compareUrl'=> self::comparison_url(),
 					'restUrl'   => esc_url_raw( rest_url( 'chidemoon-core/v1/compare-products' ) ),
+					'tableUrl'  => esc_url_raw( rest_url( 'chidemoon-core/v1/compare-table' ) ),
 					'labels'    => array(
 						'added'          => __( 'مقایسه', 'chidemoon-core' ),
 						'removed'        => __( 'انتخاب شده', 'chidemoon-core' ),
@@ -104,6 +105,16 @@ final class Chidemoon_Core_Compare {
 	}
 
 	public static function register_rest_routes(): void {
+		register_rest_route('chidemoon-core/v1','/compare-table',array(
+			'methods'=>WP_REST_Server::READABLE,'permission_callback'=>'__return_true',
+			'args'=>array('ids'=>array('type'=>'string','maxLength'=>64,'sanitize_callback'=>'sanitize_text_field')),
+			'callback'=>static function(WP_REST_Request $request){
+				$throttled=self::throttle_public_search();if(is_wp_error($throttled))return $throttled;
+				$html=self::render_comparison_table(self::selected_products((string)$request->get_param('ids')));
+				if(class_exists('Chidemoon_Core_Responsive_Images'))$html=Chidemoon_Core_Responsive_Images::rewrite($html,get_option('chidemoon_responsive_images_v1',array()));
+				return rest_ensure_response(array('html'=>$html));
+			}
+		));
 		register_rest_route(
 			'chidemoon-core/v1',
 			'/compare-products',
@@ -562,7 +573,8 @@ final class Chidemoon_Core_Compare {
 
 	/** @param array<string,string> $atts */
 	public static function render_picker_shortcode( $atts = array() ): string {
-		return '';
+		self::enqueue_assets();
+		return '<section class="chidemoon-comparison-search chidemoon-comparison-search--persistent" aria-label="افزودن محصول به مقایسه"><label for="ch-compare-search">افزودن محصول به مقایسه</label><div class="chidemoon-comparison-search__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="ch-compare-search" type="search" data-comparison-search-input autocomplete="off" placeholder="نام محصول را جست‌وجو کنید…" aria-controls="ch-compare-search-results"></div><div id="ch-compare-search-results" class="chidemoon-comparison-search__results" data-comparison-search-results aria-live="polite" hidden></div><p data-comparison-feedback role="status" hidden></p></section>';
 	}
 
 	/**
@@ -580,7 +592,7 @@ final class Chidemoon_Core_Compare {
 
 	/** @param WC_Product[] $products */
 	public static function render_comparison_table( array $products, array $settings = array() ): string {
-		if ( count( $products ) < 2 ) {
+		if ( count( $products ) === 0 ) {
 			return '<div id="chidemoon-comparison-table" class="chidemoon-comparison-table-section">' . ( ( $settings['show_empty'] ?? true ) ? '<p class="chidemoon-compare-empty">' . esc_html( $settings['empty_text'] ?? 'دو محصول انتخاب کن تا ویژگی‌ها را کنار هم ببینی.' ) . '</p>' : '' ) . '</div>';
 		}
 		self::enqueue_assets();
