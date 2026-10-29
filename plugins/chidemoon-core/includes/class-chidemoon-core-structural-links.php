@@ -9,12 +9,7 @@ final class Chidemoon_Core_Structural_Links {
  }
  public static function markup(): string {
   $links = ''; $extra = ''; $heading = '';
-  if ( is_front_page() ) {
-   $heading = 'محصولات را بر اساس دسته پیدا کن';
-   $terms = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'parent' => 0 ) );
-   foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $links .= self::term_link( $term ); }
-   $links .= '<li><a href="' . esc_url( home_url( '/categories/' ) ) . '">همه دسته‌بندی‌ها</a></li><li><a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">همه محصولات</a></li>';
-  } elseif ( is_product_category() ) {
+  if ( is_product_category() ) {
    $term = get_queried_object(); $heading = 'دسته‌های مرتبط';
    $links = '<li><a href="' . esc_url( home_url( '/categories/' ) ) . '">همه دسته‌بندی‌ها</a></li>';
    if ( $term->parent ) { $links .= self::term_link( get_term( $term->parent, 'product_cat' ) ); }
@@ -40,7 +35,7 @@ final class Chidemoon_Core_Structural_Links {
   return '<section class="ch-structural-links" aria-label="مسیرهای مرتبط محصولات"><h2>' . esc_html( $heading ) . '</h2><ul>' . $links . '</ul>' . ( $extra ? '<h3>محصولات دیگر در همین دسته</h3><ul>' . $extra . '</ul>' : '' ) . '</section>';
  }
  public static function start(): void {
-  if ( is_admin() || is_feed() || is_404() || ! ( is_front_page() || is_product() || is_product_category() ) ) { return; }
+  if ( is_admin() || is_feed() || is_404() || ! ( is_product() || is_product_category() ) ) { return; }
   $markup = self::markup();
   if ( ! $markup ) { return; }
   ob_start( static fn( string $html ): string => str_contains( $html, 'class="ch-structural-links"' ) ? $html : ( preg_replace_callback( '/<\/main>/', static fn() => $markup . '</main>', $html, 1 ) ?? $html ) );
