@@ -422,9 +422,17 @@ final class Chidemoon_Core_Affiliate {
 		// require is_publicly_eligible() (publish + external + reviewed + valid
 		// URL). The redirect must enforce the same gate, otherwise an
 		// unreviewed / quarantined product stays reachable via a direct /go/ ID.
-		if ( ! $product instanceof WC_Product || ! self::is_offer_available( $product ) ) {
+		if ( ! $product instanceof WC_Product || ! self::is_publicly_eligible( $product ) ) {
 			self::render_not_found();
 			return;
+		}
+
+		// A saved seller link should explain an unavailable offer on its product
+		// page, rather than send the visitor to an error or an inactive merchant.
+		if ( ! self::is_offer_available( $product ) ) {
+			nocache_headers();
+			wp_safe_redirect( get_permalink( $product->get_id() ), 302, 'Chidemoon Core' );
+			exit;
 		}
 
 		$url = self::get_affiliate_url( $product );

@@ -1,6 +1,8 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+require_once __DIR__ . '/class-chidemoon-core-category-facets.php';
+
 final class Chidemoon_Core_Discovery {
  public static function register(): void {
   add_action( 'wp_enqueue_scripts', static function (): void {
@@ -86,16 +88,58 @@ final class Chidemoon_Core_Discovery {
    }
    if ( count( $clauses ) > 1 ) { $meta[] = $clauses; }
   }
-  return array( 'tax_query' => $tax, 'meta_query' => $meta );
+  $result = array( 'tax_query' => $tax, 'meta_query' => $meta );
+  $matching = Chidemoon_Core_Category_Facets::matching_ids($input);
+  if (null !== $matching) { $result['post__in'] = $matching ?: array(0); }
+  return $result;
  }
  private static function available_meta(): array { return array( 'relation' => 'AND', array( 'key' => '_chidemoon_availability_status', 'value' => 'in_stock' ), array( 'key' => '_chidemoon_availability_observed_unix', 'value' => array( time() - Chidemoon_Core_Commercial::FRESHNESS_SECONDS, time() + 300 ), 'compare' => 'BETWEEN', 'type' => 'NUMERIC' ), array( 'relation' => 'OR', array( 'key' => Chidemoon_Core_Source_Importer::META_WITHDRAWN, 'value' => '0' ), array( 'key' => Chidemoon_Core_Source_Importer::META_WITHDRAWN, 'compare' => 'NOT EXISTS' ) ) ); }
  public static function filter_archive( WP_Query $query ): void {
   if ( is_admin() || $query->get( '_chidemoon_discovery_filtered' ) ) { return; }
   $query->set( '_chidemoon_discovery_filtered', true );
   $filters = self::query_filters( wp_unslash( $_GET ) );
-  foreach ( $filters as $key => $clauses ) { $existing = (array) $query->get( $key ); $query->set( $key, $existing ? array( 'relation' => 'AND', $existing, $clauses ) : $clauses ); }
+  foreach ( $filters as $key => $clauses ) {
+   $existing = (array) $query->get( $key );
+   if ('post__in' === $key) { $query->set($key, $existing ? (array_values(array_intersect($existing,$clauses)) ?: array(0)) : $clauses); }
+   else { $query->set( $key, $existing ? array( 'relation' => 'AND', $existing, $clauses ) : $clauses ); }
+  }
  }
  public static function number_input( string $key, array $input ): ?float { $value = $input[ $key ] ?? ''; return is_scalar( $value ) && '' !== (string) $value && is_numeric( $value ) && is_finite( (float) $value ) && $value >= 0 && $value <= 999999999999999 ? (float) $value : null; }
+ /** Base category scope deliberately ignores selected facets so choices remain editable. */
+ public static function category_product_ids(): ?array {
+  if ( ! is_product_category() ) { return null; }
+  static $cache = array();
+  $id = (int) get_queried_object_id();
+  if ( ! isset( $cache[$id] ) ) {
+   $filters = self::query_filters( array() );
+   $filters['tax_query'][] = array( 'taxonomy'=>'product_cat', 'field'=>'term_id', 'terms'=>array($id), 'include_children'=>true );
+   $cache[$id] = get_posts( array_merge( array( 'post_type'=>'product', 'post_status'=>'publish', 'posts_per_page'=>-1, 'fields'=>'ids', 'no_found_rows'=>true ), $filters ) );
+  }
+  return $cache[$id];
+ }
+ /** Category families choose useful axes; terms still come only from actual products. */
+ public static function category_fields(): array {
+  $fields = array('color','material','style','room','features','suitability');
+  if ( ! is_product_category() ) { return $fields; }
+  $term = get_queried_object();
+  $names = array($term->name);
+  foreach ( get_ancestors($term->term_id, 'product_cat', 'taxonomy') as $id ) {
+   $ancestor = get_term($id, 'product_cat');
+   if ( $ancestor && ! is_wp_error($ancestor) ) { $names[] = $ancestor->name; }
+  }
+  $family = implode(' ', $names);
+  if (preg_match('/تابلو/u',$family)) { return array('color'); }
+  if ( preg_match('/لوازم برقی|نوشیدنی‌ساز|آماده‌سازی غذا|گرمایشی|ظرفشویی|اسپرسوساز|قهوه‌ساز|چای‌ساز|آسیاب/u', $family) ) {
+   return array('features','material','color','suitability');
+  }
+  if ( preg_match('/آشپزخانه|پخت و پز|پذیرایی|بلور/u', $family) ) {
+   return array('material','features','color','style');
+  }
+  if ( preg_match('/کالای خواب|ملزومات اتاق خواب|پتو|روتختی/u', $family) ) {
+   return array('material','suitability','color','features','style');
+  }
+  return array('style','material','color','room','features','suitability');
+ }
  public static function filters( array $attributes = array() ): string {
   $input = wp_unslash( $_GET );
   $html = '<form method="get" class="ch-catalog-filters" aria-label="' . esc_attr__( 'Product filters', 'chidemoon-core' ) . '">';
@@ -125,23 +169,36 @@ final class Chidemoon_Core_Discovery {
   }
   $reset = is_search() ? add_query_arg( array( 's' => $input['s'], 'content_type' => 'product' ), $action ) : $action;
   $unit = get_woocommerce_currency_symbol();
-  $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" data-price-unit="' . esc_attr( $unit ) . '" aria-label="فیلتر محصولات"><fieldset><legend>قیمت (' . esc_html( $unit ) . ')</legend>';
+  $html = '<form method="get" action="' . esc_url( $action ) . '" class="ch-sidebar-filters" data-price-unit="' . esc_attr( $unit ) . '" aria-label="فیلتر محصولات"><div class="ch-filter-options" tabindex="0" role="region" aria-label="گزینه‌های فیلتر محصولات"><fieldset><legend>قیمت (' . esc_html( $unit ) . ')</legend>';
   foreach ( array( 'ch_min_price' => 'از قیمت', 'ch_max_price' => 'تا قیمت' ) as $key => $label ) {
    $html .= '<label>' . esc_html( $label ) . '<input type="number" inputmode="numeric" min="0" step="1" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) ( self::number_input( $key, $input ) ?? '' ) ) . '" placeholder="' . esc_attr( $unit ) . '"></label>';
   }
-  $html .= '</fieldset><fieldset><legend>دسته‌بندی محصولات</legend><div class="ch-sidebar-categories">';
-  $terms = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true, 'orderby' => 'name' ) );
-  foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $html .= self::checkbox( 'ch_category', $term->slug, $term->name, $input ); }
-  $html .= '</div></fieldset>';
+  $html .= '</fieldset>';
+  $html .= Chidemoon_Core_Category_Facets::render(self::category_product_ids() ?? array(), $input);
+  foreach (self::category_fields() as $field) {
+   $html .= self::facet($field, Chidemoon_Core_Enrichment::TAXONOMIES[$field], $input);
+  }
   foreach ( array( 's', 'orderby', 'post_type', 'content_type' ) as $key ) { if ( isset( $input[ $key ] ) && is_string( $input[ $key ] ) ) { $html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( sanitize_text_field( $input[ $key ] ) ) . '">'; } }
-  return $html . '<button type="submit">اعمال فیلتر</button><a class="ch-sidebar-reset" href="' . esc_url( $reset ) . '">پاک کردن فیلترها</a></form>';
+  return $html . '</div><div class="ch-filter-actions"><button type="submit">اعمال فیلتر</button><a class="ch-sidebar-reset" href="' . esc_url( $reset ) . '">پاک کردن فیلترها</a></div></form>';
  }
  private static function checkbox( string $key, string $value, string $label, array $input ): string { return '<label><input type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value ) . '" ' . checked( in_array( $value, self::selection( $key, $input ), true ), true, false ) . '> ' . esc_html( $label ) . '</label> '; }
  private static function facet( string $field, string $taxonomy, array $input ): string {
-  $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
+  $scope = self::category_product_ids();
+  if ( array() === $scope ) { return ''; }
+  $args = array( 'taxonomy' => $taxonomy, 'hide_empty' => true );
+  if ( null !== $scope ) { $args['object_ids'] = $scope; }
+  $terms = get_terms( $args );
   if ( is_wp_error( $terms ) || ! $terms ) { return ''; }
+  $terms = array_values(array_filter($terms, static fn($term) => ! in_array(strtolower(trim($term->name)), array('none','unknown','not applicable','نامشخص','کاربرد ندارد','—','-'), true) && ! ('features' === $field && 'استند چوبی' === $term->name)));
+  // A single value cannot narrow a category and should not consume sidebar space.
+  if ( ! $terms || (null !== $scope && count($terms) < 2) ) { return ''; }
   $html = '<fieldset><legend>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</legend>';
-  foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { $html .= self::checkbox( 'ch_' . $field, $term->slug, $term->name, $input ); }
+  $html .= '<label><input type="checkbox" class="ch-facet-all" ' . checked( ! self::selection('ch_' . $field, $input), true, false ) . '> همه</label>';
+  foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) {
+   if ('none' === strtolower($term->name)) { continue; }
+   if ('features' === $field && 'استند چوبی' === $term->name) { continue; }
+   $html .= self::checkbox( 'ch_' . $field, $term->slug, $term->name, $input );
+  }
   return $html . '</fieldset>';
  }
  public static function fit( array $dimensions, array $space ): string {

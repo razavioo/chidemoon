@@ -2,6 +2,19 @@
 (() => {
  'use strict';
  const illustrations = {
+  sofa: '<path d="M23 48V31q0-10 10-10h30q10 0 10 10v17M16 47q-8 0-8 9v18h80V56q0-9-8-9t-8 9v7H24v-7q0-9-8-9ZM20 74v9m56-9v9M48 22v40"/>',
+  dining: '<path d="M24 37h48v11H24ZM31 48v32m34-32v32M9 28v34h17m-17-9h17v27M87 28v34H70m17-9H70v27M38 24h20"/>',
+  tables: '<path d="M13 39h48v10H13ZM20 49v28m34-28v28M59 58h25v8H59m5 0v15m15-15v15M26 30h25"/>',
+  chandelier: '<path d="M48 10v22m-8 0h16l7 17H33ZM48 49v13m-25-9v12q0 12 25 12t25-12V53M17 53h12m38 0h12M48 77v9M36 86h24"/>',
+  lamp: '<path d="M34 17h28l13 34H21ZM48 51v28M32 81h32M69 56v11"/>',
+  sconce: '<path d="M66 23h12v52H66ZM66 55H41V38M27 17h28l9 21H18ZM34 43h14"/>',
+  stringlights: '<path d="M12 24q36 33 72 0M23 34v10m25-1v12m25-21v10"/><path d="M17 49q0-7 6-7t6 7q0 7-6 10-6-3-6-10Zm25 13q0-7 6-7t6 7q0 7-6 10-6-3-6-10Zm25-13q0-7 6-7t6 7q0 7-6 10-6-3-6-10Z"/>',
+  mirror: '<path d="M26 78V37a22 22 0 0 1 44 0v41ZM32 72V37a16 16 0 0 1 32 0v35ZM39 43l13-15m-9 29 14-17M21 83h54"/>',
+  art: '<rect x="17" y="18" width="62" height="61" rx="3"/><path d="M24 25h48v47H24Zm0 38 15-18 12 13 9-10 12 15"/><circle cx="58" cy="36" r="5"/>',
+  shelf: '<path d="M13 49h70v8H13ZM24 57v18m48-18v18M22 49V26h10v23m3 0V22h10v27m13-1q-7-10 0-18h12q7 8 0 18M55 30h18"/>',
+  clock: '<circle cx="48" cy="48" r="31"/><path d="M48 23v5m0 40v5M23 48h5m40 0h5M48 34v16l13 8"/>',
+  vase: '<path d="M37 40h22v12q19 25 7 30H30q-12-5 7-30ZM48 40V15m0 15q-19 0-19-15 19 0 19 15Zm0-6q17 0 17-14-17 0-17 14M36 65h24"/>',
+  decor: '<path d="M15 76h66M24 70V37h26v33M30 43h14v19H30M59 70V47h16v23M58 47l4-9h8l5 9"/><circle cx="66" cy="23" r="9"/>',
   appliance: '<rect x="22" y="14" width="52" height="68" rx="9"/><circle cx="48" cy="51" r="17"/><path d="M32 25h8m15 0h8M32 82v4m32-4v4"/>',
   blender: '<path d="M31 17h34l-5 39H36ZM37 56h22l7 24H30ZM65 24h9v24H62M42 30h10m-11 9h10"/><circle cx="48" cy="70" r="3"/>',
   coffee: '<path d="M27 17h42v21H27ZM31 38v29h34V38M23 78h50M38 51h17v15H38Zm17 2h7v10h-7M39 25h18"/>',
@@ -16,6 +29,7 @@
   storage: '<rect x="18" y="20" width="60" height="61" rx="5"/><path d="M18 49h60M47 20v61M29 32h8m20 0h9M29 62h8m20 0h9"/>',
   bed: '<path d="M14 77V32q0-8 8-8h52q8 0 8 8v45M14 49h68M14 66h68M24 49V35h19v14m10 0V35h19v14M20 77v7m56-7v7"/>',
   linen: '<path d="M22 22h52v56H22ZM22 37h52M33 37v41m30-41v41M22 65h52M31 22v15m34-15v15"/>',
+  curtain: '<path d="M12 18h72M20 18v62h22V18m12 0v62h22V18M27 25v48m8-48v48m27-48v48m7-48v48M42 59q-15 3-22 12m34-12q15 3 22 12"/>',
   rug: '<path d="M23 20h50v58H23ZM31 28h34v42H31ZM48 36l13 13-13 13-13-13ZM23 13v7m12-7v7m13-7v7m13-7v7m12-7v7M23 78v7m12-7v7m13-7v7m13-7v7m12-7v7"/>',
   porcelain: '<ellipse cx="48" cy="53" rx="32" ry="23"/><ellipse cx="48" cy="53" rx="22" ry="15"/><path d="M41 49q7-13 14 0-7 14-14 0Zm7-8v24M26 36q22-17 44 0"/>',
   arcopal: '<rect x="18" y="24" width="60" height="53" rx="16"/><rect x="27" y="33" width="42" height="35" rx="12"/><path d="m38 44 5 6-5 6m20-12-5 6 5 6M33 82h30"/>',
@@ -33,6 +47,9 @@
  const iconFor = link => {
   const slug = new URL(link.href).pathname.split('/').filter(Boolean).pop();
   const groups = {
+   sofa: ['furniture-decoration','furniture','living-room-furniture','sofas'], dining: ['dining-tables-chairs'], tables: ['coffee-side-tables-poufs'],
+   chandelier: ['lighting','chandeliers-ceiling-lights'], lamp: ['floor-bedside-lamps'], sconce: ['wall-lights'], stringlights: ['decorative-lighting'],
+   mirror: ['mirrors'], art: ['wall-art'], shelf: ['shelves-wall-decor'], clock: ['clocks'], vase: ['vases'], decor: ['decorative-accessories'],
    appliance: ['home-appliance'], blender: ['chopper-food-processor'], grinder: ['food-grinder'],
    coffee: ['espresso-maker','coffee-maker'], kettle: ['drink-maker','tea-maker'],
    heater: ['heater','gas-heater'], electric: ['electric-room-heaters','electric-heater'],
@@ -40,7 +57,7 @@
    crystal: ['crystalware'], ceramic: ['ceramicware'], melamine: ['melamine-tableware'],
    bowl: ['serving','bowl'], condiment: ['condiment-and-appetizer-dishes'], tray: ['tray'], cutlery: ['spoon-fork-knife'],
    cup: ['tea-sets'], jug: ['mug-jug'], jar: ['canisters'], oil: ['sauce-dish'], storage: ['kitchen-organizers','drawer-cabinet-organizer'],
-   bed: ['bedroom-essentials'], pillow: ['bedding'], linen: ['bedspread'], rug: ['carpets','machine-made-carpet'], mat: ['rugs-floor-mats'],
+   bed: ['bedroom-essentials'], pillow: ['bedding'], linen: ['bedspread'], curtain: ['curtains','curtain-accessories'], rug: ['carpets','machine-made-carpet'], mat: ['rugs-floor-mats'],
   };
   const key = Object.keys(groups).find(key => groups[key].includes(slug)) || 'storage';
   const icon = document.createElement('span'); icon.className = `ch-category-icon ch-category-icon-${key}`; icon.setAttribute('aria-hidden','true');

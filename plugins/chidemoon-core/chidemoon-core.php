@@ -35,6 +35,7 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-importer.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-source-contract.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-source-importer.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-enrichment.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-detailed-specs.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-commercial.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-looks.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-reconciliation.php';
@@ -49,6 +50,8 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-content-relatio
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-breadcrumbs.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-structural-links.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-responsive-images.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-page-cache.php';
+require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-critical-styles.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 
 register_activation_hook( __FILE__, array( 'Chidemoon_Core_Activator', 'activate' ) );

@@ -32,6 +32,7 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Importer::register();
 		Chidemoon_Core_Source_Importer::register();
 		Chidemoon_Core_Enrichment::register();
+		add_filter( 'woocommerce_display_product_attributes', array( 'Chidemoon_Core_Detailed_Specs', 'display_attributes' ), 30, 2 );
 		Chidemoon_Core_Commercial::register();
 		Chidemoon_Core_Looks::register();
 		Chidemoon_Core_Reconciliation::register();
@@ -45,6 +46,8 @@ final class Chidemoon_Core_Plugin {
 		Chidemoon_Core_Breadcrumbs::register();
 		Chidemoon_Core_Structural_Links::register();
 		Chidemoon_Core_Responsive_Images::register();
+		Chidemoon_Core_Page_Cache::register();
+		Chidemoon_Core_Critical_Styles::register();
 		add_action( 'init', array( 'Chidemoon_Core_Activator', 'flush_rewrite_rules_if_pending' ), 99 );
 	}
 }

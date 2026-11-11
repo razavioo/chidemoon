@@ -31,7 +31,7 @@ final class Chidemoon_Core_Elementor_Product_Actions_Widget extends \Elementor\W
 			'raw' => 'در قالب کارت، «محصول جاری در کارت» را نگه دارید تا هر کارت به محصول خودش لینک شود. جزئیات به صفحهٔ داخلی محصول و خرید به لینک تأییدشدهٔ فروشنده از مسیر /go/ می‌رود. نام، تصویر و قیمت را از خود محصول و ظاهر کارت را از قالب Loop Item ویرایش کنید.',
 		) );
 		$this->add_control( 'show_details', array( 'label' => 'دکمهٔ جزئیات محصول', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => 'yes' ) );
-		$this->add_control( 'details_text', array( 'label' => 'متن دکمهٔ جزئیات', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'جزئیات محصول', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_details' => 'yes' ) ) );
+		$this->add_control( 'details_text', array( 'label' => 'متن دکمهٔ جزئیات', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'مشاهده محصول', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_details' => 'yes' ) ) );
 		$this->add_control( 'details_new_tab', array( 'label' => 'باز کردن جزئیات در زبانهٔ تازه', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => '', 'condition' => array( 'show_details' => 'yes' ) ) );
 		$this->add_control( 'show_purchase', array( 'label' => 'دکمهٔ خرید از فروشنده', 'type' => \Elementor\Controls_Manager::SWITCHER, 'default' => '', 'description' => 'فقط برای محصول منتشرشده با پیشنهاد فروشندهٔ بررسی‌شده فعال می‌شود.' ) );
 		$this->add_control( 'purchase_text', array( 'label' => 'متن دکمهٔ خرید', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'خرید از فروشگاه', 'dynamic' => array( 'active' => true ), 'condition' => array( 'show_purchase' => 'yes' ) ) );
@@ -84,7 +84,7 @@ final class Chidemoon_Core_Elementor_Product_Actions_Widget extends \Elementor\W
 		echo '<div class="ch-product-card-actions">';
 		if ( 'yes' === ( $settings['show_details'] ?? 'yes' ) ) {
 			$target = 'yes' === ( $settings['details_new_tab'] ?? '' ) ? ' target="_blank" rel="noopener"' : '';
-			echo '<a class="chidemoon-button ch-product-card-details" href="' . esc_url( get_permalink( $product->get_id() ) ) . '"' . $target . '>' . esc_html( $this->required_text( $settings, 'details_text', 'جزئیات محصول' ) ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<a class="chidemoon-button ch-product-card-details" href="' . esc_url( get_permalink( $product->get_id() ) ) . '"' . $target . '>' . esc_html( $this->required_text( $settings, 'details_text', 'مشاهده محصول' ) ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		if ( $eligible && 'yes' === ( $settings['show_purchase'] ?? '' ) ) {
 			echo '<div class="ch-product-card-purchase">';

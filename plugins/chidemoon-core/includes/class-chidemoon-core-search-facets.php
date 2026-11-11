@@ -13,6 +13,7 @@ final class Chidemoon_Core_Search_Facets {
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'register_elementor_widget' ), 10 );
 		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'global_search_form' ), 30, 2 );
 		add_action( 'template_redirect', array( __CLASS__, 'canonical_search' ), 0 );
+		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'product_grid' ), 200, 2 );
 	}
 
 	public static function global_search_form( string $html, $widget ): string {
@@ -43,7 +44,7 @@ final class Chidemoon_Core_Search_Facets {
 	public static function selected_type(): string {
 		$input = $_GET['content_type'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$type = is_string( $input ) ? sanitize_key( wp_unslash( $input ) ) : '';
-		return in_array( $type, array( 'post', 'product' ), true ) ? $type : '';
+		return 'product';
 	}
 
 	public static function filter_query( WP_Query $query ): void {
@@ -57,6 +58,7 @@ final class Chidemoon_Core_Search_Facets {
 	}
 
 	public static function render( array $settings = array(), bool $preview = false ): string {
+		if(is_search()){global $wp_query;return '<div class="ch-search-summary"><span class="ch-search-summary-dot" aria-hidden="true"></span><span>'.esc_html(self::persian_digits((string)$wp_query->found_posts)).' محصول برای «'.esc_html(get_search_query(false)).'»</span></div>';}
 		if ( ! is_search() && ! $preview ) {
 			return '';
 		}
@@ -93,6 +95,18 @@ final class Chidemoon_Core_Search_Facets {
 		return $html . '</nav>';
 	}
 
+	public static function product_grid(string $html,$widget):string {
+		if(!is_search())return $html;
+		$html=str_replace('جستجو در محصولات و مطالب','محصول مورد علاقه‌ات را پیدا کن',$html);
+		if(!in_array($widget->get_name(),['archive-posts','posts','loop-grid'],true)||!str_contains((string)$widget->get_settings('_css_classes'),'ch-search-results-feed'))return $html;
+		global $wp_query;$cards='';
+		foreach($wp_query->posts as $post){$p=wc_get_product($post->ID);if(!$p||!Chidemoon_Core_Affiliate::is_publicly_eligible($p))continue;
+			$url=get_permalink($p->get_id());$terms=get_the_terms($p->get_id(),'product_cat');$category=is_array($terms)?end($terms)->name:'';
+			$cards.='<article class="ch-result-card"><a class="ch-result-image" href="'.esc_url($url).'" aria-label="'.esc_attr($p->get_name()).'">'.wp_get_attachment_image($p->get_image_id(),'woocommerce_thumbnail',false,['sizes'=>'(max-width: 600px) calc(50vw - 26px), (max-width: 1024px) 30vw, 300px']).'<span class="ch-result-arrow" aria-hidden="true">↖</span></a><div class="ch-result-info"><span class="ch-result-category">'.esc_html($category).'</span><h2><a href="'.esc_url($url).'">'.esc_html($p->get_name()).'</a></h2><div class="ch-result-price">'.$p->get_price_html().'</div><a class="ch-result-action" href="'.esc_url($url).'">مشاهده محصول <span aria-hidden="true">←</span></a></div></article>';
+		}
+		if(!$cards)return '<div class="ch-result-empty"><h2>محصولی پیدا نشد</h2><p>نام کوتاه‌تر یا عبارت دیگری را جستجو کن.</p><a href="'.esc_url(home_url('/shop/')).'">دیدن همه محصولات ←</a></div>';
+		return '<div class="ch-result-grid">'.$cards.'</div><nav class="ch-result-pagination" aria-label="صفحه‌های نتایج">'.paginate_links(['total'=>$wp_query->max_num_pages,'current'=>max(1,get_query_var('paged')),'prev_text'=>'→','next_text'=>'←']).'</nav>';
+	}
 	private static function persian_digits( string $text ): string {
 		return strtr( $text, array( '0' => '۰', '1' => '۱', '2' => '۲', '3' => '۳', '4' => '۴', '5' => '۵', '6' => '۶', '7' => '۷', '8' => '۸', '9' => '۹' ) );
 	}

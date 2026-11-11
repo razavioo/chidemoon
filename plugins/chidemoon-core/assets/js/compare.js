@@ -195,6 +195,11 @@
 		write(displayedTableSelection());
 		setComparisonHistory(read(), true);
 		bindComparisonTools(); refresh();
+		var recommendations = section.querySelector('[data-comparison-recommendations]');
+		if (recommendations) {
+			recommendations.remove();
+			if (read().length) updateComparisonTable(read(), false);
+		}
 		announce('محصول از جدول حذف شد.');
 		return true;
 	}
@@ -393,7 +398,9 @@
 	function bindSearch() {
 		var input = document.querySelector('[data-comparison-search-input]');
 		var results = document.querySelector('[data-comparison-search-results]');
-		if (!input || !results || !config.restUrl) return;
+		if (!input || !results || !config.restUrl || input.dataset.searchReady) return;
+		input.dataset.searchReady = 'true';
+		var home = input.closest('[data-home-editorial-comparison]');
 		input.addEventListener('input', function () {
 			var term = input.value.trim();
 			window.clearTimeout(searchTimer);
@@ -416,9 +423,9 @@
 						}
 						results.hidden = false;
 						results.innerHTML = products.map(function (product) {
-							var active = selected(product.id);
+							var active = home ? homeIds(home).includes(Number(product.id)) : selected(product.id);
 							var thumb = product.image ? '<img class="chidemoon-comparison-search__thumb" src="' + escapeHtml(product.image) + '" alt="" loading="lazy" width="40" height="40">' : '';
-							return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" data-compare-product="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '" data-compare-image="' + escapeHtml(product.image || '') + '">' + thumb + '<span dir="auto">' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
+							return '<button type="button" class="chidemoon-comparison-search__result' + (active ? ' is-selected' : '') + '" '+(home?'data-home-comparison-add':'data-compare-product')+'="' + Number(product.id) + '" data-compare-name="' + escapeHtml(product.title || ('#' + product.id)) + '" data-compare-image="' + escapeHtml(product.image || '') + '">' + thumb + '<span dir="auto">' + escapeHtml(product.title || ('#' + product.id)) + '</span><small>' + escapeHtml(active ? config.labels.removed : config.labels.added) + '</small></button>';
 						}).join('');
 					})
 					.catch(function (error) {
@@ -427,6 +434,36 @@
 					});
 			}, 220);
 		});
+	}
+
+	function homeIds(home) {
+		return Array.from(home.querySelectorAll('[data-home-comparison-remove]')).map(function(b){return Number(b.dataset.homeProduct);});
+	}
+
+	function updateHomeTable(home, ids) {
+		if (home.tableController) home.tableController.abort();
+		var controller = new AbortController(); home.tableController = controller;
+		var feedback = home.querySelector('[data-home-comparison-feedback]');
+		feedback.classList.remove('chidemoon-sr-only');
+		feedback.textContent = config.labels.loading;
+		home.setAttribute('aria-busy','true');
+		fetch(config.tableUrl+'?ids='+encodeURIComponent(ids.join(',')),{signal:controller.signal})
+			.then(function(r){if(!r.ok)throw Error('table');return r.json();})
+			.then(function(data){
+				if(home.tableController!==controller)return;
+				var doc=new DOMParser().parseFromString(data.html,'text/html'),wrap=doc.querySelector('.chidemoon-comparison-table-wrap');
+				if(!wrap)throw Error('table');
+				wrap.querySelectorAll('.chidemoon-comparison-table__remove').forEach(function(b){b.dataset.homeComparisonRemove='';b.dataset.homeProduct=b.dataset.compareProduct;b.removeAttribute('data-compare-product');b.parentElement.prepend(b);});
+				home.querySelector('.chidemoon-comparison-table-wrap').replaceWith(document.importNode(wrap,true));
+				home.querySelector('.ch-home-comparison-intro').textContent='محصولات انتخابی تو، کنار هم';
+				home.querySelector('.ch-home-comparison-intro').hidden=false;
+				home.querySelector('.chidemoon-comparison-scroll-hint').hidden=false;
+				home.querySelector('.ch-home-comparison-note').hidden=true;
+				home.querySelectorAll('[data-home-comparison-add]').forEach(function(b){var active=ids.includes(Number(b.dataset.homeComparisonAdd));b.classList.toggle('is-selected',active);b.querySelector('small').textContent=active?config.labels.removed:config.labels.added;});
+				feedback.textContent='محصول به جدول مقایسه اضافه شد.';
+			})
+			.catch(function(error){if(error.name!=='AbortError')feedback.textContent=config.labels.searchError;})
+			.finally(function(){if(home.tableController===controller)home.removeAttribute('aria-busy');});
 	}
 
 	function backfillImages() {
@@ -469,6 +506,38 @@
 			});
 		}
 		document.addEventListener('click', function (event) {
+			var homeAdd = event.target.closest('[data-home-comparison-add]');
+			if(homeAdd){
+				var owner=homeAdd.closest('[data-home-editorial-comparison]'),ids=homeIds(owner),added=Number(homeAdd.dataset.homeComparisonAdd);
+				if(owner.getAttribute('aria-busy')==='true')return;
+				if(ids.includes(added))return;
+				if(ids.length>=config.maximum){owner.querySelector('[data-home-comparison-feedback]').textContent=config.labels.full;return;}
+				updateHomeTable(owner,ids.concat(added));return;
+			}
+			var homeRemove = event.target.closest('[data-home-comparison-remove]');
+			var homeReset = event.target.closest('[data-home-comparison-reset]');
+			if (homeRemove || homeReset) {
+				var home = (homeRemove || homeReset).closest('[data-home-editorial-comparison]');
+				if (home.tableController) { home.tableController.abort(); home.tableController=null; home.removeAttribute('aria-busy'); }
+				if (homeReset) { home.innerHTML = home.initialMarkup; home.querySelector('[data-comparison-search-input]').removeAttribute('data-search-ready'); bindSearch(); return; }
+				if (!home.initialMarkup) home.initialMarkup = home.innerHTML;
+				var homeTable = home.querySelector('table'), column = homeRemove.parentElement.cellIndex;
+				Array.from(homeTable.rows).forEach(function (row) { if (row.cells[column]) row.deleteCell(column); });
+				var remaining = homeTable.querySelectorAll('[data-home-comparison-remove]');
+				homeTable.dataset.productCount = remaining.length;
+				if (!remaining.length) {
+					home.querySelector('.chidemoon-comparison-table-wrap').hidden=true;
+					home.querySelector('.ch-home-comparison-intro').hidden=true;
+					home.querySelector('.chidemoon-comparison-scroll-hint').hidden=true;
+					home.querySelector('.ch-home-comparison-note').hidden=true;
+					home.querySelector('[data-home-comparison-search]').hidden=false;
+					home.querySelector('[data-comparison-search-results]').hidden=true;
+				}
+				var reset = home.querySelector('[data-home-comparison-reset]'); reset.hidden = false;
+				home.querySelector('[data-home-comparison-feedback]').textContent = 'محصول از جدول حذف شد.';
+				(remaining[0] || home.querySelector('[data-comparison-search-input]')).focus();
+				return;
+			}
 			var chipRemove = event.target.closest('[data-comparison-remove]');
 			if (chipRemove) {
 				if (removeTableProduct(chipRemove.dataset.comparisonRemove)) return;

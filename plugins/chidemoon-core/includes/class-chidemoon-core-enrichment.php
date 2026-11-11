@@ -38,7 +38,7 @@ final class Chidemoon_Core_Enrichment {
   add_action( 'edited_term', array( __CLASS__, 'invalidate_groups' ), 10, 3 );
   add_action( 'set_object_terms', array( __CLASS__, 'preserve_approved_terms' ), 100, 4 );
   add_filter( 'woocommerce_display_product_attributes', array( __CLASS__, 'display_attributes' ), 20, 2 );
-  add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'classification_tab' ), 15 );
+  add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'classification_tab' ), PHP_INT_MAX );
   foreach ( array( 'pa_color', 'pa_material', 'product_cat' ) as $taxonomy ) {
    add_action( $taxonomy . '_edit_form_fields', array( __CLASS__, 'term_fields' ), 10, 2 );
    add_action( 'edited_' . $taxonomy, array( __CLASS__, 'save_term_fields' ) );
@@ -186,10 +186,8 @@ final class Chidemoon_Core_Enrichment {
  }
 
  public static function classification_tab( array $tabs ): array {
-  global $product;
-  if ( $product instanceof WC_Product && ! isset( $tabs['additional_information'] ) && self::has_attributes( false, $product ) ) {
-   $tabs['additional_information'] = array( 'title' => __( 'Additional information', 'woocommerce' ), 'priority' => 20, 'callback' => 'woocommerce_product_additional_information_tab' );
-  }
+  // Technical facts remain available to comparisons without a duplicate product tab.
+  unset( $tabs['additional_information'] );
   return $tabs;
  }
 

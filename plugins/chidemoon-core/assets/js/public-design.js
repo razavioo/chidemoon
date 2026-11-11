@@ -278,10 +278,7 @@
 		searchShell.appendChild(shortcut); row.appendChild(searchShell);
 		const panel = document.createElement('div');
 		panel.id = 'ch-header-search-panel'; panel.className = 'ch-header-search-panel'; panel.inert = true; panel.setAttribute('aria-hidden','true');
-		const closeButton = document.createElement('button');
-		closeButton.type = 'button'; closeButton.className = 'ch-header-search-close';
-		closeButton.textContent = '×'; closeButton.setAttribute('aria-label', 'بستن جستجو');
-		panel.append(search, closeButton); searchShell.append(panel);
+		panel.append(search); searchShell.append(panel);
 		input.placeholder = 'جستجو در چیدمون';
 		input.setAttribute('enterkeyhint', 'search');
 		input.addEventListener('keydown', event => {
@@ -350,18 +347,47 @@
 		}
 		function closeSearch() {
 			searchShell.classList.remove('is-expanded'); header.classList.remove('ch-header-search-open');
+			shortcut.setAttribute('aria-label','باز کردن جستجو'); shortcut.title='جستجو';
 			panel.inert = true; panel.setAttribute('aria-hidden','true'); shortcut.setAttribute('aria-expanded', 'false');
 		}
-		closeButton.addEventListener('click', () => { closeSearch(); shortcut.focus({preventScroll:true}); });
+		function fitSearch() {
+			const style = getComputedStyle(row);
+			const siblings = [...row.children].filter(el => el !== searchShell && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0);
+			const used = siblings.reduce((sum,el) => {
+				if(el.matches('.ch-brand-block'))return sum+(el.querySelector('.ch-brand-logo')?.getBoundingClientRect().width||112);
+				if(el.matches('.ch-nav')&&!mobileMenu.matches){
+					const heading=el.querySelector('.e-n-menu-heading');
+					const items=heading?[...heading.children]:[];
+					return sum+items.reduce((total,item)=>total+item.getBoundingClientRect().width,0)+(parseFloat(heading&&getComputedStyle(heading).columnGap)||0)*Math.max(0,items.length-1);
+				}
+				return sum+el.getBoundingClientRect().width;
+			},0);
+			const available = row.clientWidth - used - (parseFloat(style.columnGap)||0)*siblings.length - (parseFloat(style.paddingLeft)||0) - (parseFloat(style.paddingRight)||0);
+			searchShell.style.setProperty('--ch-search-width', `${Math.max(100,Math.min(420,available))}px`);
+			input.placeholder = mobileMenu.matches ? 'جستجو…' : 'جستجو در چیدمون';
+		}
+		document.addEventListener('click', event => {
+			if (!searchShell.contains(event.target)) closeSearch();
+		});
 		panel.addEventListener('keydown', event => {
 			if(event.key === 'Escape') { event.preventDefault(); closeSearch(); shortcut.focus({preventScroll:true}); }
 		});
 		shortcut.addEventListener('click', () => {
 			if(menuToggle?.getAttribute('aria-expanded') === 'true')menuToggle.click();
-			if(searchShell.classList.contains('is-expanded')){closeSearch();return;}
-			searchShell.classList.add('is-expanded'); header.classList.add('ch-header-search-open');
+			if(searchShell.classList.contains('is-expanded')){
+				if (input.value.trim()) input.form?.requestSubmit();
+				else closeSearch();
+				return;
+			}
+			fitSearch(); searchShell.classList.add('is-expanded'); header.classList.add('ch-header-search-open');
+			shortcut.setAttribute('aria-label',input.value.trim() ? 'جستجو در چیدمون' : 'بستن جستجو'); shortcut.title=input.value.trim() ? 'جستجو' : 'بستن جستجو';
 			panel.inert = false; panel.setAttribute('aria-hidden','false'); shortcut.setAttribute('aria-expanded','true');
 			input.focus({preventScroll:true});
+		});
+		input.addEventListener('input', () => {
+			if (!searchShell.classList.contains('is-expanded')) return;
+			shortcut.setAttribute('aria-label', input.value.trim() ? 'جستجو در چیدمون' : 'بستن جستجو');
+			shortcut.title = input.value.trim() ? 'جستجو' : 'بستن جستجو';
 		});
 		// Use a real document navigation, retaining the page before search in browser history.
 		search.querySelector('form')?.addEventListener('submit', event => {
@@ -388,6 +414,7 @@
 			if (menuOpen) closeSearch();
 		}
 		window.addEventListener('resize', syncHeader, { passive: true });
+		window.addEventListener('resize', () => { if(searchShell.classList.contains('is-expanded'))fitSearch(); }, {passive:true});
 		if (menuToggle) {
 			new MutationObserver(syncHeader).observe(menuToggle, { attributes: true, attributeFilter: ['class', 'aria-expanded'] });
 		}
@@ -398,6 +425,28 @@
 		document.querySelectorAll('.ch-scene-canvas:not([data-ready])').forEach((canvas) => {
 			canvas.dataset.ready = 'true';
 			let active, timer;
+			// Source percentages refer to the full image, not the cropped frame.
+			if (canvas.closest('.ch-home-look-card')) {
+				const image = canvas.querySelector('img.ch-scene-image');
+				const points = [...canvas.querySelectorAll('.ch-scene-point')].map(button => ({ button, x: parseFloat(button.style.left) / 100, y: parseFloat(button.style.top) / 100 }));
+				const mapPoints = () => {
+					if (!image?.naturalWidth || !image.naturalHeight) return;
+					const w = canvas.clientWidth, h = canvas.clientHeight;
+					const scale = Math.max(w / image.naturalWidth, h / image.naturalHeight);
+					const iw = image.naturalWidth * scale, ih = image.naturalHeight * scale;
+					const position = getComputedStyle(image).objectPosition.split(' ').map(parseFloat);
+					const offsetX = (w - iw) * (Number.isFinite(position[0]) ? position[0] / 100 : .5);
+					const offsetY = (h - ih) * (Number.isFinite(position[1]) ? position[1] / 100 : .5);
+					points.forEach(({ button, x, y }) => {
+						const px = x * iw + offsetX, py = y * ih + offsetY;
+						button.style.left = `${px}px`; button.style.top = `${py}px`;
+						button.hidden = px < 0 || px > w || py < 0 || py > h;
+					});
+				};
+				image?.addEventListener('load', mapPoints);
+				new ResizeObserver(mapPoints).observe(canvas);
+				mapPoints();
+			}
 			const close = () => {
 				clearTimeout(timer);
 				canvas.querySelectorAll('.ch-scene-popover').forEach(p => { p.hidden = true; });
@@ -417,6 +466,7 @@
 			};
 			const open = (button) => {
 				close(); active = button;
+				if (canvas.closest('.ch-home-look-strip')) canvas.closest('.ch-home-look-card').scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'instant' });
 				document.getElementById(button.getAttribute('aria-controls')).hidden = false;
 				button.setAttribute('aria-expanded', 'true'); position();
 			};
@@ -495,8 +545,14 @@
 	function enhanceStorefront() {
 		document.querySelectorAll('.ch-sidebar-filters, .ch-catalog-filters').forEach((form, index) => {
 			enhancePriceSteps(form);
-			const state = () => JSON.stringify([...new FormData(form)].filter(([key]) => key.startsWith('ch_')).sort());
-			const initial = state();
+			form.querySelectorAll('.ch-facet-all').forEach(all => {
+				const choices = [...all.closest('fieldset').querySelectorAll('input[name]')];
+				all.addEventListener('change', () => {
+					choices.forEach(input => { input.checked = false; });
+					all.checked = true;
+				});
+				choices.forEach(input => input.addEventListener('change', () => { all.checked = !choices.some(choice => choice.checked); }));
+			});
 			const submit = form.querySelector('button[type="submit"]');
 			const min = form.querySelector('[name="ch_min_price"]');
 			const max = form.querySelector('[name="ch_max_price"]');
@@ -506,10 +562,9 @@
 				const reversed = !!(min?.value && max?.value && Number(min.value) > Number(max.value));
 				error.hidden = !reversed; error.textContent = reversed ? 'حداکثر قیمت باید بیشتر از حداقل قیمت باشد.' : '';
 				if (max) { max.setCustomValidity(error.textContent); max.setAttribute('aria-invalid', String(reversed)); }
-				if (submit) submit.disabled = state() === initial || !form.checkValidity();
+				if (submit) submit.disabled = !form.checkValidity();
 			};
 			form.addEventListener('input', sync); form.addEventListener('change', sync);
-			form.addEventListener('submit', event => { if (state() === initial) event.preventDefault(); });
 			const reset = form.querySelector('.ch-sidebar-reset');
 			const applied = [...new FormData(form)].filter(([key, value]) => key.startsWith('ch_') && value !== '').length;
 			if (reset) reset.hidden = !applied;
@@ -527,7 +582,8 @@
 					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `فیلتر محصولات، ${applied.toLocaleString('fa-IR')} فیلتر فعال`);
 				}
 				form.id ||= `ch-catalog-filter-form-${index}`;
-				const sidebar = form.parentElement;
+				const slot = form.parentElement;
+				const sidebar = form.closest('.ch-catalog-sidebar') || slot;
 				const tools = sidebar.closest('.ch-catalog-layout')?.querySelector('.ch-catalog-tools');
 				if (!tools) return;
 				tools.prepend(toggle);
@@ -545,10 +601,22 @@
 				dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeDialog(); } });
 				dialog.addEventListener('click', event => { if (event.target === dialog) { const box = dialog.getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) closeDialog(); } });
 				dialog.addEventListener('close', () => { toggle.setAttribute('aria-expanded', 'false'); document.documentElement.classList.remove('ch-filter-modal-open'); if (compact.matches) toggle.focus(); });
+				// Keep actions visible before the sidebar reaches its sticky position.
+				let frame = 0;
+				const fitPanel = () => {
+					frame = 0;
+					if (compact.matches) return;
+					const top = Math.max(112, sidebar.getBoundingClientRect().top);
+					sidebar.style.setProperty('--ch-filter-available-height', Math.max(180, window.innerHeight - top - 16) + 'px');
+				};
+				const scheduleFit = () => { if (!frame) frame = requestAnimationFrame(fitPanel); };
+				window.addEventListener('scroll', scheduleFit, { passive: true });
+				window.addEventListener('resize', scheduleFit);
 				const syncLayout = () => {
 					if (dialog.open) closeDialog();
 					if (compact.matches) dialog.append(form);
-					else sidebar.append(form);
+					else slot.append(form);
+					scheduleFit();
 				};
 				compact.addEventListener('change', syncLayout); syncLayout();
 			}
@@ -572,6 +640,20 @@
 		document.querySelectorAll('.ch-header-search .e-search-submit').forEach(button => { button.innerHTML = searchIcon; button.setAttribute('aria-label', 'جستجو در چیدمون'); });
 		const product = document.querySelector('.ch-product-single');
 		if (product) {
+			// Keep the reviewed offer reachable on phones when its original location is off screen.
+			const offer = product.querySelector('.ch-product-purchase .chidemoon-affiliate-cta');
+			if (offer && !document.querySelector('.ch-mobile-purchase') && 'IntersectionObserver' in window) {
+				const panel = document.createElement('aside');
+				panel.className = 'ch-mobile-purchase';
+				panel.setAttribute('aria-label', 'خرید محصول');
+				panel.hidden = true;
+				const link = offer.cloneNode(true);
+				link.removeAttribute('id');
+				link.className = 'ch-mobile-purchase-link';
+				panel.append(link); document.body.append(panel);
+				new IntersectionObserver(entries => { panel.hidden = entries[0].isIntersecting; }, { threshold: 0.2 }).observe(offer);
+			}
+
 			const description = product.querySelector('.ch-product-description .elementor-widget-theme-post-content');
 			if (description && description.textContent.trim().length > 600 && description.scrollHeight > 440) {
 				description.id = 'product-description-body'; description.classList.add('ch-description-collapsible');

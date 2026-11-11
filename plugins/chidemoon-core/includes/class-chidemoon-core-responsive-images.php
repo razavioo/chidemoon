@@ -62,6 +62,16 @@ final class Chidemoon_Core_Responsive_Images {
  public static function start():void {
   if(is_admin()||is_feed()||wp_is_json_request())return;
   $manifest=get_option('chidemoon_responsive_images_v1',[]);if(!$manifest)return;
-  ob_start(static fn(string $html):string=>self::rewrite($html,$manifest));
+  ob_start(static function(string $html)use($manifest):string {
+   $html=self::rewrite($html,$manifest);$tags=new WP_HTML_Tag_Processor($html);$scene=0;
+   while($tags->next_tag('img')){
+    $classes=(string)$tags->get_attribute('class');
+    if((is_front_page()&&str_contains($classes,'ch-scene-image')&&++$scene<=3)||(is_product()&&str_contains($classes,'wp-post-image'))){
+     $tags->set_attribute('loading','eager');$tags->set_attribute('fetchpriority','high');
+     $sizes=(string)$tags->get_attribute('sizes');$tags->set_attribute('sizes',preg_replace('/^auto,\s*/','',$sizes));
+    }
+   }
+   return $tags->get_updated_html();
+  });
  }
 }

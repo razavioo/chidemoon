@@ -1,6 +1,7 @@
 <?php
 /** Crawlable catalogue routes rendered outside shared Elementor template caches. */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
+require_once __DIR__ . '/class-chidemoon-core-product-recommendations.php';
 final class Chidemoon_Core_Structural_Links {
  public static function register(): void { add_action( 'template_redirect', array( __CLASS__, 'start' ), 15 ); }
  private static function term_link( $term ): string {
@@ -8,6 +9,7 @@ final class Chidemoon_Core_Structural_Links {
   return is_wp_error( $url ) ? '' : '<li><a href="' . esc_url( $url ) . '">' . esc_html( $term->name ) . '</a></li>';
  }
  public static function markup(): string {
+  if ( is_product() ) { return Chidemoon_Core_Product_Recommendations::markup( (int) get_queried_object_id() ); }
   $links = ''; $extra = ''; $heading = '';
   if ( is_product_category() ) {
    $term = get_queried_object(); $heading = 'دسته‌های مرتبط';

@@ -198,6 +198,13 @@ final class Chidemoon_Catalog_Sync {
 		$outbox = get_option( self::OUTBOX, array() );
 		while ( $outbox ) {
 			$receipt = $outbox[0];
+			// Bound acknowledgement transactions, including receipts queued by older versions.
+			if ( count( $receipt['records'] ) > 100 ) {
+				$batches = array_map( static fn( $records ) => array_merge( $receipt, array( 'records' => $records ) ), array_chunk( $receipt['records'], 100 ) );
+				$outbox = array_merge( $batches, array_slice( $outbox, 1 ) );
+				self::persist_outbox( $outbox );
+				$receipt = $outbox[0];
+			}
 			$response = self::request( '/api/integrations/catalog/v2/source-receipts', array( 'method' => 'POST', 'headers' => array( 'Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json' ), 'body' => wp_json_encode( $receipt ) ), 16000 );
 			if ( true !== ( $response['imported'] ?? null ) || false !== ( $response['publicationConfirmed'] ?? null ) ) { throw new DomainException( 'receipt_not_confirmed' ); }
 			array_shift( $outbox ); self::persist_outbox( $outbox );
@@ -225,7 +232,7 @@ final class Chidemoon_Catalog_Sync {
 			if ( ( $snapshot['organization']['id'] ?? null ) !== $config['organizationId'] || ( $snapshot['organization']['slug'] ?? null ) !== $config['organizationSlug'] ) { throw new DomainException( 'organization_mismatch' ); }
 			$report = Chidemoon_Core_Source_Importer::import_snapshot( $snapshot, false, $config['organizationSlug'] );
 			$outbox = array();
-			foreach ( array_chunk( $report['records'], 1000 ) as $records ) { $outbox[] = array( 'snapshotId' => $snapshot['snapshot']['id'], 'snapshotRevision' => $snapshot['snapshot']['revision'], 'records' => $records ); }
+			foreach ( array_chunk( $report['records'], 100 ) as $records ) { $outbox[] = array( 'snapshotId' => $snapshot['snapshot']['id'], 'snapshotRevision' => $snapshot['snapshot']['revision'], 'records' => $records ); }
 			self::persist_outbox( $outbox );
 			$status['lastImportAt'] = gmdate( 'c' ); $status['report'] = $report; $status['snapshotId'] = $snapshot['snapshot']['id']; update_option( self::STATUS, $status, false );
 			// Media imports can outlast the access token; renew before acknowledging.

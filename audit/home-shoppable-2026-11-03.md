@@ -1,0 +1,13 @@
+# Shoppable homepage
+
+## Alignment and compact-card revision — 2026-11-04
+
+Published aligned upper hero cards with different widths and a full-width lower image sharing both outer edges. Removed staggered margins. Hero frames are 240px high on desktop and 155px on mobile; the lower image is 160/115px. The next section uses smaller 360px cards with landscape 4:3 image frames. Image cropping now maps each original hotspot coordinate through the cover scale and centered crop, updating on image load and ResizeObserver changes. Popovers retain existing keyboard, pointer and product-link behavior.
+
+Live checks at 1440/390px verify matching upper edges, full-width lower image, landscape card proportions and no horizontal document overflow. All six hotspots in both placements open with focus, show product links, remain within viewport width and close with Escape. Screenshots: `output/playwright/home-tidy-{1440,390}.png` and `home-tidy-row-{1440,390}.png`. JS syntax and diff checks passed. Production CSS/JS backup: `/opt/chidemoon/backups/home-tidy-20261104/`.
+
+Published asymmetric three-image hero and replaced the discovery route cards with a horizontal row of two real shoppable scenes. Two existing merchant scenes have six eligible product hotspots (two lamps and four bedroom products). The third hero image is an inspiration scene with a gallery link, without invented product associations. Scene images preserve their original proportions and hotspot coordinates. Independent hero/row control IDs prevent collisions; keyboard focus, Escape and product links reuse the gallery implementation. Horizontal cards scroll into view when opening a hotspot.
+
+Homepage migration: `tools/home-shoppable-refresh.php apply`, with original Elementor JSON backed up in `_chidemoon_before_home_shoppable_20261103`. Code backup `/opt/chidemoon/backups/home-shoppable-20261103/`. New shortcode dynamically selects published scenes with at least two eligible products; editor content remains native Elementor shortcode widgets.
+
+Live browser checks at 1440 and 390px: three hero cards, two horizontal cards, six hotspots per placement, no duplicate IDs and no document horizontal overflow. All hotspot panels open via focus and remain within viewport width; product links and Escape checked. Initial click tests passed both placements; horizontal-card auto-centering was added after finding a partially visible panel during exhaustive checks. PHP lint, JS syntax and whitespace checks passed. Screenshots: `output/playwright/home-shoppable-1440.png`, `home-shoppable-390.png`, `home-shoppable-row-1440.png`, `home-shoppable-row-390.png`.

@@ -330,7 +330,7 @@ body:has(.chidemoon-comparison-table-section) .elementor-widget-container {
 	min-inline-size: 0;
 	max-inline-size: 100%;
 }
-.chidemoon-comparison-table-wrap { max-inline-size: 100%; isolation: isolate; }
+.chidemoon-comparison-table-wrap { position: relative; max-inline-size: 100%; isolation: isolate; }
 .chidemoon-comparison-table thead th:not(:first-child) { position: static; }
 .chidemoon-comparison-table thead img { display: block; height: auto; aspect-ratio: 1; }
 .chidemoon-comparison-table .woocommerce-Price-amount { display: inline-block; white-space: nowrap; }
@@ -362,3 +362,8 @@ body .chidemoon-comparison-search--persistent { display: block; inline-size: 100
 .chidemoon-comparison-search--persistent [hidden] { display: none !important; }
 .chidemoon-comparison-table-section[aria-busy="true"] { opacity: .7; }
 body .chidemoon-comparison-table[data-product-count="1"] { inline-size: 100%; min-inline-size: 100%; }
+
+/* Mobile QA: preserve a 44px touch target after the table's base button styles. */
+@media (max-width:1024px) {
+ body .chidemoon-comparison-table thead .chidemoon-comparison-table__remove { inline-size:44px; block-size:44px; min-block-size:44px; }
+}

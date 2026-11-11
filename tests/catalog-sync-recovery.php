@@ -134,7 +134,8 @@ case_sync( 'receipt batches drain incrementally after partial network failure', 
   if ( str_ends_with( $path, 'source-snapshot' ) ) { return response_sync( $GLOBALS['snapshot'] ); }
   $acks++; return response_sync( array( 'imported' => true, 'publicationConfirmed' => false ), 2 === $acks ? 503 : 200 );
  }; Chidemoon_Catalog_Sync::poll();
- check_sync( 1 === count( get_option( 'chidemoon_catalog_outbox' ) ) && 1 === count( get_option( 'chidemoon_catalog_outbox' )[0]['records'] ), 'Delivered batch repeated or undelivered batch lost' );
+ $pending=array_merge(...array_column(get_option('chidemoon_catalog_outbox'),'records'));
+ check_sync(array_slice($GLOBALS['report']['records'],100)===$pending,'Delivered batch repeated or undelivered batch lost');
 } );
 case_sync( 'receipt persistence failure is visible and does not claim completion', function() {
  $GLOBALS['fail_option'] = 'chidemoon_catalog_outbox'; Chidemoon_Catalog_Sync::poll();
@@ -170,5 +171,14 @@ case_sync( 'credentials must be durably marked before rotating a refresh token',
  $t = invoke_sync( 'unseal', get_option( 'chidemoon_catalog_tokens' ) ); $t['expiresAt'] = time() - 1; invoke_sync( 'persist_tokens', $t );
  $GLOBALS['fail_option'] = 'chidemoon_catalog_tokens'; Chidemoon_Catalog_Sync::poll();
  check_sync( array() === $GLOBALS['calls'] && 'credentials_persistence_failed' === state_sync()['error'], 'Rotation proceeded without durable recovery marker' );
+} );
+case_sync( 'large pending receipts are split without losing acknowledgement order', function() {
+ $receipt=receipt_sync();$receipt['records']=array_map(static fn($n)=>array('sourceKey'=>'source-'.$n,'revision'=>1,'status'=>'imported','issues'=>array()),range(1,251));
+ update_option('chidemoon_catalog_outbox',array($receipt));
+ invoke_sync('flush_receipts','test-access');
+ $bodies=array_map(static fn($call)=>json_decode($call[1]['body'],true),$GLOBALS['calls']);
+ check_sync(array(100,100,51)===array_map(static fn($body)=>count($body['records']),$bodies),'Unbounded receipt transaction');
+ check_sync($receipt['records']===array_merge(...array_column($bodies,'records')),'Receipts reordered or lost');
+ check_sync(array()===get_option('chidemoon_catalog_outbox'),'Split outbox not drained');
 } );
 echo 'Passed ' . $GLOBALS['passed'] . " sync recovery scenarios.\n";

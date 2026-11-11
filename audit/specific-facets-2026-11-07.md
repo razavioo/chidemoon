@@ -1,0 +1,11 @@
+# Specific category facets — 2026-11-07
+
+Published dimension filters for mirrors, carpets and floor mats; brand filters for electrical appliance categories and descendants; material, style/technique and dimension filters for both artwork category branches. Existing generic facets remain on other category families. Explicitly requested facets can display a single known option.
+
+New helper class derives options from existing product/source brand fields, brand taxonomies and attributes, explicit brand names in titles, dimension variants, normalized dimension fields, and explicit merchant descriptions. No product records were rewritten. Artwork material and style/technique combine recorded taxonomy terms with explicit source text. Unknown values do not become options. Selection uses stable tokens and intersects products with category, price and taxonomy constraints; multiple choices within a facet use OR, separate facets use AND. Source changes appear on the next request.
+
+Dimension parsing converts Persian/Arabic digits and metre/millimetre units to centimetres, ignores model-code hyphens, parses thickness before selecting the two display axes, and preserves explicitly stated carpet areas. It deliberately omits ambiguous sizes without usable units/context.
+
+Validation: both PHP classes lint clean. tests/category-facet-dimensions.php covers unit conversion, thickness, Persian digits, model codes, source variants and ambiguous measurements. Integration test compares every generated option against returned product IDs across nine representative category scopes, including both artwork branches and appliance descendants; all passed (output/specific-facets-final.txt). Live browser verifies 14 mirror size choices, 43 appliance brands, all three artwork facets, retained brand selection with one matching product, retained artwork size selection with one matching product, and no mobile horizontal overflow. Mobile drawer screenshot: output/playwright/board-facets-open-20261107-mobile.png.
+
+Backup: /opt/chidemoon/backups/specific-facets-20261107/class-chidemoon-core-discovery.php.

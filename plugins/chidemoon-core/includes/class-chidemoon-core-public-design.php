@@ -18,7 +18,7 @@ final class Chidemoon_Core_Public_Design {
 		add_action( 'elementor/query/chidemoon_looks', array( __CLASS__, 'looks_query' ) );
 		add_action( 'elementor/query/chidemoon_related_posts', array( __CLASS__, 'related_posts_query' ) );
 		add_shortcode( 'chidemoon_room_filters', array( __CLASS__, 'room_filters' ) );
-		add_filter( 'hello_elementor_skip_link_url', static fn(): string => '#chidemoon-content' );
+		add_filter( 'hello_elementor_skip_link_url', static fn(): string => is_singular( Chidemoon_Core_Looks::POST_TYPE ) ? '#content' : '#chidemoon-content' );
 		add_filter( 'hello_elementor_skip_link_text', static fn(): string => 'رفتن به محتوا' );
 		add_filter( 'elementor/fonts/additional_fonts', array( __CLASS__, 'fonts' ) );
 		add_filter( 'elementor/utils/get_the_archive_title', static function ( string $title ): string {
@@ -38,7 +38,7 @@ final class Chidemoon_Core_Public_Design {
 		add_filter( 'posts_clauses', array( __CLASS__, 'catalog_ordering_clauses' ), 100, 2 );
 		add_action( 'pre_get_posts', static function ( WP_Query $query ): void {
 			if ( ! is_admin() && $query->is_main_query() && $query->is_search() ) {
-				$query->set( 'post_type', array( 'post', 'product' ) );
+				$query->set( 'post_type', 'product' );
 			}
 		} );
 		add_filter( 'gettext', static function ( string $translation, string $text, string $domain ): string {
@@ -62,7 +62,7 @@ final class Chidemoon_Core_Public_Design {
 		foreach ( $xpath->query( '//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::textarea) and not(ancestor::code)]' ) as $node ) {
 			$text = self::normalize_persian( $node->nodeValue );
 			$text = str_replace( array( 'مشخصات بررسی شده', 'مقاله‌های مقایسه چیدمون به تفاوت کاربرد، اندازه و شرایط استفاده می‌پردازند.', 'مقایسه‌های تحریریه را بخوان و تفاوت گزینه‌ها را بر اساس کاربرد، اندازه و نیاز خانه‌ات بررسی کن.' ), array( 'مشخصات محصول', 'بین چند گزینه مرددی؟ تفاوت‌ها را ببین و مناسب‌ترین را برای خانه‌ات انتخاب کن.', '' ), $text );
-			if ( in_array( trim( $text ), array( 'خواندن مطلب', 'مشاهده نتیجه', 'مشاهدهٔ نتیجه' ), true ) && in_array( $widget->get_name(), array( 'button', 'posts', 'archive-posts' ), true ) ) { $text = 'product' === get_post_type( get_the_ID() ) ? 'دیدن محصول' : 'خواندن ' . self::post_card_label( get_the_ID() ); }
+			if ( in_array( trim( $text ), array( 'خواندن مطلب', 'مشاهده نتیجه', 'مشاهدهٔ نتیجه' ), true ) && in_array( $widget->get_name(), array( 'button', 'posts', 'archive-posts' ), true ) ) { $text = 'product' === get_post_type( get_the_ID() ) ? 'دیدن محصول' : ( 'مقایسه' === self::post_card_label( get_the_ID() ) ? 'مشاهده بیشتر' : 'خواندن ' . self::post_card_label( get_the_ID() ) ); }
 			$node->nodeValue = $text;
 		}
 		$root = $document->getElementById( 'ch-copy-root' );
@@ -288,7 +288,7 @@ final class Chidemoon_Core_Public_Design {
 			}
 			$action = $xpath->query( './/a[contains(concat(" ", normalize-space(@class), " "), " elementor-post__read-more ")]', $text )->item( 0 );
 			if ( $action ) {
-				$action->textContent = 'product' === $type ? 'دیدن محصول' : 'خواندن ' . $label;
+				$action->textContent = 'product' === $type ? 'دیدن محصول' : ( 'مقایسه' === $label ? 'مشاهده بیشتر' : 'خواندن ' . $label );
 				$action->setAttribute( 'aria-label', $action->textContent . ': ' . get_the_title( $post_id ) );
 			}
 		}
