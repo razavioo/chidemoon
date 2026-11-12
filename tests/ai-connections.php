@@ -49,3 +49,8 @@ $router = new Chidemoon_AI_Routed_Provider();
 check( array( 'https://public.example/v1', 'text-secret', 'text-model' ) === $router->generate_text( array(), array() ), 'Text routed to wrong credentials.' );
 check( array( 'https://public.example/images/v1', 'image-secret', 'image-model' ) === $router->generate_image( array() ), 'Image routed to wrong credentials.' );
 echo "Independent provider routing checks passed.\n";
+
+$edit = $image; $edit['model'] = 'edit-model';
+check( true === Chidemoon_AI_Connections::save( array( 'text' => $profile, 'image' => $image, 'image_edit' => $edit ) ), 'Edit profile rejected.' );
+check( 'edit-model' === $router->generate_image( array( 'request_payload' => array( 'mode' => 'edit', 'source_attachment_ids' => array( 1 ) ) ) )[2], 'Edit model routing failed.' );
+check( 'edit-model' === $router->image_model(), 'Edit provenance model incorrect.' );

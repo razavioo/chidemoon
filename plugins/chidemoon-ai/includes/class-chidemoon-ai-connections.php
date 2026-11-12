@@ -104,6 +104,7 @@ final class Chidemoon_AI_Connections {
 
 /** Routes each operation to the selected purpose without sharing credentials. */
 final class Chidemoon_AI_Routed_Provider implements Chidemoon_AI_Provider_Interface {
+ private string $image_purpose = 'image';
  private function provider( string $purpose ): Chidemoon_AI_Provider_Interface|WP_Error {
   $config = Chidemoon_AI_Connections::resolve( $purpose );
   if ( is_wp_error( $config ) ) { return $config; }
@@ -112,11 +113,11 @@ final class Chidemoon_AI_Routed_Provider implements Chidemoon_AI_Provider_Interf
  private function model( string $purpose ): string { $c = Chidemoon_AI_Connections::resolve( $purpose ); return is_wp_error( $c ) ? '' : $c['model']; }
  public function name(): string { return 'purpose-connections'; }
  public function text_model(): string { return $this->model( 'text' ); }
- public function image_model(): string { return $this->model( 'image' ); }
+ public function image_model(): string { return $this->model( $this->image_purpose ); }
  public function vision_model(): string { return $this->model( 'vision' ); }
  public function supports_vision(): bool { return '' !== $this->vision_model(); }
  public function generate_text( array $job, array $evidence ): array|WP_Error { $p = $this->provider( 'text' ); return is_wp_error( $p ) ? $p : $p->generate_text( $job, $evidence ); }
  public function generate_enrichment( array $job, array $evidence ): array|WP_Error { $p = $this->provider( 'text' ); return is_wp_error( $p ) ? $p : $p->generate_enrichment( $job, $evidence ); }
- public function generate_image( array $job ): array|WP_Error { $payload = $job['request_payload'] ?? array(); $edit = ! empty( $payload['source_attachment_ids'] ) || in_array( $payload['mode'] ?? '', array( 'edit', 'variation' ), true ); $p = $this->provider( $edit ? 'image_edit' : 'image' ); return is_wp_error( $p ) ? $p : $p->generate_image( $job ); }
+ public function generate_image( array $job ): array|WP_Error { $payload = $job['request_payload'] ?? array(); $edit = ! empty( $payload['source_attachment_ids'] ) || in_array( $payload['mode'] ?? '', array( 'edit', 'variation' ), true ); $this->image_purpose = $edit ? 'image_edit' : 'image'; $p = $this->provider( $this->image_purpose ); return is_wp_error( $p ) ? $p : $p->generate_image( $job ); }
  public function analyze_image( array $attachment_ids, array $products, string $prompt ): array|WP_Error { $p = $this->provider( 'vision' ); return is_wp_error( $p ) ? $p : $p->analyze_image( $attachment_ids, $products, $prompt ); }
 }
