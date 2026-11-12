@@ -17,11 +17,13 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 	private string $image_size;
 	private string $image_quality;
 	private string $search_mode;
+	private string $reasoning_effort;
 
 	/**
 	 * @param array<string, string> $options
 	 */
 	public function __construct( string $base_url, string $api_key, string $text_model, string $image_model, int $timeout, array $options = array() ) {
+		$this->reasoning_effort = in_array( $options['reasoning_effort'] ?? '', array( 'none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max' ), true ) ? $options['reasoning_effort'] : '';
 		$this->base_url      = $base_url;
 		$this->api_key       = $api_key;
 		$this->text_model    = $text_model;
@@ -361,6 +363,7 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 	 * @return array<string, mixed>|WP_Error
 	 */
 	private function json_request( string $path, array $body, bool $allow_retry_body = false ): array|WP_Error {
+		if ( '/chat/completions' === $path && '' !== $this->reasoning_effort ) { $body['reasoning_effort'] = $this->reasoning_effort; unset( $body['temperature'] ); }
 		if ( '/chat/completions' === $path && str_starts_with( (string) ( $body['model'] ?? '' ), 'gemini-' ) ) {
 			$contents = array();
 			$system = array();

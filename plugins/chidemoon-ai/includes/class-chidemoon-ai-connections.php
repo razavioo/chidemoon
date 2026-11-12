@@ -22,7 +22,7 @@ final class Chidemoon_AI_Connections {
   if ( ! isset( self::PURPOSES[ $purpose ] ) ) { return new WP_Error( 'invalid_purpose', 'نوع اتصال معتبر نیست.' ); }
   $saved = self::saved(); $row = $saved[ $purpose ] ?? array();
   if ( ! empty( $row['enabled'] ) ) {
-   $config = array( 'base_url' => $row['base_url'] ?? '', 'api_key' => self::decrypt( $row['credential'] ?? '' ), 'model' => $row['model'] ?? '' );
+   $config = array( 'base_url' => $row['base_url'] ?? '', 'api_key' => self::decrypt( $row['credential'] ?? '' ), 'model' => $row['model'] ?? '', 'reasoning_effort' => $row['reasoning_effort'] ?? '' );
   } elseif ( 'image_edit' === $purpose ) {
    return self::resolve( 'image' );
   } elseif ( 'vision' === $purpose && ! empty( $saved['text']['enabled'] ) ) {
@@ -52,7 +52,9 @@ final class Chidemoon_AI_Connections {
     $credential = self::encrypt( $key );
    }
    if ( $enabled && ( strlen( $base ) > 2048 || ! Chidemoon_AI_Provider_Factory::is_safe_provider_url( $base ) || wp_parse_url( $base, PHP_URL_QUERY ) || wp_parse_url( $base, PHP_URL_FRAGMENT ) || ! preg_match( '/^[a-zA-Z0-9][a-zA-Z0-9._:\/-]{0,127}$/D', $model ) || '' === self::decrypt( $credential ) ) ) { return new WP_Error( 'invalid_connection', $label . ': نشانی HTTPS عمومی، مدل و کلید معتبر را وارد کنید.' ); }
-   $next[ $purpose ] = array( 'enabled' => $enabled, 'base_url' => $base, 'model' => $model, 'credential' => $credential );
+   $effort = is_string( $row['reasoning_effort'] ?? null ) ? $row['reasoning_effort'] : ( $old['reasoning_effort'] ?? '' );
+   if ( ! in_array( $effort, array( '', 'none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max' ), true ) ) { return new WP_Error( 'invalid_effort', 'سطح پردازش معتبر نیست.' ); }
+   $next[ $purpose ] = array( 'reasoning_effort' => $effort, 'enabled' => $enabled, 'base_url' => $base, 'model' => $model, 'credential' => $credential );
   }
   update_option( self::OPTION, $next, false );
   return true;
@@ -93,6 +95,11 @@ final class Chidemoon_AI_Connections {
     $id = 'connection-' . $purpose . '-' . $field;
     echo '<p><label for="' . esc_attr( $id ) . '">' . esc_html( $name ) . '</label><br><input class="regular-text" dir="ltr" id="' . esc_attr( $id ) . '" name="' . esc_attr( $prefix . '[' . $field . ']' ) . '" type="' . ( 'api_key' === $field ? 'password' : ( 'base_url' === $field ? 'url' : 'text' ) ) . '" autocomplete="off" value="' . esc_attr( 'api_key' === $field ? '' : ( $row[ $field ] ?? '' ) ) . '"></p>';
    }
+   if ( 'text' === $purpose ) {
+    echo '<p><label for="connection-text-effort">سطح پردازش متن</label><br><select id="connection-text-effort" name="connections[text][reasoning_effort]">';
+    foreach ( array( '' => 'پیش‌فرض سرویس', 'low' => 'سبک (low)', 'medium' => 'متوسط', 'high' => 'زیاد' ) as $value => $label ) { echo '<option value="' . esc_attr( $value ) . '" ' . selected( $row['reasoning_effort'] ?? '', $value, false ) . '>' . esc_html( $label ) . '</option>'; }
+    echo '</select></p>';
+   }
    echo '<p class="description">کلید ذخیره‌شده نمایش داده نمی‌شود؛ خالی گذاشتن فیلد آن را حفظ می‌کند. ' . ( ! empty( $row['credential'] ) ? 'کلید شخصی ثبت شده است.' : 'کلید شخصی ثبت نشده است.' ) . '</p>';
    echo '<p><button class="button" type="submit" name="test_purpose" value="' . esc_attr( $purpose ) . '">تست اتصال ذخیره‌شده</button></p>';
    echo '<p><label><input type="checkbox" name="' . esc_attr( $prefix . '[clear_key]' ) . '" value="1"> حذف کلید شخصی</label></p></fieldset>';
@@ -108,7 +115,7 @@ final class Chidemoon_AI_Routed_Provider implements Chidemoon_AI_Provider_Interf
  private function provider( string $purpose ): Chidemoon_AI_Provider_Interface|WP_Error {
   $config = Chidemoon_AI_Connections::resolve( $purpose );
   if ( is_wp_error( $config ) ) { return $config; }
-  return new Chidemoon_AI_OpenAI_Compatible_Provider( $config['base_url'], $config['api_key'], $config['model'], $config['model'], Chidemoon_AI_Settings::get_int( 'provider_timeout' ), array( 'vision_model' => $config['model'], 'image_size' => Chidemoon_AI_Settings::get_string( 'image_size' ), 'image_quality' => Chidemoon_AI_Settings::get_string( 'image_quality' ), 'search_mode' => Chidemoon_AI_Settings::get_string( 'search_mode' ) ) );
+  return new Chidemoon_AI_OpenAI_Compatible_Provider( $config['base_url'], $config['api_key'], $config['model'], $config['model'], Chidemoon_AI_Settings::get_int( 'provider_timeout' ), array( 'reasoning_effort' => $config['reasoning_effort'] ?? '', 'vision_model' => $config['model'], 'image_size' => Chidemoon_AI_Settings::get_string( 'image_size' ), 'image_quality' => Chidemoon_AI_Settings::get_string( 'image_quality' ), 'search_mode' => Chidemoon_AI_Settings::get_string( 'search_mode' ) ) );
  }
  private function model( string $purpose ): string { $c = Chidemoon_AI_Connections::resolve( $purpose ); return is_wp_error( $c ) ? '' : $c['model']; }
  public function name(): string { return 'purpose-connections'; }
