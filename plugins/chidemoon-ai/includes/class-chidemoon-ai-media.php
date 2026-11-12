@@ -77,6 +77,13 @@ class Chidemoon_AI_Media {
 			return new WP_Error( 'chidemoon_ai_image_store_failed', __( 'The generated image could not be stored in the Media Library.', 'chidemoon-ai' ) );
 		}
 
+		clearstatcache( true, (string) $uploaded['file'] );
+		$stored = @file_get_contents( (string) $uploaded['file'] );
+		if ( false === $stored || ! hash_equals( hash( 'sha256', $bytes ), hash( 'sha256', $stored ) ) ) {
+			wp_delete_file( (string) $uploaded['file'] );
+			return new WP_Error( 'chidemoon_ai_image_store_failed', 'ذخیره تصویر کامل نشد؛ فضای دیسک و دسترسی پوشه رسانه را بررسی کنید و دوباره تلاش کنید.' );
+		}
+
 		$attachment_id = wp_insert_attachment(
 			array(
 				'post_mime_type' => $validated['mime'],

@@ -231,6 +231,8 @@ class Chidemoon_AI_Admin {
 			$attachment_id = absint( $result['attachment_id'] ?? 0 );
 			$html = '';
 			if ( $attachment_id ) {
+				$file = get_attached_file( $attachment_id );
+				if ( ! $file || ! is_file( $file ) || 0 === filesize( $file ) ) { return '<p role="alert">فایل تصویر موجود نیست یا ناقص ذخیره شده است. این خروجی را تأیید نکنید؛ ابتدا تصویر باید بازیابی شود.</p>'; }
 				$img = wp_get_attachment_image( $attachment_id, 'medium' );
 				if ( $img ) {
 					$html .= $img;
@@ -239,9 +241,9 @@ class Chidemoon_AI_Admin {
 			if ( 'look' === $type ) {
 				$products = is_array( $result['product_ids'] ?? null ) ? array_map( 'absint', $result['product_ids'] ) : array();
 				$hotspots = is_array( $result['hotspots_proposal'] ?? null ) ? $result['hotspots_proposal'] : array();
-				$html .= '<p><strong>' . esc_html__( 'Products:', 'chidemoon-ai' ) . '</strong> ' . esc_html( implode( ', ', array_map( 'strval', $products ) ) ) . '<br>';
-				$html .= '<strong>' . esc_html__( 'Hotspots:', 'chidemoon-ai' ) . '</strong> ' . esc_html( (string) count( $hotspots ) . ' (' . (string) ( $result['hotspot_source'] ?? 'heuristic' ) . ')' ) . '<br>';
-				$html .= '<strong>' . esc_html__( 'Room:', 'chidemoon-ai' ) . '</strong> ' . esc_html( (string) ( $result['room'] ?? '' ) ) . '</p>';
+				$html .= '<p><strong>' . esc_html( 'محصولات:' ) . '</strong> ' . esc_html( implode( ', ', array_map( 'strval', $products ) ) ) . '<br>';
+				$html .= '<strong>' . esc_html( 'نقاط خرید:' ) . '</strong> ' . esc_html( (string) count( $hotspots ) . ' (' . (string) ( $result['hotspot_source'] ?? 'heuristic' ) . ')' ) . '<br>';
+				$html .= '<strong>' . esc_html( 'فضا:' ) . '</strong> ' . esc_html( (string) ( $result['room'] ?? '' ) ) . '</p>';
 			} else {
 				$html .= '<p>' . esc_html( (string) ( $result['revised_prompt'] ?? '' ) ) . '</p>';
 			}
