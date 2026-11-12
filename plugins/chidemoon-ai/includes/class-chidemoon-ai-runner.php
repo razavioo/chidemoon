@@ -316,7 +316,15 @@ class Chidemoon_AI_Runner {
 		$provenance['hotspot_source'] = $hotspot_source;
 		$provenance['room']           = sanitize_key( (string) ( $payload['room'] ?? '' ) );
 		$provenance['style']          = sanitize_key( (string) ( $payload['style'] ?? '' ) );
+		$names = array_map( static fn( $id ) => get_the_title( $id ), $product_ids );
+		$editorial = $provider->generate_text( array( 'request_payload' => array( 'instructions' => 'یک عنوان کوتاه فارسی و درخور چیدمان و یک خلاصه کوتاه بنویس. عنوان نباید نام مدل هوش مصنوعی یا متن پرامپت باشد. فقط از اطلاعات منبع استفاده کن.', 'length' => 'short', 'lang' => 'fa' ) ), array( array( 'source_id' => 'look-context', 'source_type' => 'editorial', 'freshness_at' => current_time( 'mysql', true ), 'source_excerpt' => wp_json_encode( array( 'room' => $payload['room'] ?? '', 'style' => $payload['style'] ?? '', 'products' => $names ), JSON_UNESCAPED_UNICODE ) ) ) );
+		if ( ! is_wp_error( $editorial ) && ! is_wp_error( Chidemoon_AI_Moderation::review_text_output( $editorial ) ) ) {
+			$look_title = sanitize_text_field( (string) ( $editorial['title'] ?? '' ) );
+			$look_excerpt = sanitize_textarea_field( (string) ( $editorial['excerpt'] ?? '' ) );
+		}
 		$look     = array(
+			'title' => isset( $look_title ) ? mb_substr( $look_title, 0, 100 ) : 'چیدمان خانه با جزئیات منتخب',
+			'excerpt' => isset( $look_excerpt ) ? mb_substr( $look_excerpt, 0, 500 ) : '',
 			'attachment_id'     => $attachment_id,
 			'revised_prompt'    => sanitize_text_field( (string) ( $result['revised_prompt'] ?? '' ) ),
 			'product_ids'       => array_values( $product_ids ),
@@ -503,14 +511,15 @@ class Chidemoon_AI_Runner {
 		$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) ( $result['product_ids'] ?? array() ) ) ) ) );
 		$hotspots    = is_array( $result['hotspots_proposal'] ?? null ) ? array_values( $result['hotspots_proposal'] ) : Chidemoon_AI_Look::heuristic_hotspots( $product_ids );
 		$room        = sanitize_key( (string) ( $result['room'] ?? '' ) );
-		$caption     = sanitize_text_field( (string) ( $result['revised_prompt'] ?? __( 'AI styled look', 'chidemoon-ai' ) ) );
+		$caption = sanitize_text_field( (string) ( $result['excerpt'] ?? '' ) );
+		$title = sanitize_text_field( (string) ( $result['title'] ?? 'چیدمان خانه با جزئیات منتخب' ) );
 
 		$post_id = wp_insert_post(
 			array(
 				'post_author'  => (int) ( $job['requested_by'] ?? get_current_user_id() ),
 				'post_status'  => 'draft',
 				'post_type'    => Chidemoon_Core_Looks::POST_TYPE,
-				'post_title'   => '' !== $caption ? $caption : __( 'AI styled look', 'chidemoon-ai' ),
+				'post_title'   => $title ?: 'چیدمان خانه با جزئیات منتخب',
 				'post_content' => '',
 				'post_excerpt' => $caption,
 			),

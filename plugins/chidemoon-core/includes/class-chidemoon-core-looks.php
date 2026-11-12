@@ -179,7 +179,8 @@ final class Chidemoon_Core_Looks {
     $content = '<h2>' . esc_html( $look->post_title ) . '</h2>' . ( self::relationships( $look->ID ) ? self::render( $look->ID ) : self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) );
    }
    if ( ! trim( $content ) ) { continue; }
-   if ( ! str_contains( $content, 'class="ch-scene-point"' ) && ! str_contains( $content, 'class="chidemoon-shop-the-look__hotspot"' ) ) { continue; }
+   // Published Looks remain discoverable before optional hotspot approval.
+   if ( ! str_contains( $content, '<img' ) ) { continue; }
    $title = (string) get_post_meta( $look->ID, '_reycob_stl_heading', true ) ?: $look->post_title;
    $content = preg_replace( '/^<h2>.*?<\/h2>/s', '', $content, 1 );
    $chips = '';
@@ -273,31 +274,31 @@ final class Chidemoon_Core_Looks {
  }
  public static function render( int $id, string $extra_class = '' ): string {
   if ( self::POST_TYPE !== get_post_type( $id ) || ( 'publish' !== get_post_status( $id ) && ! current_user_can( 'edit_post', $id ) ) ) { return ''; }
-  $spots = array(); $list = '<ul class="ch-look-products">';
+  $spots = array(); $list = '<section class="ch-look-shopping"><h2>محصولات این چیدمان</h2><ul class="ch-look-products">';
   foreach ( self::relationships( $id ) as $row ) {
    $product = ! empty( $row['product_id'] ) ? wc_get_product( (int) $row['product_id'] ) : false;
    if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) {
     if ( current_user_can( 'edit_post', $id ) ) { $list .= '<li>' . esc_html__( 'Product reference requires reconciliation', 'chidemoon-core' ) . ' ' . esc_html( (string) $row['source_key'] ) . '</li>'; }
     continue;
    }
-   $list .= '<li><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '">' . esc_html( $product->get_name() ) . '</a> ' . esc_html__( ucfirst( (string) $row['role'] ), 'chidemoon-core' ) . ' ' . $product->get_price_html();
+   $list .= '<li>' . get_the_post_thumbnail( $product->get_id(), 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) ) . '<div><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '">' . esc_html( $product->get_name() ) . '</a> ' . esc_html__( ucfirst( (string) $row['role'] ), 'chidemoon-core' ) . ' ' . $product->get_price_html();
    if ( ! Chidemoon_Core_Affiliate::is_offer_available( $product ) ) {
     $list .= '<span>' . esc_html__( 'Unavailable at merchant', 'chidemoon-core' ) . '</span>';
     if ( class_exists( 'Chidemoon_Core_Discovery' ) ) { $list .= Chidemoon_Core_Discovery::alternatives( $product->get_id() ); }
    }
-   $list .= '</li>';
+   $list .= '</div></li>';
    if ( null !== $row['hotspot_x'] && null !== $row['hotspot_y'] && $row['hotspot_approved'] ) { $spots[] = array( 'productId' => $product->get_id(), 'x' => (float) $row['hotspot_x'], 'y' => (float) $row['hotspot_y'] ); }
   }
   $image = get_post_thumbnail_id( $id );
   $html = Chidemoon_Core_Shop_The_Look::render_look( array( 'imageId' => $image, 'caption' => wp_strip_all_tags( (string) get_post_field( 'post_excerpt', $id ) ), 'hotspots' => $spots ), $extra_class );
-  $html .= $list . '</ul><ul class="ch-look-palette" aria-label="' . esc_attr__( 'Approved palette', 'chidemoon-core' ) . '">';
+  $html .= $list . '</ul></section><ul class="ch-look-palette" aria-label="' . esc_attr__( 'Approved palette', 'chidemoon-core' ) . '">';
   foreach ( (array) get_post_meta( $id, self::PALETTE, true ) as $color ) {
    $term = get_term( (int) ( $color['colorId'] ?? 0 ), 'pa_color' );
    if ( ! $term || is_wp_error( $term ) ) { continue; }
    $style = ! empty( $color['hex'] ) && preg_match( '/^#[a-fA-F0-9]{6}$/D', $color['hex'] ) ? ' style="background-color:' . esc_attr( $color['hex'] ) . '"' : '';
    $html .= '<li><span aria-hidden="true"' . $style . '></span>' . esc_html( $term->name ) . ( isset( $color['proportion'] ) ? ' ' . esc_html( (string) round( 100 * $color['proportion'] ) . '%' ) : '' ) . '</li>';
   }
-  return $html . '</ul>';
+  return '<div class="ch-look-detail">' . $html . '</ul></div>';
  }
  public static function render_content( string $content ): string { if ( is_singular( self::POST_TYPE ) && in_the_loop() && is_main_query() && ! str_contains( $content, 'chidemoon-shop-the-look' ) ) { return $content . self::render( get_the_ID() ); } return $content; }
  public static function product_looks(): void { echo self::product_looks_shortcode(); }

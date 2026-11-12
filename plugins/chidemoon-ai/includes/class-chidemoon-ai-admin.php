@@ -229,7 +229,7 @@ class Chidemoon_AI_Admin {
 		$type = (string) ( $job['job_type'] ?? '' );
 		if ( in_array( $type, array( 'image', 'look' ), true ) ) {
 			$attachment_id = absint( $result['attachment_id'] ?? 0 );
-			$html = '';
+			$html = ! empty( $result['title'] ) ? '<h3>' . esc_html( $result['title'] ) . '</h3>' : '';
 			if ( $attachment_id ) {
 				$file = get_attached_file( $attachment_id );
 				if ( ! $file || ! is_file( $file ) || 0 === filesize( $file ) ) { return '<p role="alert">فایل تصویر موجود نیست یا ناقص ذخیره شده است. این خروجی را تأیید نکنید؛ ابتدا تصویر باید بازیابی شود.</p>'; }

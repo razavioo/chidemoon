@@ -2252,3 +2252,16 @@ body .elementor main.ch-main:has(.ch-category-panel) { padding-block: 24px; gap:
 .ch-comparison-article-row .ch-recommendation-link { margin-top: auto; }
 @media(max-width:1024px) { .ch-recommendation-row { grid-auto-columns: calc((100% - 48px)/3); } }
 @media(max-width:767px) { .ch-product-recommendations { width: calc(100% - 32px); margin-block: 24px; } .ch-recommendation-row { grid-auto-columns: 66%; gap: 16px; } .ch-recommendation-section > h2 { font-size: 20px; margin-bottom: 16px; } }
+/* A published Look shares one image-led composition with the discovery gallery. */
+.ch-look-detail{display:grid;gap:32px;max-inline-size:1200px;margin-inline:auto}
+.ch-look-detail .chidemoon-shop-the-look{margin:0}
+.ch-look-detail .chidemoon-shop-the-look__image{display:block;inline-size:100%;block-size:auto;border-radius:16px}
+.ch-look-detail figcaption{max-inline-size:70ch;line-height:1.9;margin-block-start:16px}
+.ch-look-shopping h2{font-size:clamp(20px,2vw,28px);margin-block:0 20px}
+.ch-look-detail .ch-look-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;padding:0;margin:0}
+.ch-look-detail .ch-look-products li{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--ch-color-border,#e5e3dc);border-radius:16px;min-inline-size:0;line-height:1.8}
+.ch-look-detail .ch-look-products img{inline-size:88px;block-size:88px;object-fit:contain;flex-shrink:0}
+.ch-look-detail .ch-look-products a{display:block;font-weight:600}
+.ch-look-detail .chidemoon-shop-the-look__fallback{display:none}
+.ch-look-detail .ch-look-palette:empty{display:none}
+@media(max-width:767px){.ch-look-detail .ch-look-products{grid-template-columns:1fr}.ch-look-detail{gap:24px}}
