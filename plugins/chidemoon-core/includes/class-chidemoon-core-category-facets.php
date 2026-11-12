@@ -54,6 +54,14 @@ final class Chidemoon_Core_Category_Facets {
     foreach($brands as $label=>$pattern){if(preg_match('/'.$pattern.'/iu',$title)){$values[]=$label;break;}}
    }
   }elseif($field==='size'){
+   // Reviewed dimensions take precedence over ambiguous seller text and frame sizes.
+   $reviewed=Chidemoon_Core_Enrichment::read($id)['dimensions']??array();
+   if(isset($reviewed['approvedBy'])){
+    $d=($reviewed['state']??'')==='value'?($reviewed['value']??array()):array();
+    $a=$d['length']??$d['height']??null;$b=$d['width']??null;
+    if(is_numeric($a)&&is_numeric($b)&&$a>0&&$b>0){$s=array((float)$a,(float)$b);sort($s,SORT_NUMERIC);$values[]=implode(' × ',$s).' سانتی‌متر';}
+    return $cache[$id][$field]=$values;
+   }
    foreach($p->get_attributes() as $a){if(preg_match('/size|dimension|ابعاد|اندازه|سایز/iu',$a->get_name())){foreach($a->get_options() as $option){if($a->is_taxonomy()){$t=get_term($option,$a->get_name());$option=$t&&!is_wp_error($t)?$t->name:'';}$values=array_merge($values,self::sizes((string)$option,true));}}}
    $values=array_merge($values,self::sizes($text));
    $e=get_post_meta($id,Chidemoon_Core_Enrichment::META,true);$d=is_array($e)?($e['dimensions']['value']??array()):array();

@@ -234,12 +234,12 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			'model'          => $this->image_model,
 			'prompt'         => $prompt,
 			'size'           => $this->image_size,
-			'response_format' => 'b64_json',
 		);
 		if ( '' !== $this->image_quality && 'auto' !== $this->image_quality ) {
 			$common['quality'] = $this->image_quality;
 		}
 
+		if ( empty( $attachments ) && in_array( $mode, array( 'edit', 'variation' ), true ) ) { return new WP_Error( 'chidemoon_ai_source_image_required', 'ویرایش تصویر به تصویر ورودی نیاز دارد.' ); }
 		if ( empty( $attachments ) ) {
 			$response = $this->json_request( '/images/generations', $common );
 		} else {
@@ -383,6 +383,8 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			$this->base_url . $path,
 			array(
 				'timeout' => $this->timeout,
+				'redirection' => 0,
+				'limit_response_size' => 20 * 1024 * 1024,
 				'headers' => array(
 					'Authorization' => 'Bearer ' . $this->api_key,
 					'Content-Type'  => 'application/json',
@@ -430,6 +432,8 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			$this->base_url . '/images/edits',
 			array(
 				'timeout' => $this->timeout,
+				'redirection' => 0,
+				'limit_response_size' => 20 * 1024 * 1024,
 				'headers' => array(
 					'Authorization' => 'Bearer ' . $this->api_key,
 					'Content-Type'  => 'multipart/form-data; boundary=' . $boundary,

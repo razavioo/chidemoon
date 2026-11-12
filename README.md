@@ -125,3 +125,17 @@ wp --user=1 eval-file /path/to/tests/elementor-upgrade-save.php
 ## هوش مصنوعی
 
 اتصال AI به ادیتور طبق پلن این بازسازی به مرحلهٔ بعد موکول شده است. افزونهٔ AI موجود فعال می‌ماند، اما خروجی آن به‌خودی‌خود چیدمان بومی المنتور تولید نمی‌کند. اتصال آینده باید درج عناصر ساختاریافته، پیش‌نمایش و تأیید کاربر را پیاده کند. کلید سرویس‌دهنده و ارتقای سازگار نسخه‌ها پیش‌نیاز آزمون تولید واقعی خواهند بود.
+
+## گزارش کلیک فروشگاه‌ها
+
+در پیشخوان، **چیدمون → کلیک فروشگاه‌ها** برای کاربران دارای دسترسی مدیریت افیلیت، گزارش ۷، ۳۰ و ۹۰ روز اخیر را نمایش می‌دهد. مجموع رویدادها و حداکثر ۱۰۰ ترکیب محصول و فروشگاه با بیشترین کلیک، به همراه آخرین زمان UTC ارائه می‌شود. دکمه‌های خرید از مسیر `/go/{product_id}/` عبور می‌کنند. این گزارش شمارش کلیک است و تعداد خریدار، خرید یا کمیسیون را نشان نمی‌دهد؛ درخواست‌های Do Not Track ثبت نمی‌شوند و حذف دوره‌ای داده‌ها طبق تنظیم نگهداری ادامه دارد.
+
+تست مستقل ثبت و گزارش: `php tests/affiliate-click-report.php`. تست انتقال AI در `tests/ai-gemini-runtime.php` باید با `wp eval-file` در وردپرس فعال اجرا شود؛ پاسخ‌های آن شبیه‌سازی شده‌اند و تأیید تولید واقعی نیستند.
+
+## Personal AI connections
+
+AI Settings now provides independent text, image, vision and moderation connections. Enable a personal connection and enter the public HTTPS API base URL, exact model and API key. Enabled personal profiles override host defaults; disabling a profile restores host configuration. Vision inherits a personal text profile when it has no enabled profile of its own. Moderation remains independently configurable and required.
+
+Keys are encrypted using AES-256-GCM with a key derived from the installation's WordPress auth salt. Saved options are not autoloaded. Blank key fields preserve the existing key; the explicit delete control removes it when the profile is disabled. Salt rotation requires re-entering personal keys. Connection tests query the saved model endpoint without generating content; gateways without model lookup may reject that test despite supporting generation. Actual image/text compatibility must still be verified in the studios. The adapters support OpenAI-compatible and native Gemini APIs; arbitrary provider-specific protocols are not supported.
+
+Run `php tests/ai-connections.php` for storage, validation, permission and routing checks. `tools/ai-live-generation-check.php` is an explicit, billable WP-CLI production probe; it validates generation and moderation without publishing or writing generated content to the database.

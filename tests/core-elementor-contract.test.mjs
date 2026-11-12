@@ -26,7 +26,9 @@ describe('native Elementor ownership', () => {
     const compare = read(`${core}/includes/class-chidemoon-core-compare.php`);
     assert.match(compare, /Chidemoon_Core_Affiliate::is_publicly_eligible\( \$product \)/);
     for (const marker of ['data-comparison-status', 'data-compare-product', 'nofollow sponsored noopener']) assert.ok(compare.includes(marker));
-    assert.match(compare, /render_picker_shortcode\([^\{]+\{\s*return '';\s*\}/);
+    assert.match(compare, /render_picker_shortcode\([^\{]+\{\s*self::enqueue_assets\(\)/);
+    assert.ok(compare.includes('data-comparison-search-input'));
+    assert.ok(compare.includes('data-comparison-search-results'));
   });
 
   it('shares Shop-the-Look rendering and provides human editing controls', () => {

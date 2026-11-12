@@ -315,12 +315,16 @@ class Chidemoon_AI_Admin {
 
 	public static function settings(): void {
 		self::guard( Chidemoon_AI_Capabilities::MANAGE );
+		ob_start();
+		if ( class_exists( 'Chidemoon_AI_Connections' ) ) { Chidemoon_AI_Connections::render(); }
+		$connection_panel = ob_get_clean();
 		$provider = Chidemoon_AI_Provider_Factory::create();
 		$status   = class_exists( 'Chidemoon_AI_Settings' ) ? Chidemoon_AI_Settings::secret_status() : array();
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Chidemoon AI Settings', 'chidemoon-ai' ); ?></h1>
-			<p><?php esc_html_e( 'Provider secrets are intentionally host-managed. They are never saved in WordPress options or exposed in this panel.', 'chidemoon-ai' ); ?></p>
+			<?php echo $connection_panel; // Escaped by the connection renderer. ?>
+			<p><?php esc_html_e( 'Saved personal connections override host defaults. API keys are encrypted and never displayed again.', 'chidemoon-ai' ); ?></p>
 			<table class="widefat striped" style="max-width: 900px">
 				<tbody>
 					<tr><th><?php esc_html_e( 'Provider status', 'chidemoon-ai' ); ?></th><td><?php echo esc_html( is_wp_error( $provider ) ? __( 'Not configured', 'chidemoon-ai' ) : __( 'Configured', 'chidemoon-ai' ) ); ?></td></tr>
@@ -344,7 +348,7 @@ class Chidemoon_AI_Admin {
 				<button type="button" class="button" id="chidemoon-ai-test-vision"><?php esc_html_e( 'Check vision', 'chidemoon-ai' ); ?></button>
 				<span id="chidemoon-ai-vision-result" aria-live="polite"></span>
 			</p>
-			<p><?php esc_html_e( 'Required host environment values: CHIDEMOON_AI_PROVIDER_BASE_URL and CHIDEMOON_AI_API_KEY. Optional non-secret controls below are stored locally; host environment values always win.', 'chidemoon-ai' ); ?></p>
+			<p><?php esc_html_e( 'Host model defaults apply to connections without a personal override. Each enabled personal connection uses its own Base URL, API key and model.', 'chidemoon-ai' ); ?></p>
 			<?php if ( class_exists( 'Chidemoon_AI_Settings' ) ) : ?>
 			<form action="options.php" method="post">
 				<?php settings_fields( 'chidemoon_ai_settings' ); ?>

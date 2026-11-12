@@ -232,6 +232,11 @@ class Chidemoon_AI_Settings {
 	 * @return array<string, bool|string>
 	 */
 	public static function secret_status(): array {
+		if ( class_exists( 'Chidemoon_AI_Connections' ) ) {
+			$text = Chidemoon_AI_Connections::resolve( 'text' );
+			$moderation = Chidemoon_AI_Connections::resolve( 'moderation' );
+			return array( 'provider_configured' => ! is_wp_error( $text ), 'base_host' => is_wp_error( $text ) ? '' : (string) wp_parse_url( $text['base_url'], PHP_URL_HOST ), 'moderation_configured' => ! is_wp_error( $moderation ), 'search_key_present' => self::search_has_key() );
+		}
 		$base = trim( (string) getenv( 'CHIDEMOON_AI_PROVIDER_BASE_URL' ) );
 		$key  = trim( (string) getenv( 'CHIDEMOON_AI_API_KEY' ) );
 

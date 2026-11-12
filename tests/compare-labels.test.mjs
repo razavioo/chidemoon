@@ -39,6 +39,8 @@ test('Elementor comparison copy survives selection changes across card and detai
   const strip = { querySelector() { return null; } };
   const document = {
     readyState: 'complete',
+      getElementById() { return null; },
+      body: { querySelector() { return null; } },
     querySelector(selector) { return selector === '[data-comparison-status]' ? strip : null; },
     querySelectorAll(selector) { return selector === '[data-compare-product]' ? [card, detail, legacy] : []; },
     addEventListener(name, handler) { if (name === 'click') click = handler; },
@@ -46,7 +48,7 @@ test('Elementor comparison copy survives selection changes across card and detai
   };
   runInNewContext(source, {
     window: {
-      ChidemoonCompare: {
+      addEventListener() {}, ChidemoonCompare: {
         key: 'compare', maximum: 4, compareUrl: '/product-comparison/',
         labels: { added: 'مقایسهٔ پیش‌فرض', removed: 'انتخاب پیش‌فرض', singleAdd: 'افزودن', singleIn: 'انتخاب', singleHint: 'راهنما', singleRemoveHint: 'حذف' },
       },

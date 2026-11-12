@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, copyFileSync, symlinkSync, rmSync } from 'node:fs';
+import { realpathSync, mkdtempSync, mkdirSync, writeFileSync, copyFileSync, symlinkSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 test('scheduled host tasks resolve secrets outside immutable releases and respect explicit overrides', () => {
-  const fixture = mkdtempSync(join(tmpdir(), 'chidemoon-host-ops-'));
+  const fixture = realpathSync(mkdtempSync(join(tmpdir(), 'chidemoon-host-ops-')));
   try {
     const bin = join(fixture, 'bin');
     mkdirSync(bin);

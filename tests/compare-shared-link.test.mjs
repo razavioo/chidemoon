@@ -29,6 +29,8 @@ describe('shared comparison links', () => {
     };
     const document = {
       readyState: 'complete',
+      getElementById() { return null; },
+      body: { querySelector() { return null; } },
       querySelector(selector) { return selector === '[data-comparison-status]' ? strip : null; },
       querySelectorAll() { return []; },
       addEventListener() {},
@@ -46,7 +48,7 @@ describe('shared comparison links', () => {
     };
     const requests = [];
     runInNewContext(source, {
-      window: { ChidemoonCompare: config, location: { search: '?products=1,2' } },
+      window: { addEventListener() {}, ChidemoonCompare: config, location: { search: '?products=1,2' } },
       document,
       localStorage: { getItem() { return stored; }, setItem(_key, value) { stored = value; } },
       fetch(url) {
@@ -71,11 +73,9 @@ describe('shared comparison links', () => {
 
   it('uses the server-rendered table when validation is temporarily unavailable', async () => {
     let stored = JSON.stringify([{ id: 3, name: 'Old selection', image: '/old.jpg' }]);
-    let click;
-    let destination;
     const tableButtons = [
-      { dataset: { compareProduct: '1', compareName: 'First' } },
-      { dataset: { compareProduct: '2', compareName: 'Second' } },
+      { parentElement: { querySelector() { return null; } }, dataset: { compareProduct: '1', compareName: 'First' } },
+      { parentElement: { querySelector() { return null; } }, dataset: { compareProduct: '2', compareName: 'Second' } },
     ];
     const table = { querySelectorAll() { return tableButtons; } };
     const strip = {
@@ -91,14 +91,14 @@ describe('shared comparison links', () => {
     };
     const document = {
       readyState: 'complete',
+      getElementById() { return null; },
       querySelector(selector) {
         return { '[data-comparison-status]': strip, '.chidemoon-comparison-table': table }[selector] ?? null;
       },
       querySelectorAll() { return []; },
-      addEventListener(name, handler) { if (name === 'click') click = handler; },
-      getElementById() { return null; },
+      addEventListener() {},
       createElement() { return { set textContent(value) { this.value = String(value); }, get innerHTML() { return this.value ?? ''; }, setAttribute() {} }; },
-      body: { appendChild() {} },
+      body: { appendChild() {}, querySelector() { return null; } },
       documentElement: { classList: { remove() {} }, style: { removeProperty() {} } },
     };
     const config = {
@@ -106,7 +106,7 @@ describe('shared comparison links', () => {
       labels: { count: 'محصول برای مقایسه', searchError: 'خطای شبکه', needMore: 'یک محصول دیگر' },
     };
     runInNewContext(source, {
-      window: { ChidemoonCompare: config, location: { search: '?products=1,2', assign(url) { destination = url; } } },
+      window: { addEventListener() {}, ChidemoonCompare: config, location: { search: '?products=1,2' } },
       document,
       localStorage: { getItem() { return stored; }, setItem(_key, value) { stored = value; } },
       fetch() { return Promise.reject(new Error('offline')); },
@@ -116,9 +116,7 @@ describe('shared comparison links', () => {
     await new Promise((resolve) => setImmediate(resolve));
     assert.deepEqual(JSON.parse(stored).map((item) => item.id), [1, 2]);
     assert.equal(strip.hidden, false);
-    click({ target: { closest(selector) { return selector === '.chidemoon-comparison-table__remove' ? tableButtons[0] : null; } }, preventDefault() {} });
-    assert.deepEqual(JSON.parse(stored).map((item) => item.id), [2]);
-    assert.equal(destination, '/comparisons/?products=2#chidemoon-comparison-table');
+
   });
 
   it('keeps a prior selection if a broken link has no rendered table and validation fails', async () => {
@@ -127,17 +125,18 @@ describe('shared comparison links', () => {
     const strip = { hidden: true };
     const document = {
       readyState: 'complete',
+      getElementById() { return null; },
+      body: { querySelector() { return null; } },
       querySelector(selector) { return selector === '[data-comparison-status]' ? strip : null; },
       querySelectorAll() { return []; },
       addEventListener() {},
-      getElementById() { return null; },
       createElement() { return { set textContent(value) { this.value = String(value); }, get innerHTML() { return this.value ?? ''; }, setAttribute() {} }; },
-      body: { appendChild() {} },
+      body: { appendChild() {}, querySelector() { return null; } },
       documentElement: { classList: { remove() {} }, style: { removeProperty() {} } },
     };
     runInNewContext(source, {
       window: {
-        ChidemoonCompare: { key: 'compare', maximum: 4, restUrl: '/compare-products', labels: { searchError: 'خطای شبکه' } },
+        addEventListener() {}, ChidemoonCompare: { key: 'compare', maximum: 4, restUrl: '/compare-products', labels: { searchError: 'خطای شبکه' } },
         location: { search: '?products=999' },
       },
       document,

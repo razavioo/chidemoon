@@ -47,7 +47,7 @@ namespace {
 	}
 	class Chidemoon_Core_Looks { public static function product_looks_shortcode( array $attributes ): string { return ''; } }
 
-	class Chidemoon_Core_Commercial { public static function availability( WC_Product $product ): string { return 'unknown'; } }
+	class Chidemoon_Core_Commercial { public static function merchant_inventory_html( WC_Product $product ): string { return ''; } public static function availability( WC_Product $product ): string { return 'unknown'; } }
 	function __( string $value, string $domain ): string { return $value; }
 	$product = new WC_Product( array(
 		Chidemoon_Core_Affiliate::META_MERCHANT_NAME => 'فروشگاه نمونه',

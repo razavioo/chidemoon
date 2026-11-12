@@ -85,6 +85,55 @@ final class Chidemoon_Core_Admin {
 			'dashicons-admin-home',
 			56
 		);
+		add_submenu_page( 'chidemoon-readiness', 'گزارش کلیک فروشگاه‌ها', 'کلیک فروشگاه‌ها', 'chidemoon_manage_affiliate', 'chidemoon-clicks', array( __CLASS__, 'render_click_report' ) );
+	}
+
+	/** Read-only aggregation; timestamps in the click table are UTC. */
+	public static function click_report( int $days = 30 ): array {
+		global $wpdb;
+		$days = in_array( $days, array( 7, 30, 90 ), true ) ? $days : 30;
+		$end = gmdate( 'Y-m-d H:i:s' );
+		$start = gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
+		$table = $wpdb->prefix . 'chidemoon_clicks';
+		$total = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE clicked_at >= %s AND clicked_at <= %s", $start, $end ) );
+		if ( null === $total ) { return array( 'error' => true ); }
+		$rows = $wpdb->get_results( $wpdb->prepare(
+			"SELECT product_id, merchant_host, COUNT(*) AS clicks, MAX(clicked_at) AS last_click FROM {$table} WHERE clicked_at >= %s AND clicked_at <= %s GROUP BY product_id, merchant_host ORDER BY clicks DESC, product_id ASC, merchant_host ASC LIMIT 100",
+			$start, $end
+		), ARRAY_A );
+		return array( 'error' => null === $rows, 'days' => $days, 'total' => (int) $total, 'rows' => $rows ?: array() );
+	}
+
+	public static function render_click_report(): void {
+		if ( ! current_user_can( 'chidemoon_manage_affiliate' ) ) {
+			wp_die( esc_html__( 'اجازهٔ مشاهدهٔ گزارش کلیک‌ها را ندارید.', 'chidemoon-core' ) );
+		}
+		$days = isset( $_GET['days'] ) && is_scalar( $_GET['days'] ) ? absint( $_GET['days'] ) : 30;
+		$report = self::click_report( $days );
+		echo '<div class="wrap"><h1>گزارش کلیک فروشگاه‌ها</h1>';
+		if ( $report['error'] ) {
+			echo '<div class="notice notice-error"><p>گزارش بارگذاری نشد. صفحه را تازه کنید؛ در صورت تکرار، وضعیت پایگاه داده را بررسی کنید.</p></div></div>';
+			return;
+		}
+		echo '<form method="get"><input type="hidden" name="page" value="chidemoon-clicks"><label for="chidemoon-click-days">بازهٔ زمانی </label><select id="chidemoon-click-days" name="days">';
+		foreach ( array( 7, 30, 90 ) as $option ) {
+			echo '<option value="' . esc_attr( (string) $option ) . '" ' . selected( $report['days'], $option, false ) . '>' . esc_html( (string) $option ) . ' روز اخیر</option>';
+		}
+		echo '</select> <button class="button" type="submit">نمایش گزارش</button></form>';
+		echo '<p>مجموع کلیک‌های ثبت‌شده: <strong>' . esc_html( number_format_i18n( $report['total'] ) ) . '</strong></p>';
+		echo '<p>حداکثر ۱۰۰ ترکیب محصول و فروشگاه با بیشترین کلیک نمایش داده می‌شود. هر کلیک ثبت‌شده یک رویداد است؛ این عدد تعداد خریدار یا خرید نیست. زمان‌ها به وقت UTC هستند. درخواست‌های Do Not Track ثبت نمی‌شوند و داده‌های قدیمی طبق تنظیم نگهداری حذف می‌شوند.</p>';
+		echo '<table class="widefat striped"><caption class="screen-reader-text">کلیک محصولات و فروشگاه‌ها</caption><thead><tr><th scope="col">محصول</th><th scope="col">فروشگاه</th><th scope="col">کلیک</th><th scope="col">آخرین کلیک (UTC)</th></tr></thead><tbody>';
+		if ( ! $report['rows'] ) { echo '<tr><td colspan="4">در این بازه کلیکی ثبت نشده است.</td></tr>'; }
+		foreach ( $report['rows'] as $row ) {
+			$id = (int) $row['product_id'];
+			$title = get_the_title( $id ) ?: 'محصول حذف‌شده';
+			$edit = get_edit_post_link( $id );
+			echo '<tr><td>';
+			if ( $edit ) { echo '<a href="' . esc_url( $edit ) . '">' . esc_html( $title ) . '</a>'; }
+			else { echo esc_html( $title ); }
+			echo ' (#' . esc_html( (string) $id ) . ')</td><td>' . esc_html( $row['merchant_host'] ) . '</td><td>' . esc_html( number_format_i18n( (int) $row['clicks'] ) ) . '</td><td>' . esc_html( $row['last_click'] ) . '</td></tr>';
+		}
+		echo '</tbody></table></div>';
 	}
 
 	public static function register_rest_route(): void {

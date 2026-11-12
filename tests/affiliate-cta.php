@@ -19,7 +19,7 @@ class WC_Product {
 function get_post_status( int $id ): string { return 'publish'; }
 function get_permalink( int $id ): string { return '/product/' . $id . '/'; }
 function home_url( string $path ): string { return $path; }
-function wp_parse_url( string $url ) { return parse_url( $url ); }
+function wp_parse_url( string $url, int $component = -1 ) { return parse_url( $url, $component ); }
 function esc_url_raw( string $url, array $protocols ): string { return $url; }
 
 require __DIR__ . '/../plugins/chidemoon-core/includes/class-chidemoon-core-affiliate.php';

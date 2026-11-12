@@ -85,6 +85,7 @@ final class Chidemoon_Core_Elementor_Product_Offer_Widget extends \Elementor\Wid
 		}
 		$status = Chidemoon_Core_Commercial::availability( $product );
 		if ( in_array( $status, array( 'in_stock', 'out_of_stock', 'withdrawn' ), true ) ) { echo '<p class="ch-product-stock">' . esc_html( Chidemoon_Core_Commercial::availability_label( $product ) ) . '</p>'; }
+		echo Chidemoon_Core_Commercial::merchant_inventory_html( $product );
 		echo '<div class="ch-product-offer-actions">';
 		echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => (string) $product->get_id(), 'label' => $this->required_text( $settings, 'button_text', 'خرید از فروشگاه' ), 'show_price' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</div>';

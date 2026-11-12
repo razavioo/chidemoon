@@ -65,6 +65,8 @@ class Chidemoon_AI_Provider_Factory {
 			return $override;
 		}
 
+		if ( class_exists( 'Chidemoon_AI_Connections' ) && array_filter( Chidemoon_AI_Connections::saved(), static fn( $row ) => ! empty( $row['enabled'] ) ) ) { return new Chidemoon_AI_Routed_Provider(); }
+
 		$base_url = trim( (string) getenv( 'CHIDEMOON_AI_PROVIDER_BASE_URL' ) );
 		$api_key  = trim( (string) getenv( 'CHIDEMOON_AI_API_KEY' ) );
 		if ( '' === $base_url || '' === $api_key ) {
