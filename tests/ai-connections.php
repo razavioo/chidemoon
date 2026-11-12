@@ -54,3 +54,5 @@ $edit = $image; $edit['model'] = 'edit-model';
 check( true === Chidemoon_AI_Connections::save( array( 'text' => $profile, 'image' => $image, 'image_edit' => $edit ) ), 'Edit profile rejected.' );
 check( 'edit-model' === $router->generate_image( array( 'request_payload' => array( 'mode' => 'edit', 'source_attachment_ids' => array( 1 ) ) ) )[2], 'Edit model routing failed.' );
 check( 'edit-model' === $router->image_model(), 'Edit provenance model incorrect.' );
+
+check( 'edit-model' === $router->generate_image( array( 'request_payload' => array( 'mode' => 'look_scene', 'product_ids' => array( 42 ) ) ) )[2], 'Product-based Look must use reference-aware edit model.' );

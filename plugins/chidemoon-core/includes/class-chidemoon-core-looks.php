@@ -176,7 +176,7 @@ final class Chidemoon_Core_Looks {
    if ( 'reycob_look' === $look->post_type ) {
     $content = self::hotspot_scene( $look->ID, 0 === $shown );
    } else {
-    $content = '<h2>' . esc_html( $look->post_title ) . '</h2>' . ( self::relationships( $look->ID ) ? self::render( $look->ID ) : self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) );
+    $content = '<a class="ch-look-card-image-link" href="' . esc_url( get_permalink( $look->ID ) ) . '" aria-label="' . esc_attr( $look->post_title ) . '">' . self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) . '</a><div class="ch-look-card-footer"><a href="' . esc_url( get_permalink( $look->ID ) ) . '">مشاهده چیدمان و محصولات</a></div>';
    }
    if ( ! trim( $content ) ) { continue; }
    // Published Looks remain discoverable before optional hotspot approval.

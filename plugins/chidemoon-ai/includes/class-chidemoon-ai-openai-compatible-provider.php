@@ -229,6 +229,23 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		$mode         = sanitize_key( (string) ( $payload['mode'] ?? 'generate' ) );
 		$attachments  = is_array( $payload['source_attachment_ids'] ?? null ) ? array_map( 'absint', $payload['source_attachment_ids'] ) : array();
 		$prompt       = $this->image_prompt( $mode, (string) ( $payload['prompt'] ?? '' ) );
+		if ( ! empty( $payload['product_ids'] ) && ! str_starts_with( $this->image_model, 'gemini-' ) ) {
+			$references = array(); $labels = array();
+			foreach ( array_slice( (array) $payload['product_ids'], 0, 6 ) as $product_id ) {
+				$product = wc_get_product( (int) $product_id );
+				$ids = $product ? array_values( array_unique( array_filter( array_merge( array( $product->get_image_id() ), $product->get_gallery_image_ids() ) ) ) ) : array();
+				$excluded = array_map( 'intval', (array) get_post_meta( (int) $product_id, '_chidemoon_ai_reference_excluded', true ) );
+				$ids = array_values( array_diff( $ids, $excluded ) );
+				if ( ! $ids ) { return new WP_Error( 'chidemoon_ai_product_image_missing', 'هر محصول باید تصویر مرجع داشته باشد.' ); }
+				$positions = array();
+				foreach ( $ids as $id ) { $references[] = (int) $id; $positions[] = count( $references ); }
+				$labels[] = 'Reference images ' . implode( ', ', $positions ) . ' show the SAME product from different views; the FIRST is authoritative for colour/variant, other views clarify geometry and details only: ' . $product->get_name();
+			}
+			if ( count( $references ) + count( $attachments ) > 32 ) { return new WP_Error( 'chidemoon_ai_reference_limit', 'تعداد تصاویر مرجع بیش از ظرفیت است؛ تعداد محصولات را کمتر کنید.' ); }
+			$attachments = array_merge( $references, $attachments );
+			$prompt .= "\n\nPRODUCT IDENTITY IS MANDATORY. Use the actual objects in the attached product photographs, not similar substitutes. Multiple views belong to ONE object. Preserve exact silhouette, geometry, proportions, materials, colours, printed motifs, cabinet door count and layout, lamp stand and shade construction, and rug pattern/border. Do not redesign or restyle any product. Design only the surrounding room. Keep every selected product clearly visible and identifiable. Product identity overrides the requested interior style.\n" . implode( "\n", $labels );
+		}
+
 		if ( str_starts_with( $this->image_model, 'gemini-' ) ) {
 			return $this->gemini_image( $payload, $attachments, $prompt );
 		}
