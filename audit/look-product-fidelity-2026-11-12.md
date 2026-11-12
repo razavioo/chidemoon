@@ -9,3 +9,9 @@ A mocked request executed in WordPress verified all 17 images are present in the
 Native Look gallery cards now render a linked scene image and a detail link, rather than inserting the full detail-page product layout into a narrow masonry card. Legacy interactive scenes remain unchanged. Publication visibility and hotspot approval remain separate.
 
 Image synthesis can still alter details; byte transport alone is not fidelity evidence. New image output must be visually compared against references before replacing published media.
+
+## Replacement completed
+
+Following explicit authorization to retry and replace the published image, Sunburst completed the edit with all 17 source photographs and a longer operation timeout. Attachment 8934 was visually compared with the original product contact sheet: turned single lamp stem, macrame shade, open console with black X-braced side frames and carved drawer fronts, and tree-patterned red rug are represented. Exact pixel identity is not claimed.
+
+Published Look 8931 and job 11 now use attachment 8934. Three reviewed hotspot positions were saved for products 7721, 8848 and 3157. Sealed release `chidemoon-release-v0.1.0-141-gf8ee8b9-f8ee8b9a5611` restores the interactive figure in compact gallery cards. Live gallery inspection showed all three buttons, and clicking the console point opened its correct product panel and link. The previous media is retained for recovery.
