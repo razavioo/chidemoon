@@ -15,3 +15,11 @@ Image synthesis can still alter details; byte transport alone is not fidelity ev
 Following explicit authorization to retry and replace the published image, Sunburst completed the edit with all 17 source photographs and a longer operation timeout. Attachment 8934 was visually compared with the original product contact sheet: turned single lamp stem, macrame shade, open console with black X-braced side frames and carved drawer fronts, and tree-patterned red rug are represented. Exact pixel identity is not claimed.
 
 Published Look 8931 and job 11 now use attachment 8934. Three reviewed hotspot positions were saved for products 7721, 8848 and 3157. Sealed release `chidemoon-release-v0.1.0-141-gf8ee8b9-f8ee8b9a5611` restores the interactive figure in compact gallery cards. Live gallery inspection showed all three buttons, and clicking the console point opened its correct product panel and link. The previous media is retained for recovery.
+
+## Automatic workflow
+
+New Look jobs now assess the generated scene against all selected product photos (excluding explicitly reviewed non-photo references), obtain Persian scene metadata and require one valid, distinct hotspot per selected product. Missing images, failed storage, mismatched products, invalid analysis or incomplete points fail the job instead of silently using heuristic coordinates or generic titles. Model assessment is not a guarantee of exact visual identity; human review remains part of the normal workflow.
+
+After human approval, vision-verified hotspots are transferred as confirmed relationships to the draft. Existing publish/gallery and shared interactive detail rendering apply to every Look. The selected style and room are assigned to the draft. Product image calls have a 420-second timeout to accommodate multi-reference edits without automatic billable resubmission. Text calls retain their configured timeout and lightweight model.
+
+Standalone assessment tests cover complete acceptance and rejection of mismatch, duplicates, unknown/missing products, bad bounds and non-Persian titles. Existing unrelated `.taste-skill/` untracked content was preserved.

@@ -115,7 +115,7 @@ final class Chidemoon_AI_Routed_Provider implements Chidemoon_AI_Provider_Interf
  private function provider( string $purpose ): Chidemoon_AI_Provider_Interface|WP_Error {
   $config = Chidemoon_AI_Connections::resolve( $purpose );
   if ( is_wp_error( $config ) ) { return $config; }
-  return new Chidemoon_AI_OpenAI_Compatible_Provider( $config['base_url'], $config['api_key'], $config['model'], $config['model'], Chidemoon_AI_Settings::get_int( 'provider_timeout' ), array( 'reasoning_effort' => $config['reasoning_effort'] ?? '', 'vision_model' => $config['model'], 'image_size' => Chidemoon_AI_Settings::get_string( 'image_size' ), 'image_quality' => Chidemoon_AI_Settings::get_string( 'image_quality' ), 'search_mode' => Chidemoon_AI_Settings::get_string( 'search_mode' ) ) );
+  return new Chidemoon_AI_OpenAI_Compatible_Provider( $config['base_url'], $config['api_key'], $config['model'], $config['model'], in_array( $purpose, array( 'image', 'image_edit' ), true ) ? 420 : Chidemoon_AI_Settings::get_int( 'provider_timeout' ), array( 'reasoning_effort' => $config['reasoning_effort'] ?? '', 'vision_model' => $config['model'], 'image_size' => Chidemoon_AI_Settings::get_string( 'image_size' ), 'image_quality' => Chidemoon_AI_Settings::get_string( 'image_quality' ), 'search_mode' => Chidemoon_AI_Settings::get_string( 'search_mode' ) ) );
  }
  private function model( string $purpose ): string { $c = Chidemoon_AI_Connections::resolve( $purpose ); return is_wp_error( $c ) ? '' : $c['model']; }
  public function name(): string { return 'purpose-connections'; }

@@ -12,6 +12,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Chidemoon_AI_Look {
+	/** Reject incomplete or guessed scene metadata instead of silently proposing random points. */
+	public static function validate_assessment( $result, array $product_ids ): array|WP_Error {
+		$error = static fn() => new WP_Error( 'chidemoon_ai_look_verification', 'تطابق محصولات، عنوان یا نقاط تصویر تأیید نشد. خروجی آماده انتشار نیست؛ تصویر و تنظیمات تحلیل را بررسی کنید.' );
+		if ( is_wp_error( $result ) || ! is_array( $result ) || true !== ( $result['products_match'] ?? null ) ) { return $error(); }
+		$title = $result['title'] ?? ''; $excerpt = $result['excerpt'] ?? '';
+		if ( ! is_string( $title ) || ! is_string( $excerpt ) || ! preg_match( '/[آ-ی]/u', $title ) || mb_strlen( $title ) > 100 || '' === trim( $excerpt ) || mb_strlen( $excerpt ) > 500 ) { return $error(); }
+		$spots = $result['hotspots'] ?? null; if ( ! is_array( $spots ) || count( $spots ) !== count( $product_ids ) ) { return $error(); }
+		$seen = array(); $clean = array();
+		foreach ( $spots as $spot ) {
+			$id = $spot['product_id'] ?? 0; $x = $spot['x'] ?? null; $y = $spot['y'] ?? null;
+			if ( ! is_int( $id ) || ! in_array( $id, $product_ids, true ) || isset( $seen[$id] ) || ! is_numeric( $x ) || ! is_numeric( $y ) || ! is_finite( (float) $x ) || ! is_finite( (float) $y ) || $x < 0 || $x > 100 || $y < 0 || $y > 100 ) { return $error(); }
+			$seen[$id] = true; $clean[] = array( 'productId' => $id, 'x' => (float) $x, 'y' => (float) $y );
+		}
+		return array( 'title' => sanitize_text_field( $title ), 'excerpt' => sanitize_textarea_field( $excerpt ), 'hotspots' => $clean );
+	}
 	public const MAX_PRODUCTS     = 6;
 	public const MIN_PRODUCTS     = 1;
 	public const MAX_ATTACHMENTS  = 2;

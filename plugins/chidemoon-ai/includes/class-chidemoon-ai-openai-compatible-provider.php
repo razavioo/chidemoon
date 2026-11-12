@@ -292,13 +292,14 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'No source image was supplied for vision analysis.', 'chidemoon-ai' ) );
 		}
 
+		$assessment_schema = str_contains( $prompt, 'products_match' ) ? ' Also include title and excerpt in Persian, and products_match boolean as requested.' : '';
 		$content = array(
 			array(
 				'type' => 'text',
-				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}",
+				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}" . $assessment_schema,
 			),
 		);
-		foreach ( array_slice( $attachment_ids, 0, 2 ) as $attachment_id ) {
+		foreach ( array_slice( $attachment_ids, 0, 32 ) as $attachment_id ) {
 			$data_url = $this->attachment_data_url( $attachment_id );
 			if ( is_wp_error( $data_url ) ) {
 				return $data_url;
