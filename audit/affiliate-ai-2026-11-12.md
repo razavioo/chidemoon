@@ -25,3 +25,13 @@ The owner subsequently authorized complete server rollout and supplied a new pro
 The gateway lacks dedicated moderation routing. Explicitly configured non-moderation models use a structured multimodal classifier with required boolean categories and fail-closed validation. This is model-assisted review, not OpenAI's dedicated moderation endpoint.
 
 Three pre-existing production fixes (merchant inventory filters/display and approved dimension precedence) were imported into source before release to avoid regression. Existing tests were updated for current comparison DOM fixtures and persistent picker behavior; all 48 Node tests pass.
+
+## Deployment result
+
+Deployed sealed release `chidemoon-release-v0.1.0-135-g50c968b-50c968b43f65` using the repository deployment lane and matching verified offline Docker archive. WordPress and database health checks passed. Five encrypted profiles were saved and re-read from production with matching credentials; no key was printed.
+
+Live click report returned 3,170 events over seven days and bounded grouped rows. A real `/go/` request for product 8860 returned HTTP 302 and persisted a click; a DNT request did not persist. The 30-day rendered report showed 9,693 recorded events at verification time (counts continue changing). Server-rendered settings and report HTML were exported privately and inspected in a local browser with WordPress styles; full authenticated browser form submission was not exercised.
+
+GPT-5.5 answered `red` for a 64x64 opaque red image. The strict 1x1 image probe failed on GPT-5.5 and other tested models; that strict capability test is not claimed passed. Generated/edit output review and actual uploaded-image editing worked. Probe media remains marked review_required; no public article or Look was published.
+
+The obsolete first candidate source/image bundles created during this session were removed after the final candidate superseded them. No live volume, upload, active release or retained rollback image was deleted. Host disk remained tight (approximately 2 GiB free at the last deployment checkpoint).
