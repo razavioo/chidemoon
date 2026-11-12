@@ -2268,3 +2268,7 @@ body .elementor main.ch-main:has(.ch-category-panel) { padding-block: 24px; gap:
 .ch-look-card-image-link{display:block;margin:0 10px 10px}
 .ch-look-card-image-link .ch-scene-image{display:block;inline-size:100%;block-size:auto;height:auto;object-fit:contain}
 .ch-look-card-footer a{display:inline-flex;align-items:center;min-block-size:44px}
+.ch-look-card-interactive{margin:0 10px 10px}
+.ch-look-card-interactive .chidemoon-shop-the-look{margin:0}
+.ch-look-card-interactive .chidemoon-shop-the-look__image{display:block;inline-size:100%;block-size:auto;border-radius:14px}
+.ch-look-card-interactive figcaption,.ch-look-card-interactive .chidemoon-shop-the-look__fallback{display:none}

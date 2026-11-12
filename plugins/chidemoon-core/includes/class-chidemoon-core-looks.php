@@ -176,7 +176,10 @@ final class Chidemoon_Core_Looks {
    if ( 'reycob_look' === $look->post_type ) {
     $content = self::hotspot_scene( $look->ID, 0 === $shown );
    } else {
-    $content = '<a class="ch-look-card-image-link" href="' . esc_url( get_permalink( $look->ID ) ) . '" aria-label="' . esc_attr( $look->post_title ) . '">' . self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown ) . '</a><div class="ch-look-card-footer"><a href="' . esc_url( get_permalink( $look->ID ) ) . '">مشاهده چیدمان و محصولات</a></div>';
+    // Reuse the interactive figure without inserting the detail-page product grid.
+    $detail = self::render( $look->ID );
+    $figure = preg_match( '~<figure\b.*?</figure>~s', $detail, $matches ) ? $matches[0] : self::scene_image( (int) get_post_thumbnail_id( $look->ID ), 0 === $shown );
+    $content = '<div class="ch-look-card-interactive">' . $figure . '</div><div class="ch-look-card-footer"><a href="' . esc_url( get_permalink( $look->ID ) ) . '">مشاهده چیدمان و محصولات</a></div>';
    }
    if ( ! trim( $content ) ) { continue; }
    // Published Looks remain discoverable before optional hotspot approval.
