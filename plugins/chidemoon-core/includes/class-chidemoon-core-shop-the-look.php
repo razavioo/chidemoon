@@ -75,7 +75,7 @@ final class Chidemoon_Core_Shop_The_Look {
 	}
 
 	/**
-	 * Shortcode: [chidemoon_shop_the_look image_id="123" caption="..." hotspots='[{"x":20,"y":30,"productId":12,"label":"مبل"}]']
+	 * Shortcode: [chidemoon_shop_the_look image_id="123" caption="..." hotspots='[{"x":20,"y":30,"productId":12,"label":"Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Å¾"}]']
 	 * Also accepts imageId / image_id and hotspots as JSON string or base64.
 	 *
 	 * @param array<string, string> $atts
@@ -162,7 +162,7 @@ final class Chidemoon_Core_Shop_The_Look {
 			$products[ $product_id ] = array(
 				'id'       => $product_id,
 				'title'    => $product->get_name(),
-				'price'    => $product->get_price_html(),
+				'price'    => Chidemoon_Core_Affiliate::hotspot_price( $product ),
 				'image_id' => $product->get_image_id(),
 				'url'      => get_permalink( $product_id ),
 				'product'  => $product,
@@ -193,14 +193,14 @@ final class Chidemoon_Core_Shop_The_Look {
 						<span aria-hidden="true"><?php echo esc_html( (string) ( $index + 1 ) ); ?></span>
 					</button>
 					<div id="<?php echo esc_attr( $tooltip_id ); ?>" class="chidemoon-shop-the-look__tooltip" hidden>
-						<button type="button" class="chidemoon-shop-the-look__close" aria-label="<?php esc_attr_e( 'بستن', 'chidemoon-core' ); ?>">×</button>
+						<button type="button" class="chidemoon-shop-the-look__close" aria-label="<?php esc_attr_e( 'Ã˜Â¨Ã˜Â³Ã˜ÂªÃ™â€ ', 'chidemoon-core' ); ?>">Ãƒâ€”</button>
 						<?php if ( $product['image_id'] > 0 ) : ?>
 							<?php echo wp_get_attachment_image( $product['image_id'], 'woocommerce_thumbnail', false, array( 'class' => 'chidemoon-shop-the-look__product-image', 'alt' => $product['title'], 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php endif; ?>
 						<div class="chidemoon-shop-the-look__tooltip-body">
 							<h3><?php echo esc_html( $product['title'] ); ?></h3>
 							<div class="chidemoon-shop-the-look__price"><?php echo wp_kses_post( $product['price'] ); ?></div>
-							<a class="chidemoon-button" href="<?php echo esc_url( $product['url'] ); ?>" data-product-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-core' ); ?></a>
+							<?php echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => $product_id ) ); ?>
 							<?php echo Chidemoon_Core_Compare::control( $product['product'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 					</div>
@@ -208,8 +208,8 @@ final class Chidemoon_Core_Shop_The_Look {
 			</div>
 			<?php if ( $caption ) : ?><figcaption><?php echo esc_html( $caption ); ?></figcaption><?php endif; ?>
 			<?php if ( ! empty( $products ) ) : ?>
-				<ol class="chidemoon-shop-the-look__fallback" aria-label="<?php esc_attr_e( 'محصولات این تصویر', 'chidemoon-core' ); ?>">
-				<?php foreach ( $products as $product ) : ?><li><span><?php echo esc_html( $product['title'] ); ?></span><span><?php echo wp_kses_post( $product['price'] ); ?></span><a href="<?php echo esc_url( $product['url'] ); ?>"><?php esc_html_e( 'مشاهده محصول', 'chidemoon-core' ); ?></a></li><?php endforeach; ?>
+				<ol class="chidemoon-shop-the-look__fallback" aria-label="<?php esc_attr_e( 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â­ÃƒËœÃ‚ÂµÃƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚ÂªÃƒËœÃ‚ÂµÃƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±', 'chidemoon-core' ); ?>">
+				<?php foreach ( $products as $product ) : ?><li><span><?php echo esc_html( $product['title'] ); ?></span><span><?php echo wp_kses_post( $product['price'] ); ?></span><a href="<?php echo esc_url( $product['url'] ); ?>"><?php esc_html_e( 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â´ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â­ÃƒËœÃ‚ÂµÃƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾', 'chidemoon-core' ); ?></a></li><?php endforeach; ?>
 				</ol>
 			<?php endif; ?>
 		</figure>
@@ -223,10 +223,10 @@ final class Chidemoon_Core_Shop_The_Look {
 			array( 'post', 'product', 'chidemoon_look' ),
 			array(
 				'labels' => array(
-					'name'          => __( 'فضاها', 'chidemoon-core' ),
-					'singular_name' => __( 'فضا', 'chidemoon-core' ),
-					'add_new_item'  => __( 'افزودن فضای جدید', 'chidemoon-core' ),
-					'edit_item'     => __( 'ویرایش فضا', 'chidemoon-core' ),
+					'name'          => __( 'Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§', 'chidemoon-core' ),
+					'singular_name' => __( 'Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§', 'chidemoon-core' ),
+					'add_new_item'  => __( 'ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â²Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯', 'chidemoon-core' ),
+					'edit_item'     => __( 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â´ Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§', 'chidemoon-core' ),
 				),
 				'public'            => true,
 				'show_ui'           => true,
@@ -239,20 +239,26 @@ final class Chidemoon_Core_Shop_The_Look {
 	}
 
 	public static function migrate_existing_look_terms(): void {
+		// Keep the public name aligned with the editorial vocabulary, including
+		// installations that completed the original one-time migration.
+		$reading = get_term_by( 'slug', 'reading-corner', self::TAXONOMY );
+		if ( $reading instanceof WP_Term && 'فضای مطالعه' !== $reading->name ) {
+			wp_update_term( $reading->term_id, self::TAXONOMY, array( 'name' => 'فضای مطالعه' ) );
+		}
 		if ( get_option( self::MIGRATION_OPTION, false ) ) {
 			return;
 		}
 
 		$terms = array(
-			'living-room'   => 'پذیرایی و نشیمن',
-			'bedroom'       => 'اتاق خواب',
-			'kitchen'       => 'آشپزخانه',
-			'kids-room'     => 'اتاق کودک',
-			'terrace'       => 'تراس و بالکن',
-			'dining-room'   => 'ناهارخوری',
-			'home-office'   => 'اتاق کار',
-			'entryway'      => 'ورودی خانه',
-			'reading-corner'=> 'گوشه مطالعه',
+			'living-room'   => 'Ã™Â¾Ã˜Â°Ã›Å’Ã˜Â±Ã˜Â§Ã›Å’Ã›Å’ Ã™Ë† Ã™â€ Ã˜Â´Ã›Å’Ã™â€¦Ã™â€ ',
+			'bedroom'       => 'Ã˜Â§Ã˜ÂªÃ˜Â§Ã™â€š Ã˜Â®Ã™Ë†Ã˜Â§Ã˜Â¨',
+			'kitchen'       => 'Ã˜Â¢Ã˜Â´Ã™Â¾Ã˜Â²Ã˜Â®Ã˜Â§Ã™â€ Ã™â€¡',
+			'kids-room'     => 'Ã˜Â§Ã˜ÂªÃ˜Â§Ã™â€š ÃšÂ©Ã™Ë†Ã˜Â¯ÃšÂ©',
+			'terrace'       => 'Ã˜ÂªÃ˜Â±Ã˜Â§Ã˜Â³ Ã™Ë† Ã˜Â¨Ã˜Â§Ã™â€žÃšÂ©Ã™â€ ',
+			'dining-room'   => 'Ã™â€ Ã˜Â§Ã™â€¡Ã˜Â§Ã˜Â±Ã˜Â®Ã™Ë†Ã˜Â±Ã›Å’',
+			'home-office'   => 'Ã˜Â§Ã˜ÂªÃ˜Â§Ã™â€š ÃšÂ©Ã˜Â§Ã˜Â±',
+			'entryway'      => 'Ã™Ë†Ã˜Â±Ã™Ë†Ã˜Â¯Ã›Å’ Ã˜Â®Ã˜Â§Ã™â€ Ã™â€¡',
+			'reading-corner'=> 'Ã™ÂÃ˜Â¶Ã˜Â§Ã›Å’ Ã™â€¦Ã˜Â·Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€¡',
 		);
 		$term_ids = array();
 		$complete = true;
@@ -307,18 +313,19 @@ final class Chidemoon_Core_Shop_The_Look {
 	 */
 	public static function room_for_tags( array $tags ): string {
 		$map = array(
-			'اتاق خواب'      => 'bedroom',
-			'خواب'           => 'bedroom',
-			'نشیمن'          => 'living-room',
-			'پذیرایی'        => 'living-room',
-			'بالکن'          => 'terrace',
-			'تراس'           => 'terrace',
-			'ناهارخوری'      => 'dining-room',
-			'کار در خانه'    => 'home-office',
-			'گوشه مطالعه'    => 'reading-corner',
-			'ورودی'          => 'entryway',
-			'اتاق کودک'      => 'kids-room',
-			'آشپزخانه'       => 'kitchen',
+			'ÃƒËœÃ‚Â§ÃƒËœÃ‚ÂªÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¡ ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨'      => 'bedroom',
+			'ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨'           => 'bedroom',
+			'Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â´Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â '          => 'living-room',
+			'Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â°Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™'        => 'living-room',
+			'ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â '          => 'terrace',
+			'ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³'           => 'terrace',
+			'Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™'      => 'dining-room',
+			'ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â± ÃƒËœÃ‚Â®ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¡'    => 'home-office',
+			'Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â·ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¹Ãƒâ„¢Ã¢â‚¬Â¡'    => 'reading-corner',
+			'ÃƒÅ¡Ã‚Â¯Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â´Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â·ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¹Ãƒâ„¢Ã¢â‚¬Â¡'    => 'reading-corner', // legacy label kept for imports
+			'Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™'          => 'entryway',
+			'ÃƒËœÃ‚Â§ÃƒËœÃ‚ÂªÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¡ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯ÃƒÅ¡Ã‚Â©'      => 'kids-room',
+			'ÃƒËœÃ‚Â¢ÃƒËœÃ‚Â´Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â²ÃƒËœÃ‚Â®ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¡'       => 'kitchen',
 		);
 		foreach ( $tags as $tag ) {
 			$term = get_term_by( 'slug', sanitize_title( (string) $tag ), 'post_tag' );

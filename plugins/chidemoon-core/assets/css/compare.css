@@ -367,3 +367,27 @@ body .chidemoon-comparison-table[data-product-count="1"] { inline-size: 100%; mi
 @media (max-width:1024px) {
  body .chidemoon-comparison-table thead .chidemoon-comparison-table__remove { inline-size:44px; block-size:44px; min-block-size:44px; }
 }
+
+/* Theme zebra stripes must not make the frozen RTL column translucent. */
+body .chidemoon-comparison-table > tbody > tr > th,
+body .chidemoon-comparison-table > thead > tr > th:first-child {
+ background-color: #f6f7f2;
+ background-image: none;
+ background-clip: border-box;
+ box-shadow: -1px 0 0 #dce3dc;
+ z-index: 4;
+ overflow-wrap: anywhere;
+}
+body .chidemoon-comparison-table > thead > tr > th:not(:first-child),
+body .chidemoon-comparison-table > tbody > tr > td { background-color: #fff; }
+body .chidemoon-comparison-table > tbody > tr:nth-child(even) > td { background-color: #fafbf8; }
+body .chidemoon-comparison-table > tbody > tr:hover > td { background-color: #f0f4ed; }
+body .chidemoon-comparison-table > tbody > tr.is-different > th::after { display: none; }
+body .chidemoon-comparison-table > tbody > tr.is-different > th { border-inline-start: 3px solid #b98252; }
+.chidemoon-comparison-table-wrap { overscroll-behavior-inline: contain; }
+.chidemoon-comparison-table :is(th, td) { box-sizing: border-box; }
+@media (max-width: 767px) {
+ .chidemoon-comparison-table-wrap { scroll-padding-inline-start: 100px; scroll-snap-type: x proximity; }
+ .chidemoon-comparison-table thead th:not(:first-child) { scroll-snap-align: start; }
+ .chidemoon-comparison-table .chidemoon-button { white-space: normal; overflow-wrap: anywhere; }
+}

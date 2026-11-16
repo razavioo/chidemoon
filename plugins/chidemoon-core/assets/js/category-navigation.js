@@ -70,13 +70,25 @@
   return icon;
  };
  const initMenu = () => {
-  document.querySelectorAll('.ch-header .e-n-menu-item:has(.ch-category-tree)').forEach(item => {
+  document.querySelectorAll('.ch-header .e-n-menu-item:has(.ch-category-tree), .ch-header .e-n-menu-item:has(.ch-look-menu)').forEach(item => {
    if (item.dataset.chMenuReady) return;
    item.dataset.chMenuReady = 'true'; item.classList.add('ch-category-menu');
    const title = item.querySelector('.e-n-menu-title');
    const toggle = title.querySelector('.e-n-menu-dropdown-icon');
    const content = item.querySelector('.e-n-menu-content');
+   const desktopHover = matchMedia('(min-width: 1025px) and (hover: hover) and (pointer: fine)');
+   let closeTimer;
    const setOpen = open => {
+    clearTimeout(closeTimer);
+    if (open && desktopHover.matches) {
+     const header = item.closest('.ch-header').getBoundingClientRect();
+     const label = title.querySelector('.e-n-menu-title-text').getBoundingClientRect();
+     content.style.setProperty('--ch-dropdown-top', `${header.bottom}px`);
+     content.style.setProperty('--ch-dropdown-right', `${Math.max(16, document.documentElement.clientWidth - label.right)}px`);
+    }
+    if (open) item.parentElement.querySelectorAll(':scope > .ch-category-menu.ch-category-menu-open').forEach(other => {
+     if (other !== item) other.dispatchEvent(new Event('ch-menu-close'));
+    });
     item.classList.toggle('ch-category-menu-open',open);
     item.classList.toggle('ch-mobile-expanded',open);
     toggle.setAttribute('aria-expanded',String(open));
@@ -84,7 +96,13 @@
     item.closest('.e-n-menu-wrapper').classList.toggle('ch-category-view-open',open);
    };
    setOpen(false);
+   item.addEventListener('ch-menu-close',() => setOpen(false));
+   item.addEventListener('pointerenter',() => { if (desktopHover.matches) setOpen(true); });
+   item.addEventListener('pointerleave',() => { if (desktopHover.matches) closeTimer = setTimeout(() => setOpen(false),180); });
+   content.addEventListener('pointerenter',() => clearTimeout(closeTimer));
+   content.addEventListener('pointerleave',() => { if (desktopHover.matches) closeTimer = setTimeout(() => setOpen(false),180); });
    title.addEventListener('click',event => {
+    if (event.target.closest('a[href]') && (desktopHover.matches || item.querySelector('.ch-look-menu'))) return;
     event.preventDefault(); event.stopImmediatePropagation();
     setOpen(!item.classList.contains('ch-category-menu-open'));
    },true);

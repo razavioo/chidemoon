@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Chidemoon Core
  * Plugin URI: https://chidemoon.com

@@ -11,7 +11,7 @@ $walk=static function(&$items)use(&$walk,&$found,$widget){foreach($items as &$n)
  $widget('chlooktitle','heading',['title'=>'چیدمان را ببین، جزئیاتش را پیدا کن','header_size'=>'h2']),
  $widget('chlookdesc','text-editor',['editor'=>'<p>روی نقطه‌های تصویر بزن و محصول هر گوشه را ببین.</p>']),
  $widget('chlookrow','shortcode',['shortcode'=>'[chidemoon_home_looks]']),
- $widget('chlookmore','button',['text'=>'همهٔ ایده‌های چیدمون','link'=>['url'=>home_url('/shop-the-look/')],'_css_classes'=>'ch-link-button'])];++$found;continue;}
+ $widget('chlookmore','button',['text'=>'مشاهده ایده‌های چیدمون','link'=>['url'=>home_url('/shop-the-look/')],'_css_classes'=>'ch-link-button'])];++$found;continue;}
  if(!empty($n['elements']))$walk($n['elements']);
 }};$walk($nodes);if($found!==2)WP_CLI::error('Expected hero visual and discovery section.');
 if(!in_array('apply',$args??[],true)){WP_CLI::success('Preview: asymmetric hero and horizontal shoppable scenes.');return;}

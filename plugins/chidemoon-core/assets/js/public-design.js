@@ -461,6 +461,9 @@
 				let y = b.bottom - c.top + 10;
 				const above = b.top - c.top - panel.offsetHeight - 10;
 				if (y + panel.offsetHeight > c.height && above >= 8) y = above;
+				if (canvas.closest('.ch-home-look-strip')) {
+					y = Math.max(8, Math.min(y, c.height - panel.offsetHeight - 8));
+				}
 				panel.style.left = `${Math.max(12, Math.min(x - panel.offsetWidth / 2, c.width - panel.offsetWidth - 12))}px`;
 				panel.style.top = `${Math.max(8, y)}px`;
 			};
@@ -486,7 +489,78 @@
 		});
 	}
 
+	function enhanceHomeLookTabs() {
+		document.querySelectorAll('.ch-home-looks-tabs:not([data-tabs-ready])').forEach(root => {
+			root.dataset.tabsReady = 'true';
+			const nav = root.querySelector('.ch-home-room-tabs');
+			const tabs = [...nav.querySelectorAll('a[data-room]')];
+			const panel = root.querySelector('.ch-home-look-strip');
+			const status = root.querySelector('.ch-home-looks-status');
+			const cache = new Map([['', panel.innerHTML]]);
+			let controller, request = 0, active = tabs[0];
+			nav.setAttribute('role', 'tablist');
+			panel.setAttribute('role', 'tabpanel'); panel.tabIndex = 0;
+			const mark = tab => {
+				tabs.forEach(item => { const selected = item === tab; item.classList.toggle('is-active', selected); item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1; });
+				panel.setAttribute('aria-labelledby', tab.id);
+			};
+			tabs.forEach(tab => { tab.setAttribute('role', 'tab'); tab.setAttribute('aria-controls', panel.id); });
+			mark(active);
+			const select = async tab => {
+				controller?.abort(); const serial = ++request;
+				mark(tab); panel.setAttribute('aria-busy', 'true'); status.textContent = 'در حال دریافت جدیدترین چیدمان‌ها…';
+				try {
+					const room = tab.dataset.room;
+					if (!cache.has(room)) {
+						controller = new AbortController();
+						const url = new URL(root.dataset.endpoint); url.searchParams.set('room', room);
+						const response = await fetch(url, { signal: controller.signal });
+						if (!response.ok) throw new Error('Could not load looks');
+						const result = await response.json();
+						if (typeof result.html !== 'string') throw new Error('Invalid looks response');
+						cache.set(room, result.html);
+					}
+					if (serial !== request) return;
+					panel.innerHTML = cache.get(room); panel.scrollLeft = 0; active = tab;
+					enhanceSceneHotspots();
+					status.textContent = `جدیدترین چیدمان‌ها برای ${tab.textContent.trim()} نمایش داده شد.`;
+				} catch (error) {
+					if (error.name === 'AbortError' || serial !== request) return;
+					mark(active); status.textContent = 'دریافت تصاویر انجام نشد؛ دوباره روی تب بزنید.';
+				} finally { if (serial === request) panel.removeAttribute('aria-busy'); }
+			};
+			tabs.forEach((tab, index) => {
+				tab.addEventListener('click', event => { if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return; event.preventDefault(); select(tab); });
+				tab.addEventListener('keydown', event => {
+					let next;
+					if (event.key === 'ArrowLeft') next = (index + 1) % tabs.length;
+					if (event.key === 'ArrowRight') next = (index - 1 + tabs.length) % tabs.length;
+					if (event.key === 'Home') next = 0;
+					if (event.key === 'End') next = tabs.length - 1;
+					if (next === undefined) return;
+					event.preventDefault(); tabs[next].focus(); select(tabs[next]);
+				});
+			});
+		});
+	}
+
 	function onReady() {
+		document.querySelectorAll('.ch-idea-group-tabs').forEach(root => {
+			const tabs = [...root.querySelectorAll('[data-panel]')];
+			root.querySelector('nav').setAttribute('role', 'tablist');
+			const select = tab => {
+				tabs.forEach(item => { const active = item === tab; item.classList.toggle('is-active', active); item.setAttribute('aria-selected', String(active)); item.tabIndex = active ? 0 : -1; document.getElementById(item.dataset.panel).hidden = !active; });
+				window.dispatchEvent(new Event('resize'));
+			};
+			tabs.forEach((tab, index) => {
+				tab.setAttribute('role', 'tab'); tab.setAttribute('aria-controls', tab.dataset.panel);
+				document.getElementById(tab.dataset.panel).setAttribute('role', 'tabpanel');
+				tab.addEventListener('click', event => { if(event.ctrlKey || event.metaKey || event.shiftKey) return; event.preventDefault(); select(tab); });
+				tab.addEventListener('keydown', event => { let next; if(event.key === 'ArrowLeft') next = (index+1)%tabs.length; if(event.key === 'ArrowRight') next = (index+tabs.length-1)%tabs.length; if(event.key === 'Home') next=0; if(event.key === 'End') next=tabs.length-1; if(next!==undefined){event.preventDefault();tabs[next].focus();select(tabs[next]);} });
+			});
+			if(tabs.length) select(tabs[0]);
+		});
+		enhanceHomeLookTabs();
 		enhanceStorefront();
 		enhanceSceneHotspots();
 		enhanceGalleryCounter();
@@ -500,7 +574,7 @@
 
 		enhanceHeader();
 		// Elementor replaces widget markup while editing; enhance each new header once.
-		new MutationObserver(() => { enhanceHeader(); enhanceSceneHotspots(); }).observe(document.body, { childList: true, subtree: true });
+		new MutationObserver(() => { enhanceHeader(); enhanceSceneHotspots(); enhanceHomeLookTabs(); }).observe(document.body, { childList: true, subtree: true });
 	}
 
 	function enhanceInfiniteListings(root = document) {
@@ -544,6 +618,8 @@
 
 	function enhanceStorefront() {
 		document.querySelectorAll('.ch-sidebar-filters, .ch-catalog-filters').forEach((form, index) => {
+			const isLook = form.classList.contains('ch-look-filters');
+			const filterTitle = isLook ? 'فیلترها' : 'فیلتر محصولات';
 			enhancePriceSteps(form);
 			form.querySelectorAll('.ch-facet-all').forEach(all => {
 				const choices = [...all.closest('fieldset').querySelectorAll('input[name]')];
@@ -566,31 +642,33 @@
 			};
 			form.addEventListener('input', sync); form.addEventListener('change', sync);
 			const reset = form.querySelector('.ch-sidebar-reset');
-			const applied = [...new FormData(form)].filter(([key, value]) => key.startsWith('ch_') && value !== '').length;
+			const applied = [...new FormData(form)].filter(([key, value]) => (isLook ? ['room', 'style', 'color'].includes(key) : key.startsWith('ch_')) && value !== '').length;
 			if (reset) reset.hidden = !applied;
 			if (form.classList.contains('ch-sidebar-filters')) {
 				const heading = document.createElement('div'); heading.className = 'ch-filter-heading';
 				const title = document.createElement('strong'); title.textContent = 'فیلتر محصولات';
 				const icon = document.createElement('span'); icon.className = 'ch-filter-heading-icon'; icon.setAttribute('aria-hidden', 'true');
 				icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg>';
-				heading.append(icon, title); form.prepend(heading);
+				heading.append(icon, title); if (!isLook) form.prepend(heading);
 				const toggle = document.createElement('button');
 				toggle.type = 'button'; toggle.className = 'ch-filter-toggle';
 				toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg><span>فیلتر محصولات</span>';
+				toggle.querySelector('span').textContent = filterTitle;
 				if (applied) {
 					const badge = document.createElement('span'); badge.className = 'ch-filter-badge'; badge.textContent = applied.toLocaleString('fa-IR'); toggle.append(badge);
-					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `فیلتر محصولات، ${applied.toLocaleString('fa-IR')} فیلتر فعال`);
+					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `${filterTitle}، ${applied.toLocaleString('fa-IR')} فیلتر فعال`);
 				}
 				form.id ||= `ch-catalog-filter-form-${index}`;
 				const slot = form.parentElement;
 				const sidebar = form.closest('.ch-catalog-sidebar') || slot;
-				const tools = sidebar.closest('.ch-catalog-layout')?.querySelector('.ch-catalog-tools');
+				const tools = isLook ? sidebar.closest('.ch-look-browse')?.querySelector('.ch-look-tools') : sidebar.closest('.ch-catalog-layout')?.querySelector('.ch-catalog-tools');
 				if (!tools) return;
 				tools.prepend(toggle);
 				const dialog = document.createElement('dialog'); dialog.className = 'ch-filter-dialog'; dialog.id = `${form.id}-dialog`;
 				const dialogHeading = document.createElement('div'); dialogHeading.className = 'ch-filter-dialog-heading';
 				const dialogTitle = document.createElement('h2'); dialogTitle.id = `${dialog.id}-title`; dialogTitle.textContent = 'فیلتر محصولات';
 				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = '×'; close.setAttribute('aria-label', 'بستن فیلتر محصولات');
+				dialogTitle.textContent = filterTitle; close.setAttribute('aria-label', `بستن ${filterTitle}`);
 				dialogHeading.append(dialogTitle, close); dialog.append(dialogHeading); document.body.append(dialog);
 				dialog.setAttribute('aria-labelledby', dialogTitle.id);
 				toggle.setAttribute('aria-controls', dialog.id); toggle.setAttribute('aria-haspopup', 'dialog'); toggle.setAttribute('aria-expanded', 'false');
@@ -619,6 +697,7 @@
 					scheduleFit();
 				};
 				compact.addEventListener('change', syncLayout); syncLayout();
+				if (isLook) document.documentElement.classList.add('ch-look-filters-ready');
 			}
 			sync();
 		});

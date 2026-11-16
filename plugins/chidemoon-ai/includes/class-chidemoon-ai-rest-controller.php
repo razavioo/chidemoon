@@ -311,6 +311,16 @@ class Chidemoon_AI_REST_Controller {
 				return self::error( 'chidemoon_ai_look_product_invalid', __( 'A selected look item is not a product.', 'chidemoon-ai' ), 400 );
 			}
 		}
+		// Product photos are mandatory identity references for a look. Text-only
+		// generation lets the model substitute unrelated products.
+		$product_attachments = array();
+		foreach ( $product_ids as $pid ) {
+			$image_id = absint( get_post_thumbnail_id( $pid ) );
+			if ( ! $image_id || 'attachment' !== get_post_type( $image_id ) ) {
+				return self::error( 'chidemoon_ai_look_product_image_missing', __( 'هر محصول انتخاب‌شده باید عکس اصلی داشته باشد.', 'chidemoon-ai' ), 400 );
+			}
+			$product_attachments[] = $image_id;
+		}
 		$attachments = array();
 		if ( isset( $data['source_attachment_ids'] ) ) {
 			if ( ! self::valid_id_list( $data['source_attachment_ids'] ?? array(), 0, 2 ) ) {
@@ -318,6 +328,7 @@ class Chidemoon_AI_REST_Controller {
 			}
 			$attachments = self::post_ids( $data['source_attachment_ids'] ?? array(), 0, 2 );
 		}
+		$attachments = array_values( array_unique( array_merge( $product_attachments, $attachments ) ) );
 		if ( ! self::rights_attested( $data['rights_attestation'] ?? false ) ) {
 			return self::error( 'chidemoon_ai_rights_attestation_required', __( 'Confirm that you have the rights to use every source image and requested image concept.', 'chidemoon-ai' ), 400 );
 		}
