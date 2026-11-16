@@ -31,7 +31,7 @@ final class Chidemoon_Core_Look_Watermark {
   $id = (int)(get_post_meta($post->ID,'_reycob_stl_image_id',true) ?: get_post_thumbnail_id($post->ID));
   $settings = (array)get_post_meta($id,'_chidemoon_watermark_settings',true);
   echo '<p>پترن روی خود تصویر ذخیره می‌شود. نسخهٔ اصلی محفوظ می‌ماند.</p>';
-  foreach(array('size'=>array('اندازهٔ لوگو (درصد عرض تصویر)',14,5,25),'spacing'=>array('فاصلهٔ پترن (درصد)',100,60,180)) as $key=>$field){
+  foreach(array('size'=>array('اندازهٔ لوگو (درصد عرض تصویر)',22,5,25),'spacing'=>array('فاصلهٔ پترن (درصد)',100,60,180)) as $key=>$field){
    echo '<p><label>'.esc_html($field[0]).'<input style="width:100%" type="number" name="chwm_'.$key.'" min="'.$field[2].'" max="'.$field[3].'" value="'.esc_attr($settings[$key]??$field[1]).'"></label></p>';
   }
   echo '<p><label><input type="checkbox" name="chwm_apply" value="1"> اعمال یا بازسازی واترمارک هنگام ذخیره</label></p>';
@@ -40,7 +40,7 @@ final class Chidemoon_Core_Look_Watermark {
   if(!in_array($post->post_type,array('reycob_look','chidemoon_look'),true)||wp_is_post_revision($post_id)||!current_user_can('edit_post',$post_id)||!isset($_POST['chidemoon_watermark_nonce'])||!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['chidemoon_watermark_nonce'])),'chidemoon_watermark')||empty($_POST['chwm_apply'])) return;
   $id=(int)(get_post_meta($post_id,'_reycob_stl_image_id',true) ?: get_post_thumbnail_id($post_id));
   if(!$id)return;
-  update_post_meta($id,'_chidemoon_watermark_settings',array('size'=>max(5,min(25,(int)($_POST['chwm_size']??14))),'spacing'=>max(60,min(180,(int)($_POST['chwm_spacing']??100)))));
+  update_post_meta($id,'_chidemoon_watermark_settings',array('size'=>max(5,min(25,(int)($_POST['chwm_size']??22))),'spacing'=>max(60,min(180,(int)($_POST['chwm_spacing']??100)))));
   $result=self::apply($id);
   if(is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
  }
@@ -100,11 +100,17 @@ final class Chidemoon_Core_Look_Watermark {
   $versions = get_post_meta( $id, '_chidemoon_watermark_versions', true );
   $versions = is_array( $versions ) ? $versions : array();
   $settings = (array)get_post_meta($id,'_chidemoon_watermark_settings',true);
-  $version = $settings ? '4-'.md5(wp_json_encode($settings)) : 3;
+  $version = '6-'.md5(wp_json_encode($settings));
   foreach ( array_unique( $files ) as $path ) {
    if ( ! is_file( $path ) || ! str_starts_with( wp_normalize_path( $path ), wp_normalize_path( $uploads['basedir'] ) . '/' ) ) { continue; }
    $hash = hash_file( 'sha256', $path );
    if ( ( $marked[ $path ] ?? '' ) === $hash ) {
+    // Every stamped file must retain its own clean counterpart, including
+    // thumbnails and responsive variants. Never back up a stamped file as clean.
+    if ( empty( $originals[ $path ] ) || ! is_file( $originals[ $path ] ) ) {
+     flock( $lock, LOCK_UN ); fclose( $lock );
+     return new WP_Error( 'watermark_original_missing', 'Clean image is missing: ' . basename( $path ) );
+    }
     if ( ( $versions[ $path ] ?? 1 ) === $version ) { continue; }
     if ( empty( $originals[ $path ] ) || ! is_file( $originals[ $path ] ) || ! copy( $originals[ $path ], $path ) ) { return new WP_Error( 'watermark_restore', 'Cannot restore clean source.' ); }
     $hash = hash_file( 'sha256', $path );
@@ -128,7 +134,7 @@ final class Chidemoon_Core_Look_Watermark {
   if ( ! $image ) { return new WP_Error( 'watermark_format', 'Unsupported image: ' . basename( $path ) ); }
   $w = imagesx( $image ); $h = imagesy( $image );
   // Staggered diagonal signatures across the image, at low opacity.
-  $width = max( 28, (int) round( $w * max(5,min(25,(int)($settings['size']??14))) / 100 ) );
+  $width = max( 28, (int) round( $w * max(5,min(25,(int)($settings['size']??22))) / 100 ) );
   $sample = imagecolorsforindex( $image, imagecolorat( $image, (int) ( $w / 2 ), (int) ( $h / 2 ) ) );
   $light_background = ( .2126 * $sample['red'] + .7152 * $sample['green'] + .0722 * $sample['blue'] ) > 145;
   $logo = imagecreatefrompng( CHIDEMOON_CORE_DIR . 'assets/brand/chidemoon-logo-fa-' . ( $light_background ? 'mono' : 'white' ) . '.png' );
@@ -139,15 +145,15 @@ final class Chidemoon_Core_Look_Watermark {
   imagecopyresampled( $scaled, $logo, 0, 0, 0, 0, $width, $height, imagesx( $logo ), imagesy( $logo ) );
   for ( $y = 0; $y < $height; ++$y ) { for ( $x = 0; $x < $width; ++$x ) {
    $c = imagecolorsforindex( $scaled, imagecolorat( $scaled, $x, $y ) );
-   $alpha = (int) round( 127 - ( 127 - $c['alpha'] ) * .21 );
+   $alpha = (int) round( 127 - ( 127 - $c['alpha'] ) * .06 );
    imagesetpixel( $scaled, $x, $y, imagecolorallocatealpha( $scaled, $c['red'], $c['green'], $c['blue'], $alpha ) );
   } }
   $rotated = imagerotate( $scaled, 25, imagecolorallocatealpha( $scaled, 0, 0, 0, 127 ) );
   imagesavealpha( $rotated, true );
   imagealphablending( $image, true ); imagesavealpha( $image, true );
   $spacing = max(60,min(180,(int)($settings['spacing']??100)))/100;
-  $step_x = max( 36, (int) round( $w * .32 * $spacing ) );
-  $step_y = max( 36, (int) round( min( $w, $h ) * .24 * $spacing ) );
+  $step_x = max( 36, (int) round( $w * .58 * $spacing ) );
+  $step_y = max( 36, (int) round( max( $h * .46, imagesy( $rotated ) * 1.8 ) * $spacing ) );
   $row = 0;
   for ( $y = -(int)(imagesy($rotated)/2); $y < $h; $y += $step_y, ++$row ) {
    for ( $x = -$step_x + ( $row % 2 ? (int)($step_x/2) : 0 ); $x < $w; $x += $step_x ) {
