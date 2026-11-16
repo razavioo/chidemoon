@@ -34,6 +34,14 @@ final class Chidemoon_Core_Responsive_Images {
  }
  public static function rewrite(string $html,array $manifest):string {
   $manifest=self::index($manifest);
+  // Elementor can cache a derivative URL rather than the original attachment.
+  $upload_path=trailingslashit(wp_parse_url(wp_upload_dir()['baseurl'],PHP_URL_PATH));
+  foreach($manifest['images'] as $image_id=>$image_entry){
+   foreach($image_entry['variants']??[] as $variant){
+    $variant_path=wp_parse_url($variant['url'],PHP_URL_PATH);
+    if(str_starts_with($variant_path,$upload_path))$manifest['paths'][rawurldecode(substr($variant_path,strlen($upload_path)))]=$image_id;
+   }
+  }
   // Imports can include 50px/256px copies of the exact same source photo in galleries.
   // Prefer the known larger copy; never upscale or substitute a different photograph.
   $sources=[];
@@ -50,7 +58,9 @@ final class Chidemoon_Core_Responsive_Images {
    $identity=preg_replace('/\.(jpe?g|png)_\d+X\d+X\d+(?:-\d+)?\.webp$/i', '.$1', $key);
    if($entry&&isset($sources[$identity])&&$sources[$identity]['width']>$entry['width'])$entry=$sources[$identity];
    if(!$entry||empty($entry['variants']))continue;
-   $variants=$entry['variants'];$largest=end($variants);$set=[];
+   $variants=$entry['variants'];
+   if(get_post_meta((int)($entry['id']??($manifest['paths'][$key]??0)),'_chidemoon_watermarked_files',true))foreach($variants as &$variant){$variant['url']=add_query_arg('chwm','3',$variant['url']);}unset($variant);
+   $largest=end($variants);$set=[];
    foreach($variants as $v)$set[]=$v['url'].' '.$v['width'].'w';
    $tags->set_attribute('src',$largest['url']);$tags->set_attribute('srcset',implode(', ',$set));
    if(!$tags->get_attribute('sizes'))$tags->set_attribute('sizes','(max-width: 767px) calc(100vw - 32px), 640px');

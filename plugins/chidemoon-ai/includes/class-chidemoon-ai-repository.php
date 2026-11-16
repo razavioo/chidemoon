@@ -148,6 +148,14 @@ class Chidemoon_AI_Repository {
 		);
 	}
 
+	public static function mark_failed_with_result( int $id, string $from, string $code, string $message, array $result ): bool {
+		return self::transition( $id, $from, Chidemoon_AI_State_Machine::FAILED, array(
+			'error_code' => sanitize_key( $code ), 'error_message' => sanitize_text_field( $message ),
+			'result_payload' => wp_json_encode( $result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ),
+			'completed_at' => current_time( 'mysql', true ),
+		) );
+	}
+
 	public static function approve( int $id, int $reviewer_id, ?array $result = null ): bool {
 		return self::transition(
 			$id,

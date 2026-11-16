@@ -19,3 +19,10 @@
 @keyframes chidemoon-look-pulse { 0%, 100% { opacity: .7; transform: scale(1); } 50% { opacity: 0; transform: scale(1.35); } }
 @media (max-width: 640px) { .chidemoon-shop-the-look__tooltip--mobile { bottom: calc(var(--chidemoon-compare-bar-height, 0px) + 1.75rem + env(safe-area-inset-bottom)); inset-inline: .75rem !important; max-height: min(65dvh, 28rem); max-width: none; position: fixed; top: auto !important; width: auto; } }
 @media (prefers-reduced-motion: reduce) { .chidemoon-shop-the-look__hotspot::after { animation: none; } .chidemoon-shop-the-look__hotspot { transition: none; } }
+/* Compact hotspot product card */
+.chidemoon-shop-the-look__tooltip{box-sizing:border-box;width:min(280px,calc(100% - 16px));max-width:min(280px,calc(100% - 16px));max-height:none;border-radius:8px;overflow:hidden}
+.chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__product-image{width:48px;height:48px;max-height:48px;object-fit:contain;float:right;margin:0 0 6px 8px}
+.chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__tooltip-body{padding:10px;overflow:hidden}
+.chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__tooltip-body h3{font-size:12px;line-height:1.65;margin:0 0 4px;min-height:0}
+.chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__price{font-size:12px;margin:0 0 6px}
+.chidemoon-shop-the-look__tooltip .chidemoon-button{min-height:34px;padding:6px 10px;font-size:12px;border-radius:7px}

@@ -4,6 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Chidemoon_Core_Commercial {
  public const FRESHNESS_SECONDS = 86400;
  public static function register(): void {
+  // External offers keep checkout stock disabled; report the verified merchant inventory.
+  add_filter( 'woocommerce_product_get_stock_quantity', static function( $quantity, WC_Product $product ) {
+   $inventory = $product->get_meta( '_chidemoon_merchant_inventory', true );
+   if ( ! $product->is_type( 'external' ) || ! is_array( $inventory ) || ! isset( $inventory['quantity'] ) ) { return $quantity; }
+   $availability = self::observations( $product )['availability'] ?? array();
+   return self::is_fresh( $inventory['observedAt'] ?? null ) && ( $inventory['observedAt'] ?? null ) === ( $availability['observedAt'] ?? null ) ? (int) $inventory['quantity'] : null;
+  }, 20, 2 );
+  add_filter( 'woocommerce_product_get_stock_status', static function( $status, WC_Product $product ) {
+   if ( ! $product->is_type( 'external' ) || ! is_array( $product->get_meta( '_chidemoon_merchant_inventory', true ) ) ) { return $status; }
+   $availability = self::availability( $product );
+   return in_array( $availability, array( 'out_of_stock', 'withdrawn' ), true ) ? 'outofstock' : ( 'in_stock' === $availability ? 'instock' : $status );
+  }, 20, 2 );
   add_filter( 'woocommerce_currencies', static function( array $currencies ): array { $currencies['IRT'] = 'تومان'; return $currencies; } );
   // Labels must match the actual accounting unit; IRR amounts are never toman.
   add_filter( 'woocommerce_currency_symbol', static fn( string $symbol, string $currency ): string => 'IRR' === $currency ? 'ریال' : ( 'IRT' === $currency ? 'تومان' : $symbol ), 10, 2 );
@@ -110,9 +122,16 @@ final class Chidemoon_Core_Commercial {
  public static function render_summary(): void { echo self::observations_shortcode(); }
  public static function observations_shortcode( array $attributes = array() ): string {
   $product = wc_get_product( absint( $attributes['product_id'] ?? get_the_ID() ) );
-  if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) || ! $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) ) { return ''; }
+  if ( ! $product instanceof WC_Product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ) { return ''; }
+  if ( ! $product->get_meta( Chidemoon_Core_Source_Importer::META_IDENTITY, true ) && ! is_array( $product->get_meta( '_chidemoon_merchant_inventory', true ) ) ) { return ''; }
   if ( 'unknown' === self::availability( $product ) ) { return ''; }
-  return '<div class="ch-offer-observations"><p class="ch-product-stock">' . esc_html( self::availability_label( $product ) ) . '</p></div>';
+  return '<div class="ch-offer-observations"><p class="ch-product-stock">' . esc_html( self::availability_label( $product ) ) . '</p>' . self::merchant_inventory_html( $product ) . '</div>';
+ }
+ public static function merchant_inventory_html( WC_Product $product ): string {
+  $inventory = $product->get_meta( '_chidemoon_merchant_inventory', true );
+  $availability = self::observations( $product )['availability'] ?? array();
+  return is_array( $inventory ) && ( $inventory['observedAt'] ?? null ) === ( $availability['observedAt'] ?? null ) && 'in_stock' === self::availability( $product ) && ( $inventory['quantity'] ?? 0 ) > 0
+   ? '<p class="ch-product-merchant-quantity">موجودی فروشگاه: ' . esc_html( number_format_i18n( (int) $inventory['quantity'] ) ) . ' عدد</p>' : '';
  }
  public static function review_label( array $args ): array { $args['title_reply'] = 'دیدگاهت را بنویس'; $args['label_submit'] = 'ثبت دیدگاه'; $args['comment_notes_after'] = '<p>دیدگاهت پس از بررسی منتشر می شود.</p>'; return $args; }
  public static function moderate_review( $approved, array $comment ) { return 'product' === get_post_type( (int) ( $comment['comment_post_ID'] ?? 0 ) ) && ! is_wp_error( $approved ) && 'spam' !== $approved && 'trash' !== $approved ? 0 : $approved; }

@@ -19,6 +19,7 @@ final class Chidemoon_Core_Affiliate {
 	private const REDIRECT_QUERY_VAR = 'chidemoon_affiliate_product';
 
 	public static function register(): void {
+		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'price_source' ), 200, 2 );
 		add_action( 'init', array( __CLASS__, 'register_redirect_rewrite' ) );
 		add_filter( 'query_vars', array( __CLASS__, 'register_query_var' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'handle_frontend_redirects' ), 1 );
@@ -314,6 +315,10 @@ final class Chidemoon_Core_Affiliate {
 		}
 
 		$product_id = absint( get_query_var( self::REDIRECT_QUERY_VAR ) );
+		// Fallback for hosts where the web server has not refreshed the /go/ rewrite rule.
+		if ( $product_id < 1 && isset( $_GET[ self::REDIRECT_QUERY_VAR ] ) ) {
+			$product_id = absint( wp_unslash( $_GET[ self::REDIRECT_QUERY_VAR ] ) );
+		}
 		if ( $product_id > 0 ) {
 			self::redirect_to_affiliate_offer( $product_id );
 		}
@@ -356,11 +361,12 @@ final class Chidemoon_Core_Affiliate {
 		if ( ! $product instanceof WC_Product || ! self::is_offer_available( $product ) ) {
 			return '';
 		}
+		$price = preg_replace( '/<span class="ch-marketplace"[^>]*>.*?<\/span>/s', '', $product->get_price_html() );
 
 		return sprintf(
 			'<a class="chidemoon-affiliate-cta" href="%1$s" target="_blank" rel="nofollow sponsored noopener">%2$s</a>',
 			esc_url( self::tracking_url( $product_id ) ),
-			'<span class="chidemoon-affiliate-cta__label">' . esc_html( $attributes['label'] ) . '</span>' . ( ! empty( $attributes['show_price'] ) && '' !== $product->get_price_html() ? ' <span class="chidemoon-affiliate-cta__price">(' . wp_kses_post( $product->get_price_html() ) . ')</span>' : '' )
+			'<span class="chidemoon-affiliate-cta__label">' . esc_html( self::purchase_label( $product ) ) . '</span>' . ( ! empty( $attributes['show_price'] ) && '' !== $price ? ' <span class="chidemoon-affiliate-cta__price">(' . wp_kses_post( $price ) . ')</span>' : '' )
 		);
 	}
 
@@ -378,7 +384,42 @@ final class Chidemoon_Core_Affiliate {
 	}
 
 	public static function tracking_url( int $product_id ): string {
-		return home_url( '/go/' . $product_id . '/' );
+		$destination = self::get_affiliate_url_by_id( $product_id );
+		if ( '' === $destination ) {
+			return '';
+		}
+		return add_query_arg(
+			array(
+				'utm_source'   => 'chidemoon',
+				'utm_medium'   => 'affiliate',
+				'utm_campaign' => 'chidemoon_product_' . $product_id,
+			),
+			$destination
+		);
+	}
+	/** Marketplace identity comes from exact destination hosts, never seller names. */
+	public static function marketplace( WC_Product $product ): string {
+		foreach ( array( self::META_AFFILIATE_URL, '_product_url', self::META_SOURCE_URL ) as $key ) {
+			$host = strtolower( (string) wp_parse_url( (string) $product->get_meta( $key, true ), PHP_URL_HOST ) );
+			foreach ( array( 'basalam.com' => 'باسلام', 'digikala.com' => 'دیجی‌کالا' ) as $domain => $name ) {
+				if ( $host === $domain || str_ends_with( $host, '.' . $domain ) ) { return $name; }
+			}
+		}
+		return '';
+	}
+	public static function purchase_label( WC_Product $product ): string {
+		$name = self::marketplace( $product );
+		return $name ? 'خرید از ' . $name : 'مشاهده پیشنهاد خرید';
+	}
+	public static function source_badge( WC_Product $product ): string {
+		$name = self::marketplace( $product );
+		return $name ? '<span class="ch-marketplace" aria-label="' . esc_attr( 'سایت مبدأ: ' . $name ) . '">' . esc_html( $name ) . '</span>' : '';
+	}
+	public static function price_source( string $html, WC_Product $product ): string {
+		return $html && ! str_contains( $html, 'class="ch-marketplace"' ) ? $html . self::source_badge( $product ) : $html;
+	}
+	public static function hotspot_price( WC_Product $product ): string {
+		return (string) preg_replace( '/<span class="ch-marketplace"[^>]*>.*?<\/span>/s', '', $product->get_price_html() );
 	}
 
 	public static function get_affiliate_url_by_id( int $product_id ): string {
@@ -572,7 +613,7 @@ final class Chidemoon_Core_Affiliate {
 				array(
 					'root'   => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
 					'nonce'  => wp_create_nonce( 'wp_rest' ),
-					'queued' => __( 'Enrichment queued. Review it under Chidemoon AI → Review Queue.', 'chidemoon-core' ),
+					'queued' => __( 'Enrichment queued. Review it under Chidemoon AI â†’ Review Queue.', 'chidemoon-core' ),
 					'error'  => __( 'The enrichment request could not be queued.', 'chidemoon-core' ),
 				)
 			) . ';',
@@ -580,3 +621,4 @@ final class Chidemoon_Core_Affiliate {
 		);
 	}
 }
+

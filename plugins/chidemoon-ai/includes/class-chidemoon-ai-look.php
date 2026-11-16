@@ -149,6 +149,7 @@ class Chidemoon_AI_Look {
 		}
 		$valid_ids = array_map( 'intval', $product_ids );
 		$hotspots  = array();
+		$seen      = array();
 		foreach ( array_slice( $raw, 0, 8 ) as $index => $spot ) {
 			if ( ! is_array( $spot ) ) {
 				continue;
@@ -162,6 +163,10 @@ class Chidemoon_AI_Look {
 			if ( ! in_array( $pid, $valid_ids, true ) ) {
 				$pid = $valid_ids[ $index % count( $valid_ids ) ];
 			}
+			if ( isset( $seen[ $pid ] ) ) {
+				continue;
+			}
+			$seen[ $pid ] = true;
 			$post       = get_post( $pid );
 			$hotspots[] = array(
 				'x'         => $x,
@@ -171,7 +176,10 @@ class Chidemoon_AI_Look {
 			);
 		}
 
-		return ! empty( $hotspots ) ? $hotspots : self::heuristic_hotspots( $product_ids );
+		if ( count( $hotspots ) !== count( $valid_ids ) ) {
+			return self::heuristic_hotspots( $product_ids );
+		}
+		return $hotspots;
 	}
 
 	/**

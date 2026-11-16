@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Chidemoon_Core_Looks {
  public const POST_TYPE = 'chidemoon_look';
  public const PALETTE = '_chidemoon_look_palette';
- public const PRIMARY_STYLES = array('modern','classic','minimal','scandinavian','boho','rustic');
+ public const PRIMARY_STYLES = array('classic-french','neoclassical','iranian-boho','minimal','modern');
  public const COLORS = array(
   'white'=>array('سفید','#ffffff'), 'cream'=>array('کرم','#eee1c6'),
   'beige'=>array('بژ','#cbb99b'), 'gray'=>array('طوسی','#939799'),
@@ -16,6 +16,12 @@ final class Chidemoon_Core_Looks {
   'silver'=>array('نقره‌ای','#b8bec3'),
  );
  public static function register(): void {
+  require_once __DIR__ . '/class-chidemoon-core-look-views.php';
+  Chidemoon_Core_Look_Views::register();
+  require_once __DIR__ . '/class-chidemoon-core-look-watermark.php';
+  Chidemoon_Core_Look_Watermark::register();
+  require_once __DIR__ . '/class-chidemoon-core-look-pages.php';
+  Chidemoon_Core_Look_Pages::register();
   add_action( 'init', array( __CLASS__, 'register_model' ), 6 );
   add_filter( 'use_block_editor_for_post_type', static fn( $use, $type ) => self::POST_TYPE === $type ? false : $use, 10, 2 );
   add_action( 'add_meta_boxes_' . self::POST_TYPE, array( __CLASS__, 'add_editor' ) );
@@ -148,7 +154,7 @@ final class Chidemoon_Core_Looks {
  }
  public static function filters(): string {
   $page=get_page_by_path('shop-the-look');$url=$page?get_permalink($page):home_url('/shop-the-look/');
-  $html='<aside class="ch-look-sidebar" aria-label="فیلتر چیدمان‌ها"><h2>فیلتر چیدمان‌ها</h2><form method="get" action="'.esc_url($url).'#ch-look-results">';
+  $html='<aside class="ch-look-sidebar" aria-label="فیلترها"><form class="ch-sidebar-filters ch-look-filters" method="get" action="'.esc_url($url).'#ch-look-results"><div class="ch-filter-options" tabindex="0" aria-label="گزینه‌های فیلتر">';
   foreach(self::filter_taxonomies() as $key=>$taxonomy){
    $term_args=['taxonomy'=>$taxonomy,'hide_empty'=>false];
    if('style'===$key)$term_args['slug']=self::PRIMARY_STYLES;
@@ -164,12 +170,16 @@ final class Chidemoon_Core_Looks {
    }
    $html.='</fieldset>';
   }
-  return $html.'<button class="ch-look-filter-submit" type="submit">اعمال فیلترها</button></form></aside>';
+  return $html.'</div><div class="ch-filter-actions"><button class="ch-look-filter-submit" type="submit">اعمال فیلترها</button><a class="ch-sidebar-reset ch-look-filter-reset" href="'.esc_url($url).'">پاک کردن فیلترها</a></div></form></aside>';
  }
- public static function gallery(): string {
-  $args = array( 'post_type' => array( self::POST_TYPE, 'reycob_look' ), 'post_status' => 'publish', 'posts_per_page' => -1, 'orderby' => 'date', 'order' => 'DESC' );
+ public static function gallery( $attributes = array() ): string {
+  $args = array( 'post_type' => array( self::POST_TYPE, 'reycob_look' ), 'post_status' => 'publish', 'posts_per_page' => ! empty( $attributes['preview_limit'] ) ? max( 1, min( 12, (int) $attributes['preview_limit'] ) ) : -1, 'orderby' => 'date', 'order' => 'DESC' );
   $args=array_merge($args,self::filter_query($_GET));
-  $html = '<div class="ch-look-browse">'.self::filters().'<div id="ch-look-results" class="ch-look-gallery" aria-label="نتایج چیدمان‌ها">';
+  $landing = Chidemoon_Core_Look_Pages::current_term();
+  if ( isset( $attributes['term'] ) && $attributes['term'] instanceof WP_Term ) { $landing = $attributes['term']; }
+  if ( $landing ) { $args['tax_query'] = array( array( 'taxonomy' => $landing->taxonomy, 'field' => 'term_id', 'terms' => $landing->term_id ) ); }
+  $html = '<div class="ch-look-browse"><div class="ch-look-tools ch-catalog-tools"></div>'.self::filters().'<div id="ch-look-results" class="ch-look-gallery" aria-label="نتایج چیدمان‌ها">';
+  if ( $landing || ! empty( $attributes['group'] ) ) { $html = '<div class="ch-look-browse ch-look-browse--landing"><div id="ch-look-results" class="ch-look-gallery" aria-label="' . esc_attr( $landing ? 'ایده‌های ' . $landing->name : 'همه ایده‌های چیدمون' ) . '">'; }
   $shown = 0;
   foreach ( get_posts( $args ) as $look ) {
    if ( self::POST_TYPE === $look->post_type && get_post_meta( $look->ID, '_chidemoon_reycob_scene', true ) ) { continue; }
@@ -185,8 +195,15 @@ final class Chidemoon_Core_Looks {
    $chips = '';
    foreach ( array( 'chidemoon_room' => 'فضا', 'chidemoon_style' => 'سبک' ) as $taxonomy => $label ) {
     $tags = wp_get_object_terms( $look->ID, $taxonomy );
-    $names = is_wp_error( $tags ) ? array() : array_map( static fn( $tag ) => $tag->name, array_filter( $tags, static fn( $tag ) => 'none' !== $tag->slug ) );
-    foreach ( $names as $name ) { $chips .= '<span aria-label="' . esc_attr( $label . ': ' . $name ) . '">' . esc_html( $name ) . '</span>'; }
+    if ( is_wp_error( $tags ) ) { continue; }
+    foreach ( array_filter( $tags, static fn( $tag ) => 'none' !== $tag->slug ) as $tag ) {
+     $key = 'chidemoon_room' === $taxonomy ? 'room' : 'style';
+     $page = get_page_by_path( 'shop-the-look' );
+     $base = $page ? get_permalink( $page ) : home_url( '/shop-the-look/' );
+     $href = Chidemoon_Core_Look_Pages::url( $tag );
+     $class = 'ch-look-card-tag ch-look-card-tag--' . $key;
+     $chips .= '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $href ) . '" aria-label="' . esc_attr( $label . ': ' . $tag->name ) . '">' . esc_html( $tag->name ) . '</a>';
+    }
    }
    $heading_id = 'ch-look-title-' . (int) $look->ID;
    $header = '<header class="ch-look-card-heading"><h2 id="' . $heading_id . '">' . esc_html( $title ) . '</h2><div class="ch-look-card-tags">' . $chips . '</div></header>';
@@ -194,10 +211,11 @@ final class Chidemoon_Core_Looks {
    ++$shown;
   }
   if ( ! $shown ) { $html .= '<p>چیدمانی با این فیلترها پیدا نشد؛ فیلترها را تغییر دهید یا پاک کنید.</p>'; }
-  return $html . '</div></div>';
+  return Chidemoon_Core_Look_Pages::category_link() . $html . '</div></div>';
  }
  public static function home_looks(array $attributes = array()): string {
   $hero = 'hero' === ($attributes['mode'] ?? '');
+  if ( ! $hero ) { return self::home_tabs(); }
   $scenes = get_posts(array('post_type'=>'reycob_look','post_status'=>'publish','posts_per_page'=>12,'orderby'=>'date','order'=>'DESC'));
   // The homepage hero is a permanent editorial selection. New Looks belong to
   // the full ideas page and the shoppable strip, never to this fixed hero.
@@ -238,6 +256,45 @@ final class Chidemoon_Core_Looks {
   }
   return '<div class="'.($hero?'ch-home-look-mosaic':'ch-home-look-strip').'" aria-label="'.($hero?'چیدمان‌های پیشنهادی':'چیدمان‌های قابل خرید').'">'.implode('',$cards).'</div>';
  }
+ /** Fetch the newest eligible scenes within the selected room, not a global subset. */
+ public static function home_tab_cards( string $room = '', int $limit = 12 ): string {
+  $cards = array();
+  for ( $page = 1; count( $cards ) < $limit; ++$page ) {
+   $args = array( 'post_type' => array( self::POST_TYPE, 'reycob_look' ), 'post_status' => 'publish', 'posts_per_page' => 24, 'paged' => $page, 'orderby' => array( 'date' => 'DESC', 'ID' => 'DESC' ) );
+   if ( '' !== $room ) { $args['tax_query'] = array( array( 'taxonomy' => 'chidemoon_room', 'field' => 'slug', 'terms' => $room ) ); }
+   $scenes = get_posts( $args );
+   foreach ( $scenes as $scene ) {
+    if ( self::POST_TYPE === $scene->post_type && get_post_meta( $scene->ID, '_chidemoon_reycob_scene', true ) ) { continue; }
+    $content = 'reycob_look' === $scene->post_type ? self::hotspot_scene( $scene->ID ) : self::render( $scene->ID );
+    if ( ! str_contains( $content, 'class="ch-scene-point"' ) && ! str_contains( $content, 'class="chidemoon-shop-the-look__hotspot"' ) ) { continue; }
+    $content = str_replace( 'ch-scene-' . $scene->ID . '-', 'ch-home-tabs-' . $scene->ID . '-', $content );
+    $cards[] = '<article class="ch-home-look-card" data-look-id="' . (int) $scene->ID . '">' . $content . '<a class="ch-home-look-link" href="' . esc_url( home_url( '/shop-the-look/#ch-scene-' . $scene->ID ) ) . '">دیدن چیدمان <span aria-hidden="true">←</span></a></article>';
+    if ( count( $cards ) >= $limit ) { break; }
+   }
+   if ( count( $scenes ) < 24 ) { break; }
+  }
+  return $cards ? implode( '', $cards ) : '<p class="ch-home-looks-empty">هنوز تصویری برای این فضا منتشر نشده است.</p>';
+ }
+ public static function home_tabs(): string {
+  $id = wp_unique_id( 'ch-home-looks-' );
+  $html = '<section class="ch-home-looks-tabs" data-endpoint="' . esc_url( rest_url( 'chidemoon-core/v1/looks/home' ) ) . '"><nav class="ch-home-room-tabs" aria-label="فضاهای چیدمان"><a id="' . $id . '-all" class="is-active" data-room="" href="' . esc_url( home_url( '/shop-the-look/' ) ) . '">همه</a>';
+  $terms = get_terms( array( 'taxonomy' => 'chidemoon_room', 'hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC' ) );
+  if ( ! is_wp_error( $terms ) ) {
+   // Stable partition: actual displayable scenes first; product term counts
+   // cannot tell us whether a room has a shoppable image.
+   $populated = $empty = array();
+   foreach ( $terms as $term ) {
+    if ( str_contains( self::home_tab_cards( $term->slug, 1 ), 'data-look-id=' ) ) { $populated[] = $term; }
+    else { $empty[] = $term; }
+   }
+   $terms = array_merge( $populated, $empty );
+   foreach ( $terms as $term ) {
+    if ( 'none' === $term->slug || str_starts_with( $term->slug, 'review-' ) ) { continue; }
+    $html .= '<a id="' . $id . '-' . (int) $term->term_id . '" data-room="' . esc_attr( $term->slug ) . '" href="' . esc_url( Chidemoon_Core_Look_Pages::url( $term ) ) . '">' . esc_html( $term->name ) . '</a>';
+   }
+  }
+  return $html . '</nav><div id="' . $id . '-panel" class="ch-home-look-strip" aria-label="جدیدترین چیدمان‌ها">' . self::home_tab_cards() . '</div><p class="ch-home-looks-status screen-reader-text" role="status" aria-live="polite"></p>' . Chidemoon_Core_Look_Pages::category_link() . '</section>';
+ }
  public static function scene_image( int $id, bool $first = false ): string {
   $image = wp_get_attachment_image( $id, 'full', false, array( 'class' => 'ch-scene-image', 'loading' => $first ? 'eager' : 'lazy', 'fetchpriority' => $first ? 'high' : 'auto', 'decoding' => 'async', 'sizes' => '(max-width: 767px) calc(100vw - 32px), (max-width: 1280px) calc(100vw - 48px), 1232px' ) );
   $variants = (array) get_post_meta( $id, '_chidemoon_look_webp', true );
@@ -267,7 +324,7 @@ final class Chidemoon_Core_Looks {
    $key = 'ch-scene-' . $id . '-' . (int) $index;
    $style = 'left:' . max( 0, min( 100, (float) $point['x'] ) ) . '%;top:' . max( 0, min( 100, (float) $point['y'] ) ) . '%';
    $html .= '<button type="button" class="ch-scene-point" style="' . esc_attr( $style ) . '" aria-expanded="false" aria-controls="' . esc_attr( $key ) . '" aria-label="' . esc_attr( 'مشاهدهٔ ' . $product->get_name() ) . '"><span aria-hidden="true"></span></button>';
-   $html .= '<div class="ch-scene-popover" id="' . esc_attr( $key ) . '" hidden>' . $product->get_image( 'woocommerce_thumbnail' ) . '<div><strong>' . esc_html( $product->get_name() ) . '</strong><div class="ch-scene-price">' . $product->get_price_html() . '</div><a class="ch-scene-cta" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">مشاهده محصول</a></div></div>';
+   $html .= '<div class="ch-scene-popover" id="' . esc_attr( $key ) . '" hidden>' . $product->get_image( 'woocommerce_thumbnail' ) . '<div><strong>' . esc_html( $product->get_name() ) . '</strong><div class="ch-scene-price">' . Chidemoon_Core_Affiliate::hotspot_price( $product ) . '</div><a class="ch-scene-cta" href="' . esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ) . '" target="_blank" rel="nofollow sponsored noopener">' . esc_html( Chidemoon_Core_Affiliate::purchase_label( $product ) ) . '</a></div></div>';
   }
   return $html . '</div>';
  }
@@ -310,6 +367,15 @@ final class Chidemoon_Core_Looks {
   return $html ? '<section class="ch-product-looks"><h2>' . esc_html__( 'Used in these Looks', 'chidemoon-core' ) . '</h2><ul>' . $html . '</ul></section>' : '';
  }
  public static function register_routes(): void {
+  register_rest_route( 'chidemoon-core/v1', '/looks/home', array(
+   'methods' => 'GET', 'permission_callback' => '__return_true',
+   'args' => array( 'room' => array( 'default' => '', 'type' => 'string', 'sanitize_callback' => 'sanitize_title' ) ),
+   'callback' => static function( $request ) {
+    $room = (string) $request->get_param( 'room' );
+    if ( '' !== $room && ( 'none' === $room || ! get_term_by( 'slug', $room, 'chidemoon_room' ) ) ) { return new WP_Error( 'invalid_room', 'فضا پیدا نشد.', array( 'status' => 404 ) ); }
+    return rest_ensure_response( array( 'html' => self::home_tab_cards( $room ) ) );
+   },
+  ) );
   register_rest_route( 'chidemoon-core/v1', '/looks/product-search', array(
    'methods' => 'GET', 'permission_callback' => static fn() => current_user_can( 'chidemoon_manage_affiliate' ),
    'callback' => static function( $request ) {

@@ -206,7 +206,7 @@ class Chidemoon_AI_Admin {
 						<tr>
 							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
-							<td><?php echo esc_html( (string) ( $job['error_message'] ?: $job['error_code'] ) ); ?></td>
+							<td><?php echo wp_kses_post( self::job_preview( $job ) ); ?><p><strong><?php echo esc_html( (string) ( $job['error_message'] ?: $job['error_code'] ) ); ?></strong></p></td>
 							<td><?php echo esc_html( wp_date( 'j F Y، H:i', strtotime( $job['created_at'] . ' UTC' ) ) ); ?></td>
 							<td><button type="button" class="button" data-chidemoon-ai-review="retry" data-job-id="<?php echo esc_attr( (string) $job['id'] ); ?>"><?php esc_html_e( 'Retry', 'chidemoon-ai' ); ?></button></td>
 						</tr>

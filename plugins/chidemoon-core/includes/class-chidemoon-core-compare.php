@@ -50,7 +50,7 @@ final class Chidemoon_Core_Compare {
 		$html .= '</tr></thead><tbody>';
 		foreach ( $rows as $row ) { $html .= '<tr><th scope="row">' . esc_html( $row[0] ) . '</th><td>' . esc_html( $row[1] ) . '</td><td>' . esc_html( $row[2] ) . '</td></tr>'; }
 		$html .= '<tr><th scope="row"><span class="chidemoon-sr-only">مشاهده محصول</span></th>';
-		foreach ( $products as $product ) { $html .= '<td><a class="chidemoon-button" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">مشاهده محصول</a></td>'; }
+		foreach ( $products as $product ) { $html .= '<td>' . ( Chidemoon_Core_Affiliate::is_offer_available( $product ) ? Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => $product->get_id() ) ) : '<span>خرید در دسترس نیست</span>' ) . '</td>'; }
 		$search = str_replace('ch-compare-search','ch-home-compare-search',self::render_picker_shortcode());
 		return $html . '</tr></tbody></table></div><div data-home-comparison-search hidden>'.$search.'</div><button type="button" class="ch-home-comparison-reset" data-home-comparison-reset hidden>بازگرداندن محصولات مقایسه</button><p class="ch-home-comparison-note">جدول مقایسه برا اساس مشخصات ثبت شده فروشندگان است. در صورت مشاهده هرگونه اشکال لطفا اطلاع دهید.</p><p data-home-comparison-feedback class="chidemoon-sr-only" aria-live="polite"></p></div>';
 	}
@@ -289,7 +289,7 @@ final class Chidemoon_Core_Compare {
 	}
 
 	public static function offer_label( string $label, WC_Product $product ): string {
-		return Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ? __( 'خرید از فروشگاه', 'chidemoon-core' ) : $label;
+		return Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) ? Chidemoon_Core_Affiliate::purchase_label( $product ) : $label;
 	}
 
 	/** @param array<string, mixed> $args */
@@ -694,7 +694,7 @@ final class Chidemoon_Core_Compare {
 						<tr><th scope="row"><?php esc_html_e( 'قیمت', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php echo wp_kses_post( $product->get_price_html() ); ?></td><?php endforeach; ?></tr>
 						<?php foreach ( $labels as $label ) : ?><tr><th scope="row"><?php echo esc_html( $label ); ?></th><?php foreach ( $products as $product ) : $facts = self::visible_facts( $product ); ?><td<?php $cell_label( $product ); ?>><?php echo esc_html( $facts[ $label ] ?? '—' ); ?></td><?php endforeach; ?></tr><?php endforeach; ?>
 						<?php foreach ( $usage_rows as $key=>$label ) : ?><tr data-comparison-usage="<?php echo esc_attr($key); ?>"><th scope="row"><?php echo esc_html($label); ?></th><?php foreach($products as $product) : $usage=self::experience_values($product); $value=trim($usage[$key]??''); ?><td<?php $cell_label($product); ?>><?php echo esc_html( in_array($value,array('','—','-'),true) ? 'هنوز بررسی نشده' : $value ); ?></td><?php endforeach; ?></tr><?php endforeach; ?>
-						<tr><th scope="row"><?php esc_html_e( 'خرید', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php if ( Chidemoon_Core_Affiliate::is_offer_available( $product ) ) : ?><a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php esc_html_e( 'خرید از فروشگاه', 'chidemoon-core' ); ?></a><?php else : ?><span aria-disabled="true"><?php esc_html_e( 'Offer unavailable', 'chidemoon-core' ); ?></span><?php endif; ?></td><?php endforeach; ?></tr>
+						<tr><th scope="row"><?php esc_html_e( 'خرید', 'chidemoon-core' ); ?></th><?php foreach ( $products as $product ) : ?><td<?php $cell_label( $product ); ?>><?php if ( Chidemoon_Core_Affiliate::is_offer_available( $product ) ) : ?><a class="chidemoon-button" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php echo esc_html( Chidemoon_Core_Affiliate::purchase_label( $product ) ); ?></a><?php else : ?><span aria-disabled="true"><?php esc_html_e( 'Offer unavailable', 'chidemoon-core' ); ?></span><?php endif; ?></td><?php endforeach; ?></tr>
 					</tbody>
 				</table>
 			</div>

@@ -5,6 +5,8 @@ require_once __DIR__ . '/class-chidemoon-core-category-facets.php';
 
 final class Chidemoon_Core_Discovery {
  public static function register(): void {
+  require_once __DIR__ . '/class-chidemoon-core-home-products.php';
+  Chidemoon_Core_Home_Products::register();
   add_action( 'wp_enqueue_scripts', static function (): void {
    foreach ( array('css','js') as $type ) {
     $path = 'assets/' . $type . '/category-navigation.' . $type;

@@ -279,7 +279,8 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}",
 			),
 		);
-		foreach ( array_slice( $attachment_ids, 0, 2 ) as $attachment_id ) {
+		// Include the generated scene plus every supplied product reference.
+		foreach ( array_slice( $attachment_ids, 0, 12 ) as $attachment_id ) {
 			$data_url = $this->attachment_data_url( $attachment_id );
 			if ( is_wp_error( $data_url ) ) {
 				return $data_url;
@@ -295,7 +296,7 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			array(
 				'model'       => $this->vision_model,
 				'messages'    => array(
-					array( 'role' => 'system', 'content' => 'You locate products in an editorial room photo. Return JSON only with hotspot coordinates (x/y 0-100). Never invent products.' ),
+					array( 'role' => 'system', 'content' => 'You verify a generated room scene against supplied product reference images. Image 1 is the scene; later images are references grouped by the product list. Preserve exact silhouette, proportions, materials, colors, ornament, number of parts and construction. A product is a mismatch if substituted, redesigned, duplicated, missing, obscured, or materially changed. Return JSON only with products_match, title, excerpt, and one hotspot per visible product using x/y 0-100 on image 1. Never invent a product or hotspot.' ),
 					array( 'role' => 'user', 'content' => $content ),
 				),
 				'temperature' => 0.1,
@@ -496,7 +497,7 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			'background' => 'Place the supplied product in a clean, realistic editorial background without changing the product.',
 			'scene'      => 'Place the supplied product in an appropriate lifestyle scene without inventing product features.',
 			'aggregate'  => 'Create a coherent editorial arrangement from the supplied product images without adding products.',
-			'look_scene' => 'Create a photorealistic styled room scene that naturally features exactly the supplied products in place, editorial interior photography, consistent warm light, no extra branded products, no text overlays, no people faces.',
+			'look_scene' => 'Create a photorealistic interior photograph with a straight-on eye-level camera and a wide 4:3 composition. Use exactly the supplied product reference images as identity anchors. Preserve every product unchanged: same silhouette, proportions, material, color, ornament, number of parts and construction; do not redesign, beautify, mirror, merge or replace any item. Arrange all products visibly and logically in the requested room, with no product hidden or cropped. Keep the scene simple so every item is identifiable. No extra decorative products, no text, no logos, no people, no impossible geometry. The image must support precise product hotspots.',
 			'generate'   => 'Create an original editorial illustration or product-adjacent image. Do not depict unsupported product claims.',
 		);
 
