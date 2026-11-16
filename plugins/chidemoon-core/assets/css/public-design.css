@@ -1,3 +1,13 @@
+@font-face { font-family: Peyda; font-style: normal; font-weight: 100; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Thin.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 200; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-ExtraLight.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 300; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Light.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 400; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Regular.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 500; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Medium.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 600; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Bold.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 800; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: Peyda; font-style: normal; font-weight: 900; font-display: swap; src: url('../fonts/peyda/PeydaWebFaNum-Black.woff2') format('woff2'); }
+body, body.elementor-default { --e-global-typography-primary-font-family: Peyda; --e-global-typography-secondary-font-family: Peyda; --e-global-typography-text-font-family: Peyda; --e-global-typography-accent-font-family: Peyda; }
 /* Licensed local files supplied by the project owner. Keep model/SKU digits Latin. */
 @font-face {
 	font-family: YekanBakh;
@@ -121,8 +131,8 @@ body {
 	--ch-type-product-title: 21px;
 	--ch-type-product-card: 14px;
 	--ch-type-card-price: 17px;
-	--chidemoon-font-body: var(--e-global-typography-text-font-family, YekanBakh), Vazirmatn, Tahoma, sans-serif;
-	--chidemoon-font-display: var(--e-global-typography-primary-font-family, YekanBakh), Vazirmatn, Tahoma, sans-serif;
+	--chidemoon-font-body: Peyda, Vazirmatn, Tahoma, sans-serif;
+	--chidemoon-font-display: Peyda, Vazirmatn, Tahoma, sans-serif;
 }
 
 body.wp-theme-hello-elementor {
@@ -2367,3 +2377,43 @@ body .ch-look-filters .ch-filter-options label:has(input:checked) { background: 
 .ch-home-look-strip .ch-home-look-card{position:relative;z-index:1;}
 .ch-home-look-strip .ch-home-look-card:has(.ch-scene-point[aria-expanded="true"]){z-index:20;}
 .ch-home-look-strip .ch-home-look-card .ch-scene-popover{z-index:30;}
+
+/* Keep scrolling usable while removing the visible scrollbar chrome. */
+html, body, * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* Some component styles re-enable a thin scrollbar; keep the indicator hidden
+ * on filter and overlay scrollports while preserving wheel/touch scrolling. */
+:where(.ch-sidebar-filters .ch-filter-options,
+  .ch-filter-dialog,
+  .ch-sort-menu,
+  .chidemoon-compare-bar__items,
+  .chidemoon-comparison-picker .chidemoon-core-product-grid,
+  .chidemoon-comparison-search__results,
+  .chidemoon-comparison-table-wrap,
+  .ch-search-dialog,
+  .ch-search-dialog .e-search-results-container,
+  .e-n-menu-content,
+  .e-n-menu-wrapper) {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+:where(.ch-sidebar-filters .ch-filter-options,
+  .ch-filter-dialog,
+  .ch-sort-menu,
+  .chidemoon-compare-bar__items,
+  .chidemoon-comparison-picker .chidemoon-core-product-grid,
+  .chidemoon-comparison-search__results,
+  .chidemoon-comparison-table-wrap,
+  .ch-search-dialog,
+  .ch-search-dialog .e-search-results-container,
+  .e-n-menu-content,
+  .e-n-menu-wrapper)::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
