@@ -6,9 +6,9 @@ if (!current_user_can('manage_options')) throw new RuntimeException('Administrat
 $home=(int)get_option('page_on_front');
 $changes=[
  'cc3961ae'=>['title'=>'چیدمون؛ ایده برای خونمون','header_size'=>'h1'],
- '854f20c3'=>['editor'=>'<p>کمکت می‌کنیم تا از چیدمان‌ها ایده بگیری، به راحتی مقایسه کنی تا درنهایت محصولی طبق سلیقت بخری</p>'],
+ '854f20c3'=>['editor'=>'<p>از چیدمان‌ها ایده بگیر، محصولات رو مقایسه کن و برای خونه‌ات انتخاب کن.</p>'],
  '92528be1'=>['text'=>'ایده برای چیدمان'],
- 'b384c405'=>['text'=>'مقایسه حرفه‌ای','link'=>['url'=>home_url('/comparisons/')]],
+ 'b384c405'=>['text'=>'مقایسه محصولات','link'=>['url'=>home_url('/comparisons/')]],
  'chlooktitle'=>['title'=>'بگرد و ببین و بچین'],
  'chlookmore'=>['text'=>'مشاهده ایده‌های چیدمان'],
  'chlookdesc'=>['editor'=>'<p>روی نقطه‌های تصویر بزن و مشخصات هر محصول رو ببین</p>'],
