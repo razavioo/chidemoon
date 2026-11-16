@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+[[ "${CHIDEMOON_BACKUPS_ENABLED:-false}" == true ]] || { echo 'This data-recovery migration lane is disabled by the zero-backup policy.' >&2; exit 1; }
 
 # Upgrade an existing Hello/Elementor site without rebuilding editorial seeds.
 # Every data change shares a verified database/uploads recovery point.

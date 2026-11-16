@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+# Production owner policy: no server backups. Isolated restore drills must
+# explicitly opt in; refusal must not look like a successful recovery point.
+if [ "${CHIDEMOON_BACKUPS_ENABLED:-false}" != true ]; then
+    echo 'Backups are disabled by the zero-backup policy.' >&2
+    exit 1
+fi
+
 # The application volume is not copied wholesale because core and source-owned
 # plugins can be recreated from an immutable release; editorial uploads cannot.
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+[[ "${CHIDEMOON_BACKUPS_ENABLED:-false}" == true ]] || { echo 'This data-recovery migration lane is disabled by the zero-backup policy.' >&2; exit 1; }
 
 # Visual migrations include database recovery; code-only releases use deploy-release-bundle.sh.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

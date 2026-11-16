@@ -147,6 +147,7 @@ services:
       MARIADB_USER: ${CHIDEMOON_DB_USER:?Set CHIDEMOON_DB_USER in .env}
       MARIADB_PASSWORD: ${CHIDEMOON_DB_PASSWORD:?Set CHIDEMOON_DB_PASSWORD in .env}
       CHIDEMOON_BACKUP_RETENTION_DAYS: ${CHIDEMOON_BACKUP_RETENTION_DAYS:-14}
+      CHIDEMOON_BACKUPS_ENABLED: ${CHIDEMOON_BACKUPS_ENABLED:-false}
     volumes:
       - chidemoon_uploads:/uploads:ro
       - ./backups:/backups

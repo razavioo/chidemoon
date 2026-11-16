@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+[[ "${CHIDEMOON_BACKUPS_ENABLED:-false}" == true ]] || { echo 'Backups disabled by owner policy.'; exit 0; }
 
 # A host scheduler runs this one-shot backup after the database healthcheck.
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"

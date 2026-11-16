@@ -10,6 +10,14 @@ import { test } from 'node:test';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+test('zero-backup policy refuses backup creation by default before running tools', () => {
+  const result = spawnSync('/bin/sh', [join(root, 'ops/run-backup.sh')], {
+    env: { PATH: '/nonexistent', CHIDEMOON_BACKUPS_ENABLED: 'false' }, encoding: 'utf8',
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /disabled by the zero-backup policy/);
+});
+
 test('a failed database dump cannot publish a gzip backup; verified pairs retain original data', () => {
   const scratch = mkdtempSync(join(tmpdir(), 'chidemoon-backup-'));
   try {
@@ -31,6 +39,7 @@ test('a failed database dump cannot publish a gzip backup; verified pairs retain
       MARIADB_USER: 'fixture',
       MARIADB_PASSWORD: 'local-fixture',
       CHIDEMOON_BACKUP_RETENTION_DAYS: '14',
+      CHIDEMOON_BACKUPS_ENABLED: 'true',
       CHIDEMOON_FIXTURE_SQL: join(scratch, 'fixture.sql'),
     };
     const failed = spawnSync('sh', [script], { env: { ...env, CHIDEMOON_FIXTURE_DUMP_EXIT: '7' }, encoding: 'utf8' });
@@ -168,7 +177,7 @@ for (const mode of ['disk-after-backup', 'dump', 'migration', 'late-health', 'su
       const wrapper = join(ops, 'deploy-elementor-upgrade.sh');
       writeFileSync(wrapper, readFileSync(join(root, 'ops/deploy-elementor-upgrade.sh')));
       const result = spawnSync('bash', [wrapper, bundle, images], {
-        env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, CHIDEMOON_DEPLOY_ROOT: deploy, CHIDEMOON_MIN_FREE_MIB: '1', CHIDEMOON_FIXTURE_ROOT: scratch, CHIDEMOON_FIXTURE_FAILURE: mode },
+        env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, CHIDEMOON_BACKUPS_ENABLED: 'true', CHIDEMOON_DEPLOY_ROOT: deploy, CHIDEMOON_MIN_FREE_MIB: '1', CHIDEMOON_FIXTURE_ROOT: scratch, CHIDEMOON_FIXTURE_FAILURE: mode },
         encoding: 'utf8',
       });
       const log = readFileSync(join(scratch, 'commands.log'), 'utf8');

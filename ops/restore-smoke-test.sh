@@ -69,6 +69,7 @@ CHIDEMOON_DB_USER=restore_smoke
 CHIDEMOON_DB_PASSWORD=restore-smoke-password
 CHIDEMOON_DB_ROOT_PASSWORD=restore-smoke-root-password
 CHIDEMOON_BACKUP_RETENTION_DAYS=14
+CHIDEMOON_BACKUPS_ENABLED=true
 EOF
 
 compose up -d --wait --pull never database

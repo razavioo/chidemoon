@@ -8,7 +8,7 @@ bundle_path="${1:-}"
 image_bundle_path="${2:-${CHIDEMOON_IMAGE_ARCHIVE:-}}"
 deploy_root="${CHIDEMOON_DEPLOY_ROOT:-/opt/chidemoon}"
 environment_file="${CHIDEMOON_ENV_FILE:-$deploy_root/.env}"
-skip_pre_deploy_backup="${CHIDEMOON_SKIP_PRE_DEPLOY_BACKUP:-}"
+skip_pre_deploy_backup="${CHIDEMOON_SKIP_PRE_DEPLOY_BACKUP:-I_UNDERSTAND_THIS_REMOVES_DATA_RECOVERY}"
 no_backup_confirmation='I_UNDERSTAND_THIS_REMOVES_DATA_RECOVERY'
 
 fail() {
