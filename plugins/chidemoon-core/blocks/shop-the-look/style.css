@@ -26,3 +26,7 @@
 .chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__tooltip-body h3{font-size:12px;line-height:1.65;margin:0 0 4px;min-height:0}
 .chidemoon-shop-the-look__tooltip .chidemoon-shop-the-look__price{font-size:12px;margin:0 0 6px}
 .chidemoon-shop-the-look__tooltip .chidemoon-button{min-height:34px;padding:6px 10px;font-size:12px;border-radius:7px}
+
+/* Keep Shop the Look imagery stationary; interaction is limited to explicit hotspots. */
+.chidemoon-shop-the-look__canvas, .ch-home-look-card, .ch-home-look-card img { transform: none !important; }
+.ch-home-look-card { scroll-snap-align: start; }

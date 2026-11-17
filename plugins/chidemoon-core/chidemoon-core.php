@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /**
  * Plugin Name: Chidemoon Core
@@ -55,6 +55,14 @@ require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-page-cache.php'
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-critical-styles.php';
 require_once CHIDEMOON_CORE_DIR . 'includes/class-chidemoon-core-plugin.php';
 
+
+// Keep navigation responsive and prevent accidental image-track scrolling on the homepage.
+add_action( 'wp_enqueue_scripts', static function (): void {
+    if ( is_admin() ) { return; }
+    wp_register_script( 'chidemoon-navigation-polish', '', array(), CHIDEMOON_CORE_VERSION, true );
+    wp_enqueue_script( 'chidemoon-navigation-polish' );
+    wp_add_inline_script( 'chidemoon-navigation-polish', "document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.ch-home-look-card img,.ch-home-looks-tabs img').forEach(function(img){img.draggable=false;});document.querySelectorAll('.ch-home-look-card').forEach(function(card){card.addEventListener('wheel',function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();}},{passive:false});});document.querySelectorAll('a[href]').forEach(function(a){if(a.origin===location.origin&&!a.target&&a.href!==location.href){a.addEventListener('mouseenter',function(){var l=document.createElement('link');l.rel='prefetch';l.href=a.href;document.head.appendChild(l);},{once:true});}});});" );
+}, 99 );
 register_activation_hook( __FILE__, array( 'Chidemoon_Core_Activator', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Chidemoon_Core_Activator', 'deactivate' ) );
 
@@ -81,3 +89,4 @@ function chidemoon_core_render_woocommerce_notice(): void {
 
 	echo '<div class="notice notice-error"><p>' . esc_html__( 'Chidemoon Core requires WooCommerce to be active.', 'chidemoon-core' ) . '</p></div>';
 }
+

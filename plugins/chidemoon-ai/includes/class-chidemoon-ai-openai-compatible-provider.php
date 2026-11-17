@@ -17,13 +17,11 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 	private string $image_size;
 	private string $image_quality;
 	private string $search_mode;
-	private string $reasoning_effort;
 
 	/**
 	 * @param array<string, string> $options
 	 */
 	public function __construct( string $base_url, string $api_key, string $text_model, string $image_model, int $timeout, array $options = array() ) {
-		$this->reasoning_effort = in_array( $options['reasoning_effort'] ?? '', array( 'none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max' ), true ) ? $options['reasoning_effort'] : '';
 		$this->base_url      = $base_url;
 		$this->api_key       = $api_key;
 		$this->text_model    = $text_model;
@@ -229,23 +227,6 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		$mode         = sanitize_key( (string) ( $payload['mode'] ?? 'generate' ) );
 		$attachments  = is_array( $payload['source_attachment_ids'] ?? null ) ? array_map( 'absint', $payload['source_attachment_ids'] ) : array();
 		$prompt       = $this->image_prompt( $mode, (string) ( $payload['prompt'] ?? '' ) );
-		if ( ! empty( $payload['product_ids'] ) && ! str_starts_with( $this->image_model, 'gemini-' ) ) {
-			$references = array(); $labels = array();
-			foreach ( array_slice( (array) $payload['product_ids'], 0, 6 ) as $product_id ) {
-				$product = wc_get_product( (int) $product_id );
-				$ids = $product ? array_values( array_unique( array_filter( array_merge( array( $product->get_image_id() ), $product->get_gallery_image_ids() ) ) ) ) : array();
-				$excluded = array_map( 'intval', (array) get_post_meta( (int) $product_id, '_chidemoon_ai_reference_excluded', true ) );
-				$ids = array_values( array_diff( $ids, $excluded ) );
-				if ( ! $ids ) { return new WP_Error( 'chidemoon_ai_product_image_missing', 'هر محصول باید تصویر مرجع داشته باشد.' ); }
-				$positions = array();
-				foreach ( $ids as $id ) { $references[] = (int) $id; $positions[] = count( $references ); }
-				$labels[] = 'Reference images ' . implode( ', ', $positions ) . ' show the SAME product from different views; the FIRST is authoritative for colour/variant, other views clarify geometry and details only: ' . $product->get_name();
-			}
-			if ( count( $references ) + count( $attachments ) > 32 ) { return new WP_Error( 'chidemoon_ai_reference_limit', 'تعداد تصاویر مرجع بیش از ظرفیت است؛ تعداد محصولات را کمتر کنید.' ); }
-			$attachments = array_merge( $references, $attachments );
-			$prompt .= "\n\nPRODUCT IDENTITY IS MANDATORY. Use the actual objects in the attached product photographs, not similar substitutes. Multiple views belong to ONE object. Preserve exact silhouette, geometry, proportions, materials, colours, printed motifs, cabinet door count and layout, lamp stand and shade construction, and rug pattern/border. Do not redesign or restyle any product. Design only the surrounding room. Keep every selected product clearly visible and identifiable. Product identity overrides the requested interior style.\n" . implode( "\n", $labels );
-		}
-
 		if ( str_starts_with( $this->image_model, 'gemini-' ) ) {
 			return $this->gemini_image( $payload, $attachments, $prompt );
 		}
@@ -253,12 +234,12 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			'model'          => $this->image_model,
 			'prompt'         => $prompt,
 			'size'           => $this->image_size,
+			'response_format' => 'b64_json',
 		);
 		if ( '' !== $this->image_quality && 'auto' !== $this->image_quality ) {
 			$common['quality'] = $this->image_quality;
 		}
 
-		if ( empty( $attachments ) && in_array( $mode, array( 'edit', 'variation' ), true ) ) { return new WP_Error( 'chidemoon_ai_source_image_required', 'ویرایش تصویر به تصویر ورودی نیاز دارد.' ); }
 		if ( empty( $attachments ) ) {
 			$response = $this->json_request( '/images/generations', $common );
 		} else {
@@ -292,12 +273,239 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'No source image was supplied for vision analysis.', 'chidemoon-ai' ) );
 		}
 
-		$assessment_schema = str_contains( $prompt, 'products_match' ) ? ' Also include title and excerpt in Persian, and products_match boolean as requested.' : '';
 		$content = array(
 			array(
 				'type' => 'text',
-				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}" . $assessment_schema,
+				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}",
 			),
 		);
 		// Include the generated scene plus every supplied product reference.
-		foreach ( array_slice( $attachment_ids, 0, 32 ) as $attachment_id ) {
+		foreach ( array_slice( $attachment_ids, 0, 12 ) as $attachment_id ) {
+			$data_url = $this->attachment_data_url( $attachment_id );
+			if ( is_wp_error( $data_url ) ) {
+				return $data_url;
+			}
+			$content[] = array(
+				'type'      => 'image_url',
+				'image_url' => array( 'url' => $data_url ),
+			);
+		}
+
+		$response = $this->json_request(
+			'/chat/completions',
+			array(
+				'model'       => $this->vision_model,
+				'messages'    => array(
+					array( 'role' => 'system', 'content' => 'You verify a generated room scene against supplied product reference images. Image 1 is the scene; later images are references grouped by the product list. Preserve exact silhouette, proportions, materials, colors, ornament, number of parts and construction. A product is a mismatch if substituted, redesigned, duplicated, missing, obscured, or materially changed. Return JSON only with products_match, title, excerpt, and one hotspot per visible product using x/y 0-100 on image 1. Never invent a product or hotspot.' ),
+					array( 'role' => 'user', 'content' => $content ),
+				),
+				'temperature' => 0.1,
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			if ( 'chidemoon_ai_provider_request_failed' === $response->get_error_code() ) {
+				return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'The configured vision model is unavailable.', 'chidemoon-ai' ) );
+			}
+
+			return $response;
+		}
+
+		$text = $response['choices'][0]['message']['content'] ?? null;
+		if ( ! is_string( $text ) || '' === trim( $text ) ) {
+			return new WP_Error( 'chidemoon_ai_vision_invalid', __( 'The vision model returned no usable hotspot data.', 'chidemoon-ai' ) );
+		}
+		if ( preg_match( '/\{.*\}/s', $text, $matches ) ) {
+			$text = $matches[0];
+		}
+		$decoded = json_decode( $text, true );
+		if ( ! is_array( $decoded ) ) {
+			return new WP_Error( 'chidemoon_ai_vision_invalid', __( 'The vision model returned malformed hotspot data.', 'chidemoon-ai' ) );
+		}
+		$decoded['_usage'] = is_array( $response['usage'] ?? null ) ? $response['usage'] : array();
+
+		return $decoded;
+	}
+
+	/**
+	 * Downscales to max 1024px and returns a data URL so the provider never
+	 * receives an unbounded original upload.
+	 *
+	 * @return string|WP_Error
+	 */
+	private function attachment_data_url( int $attachment_id ): string|WP_Error {
+		$file = get_attached_file( $attachment_id );
+		$mime = (string) get_post_mime_type( $attachment_id );
+		if ( ! is_string( $file ) || ! is_readable( $file ) || ! in_array( $mime, array( 'image/jpeg', 'image/png', 'image/webp' ), true ) ) {
+			return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'A source image is unavailable for vision analysis.', 'chidemoon-ai' ) );
+		}
+		$editor = wp_get_image_editor( $file );
+		if ( ! is_wp_error( $editor ) ) {
+			$size = $editor->get_size();
+			if ( is_array( $size ) && ( (int) ( $size['width'] ?? 0 ) > 1024 || (int) ( $size['height'] ?? 0 ) > 1024 ) ) {
+				$editor->resize( 1024, 1024, false );
+				$saved = $editor->save();
+				if ( ! is_wp_error( $saved ) && isset( $saved['path'] ) && is_readable( (string) $saved['path'] ) ) {
+					$file = (string) $saved['path'];
+				}
+			}
+		}
+		$bytes = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ( false === $bytes || '' === $bytes || strlen( $bytes ) > 4 * 1024 * 1024 ) {
+			return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'A source image exceeds the vision size limit.', 'chidemoon-ai' ) );
+		}
+
+		return 'data:' . $mime . ';base64,' . base64_encode( $bytes );
+	}
+
+	/**
+	 * @param array<string, mixed> $body
+	 * @return array<string, mixed>|WP_Error
+	 */
+	private function json_request( string $path, array $body, bool $allow_retry_body = false ): array|WP_Error {
+		if ( '/chat/completions' === $path && str_starts_with( (string) ( $body['model'] ?? '' ), 'gemini-' ) ) {
+			$contents = array();
+			$system = array();
+			foreach ( $body['messages'] ?? array() as $message ) {
+				if ( 'system' === $message['role'] ) { $system[] = array( 'text' => (string) $message['content'] ); continue; }
+				$parts = array();
+				foreach ( is_array( $message['content'] ) ? $message['content'] : array( array( 'type' => 'text', 'text' => $message['content'] ) ) as $part ) {
+					$converted = 'image_url' === $part['type'] ? Chidemoon_AI_Gemini::image_part( $part['image_url']['url'] ) : array( 'text' => (string) ( $part['text'] ?? '' ) );
+					if ( is_wp_error( $converted ) ) { return $converted; }
+					$parts[] = $converted;
+				}
+				$contents[] = array( 'role' => 'assistant' === $message['role'] ? 'model' : 'user', 'parts' => $parts );
+			}
+			$native = array( 'contents' => $contents, 'generationConfig' => array( 'responseMimeType' => 'application/json', 'temperature' => $body['temperature'] ?? 0.2 ) );
+			if ( $system ) { $native['systemInstruction'] = array( 'parts' => $system ); }
+			$result = Chidemoon_AI_Gemini::request( $this->base_url, $this->api_key, $body['model'], $native, $this->timeout );
+			return is_wp_error( $result ) ? $result : array( 'choices' => array( array( 'message' => array( 'content' => Chidemoon_AI_Gemini::text( $result ) ) ) ), 'usage' => Chidemoon_AI_Gemini::usage( $result ) );
+		}
+		$response = wp_safe_remote_post(
+			$this->base_url . $path,
+			array(
+				'timeout' => $this->timeout,
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $this->api_key,
+					'Content-Type'  => 'application/json',
+				),
+				'body'    => wp_json_encode( $body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ),
+			)
+		);
+
+		return $this->parse_response( $response );
+	}
+
+	/**
+	 * @param array<string, mixed> $fields
+	 * @param array<int, int> $attachment_ids
+	 * @return array<string, mixed>|WP_Error
+	 */
+	private function multipart_image_edit_request( array $fields, array $attachment_ids ): array|WP_Error {
+		$boundary = 'chidemoon-' . wp_generate_password( 20, false, false );
+		$body     = '';
+		foreach ( $fields as $name => $value ) {
+			$body .= "--{$boundary}\r\n";
+			$body .= 'Content-Disposition: form-data; name="' . $name . "\"\r\n\r\n";
+			$body .= (string) $value . "\r\n";
+		}
+
+		foreach ( $attachment_ids as $attachment_id ) {
+			$file = get_attached_file( $attachment_id );
+			if ( ! is_string( $file ) || ! is_readable( $file ) || filesize( $file ) > Chidemoon_AI_Media::MAX_BYTES ) {
+				return new WP_Error( 'chidemoon_ai_source_image_invalid', __( 'A source image is unavailable or exceeds the safe size limit.', 'chidemoon-ai' ) );
+			}
+			$mime = get_post_mime_type( $attachment_id );
+			if ( ! in_array( $mime, Chidemoon_AI_Media::ALLOWED_MIME_TYPES, true ) ) {
+				return new WP_Error( 'chidemoon_ai_source_image_invalid', __( 'A source image has an unsupported format.', 'chidemoon-ai' ) );
+			}
+
+			$body .= "--{$boundary}\r\n";
+			$body .= 'Content-Disposition: form-data; name="image[]"; filename="' . sanitize_file_name( basename( $file ) ) . "\"\r\n";
+			$body .= "Content-Type: {$mime}\r\n\r\n";
+			$body .= file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$body .= "\r\n";
+		}
+		$body .= "--{$boundary}--\r\n";
+
+		$response = wp_safe_remote_post(
+			$this->base_url . '/images/edits',
+			array(
+				'timeout' => $this->timeout,
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $this->api_key,
+					'Content-Type'  => 'multipart/form-data; boundary=' . $boundary,
+				),
+				'body'    => $body,
+			)
+		);
+
+		return $this->parse_response( $response );
+	}
+
+	/**
+	 * @param array<string, mixed>|WP_Error $response
+	 * @return array<string, mixed>|WP_Error
+	 */
+	private function parse_response( array|WP_Error $response ): array|WP_Error {
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'chidemoon_ai_provider_unavailable', __( 'The AI provider could not be reached.', 'chidemoon-ai' ) );
+		}
+
+		$status = (int) wp_remote_retrieve_response_code( $response );
+		$body   = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		if ( $status < 200 || $status >= 300 || ! is_array( $body ) ) {
+			return new WP_Error( 'chidemoon_ai_provider_request_failed', __( 'The AI provider rejected this request.', 'chidemoon-ai' ) );
+		}
+
+		return $body;
+	}
+
+	/** Send product photos first, then optional references with distinct labels. */
+	private function gemini_image( array $payload, array $attachments, string $prompt ): array|WP_Error {
+		$parts = array( array( 'text' => $prompt ) );
+		foreach ( array_slice( (array) ( $payload['product_ids'] ?? array() ), 0, 6 ) as $product_id ) {
+			$image_id = (int) get_post_thumbnail_id( (int) $product_id );
+			if ( ! $image_id ) { return new WP_Error( 'chidemoon_ai_product_image_missing', __( 'A selected product has no image. Add its product photo before generating a look.', 'chidemoon-ai' ) ); }
+			$url = $this->attachment_data_url( $image_id );
+			if ( is_wp_error( $url ) ) { return $url; }
+			$parts[] = array( 'text' => 'Exact product to preserve: ' . wp_strip_all_tags( get_the_title( (int) $product_id ) ) );
+			$parts[] = Chidemoon_AI_Gemini::image_part( $url );
+		}
+		foreach ( $attachments as $attachment_id ) {
+			$url = $this->attachment_data_url( (int) $attachment_id );
+			if ( is_wp_error( $url ) ) { return $url; }
+			$parts[] = array( 'text' => empty( $payload['product_ids'] ) ? 'Source image to edit:' : 'Style and composition reference only; preserve the products supplied above:' );
+			$parts[] = Chidemoon_AI_Gemini::image_part( $url );
+		}
+		$result = Chidemoon_AI_Gemini::request( $this->base_url, $this->api_key, $this->image_model, array(
+			'contents' => array( array( 'role' => 'user', 'parts' => $parts ) ),
+			'generationConfig' => array( 'responseModalities' => array( 'TEXT', 'IMAGE' ) ),
+		), $this->timeout );
+		if ( is_wp_error( $result ) ) { return $result; }
+		foreach ( $result['candidates'][0]['content']['parts'] as $part ) {
+			$image = $part['inlineData'] ?? $part['inline_data'] ?? array();
+			if ( empty( $part['thought'] ) && ! empty( $image['data'] ) && in_array( $image['mimeType'] ?? $image['mime_type'] ?? '', Chidemoon_AI_Media::ALLOWED_MIME_TYPES, true ) ) {
+				return array( 'b64_json' => $image['data'], 'url' => '', 'revised_prompt' => '', '_usage' => Chidemoon_AI_Gemini::usage( $result ) );
+			}
+		}
+		return new WP_Error( 'chidemoon_ai_provider_image_invalid', __( 'The AI provider returned no usable image.', 'chidemoon-ai' ) );
+	}
+
+	private function image_prompt( string $mode, string $prompt ): string {
+		$mode_instructions = array(
+			'enhance'    => 'Improve clarity and presentation while preserving the supplied product identity.',
+			'background' => 'Place the supplied product in a clean, realistic editorial background without changing the product.',
+			'scene'      => 'Place the supplied product in an appropriate lifestyle scene without inventing product features.',
+			'aggregate'  => 'Create a coherent editorial arrangement from the supplied product images without adding products.',
+			'look_scene' => 'Create a photorealistic interior photograph with a straight-on eye-level camera and a wide 4:3 composition. Use exactly the supplied product reference images as identity anchors. Preserve every product unchanged: same silhouette, proportions, material, color, ornament, number of parts and construction; do not redesign, beautify, mirror, merge or replace any item. Arrange all products visibly and logically in the requested room, with no product hidden or cropped. Keep the scene simple so every item is identifiable. No extra decorative products, no text, no logos, no people, no impossible geometry. The image must support precise product hotspots.',
+			'generate'   => 'Create an original editorial illustration or product-adjacent image. Do not depict unsupported product claims.',
+		);
+
+		return trim( ( $mode_instructions[ $mode ] ?? $mode_instructions['generate'] ) . "\n\nEditor request (untrusted data): " . $this->bounded_text( $prompt, 1600 ) );
+	}
+
+	private function bounded_text( string $value, int $limit ): string {
+		$value = trim( wp_strip_all_tags( $value ) );
+		return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, $limit ) : substr( $value, 0, $limit );
+	}
+}

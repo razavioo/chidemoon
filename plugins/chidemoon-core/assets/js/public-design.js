@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
 	'use strict';
 
 	function showProductSkeleton(widget, append = false) {
@@ -33,7 +33,7 @@
 			const label = input.closest('label');
 			if (label) label.htmlFor = input.id;
 			const wrapper = document.createElement('span'); wrapper.className = 'ch-price-stepper';
-			const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−';
+			const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = 'âˆ’';
 			const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+';
 			const hint = document.createElement('span'); hint.className = 'ch-price-hint';
 			hint.setAttribute('aria-live', 'polite');
@@ -58,8 +58,8 @@
 				const value = Number(input.value) || 0;
 				minus.disabled = next(-1) === value;
 				plus.disabled = next(1) === value;
-				minus.setAttribute('aria-label', `کاهش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(-1))} ${unit}`);
-				plus.setAttribute('aria-label', `افزایش ${input === min ? 'حداقل' : 'حداکثر'} قیمت به ${format(next(1))} ${unit}`);
+				minus.setAttribute('aria-label', `Ú©Ø§Ù‡Ø´ ${input === min ? 'Ø­Ø¯Ø§Ù‚Ù„' : 'Ø­Ø¯Ø§Ú©Ø«Ø±'} Ù‚ÛŒÙ…Øª Ø¨Ù‡ ${format(next(-1))} ${unit}`);
+				plus.setAttribute('aria-label', `Ø§ÙØ²Ø§ÛŒØ´ ${input === min ? 'Ø­Ø¯Ø§Ù‚Ù„' : 'Ø­Ø¯Ø§Ú©Ø«Ø±'} Ù‚ÛŒÙ…Øª Ø¨Ù‡ ${format(next(1))} ${unit}`);
 				minus.title = minus.getAttribute('aria-label'); plus.title = plus.getAttribute('aria-label');
 				hint.textContent = input.value ? `${format(value)} ${unit}` : '';
 			};
@@ -127,7 +127,7 @@
 					if (error.name === 'AbortError') return;
 					select.value = committedValue; sync();
 					status.hidden = false;
-					status.textContent = 'بارگذاری انجام نشد؛ لطفاً دوباره گزینهٔ مرتب‌سازی را انتخاب کنید.';
+					status.textContent = 'Ø¨Ø§Ø±Ú¯Ø°Ø§Ø±ÛŒ Ø§Ù†Ø¬Ø§Ù… Ù†Ø´Ø¯Ø› Ù„Ø·ÙØ§Ù‹ Ø¯ÙˆØ¨Ø§Ø±Ù‡ Ú¯Ø²ÛŒÙ†Ù‡Ù” Ù…Ø±ØªØ¨â€ŒØ³Ø§Ø²ÛŒ Ø±Ø§ Ø§Ù†ØªØ®Ø§Ø¨ Ú©Ù†ÛŒØ¯.';
 				} finally {
 					clearSkeleton();
 					if (request === controller) results.removeAttribute('aria-busy');
@@ -201,13 +201,13 @@
 	function enhanceGalleryCounter() {
 		if (!document.body.classList.contains('single-product') && !document.querySelector('.ch-product-single')) return;
 		const localize = (counter) => {
-			const match = counter.textContent.trim().match(/^([0-9۰-۹٠-٩]+)\s*\/\s*([0-9۰-۹٠-٩]+)$/);
+			const match = counter.textContent.trim().match(/^([0-9Û°-Û¹Ù -Ù©]+)\s*\/\s*([0-9Û°-Û¹Ù -Ù©]+)$/);
 			if (!match) return;
-			const persianDigits = (value) => value.replace(/[0-9٠-٩]/g, (digit) => {
+			const persianDigits = (value) => value.replace(/[0-9Ù -Ù©]/g, (digit) => {
 				const code = digit.charCodeAt(0);
-				return '۰۱۲۳۴۵۶۷۸۹'[code >= 1632 ? code - 1632 : code - 48];
+				return 'Û°Û±Û²Û³Û´ÛµÛ¶Û·Û¸Û¹'[code >= 1632 ? code - 1632 : code - 48];
 			});
-			counter.textContent = `تصویر ${persianDigits(match[1])} از ${persianDigits(match[2])}`;
+			counter.textContent = `ØªØµÙˆÛŒØ± ${persianDigits(match[1])} Ø§Ø² ${persianDigits(match[2])}`;
 		};
 		const bind = (counter) => {
 			counter.setAttribute('role', 'status');
@@ -263,15 +263,15 @@
 		const menuToggle = header.querySelector('.ch-nav .e-n-menu-toggle, .ch-nav .elementor-menu-toggle');
 		const row = header.querySelector('.e-con-inner') || header;
 		if (!search || !input) return;
-		if (!input.getAttribute('aria-label')) input.setAttribute('aria-label', 'جست‌وجو در چیدمون');
+		if (!input.getAttribute('aria-label')) input.setAttribute('aria-label', 'Ø¬Ø³Øªâ€ŒÙˆØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†');
 
 		const shortcut = document.createElement('button');
 		shortcut.type = 'button';
 		shortcut.className = 'ch-header-search-shortcut';
-		shortcut.setAttribute('aria-label', 'جستجو در چیدمون');
+		shortcut.setAttribute('aria-label', 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†');
 		shortcut.setAttribute('aria-expanded', 'false');
 		shortcut.setAttribute('aria-controls', 'ch-header-search-panel');
-		shortcut.title = 'جستجو';
+		shortcut.title = 'Ø¬Ø³ØªØ¬Ùˆ';
 		shortcut.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>';
 		const searchShell = document.createElement('div');
 		searchShell.className = 'ch-header-search-shell';
@@ -279,7 +279,7 @@
 		const panel = document.createElement('div');
 		panel.id = 'ch-header-search-panel'; panel.className = 'ch-header-search-panel'; panel.inert = true; panel.setAttribute('aria-hidden','true');
 		panel.append(search); searchShell.append(panel);
-		input.placeholder = 'جستجو در چیدمون';
+		input.placeholder = 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†';
 		input.setAttribute('enterkeyhint', 'search');
 		input.addEventListener('keydown', event => {
 			if (event.key === 'Enter' && !event.isComposing) {
@@ -307,10 +307,10 @@
 
 		let drawerHeading;
 		if (menuPanel && menuToggle) {
-			menuToggle.setAttribute('aria-label', 'باز کردن منو');
+			menuToggle.setAttribute('aria-label', 'Ø¨Ø§Ø² Ú©Ø±Ø¯Ù† Ù…Ù†Ùˆ');
 			drawerHeading = document.createElement('div');
 			drawerHeading.className = 'ch-drawer-heading';
-			drawerHeading.innerHTML = '<div><strong>چیدمون</strong><span>خانه، به سلیقهٔ تو</span></div>';
+			drawerHeading.innerHTML = '<div><strong>Ú†ÛŒØ¯Ù…ÙˆÙ†</strong><span>Ø®Ø§Ù†Ù‡ØŒ Ø¨Ù‡ Ø³Ù„ÛŒÙ‚Ù‡Ù” ØªÙˆ</span></div>';
 			const brandImage = header.querySelector('.ch-brand-logo img');
 			if (brandImage) {
 				const drawerLogo = brandImage.cloneNode();
@@ -324,14 +324,14 @@
 			backdrop.className = 'ch-drawer-backdrop';
 			backdrop.type = 'button';
 			backdrop.tabIndex = -1;
-			backdrop.setAttribute('aria-label', 'بستن منو');
+			backdrop.setAttribute('aria-label', 'Ø¨Ø³ØªÙ† Ù…Ù†Ùˆ');
 			header.appendChild(backdrop);
 			const closeMenu = () => {
 				if (menuToggle.getAttribute('aria-expanded') === 'true') menuToggle.click();
 				menuToggle.focus({ preventScroll: true });
 			};
 			const drawerClose = document.createElement('button');
-			drawerClose.type = 'button'; drawerClose.textContent = '×'; drawerClose.setAttribute('aria-label', 'بستن منو');
+			drawerClose.type = 'button'; drawerClose.textContent = 'Ã—'; drawerClose.setAttribute('aria-label', 'Ø¨Ø³ØªÙ† Ù…Ù†Ùˆ');
 			drawerClose.addEventListener('click', closeMenu); drawerHeading.append(drawerClose);
 			backdrop.addEventListener('click', closeMenu);
 			document.addEventListener('keydown', event => {
@@ -347,7 +347,7 @@
 		}
 		function closeSearch() {
 			searchShell.classList.remove('is-expanded'); header.classList.remove('ch-header-search-open');
-			shortcut.setAttribute('aria-label','باز کردن جستجو'); shortcut.title='جستجو';
+			shortcut.setAttribute('aria-label','Ø¨Ø§Ø² Ú©Ø±Ø¯Ù† Ø¬Ø³ØªØ¬Ùˆ'); shortcut.title='Ø¬Ø³ØªØ¬Ùˆ';
 			panel.inert = true; panel.setAttribute('aria-hidden','true'); shortcut.setAttribute('aria-expanded', 'false');
 		}
 		function fitSearch() {
@@ -364,7 +364,7 @@
 			},0);
 			const available = row.clientWidth - used - (parseFloat(style.columnGap)||0)*siblings.length - (parseFloat(style.paddingLeft)||0) - (parseFloat(style.paddingRight)||0);
 			searchShell.style.setProperty('--ch-search-width', `${Math.max(100,Math.min(420,available))}px`);
-			input.placeholder = mobileMenu.matches ? 'جستجو…' : 'جستجو در چیدمون';
+			input.placeholder = mobileMenu.matches ? 'Ø¬Ø³ØªØ¬Ùˆâ€¦' : 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†';
 		}
 		document.addEventListener('click', event => {
 			if (!searchShell.contains(event.target)) closeSearch();
@@ -380,14 +380,14 @@
 				return;
 			}
 			fitSearch(); searchShell.classList.add('is-expanded'); header.classList.add('ch-header-search-open');
-			shortcut.setAttribute('aria-label',input.value.trim() ? 'جستجو در چیدمون' : 'بستن جستجو'); shortcut.title=input.value.trim() ? 'جستجو' : 'بستن جستجو';
+			shortcut.setAttribute('aria-label',input.value.trim() ? 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†' : 'Ø¨Ø³ØªÙ† Ø¬Ø³ØªØ¬Ùˆ'); shortcut.title=input.value.trim() ? 'Ø¬Ø³ØªØ¬Ùˆ' : 'Ø¨Ø³ØªÙ† Ø¬Ø³ØªØ¬Ùˆ';
 			panel.inert = false; panel.setAttribute('aria-hidden','false'); shortcut.setAttribute('aria-expanded','true');
 			input.focus({preventScroll:true});
 		});
 		input.addEventListener('input', () => {
 			if (!searchShell.classList.contains('is-expanded')) return;
-			shortcut.setAttribute('aria-label', input.value.trim() ? 'جستجو در چیدمون' : 'بستن جستجو');
-			shortcut.title = input.value.trim() ? 'جستجو' : 'بستن جستجو';
+			shortcut.setAttribute('aria-label', input.value.trim() ? 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†' : 'Ø¨Ø³ØªÙ† Ø¬Ø³ØªØ¬Ùˆ');
+			shortcut.title = input.value.trim() ? 'Ø¬Ø³ØªØ¬Ùˆ' : 'Ø¨Ø³ØªÙ† Ø¬Ø³ØªØ¬Ùˆ';
 		});
 		// Use a real document navigation, retaining the page before search in browser history.
 		search.querySelector('form')?.addEventListener('submit', event => {
@@ -493,7 +493,7 @@
 		document.querySelectorAll('.ch-home-looks-tabs:not([data-tabs-ready])').forEach(root => {
 			root.dataset.tabsReady = 'true';
 			const nav = root.querySelector('.ch-home-room-tabs');
-			const tabs = [...nav.querySelectorAll('a[data-room]')];
+			const tabs = [...nav.querySelectorAll('a[data-room], a[data-style]')];
 			const panel = root.querySelector('.ch-home-look-strip');
 			const status = root.querySelector('.ch-home-looks-status');
 			const cache = new Map([['', panel.innerHTML]]);
@@ -508,7 +508,7 @@
 			mark(active);
 			const select = async tab => {
 				controller?.abort(); const serial = ++request;
-				mark(tab); panel.setAttribute('aria-busy', 'true'); status.textContent = 'در حال دریافت جدیدترین چیدمان‌ها…';
+				mark(tab); panel.setAttribute('aria-busy', 'true'); status.textContent = 'Ø¯Ø± Ø­Ø§Ù„ Ø¯Ø±ÛŒØ§ÙØª Ø¬Ø¯ÛŒØ¯ØªØ±ÛŒÙ† Ú†ÛŒØ¯Ù…Ø§Ù†â€ŒÙ‡Ø§â€¦';
 				try {
 					const room = tab.dataset.room;
 					if (!cache.has(room)) {
@@ -523,10 +523,10 @@
 					if (serial !== request) return;
 					panel.innerHTML = cache.get(room); panel.scrollLeft = 0; active = tab;
 					enhanceSceneHotspots();
-					status.textContent = `جدیدترین چیدمان‌ها برای ${tab.textContent.trim()} نمایش داده شد.`;
+					status.textContent = `Ø¬Ø¯ÛŒØ¯ØªØ±ÛŒÙ† Ú†ÛŒØ¯Ù…Ø§Ù†â€ŒÙ‡Ø§ Ø¨Ø±Ø§ÛŒ ${tab.textContent.trim()} Ù†Ù…Ø§ÛŒØ´ Ø¯Ø§Ø¯Ù‡ Ø´Ø¯.`;
 				} catch (error) {
 					if (error.name === 'AbortError' || serial !== request) return;
-					mark(active); status.textContent = 'دریافت تصاویر انجام نشد؛ دوباره روی تب بزنید.';
+					mark(active); status.textContent = 'Ø¯Ø±ÛŒØ§ÙØª ØªØµØ§ÙˆÛŒØ± Ø§Ù†Ø¬Ø§Ù… Ù†Ø´Ø¯Ø› Ø¯ÙˆØ¨Ø§Ø±Ù‡ Ø±ÙˆÛŒ ØªØ¨ Ø¨Ø²Ù†ÛŒØ¯.';
 				} finally { if (serial === request) panel.removeAttribute('aria-busy'); }
 			};
 			tabs.forEach((tab, index) => {
@@ -588,12 +588,12 @@
 			let next = nextPage(pagination), busy = false;
 			if (!next) return;
 			const seen = new Set();
-			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = 'نمایش موارد بیشتر';
+			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = 'Ù†Ù…Ø§ÛŒØ´ Ù…ÙˆØ§Ø±Ø¯ Ø¨ÛŒØ´ØªØ±';
 			status.setAttribute('aria-live', 'polite'); pagination.after(status); pagination.hidden = true;
 			const load = async () => {
 				if (!widget.isConnected) { observer.disconnect(); return; }
 				if (busy || !next || seen.has(next)) return;
-				busy = true; status.textContent = 'در حال نمایش موارد بیشتر…'; grid.setAttribute('aria-busy', 'true');
+				busy = true; status.textContent = 'Ø¯Ø± Ø­Ø§Ù„ Ù†Ù…Ø§ÛŒØ´ Ù…ÙˆØ§Ø±Ø¯ Ø¨ÛŒØ´ØªØ±â€¦'; grid.setAttribute('aria-busy', 'true');
 				const clearSkeleton = widget.closest('.ch-catalog-results') ? showProductSkeleton(widget, true) : () => {};
 				try {
 					const url = next, response = await fetch(url);
@@ -605,10 +605,10 @@
 					if (!source?.children.length) throw new Error('listing');
 					[...source.children].forEach(child => grid.append(document.importNode(child, true)));
 					seen.add(url); next = nextPage(remote.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination'));
-					if (next) status.textContent = 'نمایش موارد بیشتر';
+					if (next) status.textContent = 'Ù†Ù…Ø§ÛŒØ´ Ù…ÙˆØ§Ø±Ø¯ Ø¨ÛŒØ´ØªØ±';
 					else { observer.disconnect(); status.remove(); }
 					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(grid));
-				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
+				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'Ø¨Ø§Ø±Ú¯Ø°Ø§Ø±ÛŒ Ø§Ù†Ø¬Ø§Ù… Ù†Ø´Ø¯Ø› ØªÙ„Ø§Ø´ Ø¯ÙˆØ¨Ø§Ø±Ù‡'; }
 				finally { clearSkeleton(); busy = false; grid.removeAttribute('aria-busy'); if (next && pagination.hidden) { observer.unobserve(status); observer.observe(status); } }
 			};
 			status.addEventListener('click', load);
@@ -619,7 +619,7 @@
 	function enhanceStorefront() {
 		document.querySelectorAll('.ch-sidebar-filters, .ch-catalog-filters').forEach((form, index) => {
 			const isLook = form.classList.contains('ch-look-filters');
-			const filterTitle = isLook ? 'فیلترها' : 'فیلتر محصولات';
+			const filterTitle = isLook ? 'ÙÛŒÙ„ØªØ±Ù‡Ø§' : 'ÙÛŒÙ„ØªØ± Ù…Ø­ØµÙˆÙ„Ø§Øª';
 			enhancePriceSteps(form);
 			form.querySelectorAll('.ch-facet-all').forEach(all => {
 				const choices = [...all.closest('fieldset').querySelectorAll('input[name]')];
@@ -636,7 +636,7 @@
 			if (max) { max.closest('fieldset')?.append(error); max.setAttribute('aria-describedby', [max.getAttribute('aria-describedby'), error.id].filter(Boolean).join(' ')); }
 			const sync = () => {
 				const reversed = !!(min?.value && max?.value && Number(min.value) > Number(max.value));
-				error.hidden = !reversed; error.textContent = reversed ? 'حداکثر قیمت باید بیشتر از حداقل قیمت باشد.' : '';
+				error.hidden = !reversed; error.textContent = reversed ? 'Ø­Ø¯Ø§Ú©Ø«Ø± Ù‚ÛŒÙ…Øª Ø¨Ø§ÛŒØ¯ Ø¨ÛŒØ´ØªØ± Ø§Ø² Ø­Ø¯Ø§Ù‚Ù„ Ù‚ÛŒÙ…Øª Ø¨Ø§Ø´Ø¯.' : '';
 				if (max) { max.setCustomValidity(error.textContent); max.setAttribute('aria-invalid', String(reversed)); }
 				if (submit) submit.disabled = !form.checkValidity();
 			};
@@ -646,17 +646,17 @@
 			if (reset) reset.hidden = !applied;
 			if (form.classList.contains('ch-sidebar-filters')) {
 				const heading = document.createElement('div'); heading.className = 'ch-filter-heading';
-				const title = document.createElement('strong'); title.textContent = 'فیلتر محصولات';
+				const title = document.createElement('strong'); title.textContent = 'ÙÛŒÙ„ØªØ± Ù…Ø­ØµÙˆÙ„Ø§Øª';
 				const icon = document.createElement('span'); icon.className = 'ch-filter-heading-icon'; icon.setAttribute('aria-hidden', 'true');
 				icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg>';
 				heading.append(icon, title); if (!isLook) form.prepend(heading);
 				const toggle = document.createElement('button');
 				toggle.type = 'button'; toggle.className = 'ch-filter-toggle';
-				toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg><span>فیلتر محصولات</span>';
+				toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="white"/><circle cx="15" cy="17" r="3" fill="white"/></svg><span>ÙÛŒÙ„ØªØ± Ù…Ø­ØµÙˆÙ„Ø§Øª</span>';
 				toggle.querySelector('span').textContent = filterTitle;
 				if (applied) {
 					const badge = document.createElement('span'); badge.className = 'ch-filter-badge'; badge.textContent = applied.toLocaleString('fa-IR'); toggle.append(badge);
-					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `${filterTitle}، ${applied.toLocaleString('fa-IR')} فیلتر فعال`);
+					toggle.classList.add('has-filters'); toggle.setAttribute('aria-label', `${filterTitle}ØŒ ${applied.toLocaleString('fa-IR')} ÙÛŒÙ„ØªØ± ÙØ¹Ø§Ù„`);
 				}
 				form.id ||= `ch-catalog-filter-form-${index}`;
 				const slot = form.parentElement;
@@ -666,9 +666,9 @@
 				tools.prepend(toggle);
 				const dialog = document.createElement('dialog'); dialog.className = 'ch-filter-dialog'; dialog.id = `${form.id}-dialog`;
 				const dialogHeading = document.createElement('div'); dialogHeading.className = 'ch-filter-dialog-heading';
-				const dialogTitle = document.createElement('h2'); dialogTitle.id = `${dialog.id}-title`; dialogTitle.textContent = 'فیلتر محصولات';
-				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = '×'; close.setAttribute('aria-label', 'بستن فیلتر محصولات');
-				dialogTitle.textContent = filterTitle; close.setAttribute('aria-label', `بستن ${filterTitle}`);
+				const dialogTitle = document.createElement('h2'); dialogTitle.id = `${dialog.id}-title`; dialogTitle.textContent = 'ÙÛŒÙ„ØªØ± Ù…Ø­ØµÙˆÙ„Ø§Øª';
+				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = 'Ã—'; close.setAttribute('aria-label', 'Ø¨Ø³ØªÙ† ÙÛŒÙ„ØªØ± Ù…Ø­ØµÙˆÙ„Ø§Øª');
+				dialogTitle.textContent = filterTitle; close.setAttribute('aria-label', `Ø¨Ø³ØªÙ† ${filterTitle}`);
 				dialogHeading.append(dialogTitle, close); dialog.append(dialogHeading); document.body.append(dialog);
 				dialog.setAttribute('aria-labelledby', dialogTitle.id);
 				toggle.setAttribute('aria-controls', dialog.id); toggle.setAttribute('aria-haspopup', 'dialog'); toggle.setAttribute('aria-expanded', 'false');
@@ -707,8 +707,8 @@
 			const headings = [...article.querySelectorAll('h2, h3')].filter(h => h.textContent.trim());
 			if (headings.length > 1) {
 				const layout = document.createElement('div'); layout.className = 'ch-reading-layout'; article.before(layout); layout.append(article);
-				const toc = document.createElement('nav'); toc.className = 'ch-guide-toc'; toc.setAttribute('aria-label', 'فهرست مطلب');
-				const title = document.createElement('strong'); title.textContent = 'فهرست مطلب'; toc.append(title);
+				const toc = document.createElement('nav'); toc.className = 'ch-guide-toc'; toc.setAttribute('aria-label', 'ÙÙ‡Ø±Ø³Øª Ù…Ø·Ù„Ø¨');
+				const title = document.createElement('strong'); title.textContent = 'ÙÙ‡Ø±Ø³Øª Ù…Ø·Ù„Ø¨'; toc.append(title);
 				headings.forEach((h, index) => { if (!h.id) h.id = `guide-section-${index + 1}`; const a = document.createElement('a'); a.href = `#${h.id}`; a.textContent = h.textContent; a.classList.toggle('is-subsection', h.tagName === 'H3'); toc.append(a); });
 				layout.append(toc);
 				const sync = () => { const current = headings.filter(h => h.getBoundingClientRect().top <= 180).at(-1) || headings[0]; toc.querySelectorAll('a').forEach(a => { if (a.hash === `#${current.id}`) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); }); };
@@ -716,7 +716,7 @@
 			}
 		}
 		const searchIcon = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>';
-		document.querySelectorAll('.ch-header-search .e-search-submit').forEach(button => { button.innerHTML = searchIcon; button.setAttribute('aria-label', 'جستجو در چیدمون'); });
+		document.querySelectorAll('.ch-header-search .e-search-submit').forEach(button => { button.innerHTML = searchIcon; button.setAttribute('aria-label', 'Ø¬Ø³ØªØ¬Ùˆ Ø¯Ø± Ú†ÛŒØ¯Ù…ÙˆÙ†'); });
 		const product = document.querySelector('.ch-product-single');
 		if (product) {
 			// Keep the reviewed offer reachable on phones when its original location is off screen.
@@ -724,7 +724,7 @@
 			if (offer && !document.querySelector('.ch-mobile-purchase') && 'IntersectionObserver' in window) {
 				const panel = document.createElement('aside');
 				panel.className = 'ch-mobile-purchase';
-				panel.setAttribute('aria-label', 'خرید محصول');
+				panel.setAttribute('aria-label', 'Ø®Ø±ÛŒØ¯ Ù…Ø­ØµÙˆÙ„');
 				panel.hidden = true;
 				const link = offer.cloneNode(true);
 				link.removeAttribute('id');
@@ -737,13 +737,13 @@
 			if (description && description.textContent.trim().length > 600 && description.scrollHeight > 440) {
 				description.id = 'product-description-body'; description.classList.add('ch-description-collapsible');
 				const more = document.createElement('button'); more.type = 'button'; more.className = 'ch-description-toggle'; more.setAttribute('aria-controls', description.id);
-				const expand = open => { description.classList.toggle('is-expanded', open); more.setAttribute('aria-expanded', String(open)); more.textContent = open ? 'نمایش کمتر' : 'توضیحات کامل محصول'; };
+				const expand = open => { description.classList.toggle('is-expanded', open); more.setAttribute('aria-expanded', String(open)); more.textContent = open ? 'Ù†Ù…Ø§ÛŒØ´ Ú©Ù…ØªØ±' : 'ØªÙˆØ¶ÛŒØ­Ø§Øª Ú©Ø§Ù…Ù„ Ù…Ø­ØµÙˆÙ„'; };
 				more.addEventListener('click', () => expand(more.getAttribute('aria-expanded') !== 'true'));
 				description.addEventListener('focusin', () => expand(true));
 				description.after(more); expand(false);
 			}
-			const sections = [['.ch-product-description', 'معرفی', 'product-intro'], ['.ch-product-context', 'ایده‌ها و راهنماها', 'product-context'], ['.ch-product-facts-widget', 'مشخصات', 'product-specs'], ['.ch-product-tabs-widget', 'دیدگاه‌ها', 'product-reviews']];
-			const nav = document.createElement('nav'); nav.className = 'ch-product-section-nav'; nav.setAttribute('aria-label', 'بخش‌های محصول');
+			const sections = [['.ch-product-description', 'Ù…Ø¹Ø±ÙÛŒ', 'product-intro'], ['.ch-product-context', 'Ø§ÛŒØ¯Ù‡â€ŒÙ‡Ø§ Ùˆ Ø±Ø§Ù‡Ù†Ù…Ø§Ù‡Ø§', 'product-context'], ['.ch-product-facts-widget', 'Ù…Ø´Ø®ØµØ§Øª', 'product-specs'], ['.ch-product-tabs-widget', 'Ø¯ÛŒØ¯Ú¯Ø§Ù‡â€ŒÙ‡Ø§', 'product-reviews']];
+			const nav = document.createElement('nav'); nav.className = 'ch-product-section-nav'; nav.setAttribute('aria-label', 'Ø¨Ø®Ø´â€ŒÙ‡Ø§ÛŒ Ù…Ø­ØµÙˆÙ„');
 			sections.forEach(([selector, label, id]) => { const section = product.querySelector(selector); if (!section || !section.textContent.trim()) return; section.id = id; const link = document.createElement('a'); link.href = `#${id}`; link.textContent = label; nav.append(link); });
 			const layout = product.querySelector('.ch-product-layout'); if (layout && nav.children.length) layout.after(nav);
 			const syncSections = () => {
@@ -764,3 +764,4 @@
 		onReady();
 	}
 }());
+
