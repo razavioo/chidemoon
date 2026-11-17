@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /** Update the native Elementor footer About box. Run: wp eval-file /tools/footer-about-refresh.php [apply] */
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI || ! current_user_can( 'manage_options' ) ) { exit; }
 $apply = in_array( 'apply', $args ?? array(), true );
@@ -6,7 +6,7 @@ $post = get_page_by_path( 'chidemoon-site-footer', OBJECT, 'elementor_library' )
 if ( ! $post ) { WP_CLI::error( 'Footer template not found.' ); }
 $data = json_decode( (string) get_post_meta( $post->ID, '_elementor_data', true ), true );
 if ( ! is_array( $data ) ) { WP_CLI::error( 'Invalid Elementor data.' ); }
-$copy = 'Ú†ÛŒØ¯Ù…ÙˆÙ† Ø¬Ø§ÛŒÛŒÙ‡ Ø¨Ø±Ø§ÛŒ Ø§ÛŒØ¯Ù‡ Ú¯Ø±ÙØªÙ† Ø§Ø² Ú†ÛŒØ¯Ù…Ø§Ù†â€ŒÙ‡Ø§ Ùˆ Ù…Ù‚Ø§ÛŒØ³Ù‡Ù” ÙˆØ³Ø§ÛŒÙ„ Ø®ÙˆÙ†Ù‡.';
+$copy = 'چیدمون جاییه برای ایده گرفتن از چیدمان‌ها و مقایسهٔ وسایل خونه.';
 $changed = 0;
 $walk = static function ( array &$nodes ) use ( &$walk, &$changed, $copy ): void {
     foreach ( $nodes as &$node ) {
@@ -26,5 +26,3 @@ if ( $apply && $changed ) {
     if ( class_exists( '\Elementor\Plugin' ) ) { \Elementor\Plugin::$instance->files_manager->clear_cache(); }
 }
 WP_CLI::success( ( $apply ? 'Applied' : 'Preview' ) . ': ' . $changed . ' footer About text widget(s).' );
-
-

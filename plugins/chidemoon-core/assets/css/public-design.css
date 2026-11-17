@@ -2447,3 +2447,8 @@ body .ch-sidebar-filters .ch-filter-actions { position: sticky; bottom: 0; paddi
 /* Clickable editorial labels: orange room, green style. */
 .ch-look-card-tags > a.ch-look-card-tag--style { background:#e7f1e9; color:#286044; }
 .ch-look-card-tags > a.ch-look-card-tag--style:hover { background:#d6e8da; }
+
+/* Keep the apply action immediately visible, with independently scrolling choices. */
+body .ch-sidebar-filters .ch-filter-actions { order:-1; position:sticky; top:0; bottom:auto; z-index:2; padding:12px 0; background:#fff; }
+body .ch-sidebar-filters .ch-filter-options { min-height:0; overflow-y:auto; }
+@media(min-width:981px){body .ch-sidebar-filters {top:112px;max-height:calc(100dvh - 128px);} }
