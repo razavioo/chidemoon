@@ -22,6 +22,7 @@ final class Chidemoon_Core_Looks {
   add_action( 'init', array( __CLASS__, 'register_model' ), 6 );
   add_filter( 'use_block_editor_for_post_type', static fn( $use, $type ) => self::POST_TYPE === $type ? false : $use, 10, 2 );
   add_action( 'add_meta_boxes_' . self::POST_TYPE, array( __CLASS__, 'add_editor' ) );
+  add_action( 'add_meta_boxes_reycob_look', array( __CLASS__, 'add_scene_taxonomy_checklists' ), 20 );
   add_action( 'save_post_' . self::POST_TYPE, array( __CLASS__, 'save_editor' ), 20, 2 );
   add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
   add_filter( 'rest_pre_insert_' . self::POST_TYPE, static function( $prepared, $request ) {
@@ -45,11 +46,40 @@ final class Chidemoon_Core_Looks {
   add_shortcode( 'chidemoon_look_gallery', array( __CLASS__, 'gallery' ) );
   add_shortcode( 'chidemoon_home_looks', array( __CLASS__, 'home_looks' ) );
   add_action( 'init', static function(): void {
-   if ( post_type_exists( 'reycob_look' ) ) { foreach(self::filter_taxonomies() as $taxonomy)register_taxonomy_for_object_type($taxonomy, 'reycob_look'); }
+   if ( ! post_type_exists( 'reycob_look' ) ) { return; }
+   foreach ( self::filter_taxonomies() as $taxonomy ) {
+    register_taxonomy_for_object_type( $taxonomy, 'reycob_look' );
+   }
   }, 20 );
+  add_action( 'admin_init', static function(): void {
+   foreach ( array( 'chidemoon_style', 'chidemoon_look_color' ) as $name ) {
+    $taxonomy = get_taxonomy( $name );
+    if ( $taxonomy ) {
+     $taxonomy->meta_box_sanitize_cb = array( __CLASS__, 'sanitize_scene_taxonomy_input' );
+    }
+   }
+  } );
   add_action( 'woocommerce_after_single_product_summary', array( __CLASS__, 'product_looks' ), 12 );
   add_filter( 'option_elementor_cpt_support', static fn( $types ) => array_values( array_unique( array_merge( $types, array( self::POST_TYPE ) ) ) ) );
  }
+ public static function add_scene_taxonomy_checklists(): void {
+  foreach ( array( 'chidemoon_style', 'chidemoon_look_color' ) as $name ) {
+   $taxonomy = get_taxonomy( $name );
+   if ( ! $taxonomy || ! current_user_can( $taxonomy->cap->assign_terms ) ) { continue; }
+
+   remove_meta_box( 'tagsdiv-' . $name, 'reycob_look', 'side' );
+   add_meta_box( $name . 'div', $taxonomy->labels->name, 'post_categories_meta_box', 'reycob_look', 'side', 'core', array( 'taxonomy' => $name ) );
+  }
+ }
+
+ public static function sanitize_scene_taxonomy_input( $taxonomy, $terms ) {
+  $post_id = isset( $_POST['post_ID'] ) ? absint( $_POST['post_ID'] ) : 0;
+  if ( is_array( $terms ) && 'reycob_look' === get_post_type( $post_id ) ) {
+   return taxonomy_meta_box_sanitize_cb_checkboxes( $taxonomy, $terms );
+  }
+  return taxonomy_meta_box_sanitize_cb_input( $taxonomy, $terms );
+ }
+
  public static function install(): void {
   global $wpdb;
   dbDelta( "CREATE TABLE {$wpdb->prefix}chidemoon_look_products (
