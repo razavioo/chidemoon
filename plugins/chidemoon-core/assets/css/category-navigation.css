@@ -74,7 +74,7 @@ body .ch-category-browser .ch-category-toggle { min-height: 58px; padding: 8px 1
   right: 50% !important; left: auto !important; transform: translateX(50%) !important; top: 100%; padding-top: 8px;
  }
  body .ch-header.ch-header .ch-category-menu > .e-n-menu-content > .e-con {
-  width: 100% !important; max-width: 100% !important; max-height: none; max-block-size: none; overflow: visible; padding: 16px !important;
+  width: 100% !important; max-width: 100% !important; max-height: calc(100dvh - 88px); max-block-size: calc(100dvh - 88px); overflow: auto; overscroll-behavior: contain; padding: 16px !important;
   border-radius: 18px; box-shadow: 0 18px 48px #20392920;
  }
  body .ch-header .ch-category-panel { gap: 10px; width: 100%; }
@@ -84,9 +84,10 @@ body .ch-category-browser .ch-category-toggle { min-height: 58px; padding: 8px 1
  body .ch-header .ch-category-browser > ul > li { border: 0; border-radius: 8px; background: transparent; }
  body .ch-header .ch-category-tree.ch-category-browser .ch-category-detail { display: block; min-height: 250px; padding: 14px 18px; }
  body .ch-header .ch-category-browser .ch-category-detail > ul.children { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; columns: auto; }
- body .ch-header .ch-category-browser .ch-category-detail > ul > li > a { font-size: 12px; font-weight: 600; line-height: 1.8; }
+ body .ch-header .ch-category-browser .ch-category-detail > ul.children:has(> li:nth-child(4):last-child) { grid-template-columns: repeat(4,minmax(0,1fr)); }
+ body .ch-header .ch-category-browser .ch-category-detail > ul > li > a { font-size: 13px; font-weight: 600; line-height: 1.7; }
  body .ch-header .ch-category-browser .ch-category-detail ul ul { margin-top: 6px; padding: 0; border: 0; }
- body .ch-header .ch-category-browser .ch-category-detail ul ul a { min-height: 38px; font-size: 11px; line-height: 1.7; }
+ body .ch-header .ch-category-browser .ch-category-detail ul ul a { min-height: 36px; font-size: 12px; line-height: 1.7; }
  body .ch-header .ch-category-browser .ch-category-accordion { display: none !important; }
 }
 @media (max-width: 1024px) {
