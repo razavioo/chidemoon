@@ -2400,7 +2400,6 @@ body .ch-look-filters { flex-direction: column; flex-wrap: nowrap; }
 .ch-look-tools { display: none; }
 body .ch-filter-dialog .ch-look-filters .ch-filter-options { flex: 1 1 auto; }
 body .ch-look-filters .ch-filter-actions { flex-shrink: 0; }
-body .ch-look-filters .ch-filter-options label:has(input:checked) { background: #edf4ee; border-radius: 8px; }
 @media (max-width: 1024px) {
  body .ch-look-browse { grid-template-columns: minmax(0, 1fr); }
  body .ch-look-browse > .ch-look-tools { display: flex; grid-column: 1 / -1; justify-content: flex-start; }
@@ -2512,9 +2511,3 @@ body .ch-look-filters .ch-filter-actions { position: static; }
     background: var(--chidemoon-surface, #fff);
   }
 }
-/* Make Shop the Look style and color choices as clear as room cards. */
-body .ch-look-filters .ch-look-filter-group { display: grid; gap: 8px; }
-body .ch-look-filters .ch-look-filter-group legend { display: block; inline-size: 100%; margin-block-end: 4px; }
-body .ch-look-filters .ch-look-filter-group label { box-sizing: border-box; padding: 8px 10px; border: 1px solid #dfe7e1; border-radius: 9px; background: #fff; transition: border-color .15s ease, background .15s ease; }
-body .ch-look-filters .ch-look-filter-group label:hover,
-body .ch-look-filters .ch-look-filter-group label:has(input:checked) { border-color: #9cb9a2; background: #edf4ee; color: #245236; }
