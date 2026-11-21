@@ -352,11 +352,14 @@ final class Chidemoon_Core_Looks {
   $html = '<h2>' . esc_html( $title ) . '</h2><div class="ch-scene-canvas"' . $ratio . '>' . $image;
   foreach ( (array) get_post_meta( $id, '_reycob_stl_points', true ) as $index => $point ) {
    $product = wc_get_product( (int) ( $point['product_id'] ?? 0 ) );
-   if ( ! $product || ! Chidemoon_Core_Affiliate::is_offer_available( $product ) || ! isset( $point['x'], $point['y'] ) ) { continue; }
+   if ( ! $product || ! Chidemoon_Core_Affiliate::is_publicly_eligible( $product ) || '1' === (string) $product->get_meta( '_chidemoon_source_withdrawn', true ) || ! isset( $point['x'], $point['y'] ) ) { continue; }
+   $offer = Chidemoon_Core_Affiliate::is_offer_available( $product )
+    ? '<div class="ch-scene-price">' . Chidemoon_Core_Affiliate::hotspot_price( $product ) . '</div><a class="ch-scene-cta" href="' . esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ) . '" target="_blank" rel="nofollow sponsored noopener">' . esc_html( Chidemoon_Core_Affiliate::purchase_label( $product ) ) . '</a>'
+    : '<div class="ch-scene-price">' . esc_html( 'ناموجود' ) . '</div>';
    $key = 'ch-scene-' . $id . '-' . (int) $index;
    $style = 'left:' . max( 0, min( 100, (float) $point['x'] ) ) . '%;top:' . max( 0, min( 100, (float) $point['y'] ) ) . '%';
    $html .= '<button type="button" class="ch-scene-point" style="' . esc_attr( $style ) . '" aria-expanded="false" aria-controls="' . esc_attr( $key ) . '" aria-label="' . esc_attr( 'مشاهدهٔ ' . $product->get_name() ) . '"><span aria-hidden="true"></span></button>';
-   $html .= '<div class="ch-scene-popover" id="' . esc_attr( $key ) . '" hidden>' . $product->get_image( 'woocommerce_thumbnail' ) . '<div><strong>' . esc_html( $product->get_name() ) . '</strong><div class="ch-scene-price">' . Chidemoon_Core_Affiliate::hotspot_price( $product ) . '</div><a class="ch-scene-cta" href="' . esc_url( Chidemoon_Core_Affiliate::tracking_url( $product->get_id() ) ) . '" target="_blank" rel="nofollow sponsored noopener">' . esc_html( Chidemoon_Core_Affiliate::purchase_label( $product ) ) . '</a></div></div>';
+   $html .= '<div class="ch-scene-popover" id="' . esc_attr( $key ) . '" hidden>' . $product->get_image( 'woocommerce_thumbnail' ) . '<div><strong>' . esc_html( $product->get_name() ) . '</strong>' . $offer . '</div></div>';
   }
   return $html . '</div>';
  }
