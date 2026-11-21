@@ -6,15 +6,12 @@ final class Chidemoon_Core_Looks {
  public const PALETTE = '_chidemoon_look_palette';
  public const PRIMARY_STYLES = array('classic','neoclassical','modern','iranian','minimal','french','boho');
  public const COLORS = array(
-  'white'=>array('سفید','#ffffff'), 'cream'=>array('کرم','#eee1c6'),
-  'beige'=>array('بژ','#cbb99b'), 'gray'=>array('طوسی','#939799'),
-  'black'=>array('مشکی','#262626'), 'brown'=>array('قهوه‌ای','#886044'),
-  'green'=>array('سبز','#61815b'), 'blue'=>array('آبی','#537fa3'),
-  'red'=>array('قرمز','#b64c4c'), 'orange'=>array('نارنجی','#cd854b'),
-  'yellow'=>array('زرد','#dfbd50'), 'pink'=>array('صورتی','#d79ba9'),
-  'purple'=>array('بنفش','#91709d'), 'gold'=>array('طلایی','#b99b56'),
-  'silver'=>array('نقره‌ای','#b8bec3'),
+  'white'=>array('سفید','#ffffff'), 'cream'=>array('کرم','#eee1c6'), 'beige'=>array('بژ','#cbb99b'), 'gray'=>array('طوسی','#939799'),
+  'black'=>array('مشکی','#262626'), 'brown'=>array('قهوه‌ای','#886044'), 'green'=>array('سبز','#61815b'), 'blue'=>array('آبی','#537fa3'),
+  'red'=>array('قرمز','#b64c4c'), 'orange'=>array('نارنجی','#cd854b'), 'yellow'=>array('زرد','#dfbd50'), 'pink'=>array('صورتی','#d79ba9'),
+  'purple'=>array('بنفش','#91709d'), 'gold'=>array('طلایی','#b99b56'), 'silver'=>array('نقره‌ای','#b8bec3'),
  );
+
  public static function register(): void {
   require_once __DIR__ . '/class-chidemoon-core-look-views.php';
   Chidemoon_Core_Look_Views::register();
@@ -163,7 +160,7 @@ final class Chidemoon_Core_Looks {
    $label=['room'=>'فضاهای خانه','style'=>'سبک‌ها','color'=>'رنگ‌ها'][$key]??get_taxonomy($taxonomy)->label;
    $selected=isset($_GET[$key])&&is_string($_GET[$key])?sanitize_title(wp_unslash($_GET[$key])):'';
    if('style'===$key&&!in_array($selected,self::PRIMARY_STYLES,true))$selected='';
-   $html.='<fieldset><legend>'.esc_html($label).'</legend><label><input type="radio" name="'.esc_attr($key).'" value="" '.checked($selected,'',false).'> همه</label>';
+   $html.='<fieldset class="ch-look-filter-group"> <legend>'.esc_html($label).'</legend><label><input type="radio" name="'.esc_attr($key).'" value="" '.checked($selected,'',false).'> همه</label>';
    foreach($terms as $term){
     if(strtolower($term->name)==='none'||('color'===$key&&!isset(self::COLORS[$term->slug])))continue;
     $swatch='color'===$key?'<span class="ch-color-swatch" style="--ch-swatch:'.esc_attr(self::COLORS[$term->slug][1]).'" aria-hidden="true"></span>':'';
@@ -422,7 +419,7 @@ final class Chidemoon_Core_Looks {
   $palette = (array) get_post_meta( $post->ID, self::PALETTE, true ); $palette[] = array();
   $terms = get_terms( array( 'taxonomy' => 'pa_color', 'hide_empty' => false ) );
   foreach ( $palette as $index => $color ) {
-   echo '<tr><td><select aria-label="' . esc_attr__( 'Color', 'chidemoon-core' ) . '" name="chidemoon_palette_rows[' . $index . '][colorId]"><option value="">â€”</option>';
+   echo '<tr><td><select aria-label="' . esc_attr__( 'Color', 'chidemoon-core' ) . '" name="chidemoon_palette_rows[' . $index . '][colorId]"><option value="">—</option>';
    foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) { echo '<option value="' . (int) $term->term_id . '" ' . selected( $term->term_id, $color['colorId'] ?? '', false ) . '>' . esc_html( $term->name ) . '</option>'; }
    echo '</select></td><td><input name="chidemoon_palette_rows[' . $index . '][hex]" aria-label="HEX" pattern="#[a-fA-F0-9]{6}" placeholder="#aabbcc" value="' . esc_attr( $color['hex'] ?? '' ) . '"></td><td><input name="chidemoon_palette_rows[' . $index . '][proportion]" aria-label="' . esc_attr__( 'Proportion (%)', 'chidemoon-core' ) . '" type="number" min="0" max="100" step="0.01" value="' . esc_attr( isset( $color['proportion'] ) ? (string) ( 100 * $color['proportion'] ) : '' ) . '"></td><td><button type="button" class="button ch-look-palette-remove">' . esc_html__( 'Remove', 'chidemoon-core' ) . '</button></td></tr>';
   }

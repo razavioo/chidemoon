@@ -331,7 +331,7 @@
 				menuToggle.focus({ preventScroll: true });
 			};
 			const drawerClose = document.createElement('button');
-			drawerClose.type = 'button'; drawerClose.textContent = 'Ã—'; drawerClose.setAttribute('aria-label', 'بستن منو');
+			drawerClose.type = 'button'; drawerClose.textContent = '×'; drawerClose.setAttribute('aria-label', 'بستن منو');
 			drawerClose.addEventListener('click', closeMenu); drawerHeading.append(drawerClose);
 			backdrop.addEventListener('click', closeMenu);
 			document.addEventListener('keydown', event => {
@@ -364,7 +364,7 @@
 			},0);
 			const available = row.clientWidth - used - (parseFloat(style.columnGap)||0)*siblings.length - (parseFloat(style.paddingLeft)||0) - (parseFloat(style.paddingRight)||0);
 			searchShell.style.setProperty('--ch-search-width', `${Math.max(100,Math.min(420,available))}px`);
-			input.placeholder = mobileMenu.matches ? 'جستجوâ€¦' : 'جستجو در چیدمون';
+			input.placeholder = mobileMenu.matches ? 'جستجو…' : 'جستجو در چیدمون';
 		}
 		document.addEventListener('click', event => {
 			if (!searchShell.contains(event.target)) closeSearch();
@@ -508,7 +508,7 @@
 			mark(active);
 			const select = async tab => {
 				controller?.abort(); const serial = ++request;
-				mark(tab); panel.setAttribute('aria-busy', 'true'); status.textContent = 'در حال دریافت جدیدترین چیدمان‌هاâ€¦';
+				mark(tab); panel.setAttribute('aria-busy', 'true'); status.textContent = 'در حال دریافت جدیدترین چیدمان‌ها…';
 				try {
 					const room = tab.dataset.room;
 					if (!cache.has(room)) {
@@ -587,32 +587,46 @@
 			const nextPage = nav => nav?.querySelector('a.next')?.href || nav?.querySelector('[aria-current="page"]')?.nextElementSibling?.closest('a')?.href;
 			let next = nextPage(pagination), busy = false;
 			if (!next) return;
+			const catalog = Boolean(widget.closest('.ch-catalog-results'));
+			const label = catalog ? 'نمایش بیشتر' : 'نمایش موارد بیشتر';
+			let pending;
+			const fetchPage = async url => {
+				const response = await fetch(url);
+				if (!response.ok) throw new Error('pagination');
+				return new DOMParser().parseFromString(await response.text(), 'text/html');
+			};
 			const seen = new Set();
-			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = 'نمایش موارد بیشتر';
+			const status = document.createElement('button'); status.type = 'button'; status.className = 'ch-scroll-status'; status.textContent = label;
 			status.setAttribute('aria-live', 'polite'); pagination.after(status); pagination.hidden = true;
 			const load = async () => {
 				if (!widget.isConnected) { observer.disconnect(); return; }
 				if (busy || !next || seen.has(next)) return;
-				busy = true; status.textContent = 'در حال نمایش موارد بیشترâ€¦'; grid.setAttribute('aria-busy', 'true');
-				const clearSkeleton = widget.closest('.ch-catalog-results') ? showProductSkeleton(widget, true) : () => {};
+				busy = true; status.textContent = 'در حال بارگذاری…'; grid.setAttribute('aria-busy', 'true');
+				const clearSkeleton = catalog ? showProductSkeleton(widget, true) : () => {};
 				try {
-					const url = next, response = await fetch(url);
-					if (!response.ok) throw new Error('pagination');
-					const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+					const url = next;
+					const prepared = pending;
+					pending = undefined;
+					const doc = (await prepared) || await fetchPage(url);
 					const id = widget.dataset.id;
 					const remote = id ? doc.querySelector(`[data-id="${id}"]`) : null;
 					const source = remote?.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
 					if (!source?.children.length) throw new Error('listing');
 					[...source.children].forEach(child => grid.append(document.importNode(child, true)));
 					seen.add(url); next = nextPage(remote.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination'));
-					if (next) status.textContent = 'نمایش موارد بیشتر';
+					if (next) status.textContent = label;
 					else { observer.disconnect(); status.remove(); }
 					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(grid));
 				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
 				finally { clearSkeleton(); busy = false; grid.removeAttribute('aria-busy'); if (next && pagination.hidden) { observer.unobserve(status); observer.observe(status); } }
 			};
 			status.addEventListener('click', load);
-			const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) load(); }, { rootMargin: '350px' }); observer.observe(status);
+			const observer = new IntersectionObserver(entries => {
+				if (!entries.some(entry => entry.isIntersecting)) return;
+				if (!catalog) { load(); return; }
+				if (!busy && next && !seen.has(next) && !pending) pending = fetchPage(next).catch(() => null);
+			}, { rootMargin: catalog ? '1200px' : '350px' });
+			observer.observe(status);
 		});
 	}
 
@@ -667,7 +681,7 @@
 				const dialog = document.createElement('dialog'); dialog.className = 'ch-filter-dialog'; dialog.id = `${form.id}-dialog`;
 				const dialogHeading = document.createElement('div'); dialogHeading.className = 'ch-filter-dialog-heading';
 				const dialogTitle = document.createElement('h2'); dialogTitle.id = `${dialog.id}-title`; dialogTitle.textContent = 'فیلتر محصولات';
-				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = 'Ã—'; close.setAttribute('aria-label', 'بستن فیلتر محصولات');
+				const close = document.createElement('button'); close.type = 'button'; close.className = 'ch-filter-close'; close.textContent = '×'; close.setAttribute('aria-label', 'بستن فیلتر محصولات');
 				dialogTitle.textContent = filterTitle; close.setAttribute('aria-label', `بستن ${filterTitle}`);
 				dialogHeading.append(dialogTitle, close); dialog.append(dialogHeading); document.body.append(dialog);
 				dialog.setAttribute('aria-labelledby', dialogTitle.id);
@@ -683,13 +697,15 @@
 				let frame = 0;
 				const fitPanel = () => {
 					frame = 0;
-					if (compact.matches) return;
+					if (compact.matches || isLook) return;
 					const top = Math.max(112, sidebar.getBoundingClientRect().top);
 					sidebar.style.setProperty('--ch-filter-available-height', Math.max(180, window.innerHeight - top - 16) + 'px');
 				};
 				const scheduleFit = () => { if (!frame) frame = requestAnimationFrame(fitPanel); };
-				window.addEventListener('scroll', scheduleFit, { passive: true });
-				window.addEventListener('resize', scheduleFit);
+				if (!isLook) {
+					window.addEventListener('scroll', scheduleFit, { passive: true });
+					window.addEventListener('resize', scheduleFit);
+				}
 				const syncLayout = () => {
 					if (dialog.open) closeDialog();
 					if (compact.matches) dialog.append(form);

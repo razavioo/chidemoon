@@ -223,10 +223,10 @@ final class Chidemoon_Core_Shop_The_Look {
 			array( 'post', 'product', 'chidemoon_look' ),
 			array(
 				'labels' => array(
-					'name'          => __( 'Ãƒâ„¢Ã‚ÃƒËœÃ‚¶ÃƒËœÃ‚§Ãƒâ„¢ââ‚¬¡ÃƒËœÃ‚§', 'chidemoon-core' ),
-					'singular_name' => __( 'Ãƒâ„¢Ã‚ÃƒËœÃ‚¶ÃƒËœÃ‚§', 'chidemoon-core' ),
-					'add_new_item'  => __( 'ÃƒËœÃ‚§Ãƒâ„¢Ã‚ÃƒËœÃ‚²Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚¯Ãƒâ„¢ââ‚¬  Ãƒâ„¢Ã‚ÃƒËœÃ‚¶ÃƒËœÃ‚§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚¬ÃƒËœÃ‚¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚¯', 'chidemoon-core' ),
-					'edit_item'     => __( 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚±ÃƒËœÃ‚§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚´ Ãƒâ„¢Ã‚ÃƒËœÃ‚¶ÃƒËœÃ‚§', 'chidemoon-core' ),
+					'name'          => __( 'فضاها', 'chidemoon-core' ),
+					'singular_name' => __( 'فضا', 'chidemoon-core' ),
+					'add_new_item'  => __( 'افزودن فضای جدید', 'chidemoon-core' ),
+					'edit_item'     => __( 'ویرایش فضا', 'chidemoon-core' ),
 				),
 				'public'            => true,
 				'show_ui'           => true,
@@ -250,15 +250,9 @@ final class Chidemoon_Core_Shop_The_Look {
 		}
 
 		$terms = array(
-			'living-room'   => 'Ã™¾Ã˜°Ã›Å’Ã˜±Ã˜§Ã›Å’Ã›Å’ Ã™Ë† Ã™â€ Ã˜´Ã›Å’Ã™â€¦Ã™â€ ',
-			'bedroom'       => 'Ã˜§Ã˜ªÃ˜§Ã™â€š Ã˜®Ã™Ë†Ã˜§Ã˜¨',
-			'kitchen'       => 'Ã˜¢Ã˜´Ã™¾Ã˜²Ã˜®Ã˜§Ã™â€ Ã™â€¡',
-			'kids-room'     => 'Ã˜§Ã˜ªÃ˜§Ã™â€š Ãš©Ã™Ë†Ã˜¯Ãš©',
-			'terrace'       => 'Ã˜ªÃ˜±Ã˜§Ã˜³ Ã™Ë† Ã˜¨Ã˜§Ã™â€žÃš©Ã™â€ ',
-			'dining-room'   => 'Ã™â€ Ã˜§Ã™â€¡Ã˜§Ã˜±Ã˜®Ã™Ë†Ã˜±Ã›Å’',
-			'home-office'   => 'Ã˜§Ã˜ªÃ˜§Ã™â€š Ãš©Ã˜§Ã˜±',
-			'entryway'      => 'Ã™Ë†Ã˜±Ã™Ë†Ã˜¯Ã›Å’ Ã˜®Ã˜§Ã™â€ Ã™â€¡',
-			'reading-corner'=> 'Ã™Ã˜¶Ã˜§Ã›Å’ Ã™â€¦Ã˜·Ã˜§Ã™â€žÃ˜¹Ã™â€¡',
+			'living-room'   => 'پذیرایی و نشیمن', 'bedroom' => 'اتاق خواب', 'kitchen' => 'آشپزخانه',
+			'kids-room'     => 'اتاق کودک', 'terrace' => 'تراس و بالکن', 'dining-room' => 'ناهارخوری',
+			'home-office'   => 'اتاق کار', 'entryway' => 'ورودی خانه', 'reading-corner' => 'فضای مطالعه',
 		);
 		$term_ids = array();
 		$complete = true;

@@ -197,7 +197,7 @@ final class Chidemoon_Core_Discovery {
   if ( null !== $scope ) { $args['object_ids'] = $scope; }
   $terms = get_terms( $args );
   if ( is_wp_error( $terms ) || ! $terms ) { return ''; }
-  $terms = array_values(array_filter($terms, static fn($term) => ! in_array(strtolower(trim($term->name)), array('none','unknown','not applicable','نامشخص','کاربرد ندارد','â€”','-'), true) && ! ('features' === $field && 'استند چوبی' === $term->name)));
+  $terms = array_values(array_filter($terms, static fn($term) => ! in_array(strtolower(trim($term->name)), array('none','unknown','not applicable','نامشخص','کاربرد ندارد','—','-'), true) && ! ('features' === $field && 'استند چوبی' === $term->name)));
   // A single value cannot narrow a category and should not consume sidebar space.
   if ( ! $terms || (null !== $scope && count($terms) < 2) ) { return ''; }
   $html = '<fieldset><legend>' . esc_html( Chidemoon_Core_Enrichment::field_label( $field ) ) . '</legend>';

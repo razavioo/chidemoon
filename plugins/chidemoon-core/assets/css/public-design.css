@@ -2442,7 +2442,17 @@ body::-webkit-scrollbar,
 @media (min-width: 981px) { body .ch-sidebar-filters { position: sticky; top: calc(var(--ch-admin-bar-offset, 0px) + 16px); z-index: 8; max-height: calc(100vh - var(--ch-admin-bar-offset, 0px) - 32px); overflow: auto; } }
 body .ch-sidebar-filters .ch-filter-actions { position: sticky; bottom: 0; padding-top: 12px; background: var(--chidemoon-surface, #fff); }
 
-@media (min-width: 768px) { body .ch-look-sidebar { position: sticky; top: calc(var(--ch-admin-bar-offset, 0px) + 16px); align-self: start; max-height: calc(100vh - var(--ch-admin-bar-offset, 0px) - 32px); overflow: auto; } body .ch-look-filters .ch-filter-actions { position: sticky; bottom: 0; padding-top: 12px; background: #fff; } }
+@media (min-width: 1025px) {
+  body .ch-look-sidebar {
+    --ch-look-filter-top: calc(112px + var(--ch-admin-bar-offset, 0px));
+    position: sticky;
+    inset-block-start: var(--ch-look-filter-top);
+    align-self: start;
+    box-sizing: border-box;
+    max-block-size: calc(100dvh - var(--ch-look-filter-top) - 16px);
+    display: flex;
+  }
+}
 
 /* Clickable editorial labels: orange room, green style. */
 .ch-look-card-tags > a.ch-look-card-tag--style { background:#e7f1e9; color:#286044; }
@@ -2452,3 +2462,26 @@ body .ch-sidebar-filters .ch-filter-actions { position: sticky; bottom: 0; paddi
 body .ch-sidebar-filters .ch-filter-actions { order:-1; position:sticky; top:0; bottom:auto; z-index:2; padding:12px 0; background:#fff; }
 body .ch-sidebar-filters .ch-filter-options { min-height:0; overflow-y:auto; }
 @media(min-width:981px){body .ch-sidebar-filters {top:112px;max-height:calc(100dvh - 128px);} }
+
+body .ch-look-sidebar > .ch-look-filters {
+  display: flex;
+  position: static;
+  max-block-size: none;
+  inline-size: 100%;
+  overflow: hidden;
+}
+body .ch-look-filters .ch-filter-actions { position: static; }
+@media (max-width: 1024px) {
+  html.ch-look-filters-ready body .ch-look-browse > .ch-look-tools:has(.ch-filter-toggle) {
+    position: sticky;
+    inset-block-start: calc(112px + var(--ch-admin-bar-offset, 0px));
+    z-index: 8;
+    background: var(--chidemoon-surface, #fff);
+  }
+}
+/* Make Shop the Look style and color choices as clear as room cards. */
+body .ch-look-filters .ch-look-filter-group { display: grid; gap: 8px; }
+body .ch-look-filters .ch-look-filter-group legend { display: block; inline-size: 100%; margin-block-end: 4px; }
+body .ch-look-filters .ch-look-filter-group label { box-sizing: border-box; padding: 8px 10px; border: 1px solid #dfe7e1; border-radius: 9px; background: #fff; transition: border-color .15s ease, background .15s ease; }
+body .ch-look-filters .ch-look-filter-group label:hover,
+body .ch-look-filters .ch-look-filter-group label:has(input:checked) { border-color: #9cb9a2; background: #edf4ee; color: #245236; }
