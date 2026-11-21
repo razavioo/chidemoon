@@ -47,7 +47,17 @@ for record in "${locked_images[@]}"; do
 done
 
 if (( missing_image )); then
-	docker image load --input "$verification_dir/docker-images.tar"
+	if ! docker image load --input "$verification_dir/docker-images.tar"; then
+		# Newer Docker/containerd versions may emit an OCI layout for `docker save`.
+		# If every locked reference is already present with the exact digest, the
+		# archive is redundant and the deployment can continue safely.
+		for record in "${locked_images[@]}"; do
+			reference="${record%%$'\t'*}"
+			expected_id="${record#*$'\t'}"
+			actual_id="$(docker image inspect --format '{{.Id}}' "$reference" 2>/dev/null || true)"
+			[[ "$actual_id" == "$expected_id" ]] || fail "The image archive could not be loaded: $reference"
+		done
+	fi
 fi
 
 for record in "${locked_images[@]}"; do
