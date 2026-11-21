@@ -2248,10 +2248,21 @@ body.search .ch-search .ch-search-query {
  line-height: 1.4;
  overflow-wrap: anywhere;
 }
-body.search .ch-search .ch-page-search.elementor-widget {
+body.search .ch-search .ch-page-search.elementor-widget-search.elementor-widget {
  inline-size: 100%;
  max-inline-size: 560px;
  margin-block: 16px 20px;
+}
+body.search .ch-page-search.elementor-widget-search .e-search-form:focus-within {
+ border-color: var(--chidemoon-forest);
+ outline: 2px solid var(--chidemoon-forest);
+ outline-offset: 2px;
+}
+body.search .ch-page-search.elementor-widget-search .e-search-input:focus {
+ background: transparent;
+ border: 0;
+ box-shadow: none;
+ outline: none;
 }
 body.search .ch-search .ch-search-summary {
  margin-block: 0 16px;
