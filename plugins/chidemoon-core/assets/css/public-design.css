@@ -2236,6 +2236,28 @@ body .ch-header .ch-header-search-panel .elementor-widget-search.ch-header-searc
 
 /* Product-only search: open image-led cards, independent of editorial archive skins. */
 body.search .ch-search-help p { display:none; }
+body.search .ch-search.e-con {
+ --padding-top: clamp(16px, 2vw, 28px);
+ --gap: 0px;
+ padding-block-start: var(--padding-top);
+}
+body.search .ch-search > .e-con-inner { gap: 0; }
+body.search .ch-search :is(.ch-eyebrow, .ch-page-search-caption) { display: none; }
+body.search .ch-search .ch-search-query {
+ font-size: clamp(24px, 3vw, 36px);
+ line-height: 1.4;
+ overflow-wrap: anywhere;
+}
+body.search .ch-search .ch-page-search.elementor-widget {
+ inline-size: 100%;
+ max-inline-size: 560px;
+ margin-block: 16px 20px;
+}
+body.search .ch-search .ch-search-summary {
+ margin-block: 0 16px;
+ padding-block-end: 10px;
+ border-block-end: 1px solid var(--chidemoon-line, #d6dfd9);
+}
 .ch-search-summary { display:flex; align-items:center; gap:10px; color:#66766f; font-size:14px; line-height:1.9; margin:0 0 28px; }
 .ch-search-summary-dot { width:7px; height:7px; border-radius:50%; background:#b78668; }
 .ch-result-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px 24px; }

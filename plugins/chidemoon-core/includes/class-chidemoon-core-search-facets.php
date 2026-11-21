@@ -58,7 +58,10 @@ final class Chidemoon_Core_Search_Facets {
 	}
 
 	public static function render( array $settings = array(), bool $preview = false ): string {
-		if(is_search()){global $wp_query;return '<div class="ch-search-summary"><span class="ch-search-summary-dot" aria-hidden="true"></span><span>'.esc_html(self::persian_digits((string)$wp_query->found_posts)).' محصول برای «'.esc_html(get_search_query(false)).'»</span></div>';}
+		if ( is_search() ) {
+			global $wp_query;
+			return '<div class="ch-search-summary"><span>' . esc_html( self::persian_digits( (string) $wp_query->found_posts ) ) . ' محصول</span></div>';
+		}
 		if ( ! is_search() && ! $preview ) {
 			return '';
 		}
@@ -97,7 +100,9 @@ final class Chidemoon_Core_Search_Facets {
 
 	public static function product_grid(string $html,$widget):string {
 		if(!is_search())return $html;
-		$html=str_replace('جستجو در محصولات و مطالب','محصول مورد علاقه‌ات را پیدا کن',$html);
+		if ( 'theme-archive-title' === $widget->get_name() && '' !== get_search_query( false ) ) {
+			return '<h1 class="elementor-heading-title ch-search-query">' . esc_html( get_search_query( false ) ) . '</h1>';
+		}
 		if(!in_array($widget->get_name(),['archive-posts','posts','loop-grid'],true)||!str_contains((string)$widget->get_settings('_css_classes'),'ch-search-results-feed'))return $html;
 		global $wp_query;$cards='';
 		foreach($wp_query->posts as $post){$p=wc_get_product($post->ID);if(!$p||!Chidemoon_Core_Affiliate::is_publicly_eligible($p))continue;

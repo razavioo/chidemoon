@@ -48,7 +48,7 @@ final class Chidemoon_Core_Breadcrumbs {
    if ( is_wp_error( $url ) ) { return array(); }
    $trail[] = array( $term->name, $url );
   } elseif ( is_search() ) {
-   $trail[] = array( 'نتایج جست‌وجو برای «' . get_search_query() . '»', get_search_link() );
+   $trail[] = array( 'جست‌وجو', get_search_link() );
   } else { return array(); }
   $page = max( (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
   if ( $page > 1 ) { $trail[] = array( 'صفحه ' . number_format_i18n( $page ), get_pagenum_link( $page ) ); }
