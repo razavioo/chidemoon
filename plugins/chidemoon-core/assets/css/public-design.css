@@ -2032,9 +2032,20 @@ body .ch-look-gallery-scene:last-child { border-block-end: 1px solid var(--chide
 body .ch-look-gallery-scene > :first-child, body .ch-look-gallery-scene h2:first-child { margin-block-start: 0; }
 .ch-look-sidebar { border: 1px solid var(--chidemoon-line, #dce3dc); border-radius: 12px; padding: 20px; background: #fff; }
 body .ch-look-sidebar h2 { font-size: 18px; margin: 0 0 20px; }
-.ch-look-filters fieldset { border: 0; border-block-start: 1px solid #e6ebe3; padding: 16px 0; margin: 0; min-inline-size: 0; max-block-size: none; overflow: visible; }
+.ch-look-filters fieldset { border: 0; border-block-start: 1px solid #e6ebe3; padding: 8px 0 12px; margin: 0; min-inline-size: 0; max-block-size: none; overflow: visible; }
 .ch-look-filters legend { font-size: 14px; font-weight: 700; padding-inline-end: 10px; }
-.ch-look-filters label { display: flex; align-items: center; gap: 10px; min-block-size: 44px; font-size: 13px; cursor: pointer; }
+body .ch-look-filters .ch-look-filter-group label {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ min-block-size: 40px;
+ margin: 0;
+ padding: 4px 0;
+ font-size: 13px;
+ line-height: 1.65;
+ cursor: pointer;
+}
+body .ch-look-filters .ch-look-filter-group label + label { margin-block-start: 4px; }
 .ch-look-sidebar input { accent-color: #123f34; flex-shrink: 0; }
 .ch-color-swatch { display: inline-block; inline-size: 20px; block-size: 20px; border: 1px solid #0002; border-radius: 50%; background: var(--ch-swatch); flex-shrink: 0; }
 /* Shared visual language for product and Look filters. */
