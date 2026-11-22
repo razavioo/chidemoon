@@ -198,7 +198,7 @@ final class Chidemoon_Core_Shop_The_Look {
 							<?php echo wp_get_attachment_image( $product['image_id'], 'woocommerce_thumbnail', false, array( 'class' => 'chidemoon-shop-the-look__product-image', 'alt' => $product['title'], 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php endif; ?>
 						<div class="chidemoon-shop-the-look__tooltip-body">
-							<h3><?php echo esc_html( $product['title'] ); ?></h3>
+							<h3><a class="ch-hotspot-product-title" href="<?php echo esc_url( Chidemoon_Core_Affiliate::tracking_url( $product_id ) ); ?>" target="_blank" rel="nofollow sponsored noopener"><?php echo esc_html( $product['title'] ); ?></a></h3>
 							<div class="chidemoon-shop-the-look__price"><?php echo wp_kses_post( $product['price'] ); ?></div>
 							<?php echo Chidemoon_Core_Affiliate::render_affiliate_cta( array( 'product_id' => $product_id ) ); ?>
 							<?php echo Chidemoon_Core_Compare::control( $product['product'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

@@ -5,3 +5,4 @@
 .ch-ai-product-row img { width: 44px; height: 44px; object-fit: contain; }
 .ch-ai-product-row span { flex: 1; line-height: 1.7; }
 .ch-ai-products [data-product-selected] .ch-ai-product-row { background: #eff7ef; }
+.chidemoon-ai-look-library__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;max-width:1100px}.chidemoon-ai-look-card{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px;display:grid;gap:8px}.chidemoon-ai-look-card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:5px}.chidemoon-ai-look-card span{color:#646970;font-size:12px}

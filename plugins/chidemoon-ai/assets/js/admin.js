@@ -121,13 +121,41 @@
 			result(output, 'Queueing AI job…', false);
 			request('jobs/' + type, payloadFor(form, type), uniqueKey()).then(function (response) {
 				var id = response && response.job ? response.job.id : '';
-				result(output, window.ChidemoonAiAdmin.queued + (id ? ' #' + id : ''), false);
-				window.setTimeout(function () { window.location.reload(); }, 1200);
+				if (id && type === 'look') { watchLookJob(id, output, button); } else { result(output, window.ChidemoonAiAdmin.queued + (id ? ' #' + id : ''), false); }
 			}).catch(function (error) {
 				result(output, text(error.message) || window.ChidemoonAiAdmin.error, true);
 				button.disabled = false;
 			});
 		});
+	}
+
+	function watchLookJob(id, output, button) {
+		result(output, 'در حال ساخت تصویر…', false);
+		var attempts = 0;
+		function poll() {
+			fetch(window.ChidemoonAiAdmin.root + 'jobs/' + id, { credentials: 'same-origin', headers: { 'X-WP-Nonce': window.ChidemoonAiAdmin.nonce } })
+				.then(function (r) { return r.json(); }).then(function (job) {
+					if (job.state === 'completed' || job.state === 'review_required' || job.state === 'approved') {
+						var url = job.attachment_url || (job.result && job.result.attachment_url) || '';
+						output.replaceChildren();
+						if (url) { var img = document.createElement('img'); img.src = url; img.alt = 'تصویر تولیدشده'; img.style.cssText = 'display:block;max-width:760px;width:100%;height:auto;border-radius:8px;margin:16px 0'; output.appendChild(img); }
+						var p = document.createElement('p');
+						if (window.ChidemoonAiAdmin.lookReviewUrl) {
+							var review = document.createElement('a');
+							review.className = 'button';
+							review.href = window.ChidemoonAiAdmin.lookReviewUrl + '#ch-ai-job-' + Number(id);
+							review.textContent = 'بررسی تصویر و ساخت پیش‌نویس';
+							p.appendChild(review);
+						} else {
+							p.textContent = 'تصویر برای بازبینی آماده است.';
+						}
+						output.appendChild(p); button.disabled = false; return;
+					}
+					if (job.state === 'failed') { result(output, (job.error && job.error.message) || 'ساخت تصویر ناموفق بود.', true); button.disabled = false; return; }
+					if (++attempts < 180) { window.setTimeout(poll, 2000); } else { result(output, 'ساخت تصویر طولانی شد. وضعیت در صف بررسی ذخیره شده است.', true); button.disabled = false; }
+				}).catch(function () { if (++attempts < 180) window.setTimeout(poll, 3000); else { result(output, 'وضعیت تصویر قابل دریافت نیست.', true); button.disabled = false; } });
+		}
+		poll();
 	}
 
 	function initReview(button) {
@@ -146,7 +174,8 @@
 				payload.reason = reason;
 			}
 			button.disabled = true;
-			request('jobs/' + jobId + '/' + action, payload).then(function () {
+			request('jobs/' + jobId + '/' + action, payload).then(function (response) {
+				if (response.edit_url) { window.location.assign(response.edit_url); return; }
 				window.location.reload();
 			}).catch(function (error) {
 				adminNotice(text(error.message) || window.ChidemoonAiAdmin.error);

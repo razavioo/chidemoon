@@ -227,6 +227,33 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		$mode         = sanitize_key( (string) ( $payload['mode'] ?? 'generate' ) );
 		$attachments  = is_array( $payload['source_attachment_ids'] ?? null ) ? array_map( 'absint', $payload['source_attachment_ids'] ) : array();
 		$prompt       = $this->image_prompt( $mode, (string) ( $payload['prompt'] ?? '' ) );
+		if ( 'look_scene' === $mode ) {
+			$products = (array) ( $payload['product_ids'] ?? array() );
+			if ( empty( $products ) ) {
+				return new WP_Error( 'chidemoon_ai_look_products', 'برای ساخت چیدمان حداقل یک محصول لازم است.' );
+			}
+			$product_images = array();
+			$reference_labels = array();
+			foreach ( $products as $product_id ) {
+				$image_id = (int) get_post_thumbnail_id( $product_id );
+				$reference = Chidemoon_AI_Media::look_reference( $image_id, (int) $product_id );
+				if ( is_wp_error( $reference ) ) { return $reference; }
+				$product_images[] = $image_id;
+				$reference_labels[] = wp_strip_all_tags( get_the_title( $product_id ) );
+			}
+			$attachments = array_values( array_diff( $attachments, $product_images ) );
+			foreach ( $attachments as $attachment_id ) {
+				$reference = Chidemoon_AI_Media::look_reference( $attachment_id );
+				if ( is_wp_error( $reference ) ) { return $reference; }
+			}
+			if ( ! str_starts_with( $this->image_model, 'gemini-' ) ) {
+				$attachments = array_merge( $product_images, $attachments );
+				foreach ( $reference_labels as $index => $label ) {
+					$prompt .= "\nProduct reference image " . ( $index + 1 ) . ': ' . $label;
+				}
+				$prompt .= "\nAny remaining images are style references only.";
+			}
+		}
 		if ( str_starts_with( $this->image_model, 'gemini-' ) ) {
 			return $this->gemini_image( $payload, $attachments, $prompt );
 		}

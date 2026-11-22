@@ -36,8 +36,12 @@
   document.querySelectorAll('[data-look-id]').forEach(card => {
    if (card.closest('.ch-home-look-mosaic')) return;
    const id = card.dataset.lookId;
-   const canvas = card.querySelector('.ch-scene-canvas, .chidemoon-shop-the-look__canvas, .chidemoon-shop-the-look');
-   if (!canvas || canvas.dataset.viewLook) return;
+   const canvas = card.querySelector('.ch-scene-canvas, .chidemoon-shop-the-look__canvas');
+   if (!canvas || canvas.closest('[data-look-id]') !== card) return;
+   card.querySelectorAll('.ch-look-view-count').forEach(badge => {
+    if (badge.closest('[data-look-id]') === card && badge.parentElement !== canvas) badge.remove();
+   });
+   if (canvas.dataset.viewLook) return;
    canvas.dataset.viewLook = id;
    const badge = document.createElement('span'); badge.className = 'ch-look-view-count'; badge.dataset.id = id;
    badge.title = 'شمارنده از ۱۰۰ آغاز شده؛ بازدیدهای ثبت‌شده به آن اضافه می‌شوند';

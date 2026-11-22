@@ -346,24 +346,14 @@
 			});
 		}
 		function closeSearch() {
-			searchShell.classList.remove('is-expanded'); header.classList.remove('ch-header-search-open');
+			searchShell.classList.remove('is-expanded');
 			shortcut.setAttribute('aria-label','باز کردن جستجو'); shortcut.title='جستجو';
 			panel.inert = true; panel.setAttribute('aria-hidden','true'); shortcut.setAttribute('aria-expanded', 'false');
 		}
 		function fitSearch() {
-			const style = getComputedStyle(row);
-			const siblings = [...row.children].filter(el => el !== searchShell && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0);
-			const used = siblings.reduce((sum,el) => {
-				if(el.matches('.ch-brand-block'))return sum+(el.querySelector('.ch-brand-logo')?.getBoundingClientRect().width||112);
-				if(el.matches('.ch-nav')&&!mobileMenu.matches){
-					const heading=el.querySelector('.e-n-menu-heading');
-					const items=heading?[...heading.children]:[];
-					return sum+items.reduce((total,item)=>total+item.getBoundingClientRect().width,0)+(parseFloat(heading&&getComputedStyle(heading).columnGap)||0)*Math.max(0,items.length-1);
-				}
-				return sum+el.getBoundingClientRect().width;
-			},0);
-			const available = row.clientWidth - used - (parseFloat(style.columnGap)||0)*siblings.length - (parseFloat(style.paddingLeft)||0) - (parseFloat(style.paddingRight)||0);
-			searchShell.style.setProperty('--ch-search-width', `${Math.max(100,Math.min(420,available))}px`);
+			const trigger = searchShell.getBoundingClientRect();
+			const available = Math.min(row.getBoundingClientRect().right, document.documentElement.clientWidth) - trigger.left;
+			searchShell.style.setProperty('--ch-search-width', `${Math.max(trigger.width, Math.min(320, available))}px`);
 			input.placeholder = mobileMenu.matches ? 'جستجو…' : 'جستجو در چیدمون';
 		}
 		document.addEventListener('click', event => {
@@ -379,7 +369,7 @@
 				else closeSearch();
 				return;
 			}
-			fitSearch(); searchShell.classList.add('is-expanded'); header.classList.add('ch-header-search-open');
+			fitSearch(); searchShell.classList.add('is-expanded');
 			shortcut.setAttribute('aria-label',input.value.trim() ? 'جستجو در چیدمون' : 'بستن جستجو'); shortcut.title=input.value.trim() ? 'جستجو' : 'بستن جستجو';
 			panel.inert = false; panel.setAttribute('aria-hidden','false'); shortcut.setAttribute('aria-expanded','true');
 			input.focus({preventScroll:true});
@@ -425,6 +415,7 @@
 		document.querySelectorAll('.ch-scene-canvas:not([data-ready])').forEach((canvas) => {
 			canvas.dataset.ready = 'true';
 			let active, timer;
+			const panelFor = button => canvas.querySelector('#' + CSS.escape(button.getAttribute('aria-controls')));
 			// Source percentages refer to the full image, not the cropped frame.
 			if (canvas.closest('.ch-home-look-card')) {
 				const image = canvas.querySelector('img.ch-scene-image');
@@ -455,7 +446,8 @@
 			};
 			const position = () => {
 				if (!active) return;
-				const panel = document.getElementById(active.getAttribute('aria-controls'));
+				const panel = panelFor(active);
+				if (!panel) return;
 				const c = canvas.getBoundingClientRect(), b = active.getBoundingClientRect();
 				const x = b.left - c.left + b.width / 2;
 				let y = b.bottom - c.top + 10;
@@ -468,9 +460,11 @@
 				panel.style.top = `${Math.max(8, y)}px`;
 			};
 			const open = (button) => {
+				const panel = panelFor(button);
+				if (!panel) return;
 				close(); active = button;
 				// Opening a product must not scroll the image strip.
-				document.getElementById(button.getAttribute('aria-controls')).hidden = false;
+				panel.hidden = false;
 				button.setAttribute('aria-expanded', 'true'); position();
 			};
 			canvas.querySelectorAll('.ch-scene-point').forEach(button => {

@@ -316,9 +316,8 @@ class Chidemoon_AI_REST_Controller {
 		$product_attachments = array();
 		foreach ( $product_ids as $pid ) {
 			$image_id = absint( get_post_thumbnail_id( $pid ) );
-			if ( ! $image_id || 'attachment' !== get_post_type( $image_id ) ) {
-				return self::error( 'chidemoon_ai_look_product_image_missing', __( 'هر محصول انتخاب‌شده باید عکس اصلی داشته باشد.', 'chidemoon-ai' ), 400 );
-			}
+			$reference = Chidemoon_AI_Media::look_reference( $image_id, $pid );
+			if ( is_wp_error( $reference ) ) { return $reference; }
 			$product_attachments[] = $image_id;
 		}
 		$attachments = array();
@@ -327,6 +326,12 @@ class Chidemoon_AI_REST_Controller {
 				return self::error( 'chidemoon_ai_source_image_invalid', __( 'Choose up to two valid reference images.', 'chidemoon-ai' ), 400 );
 			}
 			$attachments = self::post_ids( $data['source_attachment_ids'] ?? array(), 0, 2 );
+			foreach ( $attachments as $attachment_id ) {
+				$reference = Chidemoon_AI_Media::validate_source_attachment( $attachment_id );
+				if ( is_wp_error( $reference ) ) { return $reference; }
+				$reference = Chidemoon_AI_Media::look_reference( $attachment_id );
+				if ( is_wp_error( $reference ) ) { return $reference; }
+			}
 		}
 		$attachments = array_values( array_unique( array_merge( $product_attachments, $attachments ) ) );
 		if ( ! self::rights_attested( $data['rights_attestation'] ?? false ) ) {
@@ -350,7 +355,6 @@ class Chidemoon_AI_REST_Controller {
 		if ( '' === $prompt ) {
 			return self::error( 'chidemoon_ai_look_prompt', __( 'Provide an editor request for the look.', 'chidemoon-ai' ), 400 );
 		}
-
 		return self::queue_job(
 			$request,
 			'look',
@@ -548,6 +552,7 @@ class Chidemoon_AI_REST_Controller {
 			array(
 				'job'       => self::job_response( Chidemoon_AI_Repository::find( (int) $job['id'] ) ?: $job ),
 				'applied_id' => $result,
+				'edit_url'   => 'look' === $job['job_type'] ? (string) get_edit_post_link( $result, 'raw' ) : '',
 			),
 			200
 		);
@@ -867,6 +872,8 @@ class Chidemoon_AI_REST_Controller {
 	 * @return array<string, mixed>
 	 */
 	private static function job_response( array $job ): array {
+		$result = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array();
+		$attachment_id = absint( $result['attachment_id'] ?? 0 );
 		return array(
 			'id'             => (int) $job['id'],
 			'key'            => (string) $job['job_key'],
@@ -875,7 +882,8 @@ class Chidemoon_AI_REST_Controller {
 			'target_post_id' => absint( $job['target_post_id'] ?? 0 ),
 			'created_at'     => (string) $job['created_at'],
 			'updated_at'     => (string) $job['updated_at'],
-			'result'         => is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array(),
+			'result'         => $result,
+			'attachment_url' => $attachment_id ? (string) wp_get_attachment_url( $attachment_id ) : '',
 			'provenance'     => is_array( $job['provenance'] ?? null ) ? $job['provenance'] : array(),
 			'error'          => ! empty( $job['error_code'] ) ? array( 'code' => (string) $job['error_code'], 'message' => (string) $job['error_message'] ) : null,
 		);

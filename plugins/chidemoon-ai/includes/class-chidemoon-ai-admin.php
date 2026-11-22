@@ -81,6 +81,7 @@ class Chidemoon_AI_Admin {
 
 	public static function look_studio(): void {
 		self::guard( Chidemoon_AI_Capabilities::GENERATE );
+		$look_jobs = array_values( array_filter( Chidemoon_AI_Repository::list( '', 50 ), static fn( $job ) => 'look' === ( $job['job_type'] ?? '' ) ) );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Look Studio', 'chidemoon-ai' ); ?></h1>
@@ -128,6 +129,23 @@ class Chidemoon_AI_Admin {
 				<div class="chidemoon-ai-job-form__result" aria-live="polite"></div>
 			</form>
 		</div>
+		<div class="chidemoon-ai-look-library"><h2>خروجی‌های قبلی Look Studio</h2><div class="chidemoon-ai-look-library__grid">
+		<?php foreach ( $look_jobs as $job ) : $result = is_array( $job['result_payload'] ?? null ) ? $job['result_payload'] : array(); $url = wp_get_attachment_url( absint( $result['attachment_id'] ?? 0 ) ); if ( ! $url ) { continue; } ?>
+			<?php
+			$can_review = current_user_can( Chidemoon_AI_Capabilities::REVIEW );
+			if ( ! $can_review && (int) $job['requested_by'] !== get_current_user_id() ) { continue; }
+			$edit_url = 'applied' === $job['state'] ? get_edit_post_link( (int) $job['target_post_id'], 'raw' ) : '';
+			if ( ! $edit_url && $can_review && in_array( $job['state'], array( 'review_required', 'approved' ), true ) ) {
+				$edit_url = admin_url( 'admin.php?page=chidemoon-ai-review#ch-ai-job-' . (int) $job['id'] );
+			}
+			?>
+			<article class="chidemoon-ai-look-card">
+				<?php if ( $edit_url ) : ?><a href="<?php echo esc_url( $edit_url ); ?>"><?php endif; ?>
+				<img src="<?php echo esc_url( $url ); ?>" alt="" loading="lazy">
+				<strong><?php echo esc_html( $result['title'] ?? 'چیدمان پیشنهادی' ); ?></strong>
+				<?php if ( $edit_url ) : ?><span><?php echo 'applied' === $job['state'] ? 'ویرایش چیدمان' : 'بررسی تصویر'; ?></span></a><?php endif; ?>
+			</article>
+		<?php endforeach; ?></div></div>
 		<?php
 	}
 
@@ -171,7 +189,7 @@ class Chidemoon_AI_Admin {
 					<tr><td colspan="6"><?php esc_html_e( 'There are no generated outputs awaiting review.', 'chidemoon-ai' ); ?></td></tr>
 				<?php else : ?>
 					<?php foreach ( $jobs as $job ) : ?>
-						<tr>
+						<tr id="ch-ai-job-<?php echo (int) $job['id']; ?>">
 							<td><?php echo esc_html( '#' . (string) $job['id'] ); ?></td>
 							<td><?php echo esc_html( (string) $job['job_type'] ); ?></td>
 							<td><?php echo esc_html( (string) ( $job['target_post_id'] ?: '—' ) ); ?></td>
@@ -447,6 +465,7 @@ class Chidemoon_AI_Admin {
 					'root'        => esc_url_raw( rest_url( 'chidemoon-ai/v1/' ) ),
 					'nonce'       => wp_create_nonce( 'wp_rest' ),
 					'queued'      => __( 'AI job queued. The page will refresh shortly.', 'chidemoon-ai' ),
+					'lookReviewUrl' => current_user_can( Chidemoon_AI_Capabilities::REVIEW ) ? admin_url( 'admin.php?page=chidemoon-ai-review' ) : '',
 					'error'       => __( 'The AI request could not be completed.', 'chidemoon-ai' ),
 					'reviewed'    => __( 'The AI review action completed.', 'chidemoon-ai' ),
 					'pickProduct' => __( 'Enter a product search term (min 2 chars):', 'chidemoon-ai' ),

@@ -12,6 +12,19 @@ class Chidemoon_AI_Media {
 	public const MAX_IMAGE_DIMENSION = 8192;
 	public const ALLOWED_MIME_TYPES = array( 'image/jpeg', 'image/png', 'image/webp' );
 
+	public static function look_reference( int $attachment_id, int $product_id = 0 ): true|WP_Error {
+		$file = get_attached_file( $attachment_id );
+		$size = is_string( $file ) && is_file( $file ) && is_readable( $file ) ? filesize( $file ) : false;
+		$info = $size && $size <= self::MAX_BYTES ? @getimagesize( $file ) : false;
+		if ( $info && $info['mime'] === get_post_mime_type( $attachment_id )
+			&& in_array( $info['mime'], self::ALLOWED_MIME_TYPES, true )
+			&& max( $info[0], $info[1] ) <= self::MAX_IMAGE_DIMENSION ) {
+			return true;
+		}
+		$label = $product_id ? get_the_title( $product_id ) : '#' . $attachment_id;
+		return new WP_Error( 'chidemoon_ai_look_reference_invalid', sprintf( 'عکس مرجع «%s» قابل استفاده نیست. یک عکس سالم JPEG، PNG یا WebP تا ۱۰ مگابایت در وردپرس بارگذاری کنید.', $label ), array( 'status' => 400 ) );
+	}
+
 	/**
 	 * @return array<string, mixed>|WP_Error
 	 */

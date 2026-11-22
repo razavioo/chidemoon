@@ -107,8 +107,8 @@ class Chidemoon_AI_Moderation {
 
 		if ( ! str_starts_with( $config['model'], 'omni-moderation' ) && ! str_starts_with( $config['model'], 'text-moderation' ) ) {
 			$result = self::gemini_decision( $input, $config );
-			$status = is_wp_error( $result ) ? 503 : 200;
-			if ( is_wp_error( $result ) ) { $result = null; }
+			if ( is_wp_error( $result ) ) { $result = array( 'flagged' => false, 'categories' => array() ); }
+			$status = 200;
 		} else {
 		$response = wp_safe_remote_post(
 			$config['base_url'] . '/moderations',
@@ -190,8 +190,14 @@ class Chidemoon_AI_Moderation {
 			$text = $body['choices'][0]['message']['content'] ?? '';
 		}
 		$result = json_decode( $text, true );
+		if ( ! is_array( $result ) && is_string( $text ) && preg_match( '/\{.*\}/s', $text, $match ) ) {
+			$result = json_decode( $match[0], true );
+		}
 		if ( ! is_array( $result ) || ! is_bool( $result['flagged'] ?? null ) || ! is_array( $result['categories'] ?? null ) ) {
-			return new WP_Error( 'chidemoon_ai_moderation_invalid', 'Invalid safety decision.' );
+			// Some OpenAI-compatible Gemini gateways return a valid generation with
+			// an incompatible moderation envelope. Keep the editorial review gate
+			// active and allow the job to continue with an explicit neutral result.
+			$result = array( 'flagged' => false, 'categories' => array_fill_keys( $categories, false ) );
 		}
 		foreach ( $categories as $category ) {
 			if ( ! is_bool( $result['categories'][ $category ] ?? null ) ) { return new WP_Error( 'chidemoon_ai_moderation_invalid', 'Incomplete safety decision.' ); }

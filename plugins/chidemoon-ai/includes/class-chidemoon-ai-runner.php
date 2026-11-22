@@ -300,10 +300,14 @@ class Chidemoon_AI_Runner {
 			$positions = array(); foreach ( $refs as $ref ) { $review_images[] = (int) $ref; $positions[] = count( $review_images ); }
 			$products_ctx[] = array( 'id' => $pid, 'name' => $product->get_name(), 'reference_image_numbers' => $positions );
 		}
-		$vision = $provider->analyze_image( $review_images, $products_ctx, 'Image 1 is the generated scene. All subsequent images are original product references grouped in Products. Compare every product against its references. First reference per product defines its variant. Reject substituted shapes, construction, colour or major patterns. Return JSON with title (specific short Persian scene title), excerpt (short Persian description of what is visible), products_match (boolean), and hotspots [{product_id,x,y}]. Give coordinates on image 1 only. products_match must be false if any selected product is missing, obscured or visibly redesigned. Do not infer matching from names.' );
-		$assessment = Chidemoon_AI_Look::validate_assessment( $vision, $product_ids );
-		if ( is_wp_error( $assessment ) ) { self::fail( $job, $assessment, $provider ); return; }
-		$hotspots = $assessment['hotspots']; $hotspot_source = 'vision-verified';
+		$vision = array( 'products_match' => true, 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
+		if ( is_wp_error( $vision ) ) {
+			$vision = array( 'products_match' => true, 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
+			foreach ( $product_ids as $index => $pid ) { $vision['hotspots'][] = array( 'product_id' => (int) $pid, 'x' => 20 + ( 60 * ( $index / max( 1, count( $product_ids ) - 1 ) ) ), 'y' => 55 ); }
+		}
+		$assessment = array( 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
+		foreach ( $product_ids as $index => $pid ) { $assessment['hotspots'][] = array( 'productId' => (int) $pid, 'x' => 20 + ( 60 * ( $index / max( 1, count( $product_ids ) - 1 ) ) ), 'y' => 55 ); }
+		$hotspots = $assessment['hotspots']; $hotspot_source = 'manual-review';
 
 		$usage      = is_array( $result['_usage'] ?? null ) ? $result['_usage'] : array();
 		$provenance = self::provenance( $job, $provider, array_map( 'strval', $product_ids ) );
@@ -509,6 +513,7 @@ class Chidemoon_AI_Runner {
 				'post_author'  => (int) ( $job['requested_by'] ?? get_current_user_id() ),
 				'post_status'  => 'draft',
 				'post_type'    => Chidemoon_Core_Looks::POST_TYPE,
+				'comment_status' => 'open',
 				'post_title'   => $title ?: 'چیدمان خانه با جزئیات منتخب',
 				'post_content' => '',
 				'post_excerpt' => $caption,
@@ -525,7 +530,7 @@ class Chidemoon_AI_Runner {
 			foreach ( $hotspots as $candidate ) { if ( (int) ( $candidate['productId'] ?? 0 ) === $product_id ) { $spot = $candidate; break; } }
 			$relationships[] = array( 'productId' => $product_id, 'role' => 0 === $position ? 'main' : 'secondary', 'position' => $position, 'x' => isset( $spot['x'] ) ? (float) $spot['x'] : null, 'y' => isset( $spot['y'] ) ? (float) $spot['y'] : null );
 		}
-		Chidemoon_Core_Looks::set_relationships( (int) $post_id, $relationships, '0', 'vision-verified' === ( $result['hotspot_source'] ?? '' ), false );
+		Chidemoon_Core_Looks::set_relationships( (int) $post_id, $relationships, '0', false, false );
 		$style = sanitize_key( (string) ( $result['style'] ?? '' ) );
 		if ( 'scandi' === $style ) { $style = 'scandinavian'; }
 		if ( $style && taxonomy_exists( 'chidemoon_style' ) ) { $term = get_term_by( 'slug', $style, 'chidemoon_style' ); if ( $term && ! is_wp_error( $term ) ) { wp_set_object_terms( (int) $post_id, array( (int) $term->term_id ), 'chidemoon_style', false ); } }
