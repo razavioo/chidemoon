@@ -491,7 +491,56 @@
 			.catch(function () {});
 	}
 
+	function bindTableScrollbars() {
+		var selector = '.chidemoon-comparison-table-wrap';
+		var controls = new Map();
+		function refreshScrollbars() {
+			controls.forEach(function (control, wrap) {
+				if (!wrap.isConnected) {
+					control.resize.disconnect();
+					control.slider.remove();
+					controls.delete(wrap);
+				}
+			});
+			document.querySelectorAll(selector).forEach(function (wrap) {
+				if (controls.has(wrap)) return;
+				var slider = document.createElement('input');
+				slider.type = 'range';
+				slider.className = 'chidemoon-comparison-scrollbar';
+				slider.min = '0';
+				slider.setAttribute('aria-label', 'اسکرول افقی جدول مقایسه');
+				slider.hidden = true;
+				function sync() {
+					var max = wrap.scrollWidth - wrap.clientWidth;
+					slider.hidden = max <= 1;
+					slider.dir = getComputedStyle(wrap).direction;
+					slider.max = Math.max(0, max);
+					slider.value = Math.round(Math.abs(wrap.scrollLeft));
+				}
+				slider.addEventListener('input', function () {
+					wrap.scrollLeft = (slider.dir === 'rtl' ? -1 : 1) * Number(slider.value);
+				});
+				wrap.addEventListener('scroll', sync, { passive: true });
+				var resize = new ResizeObserver(sync);
+				resize.observe(wrap);
+				resize.observe(wrap.querySelector('table'));
+				controls.set(wrap, { slider: slider, resize: resize });
+				wrap.after(slider);
+				sync();
+			});
+		}
+		new MutationObserver(function (records) {
+			if (records.some(function (record) {
+				return Array.from(record.addedNodes).concat(Array.from(record.removedNodes)).some(function (node) {
+					return node.nodeType === 1 && (node.matches(selector) || node.querySelector(selector));
+				});
+			})) refreshScrollbars();
+		}).observe(document.body, { childList: true, subtree: true });
+		refreshScrollbars();
+	}
+
 	function bind() {
+		bindTableScrollbars();
 		bindComparisonTools();
 		var statusCta = document.querySelector('[data-comparison-status] .chidemoon-comparison-status__cta');
 		if (statusCta) {

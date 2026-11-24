@@ -43,7 +43,7 @@ final class Chidemoon_Core_Home_Products {
   }
   // Fill a sparse trend feed with the latest available catalog entries.
   if ( 'trending' === $mode && count( $ids ) < 8 ) {
-   foreach ( get_posts( array( 'post_type'=>'product', 'post_status'=>'publish', 'posts_per_page'=>100, 'fields'=>'ids', 'orderby'=>'date', 'order'=>'DESC', 'post__not_in'=>$ids ) ) as $id ) {
+   foreach ( get_posts( array( 'post_type'=>'product', 'post_status'=>'publish', 'posts_per_page'=>100, 'fields'=>'ids', 'orderby'=>'date', 'order'=>'DESC', 'post__not_in'=>$ids, 'chidemoon_home_fallback'=>true ) ) as $id ) {
     $product = wc_get_product( $id );
     if ( $product && Chidemoon_Core_Affiliate::is_offer_available( $product ) ) { $ids[] = (int) $id; }
     if ( count( $ids ) >= 8 ) { break; }
@@ -53,6 +53,7 @@ final class Chidemoon_Core_Home_Products {
   return $ids;
  }
  private static function configure( WP_Query $query, string $mode ): void {
+  if ( $query->get( 'chidemoon_home_fallback' ) ) { return; }
   $query->set( 'post_type', 'product' );
   $query->set( 'post_status', 'publish' );
   $query->set( 'post__in', self::ids( $mode ) ?: array( 0 ) );

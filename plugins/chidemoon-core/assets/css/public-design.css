@@ -1169,6 +1169,7 @@ body.rtl.woocommerce .elementor .ch-product-media.elementor-widget-woocommerce-p
 	.admin-bar .ch-catalog-sidebar.e-con { --ch-filter-top: 134px; }
 }
 .ch-catalog-results .elementor-loop-container { gap: 24px; grid-auto-rows: auto; border: 0; border-radius: 0; overflow: visible; }
+.ch-pending-product-row { display: none !important; }
 /* Size catalog cards by available results space, including the filter sidebar. */
 /* Contain the results column so the loop's intrinsic height follows the cards. */
 .ch-catalog-results.e-con { container: ch-catalog-grid / inline-size; }
@@ -1285,6 +1286,10 @@ body .ch-native-card--product.e-con { padding: 0; gap: 0; overflow: hidden; }
 body .ch-native-card--product.e-con .ch-native-card-media.elementor-widget { padding: 0; margin: 0; inline-size: 100%; overflow: hidden; border-radius: 0; }
 body .ch-native-card--product.e-con .ch-native-card-media :is(a, .elementor-widget-container) { display: block; inline-size: 100%; padding: 0; margin: 0; }
 body .ch-native-card--product.e-con .ch-native-card-media.elementor-widget img { display: block; inline-size: 100%; max-inline-size: 100%; block-size: auto; max-block-size: none; aspect-ratio: 6 / 5; object-fit: cover; padding: 0; margin: 0; border-radius: 0; }
+/* Keep product media slots consistent in every loop, including the final row. */
+body .elementor-loop-container:has(.ch-native-card--product) { align-items: stretch; }
+body .ch-native-card--product .ch-native-card-media { min-block-size: 0; aspect-ratio: 6 / 5; }
+body .ch-native-card--product .ch-native-card-media img { inline-size: 100%; block-size: 100%; object-fit: cover; }
 body .ch-native-card--product.e-con .ch-native-card-body.e-con { padding: 12px; gap: 8px; }
 .ch-filter-toggle { display: none; }
 .ch-filter-error { color: #a12828; font-size: 11px; line-height: 1.8; margin: 8px 0 0; }

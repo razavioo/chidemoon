@@ -17,22 +17,34 @@ final class Chidemoon_Core_Look_Watermark {
   add_action( 'updated_post_meta', array( __CLASS__, 'assigned' ), 20, 4 );
   add_filter( 'wp_generate_attachment_metadata', array( __CLASS__, 'generated' ), 30, 2 );
   add_filter( 'wp_get_attachment_url', static function( $url, $id ) {
-   return get_post_meta( $id, '_chidemoon_watermarked_files', true ) ? add_query_arg( 'chwm', '3', $url ) : $url;
+   return is_string( $url ) ? self::image_url( $url, (int) $id ) : $url;
   }, 20, 2 );
   add_filter( 'wp_calculate_image_srcset', static function( $sources, $size, $src, $meta, $id ) {
    if ( get_post_meta( $id, '_chidemoon_watermarked_files', true ) && is_array( $sources ) ) {
-    foreach ( $sources as &$source ) { $source['url'] = add_query_arg( 'chwm', '3', $source['url'] ); } unset( $source );
+    foreach ( $sources as &$source ) { $source['url'] = self::image_url( $source['url'], (int) $id ); } unset( $source );
    }
    return $sources;
   }, 20, 5 );
+ }
+ public static function image_url( string $url, int $id ): string {
+  $files = get_post_meta( $id, '_chidemoon_watermarked_files', true );
+  return $files ? add_query_arg( 'chwm', substr( md5( wp_json_encode( $files ) ), 0, 12 ), $url ) : $url;
  }
  public static function editor( $post ): void {
   wp_nonce_field('chidemoon_watermark','chidemoon_watermark_nonce');
   $id = (int)(get_post_meta($post->ID,'_reycob_stl_image_id',true) ?: get_post_thumbnail_id($post->ID));
   $settings = (array)get_post_meta($id,'_chidemoon_watermark_settings',true);
-  echo '<p>پترن روی خود تصویر ذخیره می‌شود. نسخهٔ اصلی محفوظ می‌ماند.</p>';
-  foreach(array('size'=>array('اندازهٔ لوگو (درصد عرض تصویر)',22,5,25),'spacing'=>array('فاصلهٔ پترن (درصد)',100,60,180)) as $key=>$field){
-   echo '<p><label>'.esc_html($field[0]).'<input style="width:100%" type="number" name="chwm_'.$key.'" min="'.$field[2].'" max="'.$field[3].'" value="'.esc_attr($settings[$key]??$field[1]).'"></label></p>';
+  echo '<p>واترمارک به‌صورت مورب روی کل عکس تکرار می‌شود.</p>';
+  $fields = array(
+   'size' => array( 'اندازهٔ لوگو (٪ عرض عکس)', 22, 5, 25, '0.1', 'اندازهٔ الگوی قبلی ۲۲٪ بود.' ),
+   'spacing' => array( 'فاصلهٔ تکرار (٪ فاصلهٔ معمول)', 100, 40, 180, '1', '۴۰ فشرده، ۱۰۰ مثل الگوی قبلی، ۱۸۰ باز. عدد کمتر یعنی تکرار بیشتر.' ),
+   'opacity' => array( 'پررنگی لوگو (٪)', 6, 1, 100, '1', 'پررنگی الگوی قبلی ۶٪ بود.' ),
+  );
+  foreach ( $fields as $key => [$label, $default, $min, $max, $step, $help] ) {
+   $field_id = 'chwm_' . $key;
+   echo '<p><label for="' . esc_attr( $field_id ) . '">' . esc_html( $label ) . '</label>';
+   echo '<input style="width:100%" type="number" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_id ) . '" min="' . esc_attr( $min ) . '" max="' . esc_attr( $max ) . '" step="' . esc_attr( $step ) . '" value="' . esc_attr( $settings[$key] ?? $default ) . '" aria-describedby="' . esc_attr( $field_id . '_help' ) . '">';
+   echo '<span class="description" id="' . esc_attr( $field_id . '_help' ) . '">' . esc_html( $help ) . '</span></p>';
   }
   echo '<p><label><input type="checkbox" name="chwm_apply" value="1"> اعمال یا بازسازی واترمارک هنگام ذخیره</label></p>';
  }
@@ -40,7 +52,11 @@ final class Chidemoon_Core_Look_Watermark {
   if(!in_array($post->post_type,array('reycob_look','chidemoon_look'),true)||wp_is_post_revision($post_id)||!current_user_can('edit_post',$post_id)||!isset($_POST['chidemoon_watermark_nonce'])||!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['chidemoon_watermark_nonce'])),'chidemoon_watermark')||empty($_POST['chwm_apply'])) return;
   $id=(int)(get_post_meta($post_id,'_reycob_stl_image_id',true) ?: get_post_thumbnail_id($post_id));
   if(!$id)return;
-  update_post_meta($id,'_chidemoon_watermark_settings',array('size'=>max(5,min(25,(int)($_POST['chwm_size']??22))),'spacing'=>max(60,min(180,(int)($_POST['chwm_spacing']??100)))));
+  update_post_meta( $id, '_chidemoon_watermark_settings', array(
+   'size' => round( self::number( $_POST['chwm_size'] ?? null, 22, 5, 25 ), 1 ),
+   'spacing' => (int) self::number( $_POST['chwm_spacing'] ?? null, 100, 40, 180 ),
+   'opacity' => (int) self::number( $_POST['chwm_opacity'] ?? null, 6, 1, 100 ),
+  ) );
   $result=self::apply($id);
   if(is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
  }
@@ -129,12 +145,16 @@ final class Chidemoon_Core_Look_Watermark {
   flock( $lock, LOCK_UN ); fclose( $lock );
   return count( $marked );
  }
+ private static function number( $value, float $default, float $min, float $max ): float {
+  return is_numeric( $value ) ? max( $min, min( $max, (float) $value ) ) : $default;
+ }
  public static function stamp( string $path, array $settings = array() ) {
   $image = @imagecreatefromstring( file_get_contents( $path ) );
   if ( ! $image ) { return new WP_Error( 'watermark_format', 'Unsupported image: ' . basename( $path ) ); }
   $w = imagesx( $image ); $h = imagesy( $image );
   // Staggered diagonal signatures across the image, at low opacity.
-  $width = max( 28, (int) round( $w * max(5,min(25,(int)($settings['size']??22))) / 100 ) );
+  $width = max( 1, (int) round( $w * self::number( $settings['size'] ?? null, 22, 5, 25 ) / 100 ) );
+  $opacity = self::number( $settings['opacity'] ?? null, 6, 1, 100 ) / 100;
   $sample = imagecolorsforindex( $image, imagecolorat( $image, (int) ( $w / 2 ), (int) ( $h / 2 ) ) );
   $light_background = ( .2126 * $sample['red'] + .7152 * $sample['green'] + .0722 * $sample['blue'] ) > 145;
   $logo = imagecreatefrompng( CHIDEMOON_CORE_DIR . 'assets/brand/chidemoon-logo-fa-' . ( $light_background ? 'mono' : 'white' ) . '.png' );
@@ -145,15 +165,15 @@ final class Chidemoon_Core_Look_Watermark {
   imagecopyresampled( $scaled, $logo, 0, 0, 0, 0, $width, $height, imagesx( $logo ), imagesy( $logo ) );
   for ( $y = 0; $y < $height; ++$y ) { for ( $x = 0; $x < $width; ++$x ) {
    $c = imagecolorsforindex( $scaled, imagecolorat( $scaled, $x, $y ) );
-   $alpha = (int) round( 127 - ( 127 - $c['alpha'] ) * .06 );
+   $alpha = (int) round( 127 - ( 127 - $c['alpha'] ) * $opacity );
    imagesetpixel( $scaled, $x, $y, imagecolorallocatealpha( $scaled, $c['red'], $c['green'], $c['blue'], $alpha ) );
   } }
+  imagealphablending( $image, true ); imagesavealpha( $image, true );
   $rotated = imagerotate( $scaled, 25, imagecolorallocatealpha( $scaled, 0, 0, 0, 127 ) );
   imagesavealpha( $rotated, true );
-  imagealphablending( $image, true ); imagesavealpha( $image, true );
-  $spacing = max(60,min(180,(int)($settings['spacing']??100)))/100;
-  $step_x = max( 36, (int) round( $w * .58 * $spacing ) );
-  $step_y = max( 36, (int) round( max( $h * .46, imagesy( $rotated ) * 1.8 ) * $spacing ) );
+  $spacing = self::number( $settings['spacing'] ?? null, 100, 40, 180 ) / 100;
+  $step_x = max( 1, (int) round( $w * .58 * $spacing ) );
+  $step_y = max( 1, (int) round( max( $h * .46, imagesy( $rotated ) * 1.8 ) * $spacing ) );
   $row = 0;
   for ( $y = -(int)(imagesy($rotated)/2); $y < $h; $y += $step_y, ++$row ) {
    for ( $x = -$step_x + ( $row % 2 ? (int)($step_x/2) : 0 ); $x < $w; $x += $step_x ) {

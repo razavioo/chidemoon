@@ -276,7 +276,12 @@ body .chidemoon-comparison-toolbar__actions button { font: inherit; font-size: 1
 .chidemoon-comparison-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; color: #123f34; min-block-size: 44px; }
 .chidemoon-comparison-switch input { accent-color: #123f34; inline-size: 19px; block-size: 19px; }
 body input.chidemoon-comparison-spec-search { inline-size: 190px; min-block-size: 44px; border: 1px solid #d6dfd5; border-radius: 10px; font: inherit; font-size: 15px; background: #fff; padding: 10px 12px; }
-.chidemoon-comparison-table-wrap { border: 1px solid #dce3dc; border-radius: 12px; background: #fff; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #9eafa1 #f3f5ef; }
+.chidemoon-comparison-table-wrap,
+.chidemoon-comparison-scrollbar {
+ --ch-scroll-thumb: #9eafa1;
+ --ch-scroll-track: #f3f5ef;
+}
+.chidemoon-comparison-table-wrap { border: 1px solid #dce3dc; border-radius: 12px; background: #fff; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--ch-scroll-thumb) var(--ch-scroll-track); }
 .chidemoon-comparison-table { table-layout: fixed; min-inline-size: 640px; }
 .chidemoon-comparison-table[data-product-count="3"] { min-inline-size: 810px; }
 .chidemoon-comparison-table[data-product-count="4"] { min-inline-size: 1030px; }
@@ -330,7 +335,7 @@ body:has(.chidemoon-comparison-table-section) .elementor-widget-container {
 	min-inline-size: 0;
 	max-inline-size: 100%;
 }
-.chidemoon-comparison-table-wrap { position: relative; max-inline-size: 100%; isolation: isolate; }
+.chidemoon-comparison-table-wrap { position: relative; min-inline-size: 0; max-inline-size: 100%; isolation: isolate; }
 .chidemoon-comparison-table thead th:not(:first-child) { position: static; }
 .chidemoon-comparison-table thead img { display: block; height: auto; aspect-ratio: 1; }
 .chidemoon-comparison-table .woocommerce-Price-amount { display: inline-block; white-space: nowrap; }
@@ -385,9 +390,58 @@ body .chidemoon-comparison-table > tbody > tr:hover > td { background-color: #f0
 body .chidemoon-comparison-table > tbody > tr.is-different > th::after { display: none; }
 body .chidemoon-comparison-table > tbody > tr.is-different > th { border-inline-start: 3px solid #b98252; }
 .chidemoon-comparison-table-wrap { overscroll-behavior-inline: contain; }
+@media (max-width: 1024px) {
+.chidemoon-comparison-table-wrap:has(+ .chidemoon-comparison-scrollbar:not([hidden])) {
+ border-end-start-radius: 0;
+ border-end-end-radius: 0;
+ border-block-end: 0;
+}
+}
+.chidemoon-comparison-scrollbar {
+ appearance: none;
+ -webkit-appearance: none;
+ display: block;
+ box-sizing: border-box;
+ inline-size: 100%;
+ block-size: 28px;
+ margin: 0;
+ padding: 0 10px;
+ border: 1px solid #dce3dc;
+ border-block-start: 0;
+ border-radius: 0 0 12px 12px;
+ background: linear-gradient(var(--ch-scroll-track), var(--ch-scroll-track)) center / calc(100% - 20px) 6px no-repeat #fff;
+ cursor: ew-resize;
+ touch-action: pan-y;
+}
+.chidemoon-comparison-scrollbar[hidden] { display: none !important; }
+@media (width > 1024px) {
+ .chidemoon-comparison-scrollbar { display: none; }
+}
+.chidemoon-comparison-scrollbar::-webkit-slider-thumb {
+ appearance: none;
+ -webkit-appearance: none;
+ inline-size: 44px;
+ block-size: 6px;
+ border-radius: 8px;
+ background: var(--ch-scroll-thumb);
+}
+.chidemoon-comparison-scrollbar::-moz-range-thumb {
+ inline-size: 44px;
+ block-size: 6px;
+ border: 0;
+ border-radius: 8px;
+ background: var(--ch-scroll-thumb);
+}
+.chidemoon-comparison-scrollbar:focus-visible { outline: 2px solid #53756b; }
 .chidemoon-comparison-table :is(th, td) { box-sizing: border-box; }
 @media (max-width: 767px) {
- .chidemoon-comparison-table-wrap { scroll-padding-inline-start: 100px; scroll-snap-type: x proximity; }
- .chidemoon-comparison-table thead th:not(:first-child) { scroll-snap-align: start; }
+ /* Let the criteria column move with the products so it cannot cover their text. */
+ body .chidemoon-comparison-table > tbody > tr > th,
+ body .chidemoon-comparison-table > thead > tr > th:first-child {
+  position: static;
+  inline-size: 100px;
+  min-inline-size: 100px;
+  box-shadow: none;
+ }
  .chidemoon-comparison-table .chidemoon-button { white-space: normal; overflow-wrap: anywhere; }
 }

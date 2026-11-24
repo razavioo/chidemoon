@@ -59,7 +59,11 @@ final class Chidemoon_Core_Responsive_Images {
    if($entry&&isset($sources[$identity])&&$sources[$identity]['width']>$entry['width'])$entry=$sources[$identity];
    if(!$entry||empty($entry['variants']))continue;
    $variants=$entry['variants'];
-   if(get_post_meta((int)($entry['id']??($manifest['paths'][$key]??0)),'_chidemoon_watermarked_files',true))foreach($variants as &$variant){$variant['url']=add_query_arg('chwm','3',$variant['url']);}unset($variant);
+   $attachment_id = (int) ( $entry['id'] ?? ( $manifest['paths'][$key] ?? 0 ) );
+   foreach ( $variants as &$variant ) {
+    $variant['url'] = Chidemoon_Core_Look_Watermark::image_url( $variant['url'], $attachment_id );
+   }
+   unset( $variant );
    $largest=end($variants);$set=[];
    foreach($variants as $v)$set[]=$v['url'].' '.$v['width'].'w';
    $tags->set_attribute('src',$largest['url']);$tags->set_attribute('srcset',implode(', ',$set));

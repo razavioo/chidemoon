@@ -582,8 +582,21 @@
 			let next = nextPage(pagination), busy = false;
 			if (!next) return;
 			const catalog = Boolean(widget.closest('.ch-catalog-results'));
+			const products = catalog || grid.matches('ul.products') || Boolean(grid.querySelector('.ch-native-card--product'));
+			const completeRows = () => {
+				if (!products) return;
+				const cards = [...grid.children].filter(card => card.matches('.e-loop-item, li.product'));
+				const layout = getComputedStyle(grid);
+				const columns = layout.display === 'grid' ? layout.gridTemplateColumns.split(' ').length : 1;
+				const remainder = next ? cards.length % columns : 0;
+				cards.forEach((card, index) => card.classList.toggle('ch-pending-product-row', index >= cards.length - remainder));
+			};
+			const resize = new ResizeObserver(() => {
+				if (!grid.isConnected || !next) resize.disconnect();
+				else if (pagination.hidden) completeRows();
+			});
+			if (products) resize.observe(grid);
 			const label = catalog ? 'نمایش بیشتر' : 'نمایش موارد بیشتر';
-			let pending;
 			const fetchPage = async url => {
 				const response = await fetch(url);
 				if (!response.ok) throw new Error('pagination');
@@ -599,28 +612,27 @@
 				const clearSkeleton = catalog ? showProductSkeleton(widget, true) : () => {};
 				try {
 					const url = next;
-					const prepared = pending;
-					pending = undefined;
-					const doc = (await prepared) || await fetchPage(url);
+					const doc = await fetchPage(url);
 					const id = widget.dataset.id;
 					const remote = id ? doc.querySelector(`[data-id="${id}"]`) : null;
 					const source = remote?.querySelector('.elementor-loop-container, ul.products, .elementor-posts-container, .ch-chooser-list');
 					if (!source?.children.length) throw new Error('listing');
 					[...source.children].forEach(child => grid.append(document.importNode(child, true)));
 					seen.add(url); next = nextPage(remote.querySelector('.elementor-pagination, .woocommerce-pagination, .ch-chooser-pagination'));
+					completeRows();
 					if (next) status.textContent = label;
 					else { observer.disconnect(); status.remove(); }
 					window.elementorFrontend?.elementsHandler?.runReadyTrigger?.(window.jQuery?.(grid));
-				} catch { observer.disconnect(); pagination.hidden = false; status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
+				} catch { observer.disconnect(); pagination.hidden = false; grid.querySelectorAll('.ch-pending-product-row').forEach(card => card.classList.remove('ch-pending-product-row')); status.textContent = 'بارگذاری انجام نشد؛ تلاش دوباره'; }
 				finally { clearSkeleton(); busy = false; grid.removeAttribute('aria-busy'); if (next && pagination.hidden) { observer.unobserve(status); observer.observe(status); } }
 			};
 			status.addEventListener('click', load);
 			const observer = new IntersectionObserver(entries => {
 				if (!entries.some(entry => entry.isIntersecting)) return;
-				if (!catalog) { load(); return; }
-				if (!busy && next && !seen.has(next) && !pending) pending = fetchPage(next).catch(() => null);
+				load();
 			}, { rootMargin: catalog ? '1200px' : '350px' });
 			observer.observe(status);
+			completeRows();
 		});
 	}
 
