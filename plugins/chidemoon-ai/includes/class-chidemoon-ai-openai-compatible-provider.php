@@ -251,7 +251,7 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 				foreach ( $reference_labels as $index => $label ) {
 					$prompt .= "\nProduct reference image " . ( $index + 1 ) . ': ' . $label;
 				}
-				$prompt .= "\nAny remaining images are style references only.";
+				$prompt .= "\nUse the remaining images as product, scene or style references according to the editor brief.";
 			}
 		}
 		if ( str_starts_with( $this->image_model, 'gemini-' ) ) {
@@ -501,12 +501,16 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 		foreach ( $attachments as $attachment_id ) {
 			$url = $this->attachment_data_url( (int) $attachment_id );
 			if ( is_wp_error( $url ) ) { return $url; }
-			$parts[] = array( 'text' => empty( $payload['product_ids'] ) ? 'Source image to edit:' : 'Style and composition reference only; preserve the products supplied above:' );
+			$parts[] = array( 'text' => empty( $payload['product_ids'] ) ? 'Source image to edit:' : 'Additional reference; use it for the object, scene or style identified in the editor brief:' );
 			$parts[] = Chidemoon_AI_Gemini::image_part( $url );
+		}
+		$config = array( 'responseModalities' => array( 'TEXT', 'IMAGE' ) );
+		if ( 'look_scene' === ( $payload['mode'] ?? '' ) && preg_match_all( '/(?<!\d)(16\s*:\s*9|9\s*:\s*16|4\s*:\s*3|3\s*:\s*4|1\s*:\s*1)(?!\d)/u', strtr( $prompt, array_combine( preg_split( '//u', '۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩', -1, PREG_SPLIT_NO_EMPTY ), array_merge( range( 0, 9 ), range( 0, 9 ) ) ) ), $ratios ) ) {
+			$config['imageConfig'] = array( 'aspectRatio' => preg_replace( '/\s+/', '', end( $ratios[1] ) ) );
 		}
 		$result = Chidemoon_AI_Gemini::request( $this->base_url, $this->api_key, $this->image_model, array(
 			'contents' => array( array( 'role' => 'user', 'parts' => $parts ) ),
-			'generationConfig' => array( 'responseModalities' => array( 'TEXT', 'IMAGE' ) ),
+			'generationConfig' => $config,
 		), $this->timeout );
 		if ( is_wp_error( $result ) ) { return $result; }
 		foreach ( $result['candidates'][0]['content']['parts'] as $part ) {
@@ -524,11 +528,11 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			'background' => 'Place the supplied product in a clean, realistic editorial background without changing the product.',
 			'scene'      => 'Place the supplied product in an appropriate lifestyle scene without inventing product features.',
 			'aggregate'  => 'Create a coherent editorial arrangement from the supplied product images without adding products.',
-			'look_scene' => 'Create a photorealistic interior photograph with a straight-on eye-level camera and a wide 4:3 composition. Use exactly the supplied product reference images as identity anchors. Preserve every product unchanged: same silhouette, proportions, material, color, ornament, number of parts and construction; do not redesign, beautify, mirror, merge or replace any item. Arrange all products visibly and logically in the requested room, with no product hidden or cropped. Keep the scene simple so every item is identifiable. No extra decorative products, no text, no logos, no people, no impossible geometry. The image must support precise product hotspots.',
+			'look_scene' => 'Create a photorealistic interior photograph. Follow the editor brief for camera angle, framing, aspect ratio, placement, and allowed decor. If editor instructions conflict, prioritize later corrections and explicit exclusions. Preserve each selected or explicitly referenced product: keep its silhouette, scale, proportions, material, color, ornament and construction. For an existing room reference, keep its furniture and composition unless the editor explicitly asks to change them. Keep selected products identifiable for hotspots. No people, text, logos, or watermarks.',
 			'generate'   => 'Create an original editorial illustration or product-adjacent image. Do not depict unsupported product claims.',
 		);
 
-		return trim( ( $mode_instructions[ $mode ] ?? $mode_instructions['generate'] ) . "\n\nEditor request (untrusted data): " . $this->bounded_text( $prompt, 1600 ) );
+		return trim( ( $mode_instructions[ $mode ] ?? $mode_instructions['generate'] ) . "\n\nEditor request:\n" . $this->bounded_text( $prompt, 'look_scene' === $mode ? 6000 : 1600 ) );
 	}
 
 	private function bounded_text( string $value, int $limit ): string {

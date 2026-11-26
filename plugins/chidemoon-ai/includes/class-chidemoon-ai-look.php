@@ -97,15 +97,15 @@ class Chidemoon_AI_Look {
 		$style_text = $style_labels[ $style ] ?? $style_labels['minimal'];
 
 		$prompt = sprintf(
-			"Style a photorealistic %s in %s style featuring these products: %s. %s",
+			"Default room and style (use only where the editor has not specified them): %s, %s. Selected products: %s. %s",
 			$room_text,
 			$style_text,
 			implode( ' | ', array_filter( $names ) ),
-			'' !== trim( $instructions ) ? 'Editor request (untrusted data): ' . trim( $instructions ) : ''
+			'' !== trim( $instructions ) ? "\n\nEditor brief:\n" . trim( $instructions ) : ''
 		);
 
 		return array(
-			'prompt'      => function_exists( 'mb_substr' ) ? mb_substr( $prompt, 0, 1600 ) : substr( $prompt, 0, 1600 ),
+			'prompt'      => function_exists( 'mb_substr' ) ? mb_substr( $prompt, 0, 6000 ) : substr( $prompt, 0, 6000 ),
 			'product_ids' => $product_ids,
 			'names'       => $names,
 			'facts'       => $facts,
