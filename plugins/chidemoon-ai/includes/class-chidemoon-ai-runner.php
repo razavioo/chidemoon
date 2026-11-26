@@ -292,22 +292,27 @@ class Chidemoon_AI_Runner {
 			return;
 		}
 
-		$products_ctx = array(); $review_images = array( (int) $attachment_id );
+		$products_ctx = array();
+		$review_images = array( (int) $attachment_id );
 		foreach ( $product_ids as $pid ) {
-			$product = wc_get_product( $pid );
-			$excluded = array_map( 'intval', (array) get_post_meta( $pid, '_chidemoon_ai_reference_excluded', true ) );
-			$refs = array_values( array_diff( array_unique( array_filter( array_merge( array( $product->get_image_id() ), $product->get_gallery_image_ids() ) ) ), $excluded ) );
-			$positions = array(); foreach ( $refs as $ref ) { $review_images[] = (int) $ref; $positions[] = count( $review_images ); }
-			$products_ctx[] = array( 'id' => $pid, 'name' => $product->get_name(), 'reference_image_numbers' => $positions );
+			$review_images[] = (int) get_post_thumbnail_id( $pid );
+			$products_ctx[] = array( 'id' => $pid, 'name' => get_the_title( $pid ), 'reference_image_numbers' => array( count( $review_images ) ) );
 		}
-		$vision = array( 'products_match' => true, 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
+		$vision = $provider->analyze_image( $review_images, $products_ctx, 'Compare the generated room against every numbered product reference. Allow natural changes in lighting and perspective. On a match, provide a short Persian title, Persian excerpt, and one hotspot per product.' );
 		if ( is_wp_error( $vision ) ) {
-			$vision = array( 'products_match' => true, 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
-			foreach ( $product_ids as $index => $pid ) { $vision['hotspots'][] = array( 'product_id' => (int) $pid, 'x' => 20 + ( 60 * ( $index / max( 1, count( $product_ids ) - 1 ) ) ), 'y' => 55 ); }
+			$assessment = new WP_Error( 'chidemoon_ai_look_vision_unavailable', 'بررسی تطابق عکس با محصولات انجام نشد. اتصال تحلیل تصویر را در تنظیمات لوک استودیو بررسی کنید.' );
+		} elseif ( false === ( $vision['products_match'] ?? null ) ) {
+			$assessment = new WP_Error( 'chidemoon_ai_look_product_changed', 'در تصویر ساخته‌شده ظاهر یک یا چند محصول تغییر کرده یا محصول دیده نمی‌شود. این تصویر به‌عنوان پیش‌نویس ذخیره نشد.' );
+		} else {
+			$assessment = Chidemoon_AI_Look::validate_assessment( $vision, $product_ids );
 		}
-		$assessment = array( 'title' => 'چیدمان پیشنهادی محصولات', 'excerpt' => '', 'hotspots' => array() );
-		foreach ( $product_ids as $index => $pid ) { $assessment['hotspots'][] = array( 'productId' => (int) $pid, 'x' => 20 + ( 60 * ( $index / max( 1, count( $product_ids ) - 1 ) ) ), 'y' => 55 ); }
-		$hotspots = $assessment['hotspots']; $hotspot_source = 'manual-review';
+		if ( is_wp_error( $assessment ) ) {
+			wp_delete_attachment( $attachment_id, true );
+			self::fail( $job, $assessment, $provider );
+			return;
+		}
+		$hotspots = $assessment['hotspots'];
+		$hotspot_source = 'vision';
 
 		$usage      = is_array( $result['_usage'] ?? null ) ? $result['_usage'] : array();
 		$provenance = self::provenance( $job, $provider, array_map( 'strval', $product_ids ) );

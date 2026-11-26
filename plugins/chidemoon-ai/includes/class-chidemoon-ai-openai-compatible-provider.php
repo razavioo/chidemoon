@@ -295,15 +295,15 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 	 * @return array<string, mixed>|WP_Error
 	 */
 	public function analyze_image( array $attachment_ids, array $products, string $prompt ): array|WP_Error {
-		$attachment_ids = array_values( array_unique( array_filter( array_map( 'absint', $attachment_ids ) ) ) );
-		if ( empty( $attachment_ids ) ) {
+		$attachment_ids = array_values( array_map( 'absint', $attachment_ids ) );
+		if ( empty( $attachment_ids ) || in_array( 0, $attachment_ids, true ) ) {
 			return new WP_Error( 'chidemoon_ai_vision_unsupported', __( 'No source image was supplied for vision analysis.', 'chidemoon-ai' ) );
 		}
 
 		$content = array(
 			array(
 				'type' => 'text',
-				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . $this->bounded_text( wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), 2000 ) . "\n\nReturn JSON only: {\"hotspots\": [{\"x\": 0-100, \"y\": 0-100, \"label\": \"...\", \"product_id\": 0}]}",
+				'text' => $this->bounded_text( $prompt, 1600 ) . "\n\nProducts: " . wp_json_encode( $products, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n\nReturn JSON only: {\"products_match\": true, \"title\": \"...\", \"excerpt\": \"...\", \"hotspots\": [{\"x\": 0, \"y\": 0, \"product_id\": 0}]}. Use the actual integer product IDs and coordinates as percentages from the top left.",
 			),
 		);
 		// Include the generated scene plus every supplied product reference.
@@ -528,7 +528,7 @@ class Chidemoon_AI_OpenAI_Compatible_Provider implements Chidemoon_AI_Provider_I
 			'background' => 'Place the supplied product in a clean, realistic editorial background without changing the product.',
 			'scene'      => 'Place the supplied product in an appropriate lifestyle scene without inventing product features.',
 			'aggregate'  => 'Create a coherent editorial arrangement from the supplied product images without adding products.',
-			'look_scene' => 'Create a photorealistic interior photograph. Follow the editor brief for camera angle, framing, aspect ratio, placement, and allowed decor. If editor instructions conflict, prioritize later corrections and explicit exclusions. Preserve each selected or explicitly referenced product: keep its silhouette, scale, proportions, material, color, ornament and construction. For an existing room reference, keep its furniture and composition unless the editor explicitly asks to change them. Keep selected products identifiable for hotspots. No people, text, logos, or watermarks.',
+			'look_scene' => 'Create a photorealistic interior photograph. Follow the editor brief for camera angle, framing, aspect ratio, placement, and allowed decor. If editor instructions conflict, prioritize later corrections and explicit exclusions. Treat the supplied product photos as fixed catalog assets and adapt the room around them. Preserve each selected or explicitly referenced product: keep its silhouette, scale, proportions, material, color, pattern, ornament and construction. For an existing room reference, keep its furniture and composition unless the editor explicitly asks to change them. Keep selected products identifiable for hotspots. No people, text, logos, or watermarks.',
 			'generate'   => 'Create an original editorial illustration or product-adjacent image. Do not depict unsupported product claims.',
 		);
 
