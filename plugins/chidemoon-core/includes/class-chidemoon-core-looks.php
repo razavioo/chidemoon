@@ -323,6 +323,7 @@ final class Chidemoon_Core_Looks {
    // cannot tell us whether a room has a shoppable image.
    $populated = $empty = array();
    foreach ( $terms as $term ) {
+    if ( 'terrace' === $term->slug ) { continue; }
     if ( str_contains( self::home_tab_cards( $term->slug, 1 ), 'data-look-id=' ) ) { $populated[] = $term; }
     else { $empty[] = $term; }
    }

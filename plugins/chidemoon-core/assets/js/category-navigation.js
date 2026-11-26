@@ -2,6 +2,10 @@
 (() => {
  'use strict';
  const illustrations = {
+  desk: '<path d="M13 38h70v10H13ZM21 48v32m54-32v32M53 49v19h22M59 57h10M32 38V21h31v17"/>',
+  television: '<rect x="17" y="18" width="62" height="38" rx="4"/><path d="M48 56v9M13 65h70v12H13Zm8 12v8m54-8v8"/>',
+  console: '<rect x="15" y="33" width="66" height="32" rx="3"/><path d="M48 33v32M35 49h6m14 0h6M22 65v15m52-15v15"/>',
+  rocker: '<path d="M25 22v30h43v16M29 52v18m-11 2q29 20 61 0M22 44h43m0 0v8"/>',
   sofa: '<path d="M23 48V31q0-10 10-10h30q10 0 10 10v17M16 47q-8 0-8 9v18h80V56q0-9-8-9t-8 9v7H24v-7q0-9-8-9ZM20 74v9m56-9v9M48 22v40"/>',
   dining: '<path d="M24 37h48v11H24ZM31 48v32m34-32v32M9 28v34h17m-17-9h17v27M87 28v34H70m17-9H70v27M38 24h20"/>',
   tables: '<path d="M13 39h48v10H13ZM20 49v28m34-28v28M59 58h25v8H59m5 0v15m15-15v15M26 30h25"/>',
@@ -47,7 +51,8 @@
  const iconFor = link => {
   const slug = new URL(link.href).pathname.split('/').filter(Boolean).pop();
   const groups = {
-   sofa: ['furniture-decoration','furniture','living-room-furniture','sofas'], dining: ['dining-tables-chairs'], tables: ['coffee-side-tables-poufs'],
+   sofa: ['furniture-decoration','furniture','living-room-furniture','sofas','outdoor-seating','kids-furniture'], dining: ['dining-tables-chairs'], tables: ['coffee-side-tables-poufs'],
+   desk: ['writing-desks'], television: ['tv-stands'], console: ['console-tables'], rocker: ['rocking-chairs'],
    chandelier: ['lighting','chandeliers-ceiling-lights'], lamp: ['floor-bedside-lamps'], sconce: ['wall-lights'], stringlights: ['decorative-lighting'],
    mirror: ['mirrors'], art: ['wall-art'], shelf: ['shelves-wall-decor'], clock: ['clocks'], vase: ['vases'], decor: ['decorative-accessories'],
    appliance: ['home-appliance'], blender: ['chopper-food-processor'], grinder: ['food-grinder'],
@@ -57,7 +62,7 @@
    crystal: ['crystalware'], ceramic: ['ceramicware'], melamine: ['melamine-tableware'],
    bowl: ['serving','bowl'], condiment: ['condiment-and-appetizer-dishes'], tray: ['tray'], cutlery: ['spoon-fork-knife'],
    cup: ['tea-sets'], jug: ['mug-jug'], jar: ['canisters'], oil: ['sauce-dish'], storage: ['kitchen-organizers','drawer-cabinet-organizer'],
-   bed: ['bedroom-essentials'], pillow: ['bedding'], linen: ['bedspread'], curtain: ['curtains','curtain-accessories'], rug: ['carpets','machine-made-carpet'], mat: ['rugs-floor-mats'],
+   bed: ['bedroom-essentials','beds'], pillow: ['bedding','cushions','blankets'], linen: ['bedspread','sofa-throws'], curtain: ['curtains','curtain-accessories'], rug: ['carpets','machine-made-carpet'], mat: ['rugs-floor-mats'],
   };
   const key = Object.keys(groups).find(key => groups[key].includes(slug)) || 'storage';
   const icon = document.createElement('span'); icon.className = `ch-category-icon ch-category-icon-${key}`; icon.setAttribute('aria-hidden','true');

@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Chidemoon_Core_Search_Facets {
 	public static function register(): void {
 		add_action( 'pre_get_posts', array( __CLASS__, 'filter_query' ), 20 );
+		add_filter( 'posts_orderby', array( __CLASS__, 'stable_search_order' ), 100, 2 );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'register_elementor_widget' ), 10 );
 		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'global_search_form' ), 30, 2 );
 		add_action( 'template_redirect', array( __CLASS__, 'canonical_search' ), 0 );
@@ -55,6 +56,17 @@ final class Chidemoon_Core_Search_Facets {
 		if ( $type ) {
 			$query->set( 'post_type', $type );
 		}
+		// The search grid has two, three, or four columns depending on the viewport.
+		$query->set( 'posts_per_page', 12 );
+		$query->set( 'posts_per_archive_page', 12 );
+	}
+
+	public static function stable_search_order( string $order, WP_Query $query ): string {
+		if ( is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
+			return $order;
+		}
+		global $wpdb;
+		return ( $order ? $order . ', ' : '' ) . "{$wpdb->posts}.ID DESC";
 	}
 
 	public static function render( array $settings = array(), bool $preview = false ): string {
@@ -104,10 +116,43 @@ final class Chidemoon_Core_Search_Facets {
 			return '<h1 class="elementor-heading-title ch-search-query">' . esc_html( get_search_query( false ) ) . '</h1>';
 		}
 		if(!in_array($widget->get_name(),['archive-posts','posts','loop-grid'],true)||!str_contains((string)$widget->get_settings('_css_classes'),'ch-search-results-feed'))return $html;
-		global $wp_query;$cards='';
-		foreach($wp_query->posts as $post){$p=wc_get_product($post->ID);if(!$p||!Chidemoon_Core_Affiliate::is_publicly_eligible($p))continue;
+		global $wp_query;
+		$posts = $wp_query->posts;
+		$suggestions = ! $posts && ! is_paged();
+		if ( $suggestions ) {
+			$phrase = trim( get_search_query( false ) );
+			$words = preg_split( '/[^\p{L}\p{N}\x{200C}]+/u', $phrase, -1, PREG_SPLIT_NO_EMPTY ) ?: array();
+			$words = array_unique( array_filter( $words, static fn( $word ) =>
+				$word !== $phrase && mb_strlen( $word ) >= 3 && ! in_array( $word, array( 'برای', 'های', 'مدل', 'قیمت', 'خرید', 'جدید' ), true )
+			) );
+			usort( $words, static fn( $a, $b ) => mb_strlen( $b ) <=> mb_strlen( $a ) );
+			foreach ( array_slice( $words, 0, 4 ) as $word ) {
+				$query = new WP_Query( array(
+					's' => $word,
+					'search_columns' => array( 'post_title' ),
+					'post_type' => 'product',
+					'post_status' => 'publish',
+					'posts_per_page' => 12,
+					'no_found_rows' => true,
+					'meta_query' => (array) $wp_query->get( 'meta_query' ),
+					'tax_query' => (array) $wp_query->get( 'tax_query' ),
+					'post__in' => (array) $wp_query->get( 'post__in' ),
+				) );
+				$posts = array_filter( $query->posts, static function ( $post ) {
+					$product = wc_get_product( $post->ID );
+					return $product && Chidemoon_Core_Affiliate::is_offer_available( $product );
+				} );
+				if ( $posts ) { break; }
+			}
+		}
+		$cards = '';
+		foreach($posts as $post){$p=wc_get_product($post->ID);if(!$p||!Chidemoon_Core_Affiliate::is_publicly_eligible($p))continue;
 			$url=get_permalink($p->get_id());$terms=get_the_terms($p->get_id(),'product_cat');$category=is_array($terms)?end($terms)->name:'';
-			$cards.='<article class="ch-result-card"><a class="ch-result-image" href="'.esc_url($url).'" aria-label="'.esc_attr($p->get_name()).'">'.wp_get_attachment_image($p->get_image_id(),'woocommerce_thumbnail',false,['sizes'=>'(max-width: 600px) calc(50vw - 26px), (max-width: 1024px) 30vw, 300px']).'<span class="ch-result-arrow" aria-hidden="true">↖</span></a><div class="ch-result-info"><span class="ch-result-category">'.esc_html($category).'</span><h2><a href="'.esc_url($url).'">'.esc_html($p->get_name()).'</a></h2><div class="ch-result-price">'.$p->get_price_html().'</div><div class="ch-result-actions ch-product-card-actions"><a class="ch-product-card-details" href="'.esc_url($url).'">مشاهده محصول</a></div></div></article>';
+			$cards.='<article class="ch-result-card"><a class="ch-result-image" href="'.esc_url($url).'" aria-label="'.esc_attr($p->get_name()).'">'.wp_get_attachment_image($p->get_image_id(),'woocommerce_thumbnail',false,['sizes'=>'(max-width: 600px) calc(50vw - 26px), (max-width: 1024px) 30vw, 300px']).'</a><div class="ch-result-info"><span class="ch-result-category">'.esc_html($category).'</span><h2><a href="'.esc_url($url).'">'.esc_html($p->get_name()).'</a></h2><div class="ch-result-price">'.$p->get_price_html().'</div><div class="ch-result-actions ch-product-card-actions"><a class="ch-product-card-details" href="'.esc_url($url).'">مشاهده محصول</a></div></div></article>';
+		}
+		if ( $suggestions && $cards ) {
+			return '<div class="ch-search-summary" data-related-search><h2>پیشنهادهای مرتبط</h2><p>برای عبارت کامل نتیجه‌ای پیدا نشد.</p></div>'
+				. '<div class="ch-result-grid">' . $cards . '</div>';
 		}
 		if(!$cards)return '<div class="ch-result-empty"><h2>محصولی پیدا نشد</h2><p>نام کوتاه‌تر یا عبارت دیگری را جستجو کن.</p><a href="'.esc_url(home_url('/shop/')).'">دیدن همه محصولات ←</a></div>';
 		return '<div class="ch-result-grid">'.$cards.'</div><nav class="ch-result-pagination" aria-label="صفحه‌های نتایج">'.paginate_links(['total'=>$wp_query->max_num_pages,'current'=>max(1,get_query_var('paged')),'prev_text'=>'→','next_text'=>'←']).'</nav>';

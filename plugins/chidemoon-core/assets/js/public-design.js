@@ -556,6 +556,18 @@
 		});
 		enhanceHomeLookTabs();
 		enhanceStorefront();
+		document.querySelectorAll('button.ch-home-about-more').forEach(button => {
+			const text = document.getElementById(button.getAttribute('aria-controls'));
+			if (!text) return;
+			const setExpanded = expanded => {
+				text.hidden = !expanded;
+				button.setAttribute('aria-expanded', String(expanded));
+				button.textContent = expanded ? 'نمایش کمتر' : 'نمایش بیشتر';
+			};
+			button.addEventListener('click', () => setExpanded(text.hidden));
+			setExpanded(false);
+			button.hidden = false;
+		});
 		enhanceSceneHotspots();
 		enhanceGalleryCounter();
 		const adminBar = document.getElementById('wpadminbar');

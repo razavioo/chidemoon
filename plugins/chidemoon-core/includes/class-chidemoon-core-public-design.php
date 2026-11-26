@@ -12,6 +12,20 @@ final class Chidemoon_Core_Public_Design {
 		require_once __DIR__ . '/class-chidemoon-core-catalog-empty.php';
 		Chidemoon_Core_Catalog_Empty::register();
 		add_filter( 'elementor/widget/render_content', array( __CLASS__, 'polish_public_copy' ), 100, 2 );
+		add_filter( 'elementor/widget/render_content', static function ( string $html, $widget ): string {
+			if ( ! is_front_page() || 'text-editor' !== $widget->get_name() || '118012b7' !== $widget->get_id() ) {
+				return $html;
+			}
+
+			if ( ! preg_match( '~^\s*(<p>[^<]+?[.!؟])\s+(.+?)</p>(.*)$~su', $html, $parts ) ) {
+				return $html;
+			}
+
+			$id = esc_attr( wp_unique_id( 'ch-home-about-rest-' ) );
+			return $parts[1] . '<span id="' . $id . '"> ' . $parts[2] . '</span></p>'
+				. '<button type="button" class="ch-home-about-more" aria-controls="' . $id
+				. '" hidden>نمایش بیشتر</button>' . $parts[3];
+		}, 110, 2 );
 		add_filter( 'the_title', array( __CLASS__, 'normalize_persian' ), 100 );
 		add_filter( 'term_name', array( __CLASS__, 'normalize_persian' ), 100 );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ), 30 );
