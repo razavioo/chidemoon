@@ -69,13 +69,38 @@ final class Chidemoon_Core_Product_Recommendations {
   }
   return $result;
  }
+ private static function product_row( array $ids ): string {
+  $template = Chidemoon_Core_Elementor_Workspace::template( 'product-card' );
+  if ( ! $template || ! class_exists( '\Elementor\Plugin' ) ) { return ''; }
+
+  global $post, $product;
+  $previous_post = $post;
+  $previous_product = $product;
+  $html = '';
+  try {
+   foreach ( $ids as $id ) {
+    $candidate = get_post( $id );
+    if ( ! $candidate ) { continue; }
+    $post = $candidate;
+    setup_postdata( $post );
+    $product = wc_get_product( $id );
+    $card = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $template->ID, '' === $html );
+    if ( $card ) { $html .= '<li class="ch-recommendation-product">' . $card . '</li>'; }
+   }
+  } finally {
+   $post = $previous_post;
+   if ( $post ) { setup_postdata( $post ); } else { wp_reset_postdata(); }
+   $product = $previous_product;
+  }
+  return $html ? '<ul class="ch-recommendation-row">' . $html . '</ul>' : '';
+ }
+
  public static function markup( int $id ): string {
   $sets=self::select($id);$html='<div class="ch-product-recommendations">';
   foreach(['similar'=>'محصولات مشابه','complementary'=>'محصولات مکمل'] as $kind=>$title){
    $html.='<section class="ch-recommendation-section" aria-labelledby="ch-recommendation-'.$kind.'"><h2 id="ch-recommendation-'.$kind.'">'.$title.'</h2>';
    if(!$sets[$kind]){$html.='<p class="ch-recommendation-empty">در حال حاضر پیشنهاد موجودی برای این محصول نداریم.</p></section>';continue;}
-   $html.='<ul class="ch-recommendation-row">';foreach($sets[$kind] as $pid){$p=wc_get_product($pid);$url=get_permalink($pid);$html.='<li class="ch-recommendation-card"><a href="'.esc_url($url).'">'.$p->get_image('woocommerce_thumbnail',['loading'=>'lazy','decoding'=>'async']).'<h3>'.esc_html($p->get_name()).'</h3></a><div class="ch-recommendation-price">'.$p->get_price_html().'</div><a class="ch-recommendation-link" href="'.esc_url($url).'">مشاهده محصول <span aria-hidden="true">←</span></a></li>';}
-   $html.='</ul></section>';
+   $html .= self::product_row( $sets[$kind] ) . '</section>';
   }return $html.'</div>';
  }
  public static function comparison( array $products ): string {
@@ -84,7 +109,7 @@ final class Chidemoon_Core_Product_Recommendations {
   foreach($selected as $id){$pools[]=self::select($id)['similar'];$terms=self::categories($id);$parents=[];foreach($terms as $t)$parents=array_merge($parents,get_ancestors($t->term_id,'product_cat'));foreach($terms as $t)if(!in_array($t->term_id,$parents,true))$categories[]=$t->term_id;}
   $suggestions=[];for($i=0;$i<6;$i++)foreach($pools as $pool){$id=$pool[$i]??0;if($id&&!in_array($id,$selected,true)&&!in_array($id,$suggestions,true))$suggestions[]=$id;if(count($suggestions)===6)break 2;}
   $html='<div class="ch-product-recommendations ch-comparison-recommendations" data-comparison-recommendations="'.esc_attr(implode(',',$selected)).'"><section class="ch-recommendation-section"><h2>محصولات مشابه برای این مقایسه</h2>';
-  if($suggestions){$html.='<ul class="ch-recommendation-row">';foreach($suggestions as $id){$p=wc_get_product($id);$url=get_permalink($id);$html.='<li class="ch-recommendation-card"><a href="'.esc_url($url).'">'.$p->get_image('woocommerce_thumbnail',['loading'=>'lazy','decoding'=>'async']).'<h3>'.esc_html($p->get_name()).'</h3></a><div class="ch-recommendation-price">'.$p->get_price_html().'</div><a class="ch-recommendation-link" href="'.esc_url($url).'">مشاهده محصول <span aria-hidden="true">←</span></a></li>';}$html.='</ul>';}
+  if ( $suggestions ) { $html .= self::product_row( $suggestions ); }
   else{$html.='<p class="ch-recommendation-empty">در حال حاضر محصول مشابه موجودی برای این انتخاب نداریم.</p>';}
   $articles=[];
   // Existing editorial comparisons discuss these product types rather than SKUs.

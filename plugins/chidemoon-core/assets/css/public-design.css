@@ -2404,6 +2404,8 @@ body .elementor main.ch-main:has(.ch-category-panel) { padding-block: 24px; gap:
 .ch-recommendation-section { padding-block: 24px; border-top: 1px solid var(--chidemoon-line); }
 .ch-recommendation-section > h2 { margin: 0 0 20px; font-size: 23px; }
 .ch-recommendation-row { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 96px)/5); gap: 24px; overflow-x: auto; scroll-snap-type: x proximity; list-style: none; margin: 0; padding: 0 0 12px; }
+.ch-recommendation-product { min-inline-size: 0; scroll-snap-align: start; }
+.ch-recommendation-product > .elementor { block-size: 100%; }
 .ch-recommendation-card { display: flex; flex-direction: column; min-width: 0; padding: 14px; border: 1px solid var(--chidemoon-line); border-radius: 16px; scroll-snap-align: start; }
 .ch-recommendation-card img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
 .ch-recommendation-card h3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 5.7em; margin: 12px 0; font-size: 14px; line-height: 1.9; }
