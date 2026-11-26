@@ -10,6 +10,17 @@ final class Chidemoon_Core_Branding {
 		add_filter( 'login_headerurl', static fn() => home_url( '/' ) );
 		add_filter( 'login_headertext', static fn() => 'چیدمون — خانه، به سلیقهٔ تو' );
 		add_action( 'wp_head', array( self::class, 'home_share_image' ), 20 );
+		foreach ( array( 'facebook', 'twitter' ) as $network ) {
+			add_filter( "rank_math/opengraph/{$network}/image", static fn( $url ) => is_front_page() ? self::asset_url( 'chidemoon-share-look.jpg' ) : $url );
+			add_filter( "rank_math/opengraph/{$network}/image_array", static function ( $image ) {
+				if ( is_front_page() && ( $image['url'] ?? '' ) === self::asset_url( 'chidemoon-share-look.jpg' ) ) {
+					$image['width'] = 1200;
+					$image['height'] = 630;
+					$image['alt'] = 'پذیرایی مدرن با نقاط شاپ د لوک چیدمون';
+				}
+				return $image;
+			} );
+		}
 	}
 
 	public static function asset_url( string $file ): string {
@@ -29,7 +40,7 @@ final class Chidemoon_Core_Branding {
 	/** Editorial and product share images remain with their own content. */
 	public static function home_share_image(): void {
 		if ( ! is_front_page() || defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'AIOSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) ) { return; }
-		$image = self::asset_url( 'chidemoon-share.jpg' );
+		$image = self::asset_url( 'chidemoon-share-look.jpg' );
 		echo '<meta property="og:type" content="website">' . "\n";
 		echo '<meta property="og:title" content="' . esc_attr( get_bloginfo( 'name' ) ) . '">' . "\n";
 		echo '<meta property="og:url" content="' . esc_url( home_url( '/' ) ) . '">' . "\n";
