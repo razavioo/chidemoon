@@ -120,29 +120,48 @@ final class Chidemoon_Core_Search_Facets {
 		$posts = $wp_query->posts;
 		$suggestions = ! $posts && ! is_paged();
 		if ( $suggestions ) {
-			$phrase = trim( get_search_query( false ) );
-			$words = preg_split( '/[^\p{L}\p{N}\x{200C}]+/u', $phrase, -1, PREG_SPLIT_NO_EMPTY ) ?: array();
-			$words = array_unique( array_filter( $words, static fn( $word ) =>
-				$word !== $phrase && mb_strlen( $word ) >= 3 && ! in_array( $word, array( 'برای', 'های', 'مدل', 'قیمت', 'خرید', 'جدید' ), true )
-			) );
-			usort( $words, static fn( $a, $b ) => mb_strlen( $b ) <=> mb_strlen( $a ) );
-			foreach ( array_slice( $words, 0, 4 ) as $word ) {
+			$phrase = strtr( get_search_query( false ), array( 'ي' => 'ی', 'ك' => 'ک', '‌' => ' ' ) );
+			$phrase = ' ' . trim( preg_replace( '/[^\p{L}\p{N}]+/u', ' ', $phrase ) ) . ' ';
+			$product_types = array(
+				'میز تلویزیون' => array( 'tv-stands' ),
+				'میز تحریر' => array( 'writing-desks' ),
+				'میز کامپیوتر' => array( 'writing-desks' ),
+				'کنسول' => array( 'console-tables' ),
+				'میز عسلی' => array( 'coffee-side-tables-poufs' ),
+				'جلو مبلی' => array( 'coffee-side-tables-poufs' ),
+				'فرش' => array( 'rugs-floor-mats', 'review-b9eabe1ceebc' ),
+				'قالی' => array( 'rugs-floor-mats', 'review-b9eabe1ceebc' ),
+				'شال مبل' => array( 'sofa-throws' ),
+				'مبل' => array( 'sofas' ),
+				'مبلمان' => array( 'sofas' ),
+				'کوسن' => array( 'cushions' ),
+				'پرده' => array( 'curtains' ),
+				'تخت' => array( 'beds' ),
+				'آینه' => array( 'mirrors' ),
+				'آباژور' => array( 'floor-bedside-lamps' ),
+				'لوستر' => array( 'chandeliers-ceiling-lights' ),
+				'گلدان' => array( 'vases' ),
+			);
+			foreach ( $product_types as $type => $categories ) {
+				if ( ! str_contains( $phrase, ' ' . $type . ' ' ) ) { continue; }
 				$query = new WP_Query( array(
-					's' => $word,
-					'search_columns' => array( 'post_title' ),
 					'post_type' => 'product',
 					'post_status' => 'publish',
 					'posts_per_page' => 12,
 					'no_found_rows' => true,
 					'meta_query' => (array) $wp_query->get( 'meta_query' ),
-					'tax_query' => (array) $wp_query->get( 'tax_query' ),
+					'tax_query' => array(
+						'relation' => 'AND',
+						(array) $wp_query->get( 'tax_query' ),
+						array( 'taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $categories ),
+					),
 					'post__in' => (array) $wp_query->get( 'post__in' ),
 				) );
 				$posts = array_filter( $query->posts, static function ( $post ) {
 					$product = wc_get_product( $post->ID );
 					return $product && Chidemoon_Core_Affiliate::is_offer_available( $product );
 				} );
-				if ( $posts ) { break; }
+				break;
 			}
 		}
 		$cards = '';
